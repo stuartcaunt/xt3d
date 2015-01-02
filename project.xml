@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<!-- use next version of openfl -->
+	<set name="next" />
+	<set name="webgl" if="html5" />
+	<haxedef name="KF_DEBUG" />
+	
+
+	<meta title="Test1" package="com.tartiflop.test1" version="1.0.0" company="Tartiflop" />
+	<app main="Test1" path="Export" />
+	
+	<source path="Test" />
+	<source path="Classes" />
+	
+	<haxelib name="openfl" />
+	
+	<assets path="Assets" rename="assets" exclude="openfl.svg" />
+	<icon path="Assets/openfl.svg" />
+	
+</project>
