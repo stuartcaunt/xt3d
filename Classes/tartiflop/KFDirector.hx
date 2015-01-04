@@ -10,9 +10,12 @@ import flash.geom.Rectangle;
 
 class KFDirector {
 
-	public var openglView(default, set):OpenGLView;
-	public var backgroundColor(default, default):KFColor = new KFColor(0.2, 0.2, 0.2);
+	public var openglView(get_openglView, set_openglView):OpenGLView;
+	public var backgroundColor(get_backgroundColor, set_backgroundColor):KFColor;
 
+
+	private var _openglView:OpenGLView;
+	private var _backgroundColor:KFColor = new KFColor(0.2, 0.2, 0.2);
 	private var _renderer:KFRenderer;
 	private var _views:Array<KFView> = new Array<KFView>();
 
@@ -20,13 +23,25 @@ class KFDirector {
 		_renderer = new KFRenderer();
 	}
 	
+	public function get_openglView():OpenGLView {
+		return _openglView;
+	}
 
-	function set_openglView(openglView) {
-		this.openglView = openglView;
+	public function set_openglView(openglView) {
+		_openglView = openglView;
 
-		this.openglView.render = renderLoop;
+		_openglView.render = renderLoop;
 
-		return this.openglView;
+		return _openglView;
+	}
+
+	public function get_backgroundColor():KFColor {
+		return _backgroundColor;
+	}
+
+	public function set_backgroundColor(backgroundColor) {
+		_backgroundColor = backgroundColor;
+		return _backgroundColor;
 	}
 
 	public function addView(view:KFView):Void {
@@ -36,7 +51,7 @@ class KFDirector {
 
 	private function renderLoop(displayRect:Rectangle):Void {
 
-		KF.Log("render");
+		//KF.Log("render");
 
 		// Clear context wil full rectangle 
 		_renderer.clear(displayRect, backgroundColor);
