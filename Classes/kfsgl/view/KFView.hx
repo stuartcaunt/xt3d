@@ -1,8 +1,9 @@
-package tartiflop;
+package kfsgl.view;
 
 import flash.geom.Rectangle;
 
-import tartiflop.KFRenderer;
+import kfsgl.renderer.KFRenderer;
+import kfsgl.utils.KFColor;
 
 class KFView  {
 

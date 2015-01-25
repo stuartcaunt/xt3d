@@ -1,9 +1,9 @@
-package tartiflop;
+package kfsgl;
 
-import tartiflop.KF;
-import tartiflop.KFView;
-import tartiflop.KFRenderer;
-import tartiflop.KFColor;
+import kfsgl.view.KFView;
+import kfsgl.renderer.KFRenderer;
+import kfsgl.utils.KF;
+import kfsgl.utils.KFColor;
 
 import openfl.display.OpenGLView;
 import flash.geom.Rectangle;
@@ -21,6 +21,7 @@ class KFDirector {
 
 	public function new() {
 		_renderer = new KFRenderer();
+		_renderer.init();
 	}
 	
 	public function get_openglView():OpenGLView {

@@ -1,4 +1,4 @@
-package tartiflop;
+package kfsgl.renderer;
 
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
@@ -7,15 +7,28 @@ import openfl.gl.GLShader;
 import openfl.gl.GLUniformLocation;
 import flash.geom.Rectangle;
 
-import tartiflop.KFColor;
+import kfsgl.utils.KFColor;
+import kfsgl.utils.KF;
+import kfsgl.renderer.shaders.KFShaderManager;
 
 
 class KFRenderer {
 
 	// State
+
+	// shader manager
+	private var _shaderManager:KFShaderManager;
+
 	private var _viewport:Rectangle;
 
 	public function new() {
+		_shaderManager = new KFShaderManager();
+	}
+
+	public function init() {
+		// Build all shaders
+		_shaderManager.loadDefaultShaders();
+
 
 	}
 

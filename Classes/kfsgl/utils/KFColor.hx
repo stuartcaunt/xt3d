@@ -1,4 +1,4 @@
-package tartiflop;
+package kfsgl.utils;
 
 class KFColor  {
 

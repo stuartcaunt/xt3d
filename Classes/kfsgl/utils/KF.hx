@@ -1,4 +1,4 @@
-package tartiflop;
+package kfsgl.utils;
 
 import haxe.Timer;
 
@@ -15,6 +15,17 @@ class KF  {
 #end		
 	}
 	
+
+	public static function jsonToMap(jsonData:Dynamic):Map<String, String> {
+		var result = new Map<String, String>();
+
+		for (key in Reflect.fields(jsonData)) {
+			var value = Reflect.getProperty(jsonData, key);
+			result.set(key, value);
+		}
+
+		return result;
+	}
 
 }
 

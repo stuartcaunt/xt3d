@@ -4,9 +4,10 @@
 	<set name="next" />
 	<set name="webgl" if="html5" />
 	<haxedef name="KF_DEBUG" />
+	<haxedef name="webgl" />
 	
 
-	<meta title="Test1" package="com.tartiflop.test1" version="1.0.0" company="Tartiflop" />
+	<meta title="Test1" package="com.kfsgl.test1" version="1.0.0" company="StepTo" />
 	<app main="Test1" path="Export" />
 	
 	<source path="Test" />

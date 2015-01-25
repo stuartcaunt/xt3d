@@ -3,9 +3,9 @@ package;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;
 
-import tartiflop.KFDirector;
-import tartiflop.KFView;
-import tartiflop.KFColor;
+import kfsgl.KFDirector;
+import kfsgl.view.KFView;
+import kfsgl.utils.KFColor;
 
 class Test1 extends Sprite {
 	
