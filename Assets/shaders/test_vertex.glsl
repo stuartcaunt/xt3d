@@ -5,6 +5,10 @@ varying vec4 v_color;
 #endif
 
 void main(void) {
-	v_color = a_color;
-	gl_Position = u_MVPMatrix * a_position;
+#ifdef USE_COLOR
+	v_color = a_color * u_color;
+#else
+	v_color = u_color;
+#endif
+	gl_Position = u_modelViewProjectionMatrix * a_position;
 }

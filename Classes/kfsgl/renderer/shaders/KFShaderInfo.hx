@@ -1,16 +1,18 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.renderer.shaders.KFUniformInfo;
+import kfsgl.renderer.shaders.KFShaderReader;
+import kfsgl.renderer.shaders.KFUniformLib;
 
 class KFShaderInfo {
-	//public var unforms:Array;
-	public var vertexShader:String;
-	public var fragmentShader:String;
-	public var uniforms:Array<KFUniformInfo>;
+	public var vertexProgram:String;
+	public var fragmentProgram:String;
+	public var uniforms:Map<String, KFUniformInfo>;
 
-	public function new(vertexShader:String, fragmentShader:String, uniforms:Array<KFUniformInfo>) {
-		this.vertexShader = vertexShader;
-		this.fragmentShader = fragmentShader;
-		this.uniforms = uniforms;
+	public function new(vertexShaderKey:String, fragmentShaderKey:String, uniformGroups:Array<String>) {
+		this.vertexProgram = KFShaderReader.getInstance().shaderWithKey(vertexShaderKey);
+		this.fragmentProgram = KFShaderReader.getInstance().shaderWithKey(fragmentShaderKey);
+		this.uniforms = KFUniformLib.getInstance().uniformsFromGroups(uniformGroups);
 	}
+
+
 }

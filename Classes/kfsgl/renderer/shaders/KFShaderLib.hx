@@ -1,8 +1,7 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.renderer.shaders.KFShaderReader;
 import kfsgl.renderer.shaders.KFShaderInfo;
-import kfsgl.renderer.shaders.KFUniformInfo;
+import kfsgl.renderer.shaders.KFUniformLib;
 
 class KFShaderLib  {
 
@@ -28,20 +27,20 @@ class KFShaderLib  {
 	public function init():Void {
 		var shaderConfigsJson = {
 			'test': {
-				vertexShader: KFShaderReader.getInstance().shaderWithKey("test_vertex"),
-				fragmentShader: KFShaderReader.getInstance().shaderWithKey("test_fragment"),
-				uniforms: [],
+				vertexShader: "test_vertex",
+				fragmentShader: "test_fragment",
+				uniforms: ["common", "color"],
 			}
 		}
 
 		// Put all shader files into a more optimised structure
 		for (shaderName in Reflect.fields(shaderConfigsJson)) {
 			var config = Reflect.getProperty(shaderConfigsJson, shaderName);
-			var vertexShader:String = Reflect.getProperty(config, 'vertexShader');
-			var fragmentShader:String = Reflect.getProperty(config, 'fragmentShader');
-			var uniforms:Array<KFUniformInfo> = Reflect.getProperty(config, 'uniforms');
+			var vertexShaderKey:String = Reflect.getProperty(config, 'vertexShader');
+			var fragmentShaderKey:String = Reflect.getProperty(config, 'fragmentShader');
+			var uniformGroups:Array<String> = Reflect.getProperty(config, 'uniforms');
 
-			_shaderConfigs.set(shaderName, new KFShaderInfo(vertexShader, fragmentShader, uniforms));
+			_shaderConfigs.set(shaderName, new KFShaderInfo(vertexShaderKey, fragmentShaderKey, uniformGroups));
 		}
 	}
 

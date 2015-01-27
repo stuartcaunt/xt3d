@@ -6,10 +6,13 @@ import openfl.gl.GLShader;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
+import kfsgl.renderer.shaders.KFShaderInfo;
 
 class KFGLProgram {
 
 	private var _name:String;
+	private var _vertexProgram:String;
+	private var _fragmentProgram:String;
 	private var _program:GLProgram;
 	private static var _prefixVertex:String = null;
 	private static var _prefixFragment:String = null;
@@ -24,30 +27,26 @@ class KFGLProgram {
 		texCoord: "a_texCoord"
 	});
 
-	public static var KFUniforms = KF.jsonToMap({
-		modelViewProjectionMatrix: "u_MVPMatrix",
-		modelViewMatrix: "u_MVMatrix",
-		modelMatrix: "u_modelMatrix",
-		viewMatrix: "u_viewMatrix",
-		normalMatrix: "u_normalMatrix"
-	});
-
 	public function new() {
 
 	}
 	
-	public static function create(shaderName:String, vertexProgram:String, fragmentProgram:String):KFGLProgram {
+	public static function create(shaderName:String, shaderInfo:KFShaderInfo):KFGLProgram {
 		var program = new KFGLProgram();
 		
-		if (program != null && !(program.init(shaderName, vertexProgram, fragmentProgram))) {
+		if (program != null && !(program.init(shaderName, shaderInfo))) {
 			program = null;
 		}
 
 		return program;
 	}
 
-	public function init(shaderName:String, vertexProgram:String, fragmentProgram:String):Bool {
+	public function init(shaderName:String, shaderInfo:KFShaderInfo):Bool {
 		_name = shaderName;
+
+		var vertexProgram = shaderInfo.vertexProgram;
+		var fragmentProgram = shaderInfo.fragmentProgram;
+		var uniforms = shaderInfo.uniforms;
 
 		// Load prefixes
 		if (_prefixVertex == null) {
@@ -61,9 +60,18 @@ class KFGLProgram {
 		var vertexDefines:String = "#define USE_COLOR\n";
 		var fragmentDefines:String = "";
 
+
+		// generate uniform declarations
+		var vertexUniforms:String = "";
+		for (uniformName in uniforms.keys()) {
+			var uniformInfo = uniforms.get(uniformName);
+			vertexUniforms += "uniform " + uniformInfo.type + " " + uniformInfo.name + ";\n";
+		}
+
+
 		// Add prefixes
-		vertexProgram = vertexDefines + _prefixVertex + vertexProgram;
-		fragmentProgram = fragmentDefines + _prefixFragment + fragmentProgram;
+		_vertexProgram = "// vertexDefines:\n" + vertexDefines + "\n// prefixVertex:\n" + _prefixVertex + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
+		_fragmentProgram = "// fragmentDefines:\n" + fragmentDefines + "\n// prefixFragment:\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();
@@ -74,8 +82,8 @@ class KFGLProgram {
 		}
 
 		// Create shaders
-		var vertexShader = createShader(vertexProgram, GL.VERTEX_SHADER);
-		var fragmentShader = createShader(fragmentProgram, GL.FRAGMENT_SHADER);
+		var vertexShader = createShader(_vertexProgram, GL.VERTEX_SHADER);
+		var fragmentShader = createShader(_fragmentProgram, GL.FRAGMENT_SHADER);
 		
 		// Verify that both vertex and fragment shaders were created successfully
 		if (vertexShader == null || fragmentShader == null) {
@@ -104,23 +112,28 @@ class KFGLProgram {
 
 		} else {
 			KF.Log("Compiled and linked successfully program \"" + _name + "\"");
+			KF.Log("Vertex program:\n" + _vertexProgram);
+			KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
 		// Get attribute locations
 		for (identifier in KFAttributes.keys()) {
 			var attribute = GL.getAttribLocation(_program, KFAttributes.get(identifier));
-			KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " " + attribute);
+			KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + attribute);
 			_attributes.set(identifier, attribute);
 		}
 
-		// Get uniform locations
-		for (identifier in KFUniforms.keys()) {
-			var uniform = GL.getUniformLocation(_program, KFUniforms.get(identifier));
-			KF.Log("uniform " + identifier + " : " + KFUniforms.get(identifier) + " " + uniform);
-			_uniforms.set(identifier, uniform);
+		// Handle uniforms
+		for (uniformName in uniforms.keys()) {
+			var uniformInfo = uniforms.get(uniformName);
+			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
+
+			// TODO : generate a KFUniform, not just simple uniformLocation
+
+			KF.Log("uniform " + uniformName + " : " + uniformInfo.name + " = " + uniformLocation);
+			_uniforms.set(uniformName, uniformLocation);
 		}
 
-		
 		return true;
 	}
 
@@ -147,6 +160,12 @@ class KFGLProgram {
 		// Verify that shader comiled
 		if (GL.getShaderParameter(shader, GL.COMPILE_STATUS) == 0) {
 			KF.Log("ERROR compiling " + (type == GL.VERTEX_SHADER ? "vertex" : "fragment") + " shader: " + GL.getShaderInfoLog(shader));
+			if (type == GL.VERTEX_SHADER) {
+				KF.Log("Vertex program:\n" + _vertexProgram);
+			} else {
+
+				KF.Log("Fragment program:\n" + _fragmentProgram);
+			}
 			return null;
 		}
 		

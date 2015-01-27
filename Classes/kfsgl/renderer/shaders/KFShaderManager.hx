@@ -40,12 +40,8 @@ class KFShaderManager {
 			var shaderName = shaderNames.next();
 			var shaderInfo = shaderConfigs.get(shaderName);
 
-			// for each shader program get vertex and fragment shaders
-			var vertexShader = shaderInfo.vertexShader;
-			var fragmentShader = shaderInfo.fragmentShader;
-
 			// Create program for each shader
-			var program = KFGLProgram.create(shaderName, vertexShader, fragmentShader);
+			var program = KFGLProgram.create(shaderName, shaderInfo);
 
 			// Verify program
 			if (program != null) {
