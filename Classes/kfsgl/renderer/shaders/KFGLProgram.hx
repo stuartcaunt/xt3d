@@ -7,6 +7,7 @@ import openfl.Assets;
 
 import kfsgl.utils.KF;
 import kfsgl.renderer.shaders.KFShaderInfo;
+import kfsgl.renderer.shaders.KFUniform;
 
 class KFGLProgram {
 
@@ -18,7 +19,7 @@ class KFGLProgram {
 	private static var _prefixFragment:String = null;
 
 	private var _attributes:Map<String, Int> = new Map<String, UInt>();
-	private var _uniforms:Map<String, Int> = new Map<String, UInt>();
+	private var _uniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
 
 	public static var KFAttributes = KF.jsonToMap({
 		position: "a_position",
@@ -112,8 +113,8 @@ class KFGLProgram {
 
 		} else {
 			KF.Log("Compiled and linked successfully program \"" + _name + "\"");
-			KF.Log("Vertex program:\n" + _vertexProgram);
-			KF.Log("Fragment program:\n" + _fragmentProgram);
+			//KF.Log("Vertex program:\n" + _vertexProgram);
+			//KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
 		// Get attribute locations
@@ -128,10 +129,11 @@ class KFGLProgram {
 			var uniformInfo = uniforms.get(uniformName);
 			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
 
-			// TODO : generate a KFUniform, not just simple uniformLocation
+			// Create a uniform object
+			var uniform:KFUniform = new KFUniform(uniformName, uniformInfo, uniformLocation);
 
-			KF.Log("uniform " + uniformName + " : " + uniformInfo.name + " = " + uniformLocation);
-			_uniforms.set(uniformName, uniformLocation);
+			// Add to all uniforms
+			_uniforms.set(uniformName, uniform);
 		}
 
 		return true;
