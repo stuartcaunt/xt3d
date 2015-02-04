@@ -1,0 +1,24 @@
+TODO
+====
+
+
+- Uniform: set value in GPU
+
+- StateManager
+- BufferManager
+
+- Material implementation
+- Geometry
+  - VertexAttribute buffers
+- Camera
+- View
+- Scene and Node
+  - scene graph
+- MeshNode (Geometry and Material)
+- Render loop
+
+DONE
+====
+
+x Intellij
+x Use Float32Array and Matrix3D for KFUniform data
