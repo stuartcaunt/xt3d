@@ -14,7 +14,7 @@ class KFShaderReader  {
 	private function new() {
 	}
 	
-	public static function getInstance():KFShaderReader {
+	public static function instance():KFShaderReader {
 		if (_instance == null) {
 			_instance = new KFShaderReader();
 			_instance.init();

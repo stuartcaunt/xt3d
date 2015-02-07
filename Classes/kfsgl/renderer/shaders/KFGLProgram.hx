@@ -174,4 +174,13 @@ class KFGLProgram {
 		return shader;
 	}
 
+	public function cloneUniforms():Map<String, KFUniform> {
+		var cloned:Map<String, KFUniform> = new Map<String, KFUniform>();
+		for (uniform in _uniforms) {
+			cloned.set(uniform.name(), uniform.clone());
+		}
+
+		return cloned;
+	}
+
 }

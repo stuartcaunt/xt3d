@@ -2,8 +2,8 @@ TODO
 ====
 
 
-- Uniform: set value in GPU
 
+- Global uniforms
 - StateManager
 - BufferManager
 
@@ -17,8 +17,11 @@ TODO
 - MeshNode (Geometry and Material)
 - Render loop
 
+
+
 DONE
 ====
 
 x Intellij
 x Use Float32Array and Matrix3D for KFUniform data
+x Uniform: set value in GPU

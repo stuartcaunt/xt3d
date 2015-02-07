@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.material.KFMaterial;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;
 
@@ -29,6 +30,9 @@ class Test1 extends Sprite {
 		var view = new KFView();
 		view.backgroundColor = new KFColor(0.8, 0.8, 0.8);
 		_director.addView(view);
+
+		var material:KFMaterial = new KFMaterial();
+		material.setProgram("test");
 
 	}
 	

@@ -9,9 +9,9 @@ class KFShaderInfo {
 	public var uniforms:Map<String, KFUniformInfo>;
 
 	public function new(vertexShaderKey:String, fragmentShaderKey:String, uniformGroups:Array<String>) {
-		this.vertexProgram = KFShaderReader.getInstance().shaderWithKey(vertexShaderKey);
-		this.fragmentProgram = KFShaderReader.getInstance().shaderWithKey(fragmentShaderKey);
-		this.uniforms = KFUniformLib.getInstance().uniformsFromGroups(uniformGroups);
+		this.vertexProgram = KFShaderReader.instance().shaderWithKey(vertexShaderKey);
+		this.fragmentProgram = KFShaderReader.instance().shaderWithKey(fragmentShaderKey);
+		this.uniforms = KFUniformLib.instance().uniformsFromGroups(uniformGroups);
 	}
 
 

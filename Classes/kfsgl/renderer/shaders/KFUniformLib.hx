@@ -16,7 +16,7 @@ class KFUniformLib {
 	private function new() {
 	}
 	
-	public static function getInstance():KFUniformLib {
+	public static function instance():KFUniformLib {
 		if (_instance == null) {
 			_instance = new KFUniformLib();
 			_instance.init();

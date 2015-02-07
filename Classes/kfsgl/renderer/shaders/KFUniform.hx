@@ -1,5 +1,7 @@
 package kfsgl.renderer.shaders;
 
+import openfl.utils.Float32Array;
+import openfl.gl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 
@@ -40,6 +42,10 @@ class KFUniform  {
 		return new KFUniform(_name, _uniformInfo, _location);
 	}
 
+	public function name():String {
+		return _name;
+	}
+
 
 	public function prepareForUse() {
 		_hasBeenSet = false;
@@ -59,8 +65,31 @@ class KFUniform  {
 
 		// Send value to the GPU if it is dirty
 		if (_isDirty) {
-			// TODO set value in the GPU
+			var type = _uniformInfo.type;
+			if (type == "float") {
+				GL.uniform1f(_location, _defaultFloatValue);
+
+			} else if (type == "vec2") {
+				GL.uniform2f(_location, _defaultFloatArrayValue[0], _defaultFloatArrayValue[1]);
+
+			} else if (type == "vec3") {
+				GL.uniform3f(_location, _defaultFloatArrayValue[0], _defaultFloatArrayValue[1], _defaultFloatArrayValue[2]);
+
+			} else if (type == "ve4") {
+				GL.uniform4f(_location, _defaultFloatArrayValue[0], _defaultFloatArrayValue[1], _defaultFloatArrayValue[2], _defaultFloatArrayValue[3]);
+
+			} else if (type == "mat3") {
+				var float32ArrayValue = new Float32Array(_defaultFloatArrayValue);
+				GL.uniformMatrix3fv(_location, false, float32ArrayValue);
+
+			} else if (type == "mat4") {
+				var float32ArrayValue = new Float32Array(_defaultMatrixValue.rawData);
+				GL.uniformMatrix4fv(_location, false, float32ArrayValue);
+			}
+
+			_isDirty = false;
 		}
+
 	}
 
 	public function setValue(value:Float) {

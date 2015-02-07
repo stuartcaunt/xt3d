@@ -15,7 +15,7 @@ class KFShaderLib  {
 	private function new() {
 	}
 	
-	public static function getInstance():KFShaderLib {
+	public static function instance():KFShaderLib {
 		if (_instance == null) {
 			_instance = new KFShaderLib();
 			_instance.init();
@@ -26,7 +26,7 @@ class KFShaderLib  {
 
 	public function init():Void {
 		var shaderConfigsJson = {
-			'test': {
+			test: {
 				vertexShader: "test_vertex",
 				fragmentShader: "test_fragment",
 				uniforms: ["common", "color"],

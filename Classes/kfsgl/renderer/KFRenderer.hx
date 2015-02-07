@@ -16,20 +16,14 @@ class KFRenderer {
 
 	// State
 
-	// shader manager
-	private var _shaderManager:KFShaderManager;
-
 	private var _viewport:Rectangle;
 
 	public function new() {
-		_shaderManager = new KFShaderManager();
 	}
 
 	public function init() {
 		// Build all shaders
-		_shaderManager.loadDefaultShaders();
-
-
+		KFShaderManager.instance().loadDefaultShaders();
 	}
 
 	public function clear(viewport:Rectangle, color:KFColor) {

@@ -10,7 +10,17 @@ class KFShaderManager {
 
 	private var _programs:Map<String,  KFGLProgram>;
 
-	public function new() {
+	private static var _instance:KFShaderManager = null;
+
+	public static function instance():KFShaderManager {
+		if (_instance == null) {
+			_instance = new KFShaderManager();
+		}
+
+		return _instance;
+	}
+
+	private function new() {
 		_programs = new Map<String, KFGLProgram>();
 
 	}
@@ -32,7 +42,7 @@ class KFShaderManager {
 
 	public function loadDefaultShaders():Void {
 		// Get all shader configs
-		var shaderConfigs = KFShaderLib.getInstance().shaderConfigs;
+		var shaderConfigs = KFShaderLib.instance().shaderConfigs;
 
 		// Iterate over all shaders
 		var shaderNames = shaderConfigs.keys();
@@ -71,12 +81,13 @@ class KFShaderManager {
 		KF.Log("Added shader program \"" + name + "\"");
 	}
 
-	public function programWithName(name:String) {
+	public function programWithName(name:String):KFGLProgram {
 		var program = _programs.get(name);
 		if (program == null) {
 			throw new KFException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
 		}
-		
+
+		return program;
 	}
 	
 
