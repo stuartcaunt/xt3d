@@ -1,5 +1,7 @@
 package kfsgl.renderer.shaders;
 
+import openfl.Assets;
+
 import kfsgl.utils.KF;
 import kfsgl.errors.KFException;
 
