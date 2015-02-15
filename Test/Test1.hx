@@ -1,5 +1,7 @@
 package;
 
+import flash.geom.Matrix3D;
+import kfsgl.renderer.shaders.KFUniformLib;
 import kfsgl.material.KFMaterial;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;
@@ -32,7 +34,9 @@ class Test1 extends Sprite {
 		_director.addView(view);
 
 		var material:KFMaterial = new KFMaterial();
-		material.setProgram("test");
+		material.setProgram("test_color");
+
+		KFUniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());
 
 	}
 	

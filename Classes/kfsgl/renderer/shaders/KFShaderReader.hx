@@ -1,7 +1,5 @@
 package kfsgl.renderer.shaders;
 
-import openfl.Assets;
-
 import kfsgl.utils.KF;
 import kfsgl.errors.KFException;
 
@@ -26,6 +24,8 @@ class KFShaderReader  {
 
 	public function init():Void {
 		var shaderFilesJson = {
+			prefix_vertex: 'prefix_vertex.glsl',
+			prefix_fragment: 'prefix_fragment.glsl',
 			test_vertex: 'test_vertex.glsl',
 			test_fragment: 'test_fragment.glsl'
 		};

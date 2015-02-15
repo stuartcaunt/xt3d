@@ -9,6 +9,7 @@ class KFMaterial {
 
 	private var _program:KFGLProgram;
 	private var _uniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
+	private var _commonUniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
 
 	public function new() {
 
@@ -21,6 +22,9 @@ class KFMaterial {
 		// get program for shader manager
 		_program = KFShaderManager.instance().programWithName(programName);
 
+		// Get common uniforms
+		_commonUniforms = _program.cloneCommonUniforms();
+
 		// Get uniforms
 		_uniforms = _program.cloneUniforms();
 	}
@@ -31,12 +35,20 @@ class KFMaterial {
 		}
 
 		_uniforms = new Map<String, KFUniform>();
+		_commonUniforms = new Map<String, KFUniform>();
 	}
 
 	public function uniform(uniformName:String):KFUniform {
+		// Get uniform from uniforms
 		var uniform = _uniforms.get(uniformName);
+
 		if (uniform == null) {
-			throw new KFException("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
+			// Get from common uniforms
+			uniform = _commonUniforms.get(uniformName);
+
+			if (uniform == null) {
+				throw new KFException("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
+			}
 		}
 
 		return uniform;

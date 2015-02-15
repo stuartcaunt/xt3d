@@ -34,7 +34,7 @@ class KFUniform  {
 
 		handleDefaultValue();
 
-		KF.Log(toString());
+		//KF.Log(toString());
 	}
 
 
@@ -44,6 +44,10 @@ class KFUniform  {
 
 	public function name():String {
 		return _name;
+	}
+
+	public function uniformInfo():KFUniformInfo {
+		return _uniformInfo;
 	}
 
 

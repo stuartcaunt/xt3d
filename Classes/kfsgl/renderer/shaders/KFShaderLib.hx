@@ -26,10 +26,22 @@ class KFShaderLib  {
 
 	public function init():Void {
 		var shaderConfigsJson = {
-			test: {
+			test_color: {
 				vertexShader: "test_vertex",
 				fragmentShader: "test_fragment",
-				uniforms: ["common", "color"],
+				vertexDefines: ["#define USE_COLOR"],
+				commonUniforms: ["common"],
+				uniforms: {
+					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
+				}
+			},
+			test_nocolor: {
+				vertexShader: "test_vertex",
+				fragmentShader: "test_fragment",
+				commonUniforms: ["common"],
+				uniforms: {
+					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
+				}
 			}
 		}
 
@@ -38,9 +50,35 @@ class KFShaderLib  {
 			var config = Reflect.getProperty(shaderConfigsJson, shaderName);
 			var vertexShaderKey:String = Reflect.getProperty(config, 'vertexShader');
 			var fragmentShaderKey:String = Reflect.getProperty(config, 'fragmentShader');
-			var uniformGroups:Array<String> = Reflect.getProperty(config, 'uniforms');
+			var vertexDefines:Array<String> = Reflect.getProperty(config, 'vertexDefines');
+			var fragmentDefines:Array<String> = Reflect.getProperty(config, 'fragmentDefines');
+			var commonUniforms:Array<String> = Reflect.getProperty(config, 'commonUniforms');
 
-			_shaderConfigs.set(shaderName, new KFShaderInfo(vertexShaderKey, fragmentShaderKey, uniformGroups));
+			var uniformMap = new Map<String, KFUniformInfo>();
+			var allUniformInfoJson = Reflect.getProperty(config, 'uniforms');
+
+			for (uniformName in Reflect.fields(allUniformInfoJson)) {
+				// Convert uniform json into type
+				var uniformInfoJson = Reflect.getProperty(allUniformInfoJson, uniformName);
+				var uniformInfo:KFUniformInfo = {
+					name: uniformInfoJson.name,
+					type: uniformInfoJson.type,
+					defaultValue: uniformInfoJson.defaultValue
+				};
+
+				// Add uniform info to map
+				uniformMap.set(uniformName, uniformInfo);
+
+			}
+
+			_shaderConfigs.set(shaderName, new KFShaderInfo(
+				vertexShaderKey,
+				fragmentShaderKey,
+				vertexDefines,
+				fragmentDefines,
+				uniformMap,
+				commonUniforms
+			));
 		}
 	}
 

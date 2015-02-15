@@ -7,7 +7,9 @@ import openfl.Assets;
 
 import kfsgl.utils.KF;
 import kfsgl.renderer.shaders.KFShaderInfo;
+import kfsgl.renderer.shaders.KFShaderReader;
 import kfsgl.renderer.shaders.KFUniform;
+import kfsgl.renderer.shaders.KFUniformLib;
 
 class KFGLProgram {
 
@@ -18,8 +20,9 @@ class KFGLProgram {
 	private static var _prefixVertex:String = null;
 	private static var _prefixFragment:String = null;
 
-	private var _attributes:Map<String, Int> = new Map<String, UInt>();
+	private var _attributes:Map<String, Int> = new Map<String, Int>();
 	private var _uniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
+	private var _commonUniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
 
 	public static var KFAttributes = KF.jsonToMap({
 		position: "a_position",
@@ -47,23 +50,28 @@ class KFGLProgram {
 
 		var vertexProgram = shaderInfo.vertexProgram;
 		var fragmentProgram = shaderInfo.fragmentProgram;
+		var vertexDefines= shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.join('\n') : "";
+		var fragmentDefines= shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.join('\n') : "";
 		var uniforms = shaderInfo.uniforms;
+		var commonUniforms = shaderInfo.commonUniforms;
 
 		// Load prefixes
 		if (_prefixVertex == null) {
-			_prefixVertex = Assets.getText("assets/shaders/prefix_vertex.glsl");
+			_prefixVertex = KFShaderReader.instance().shaderWithKey("prefix_vertex");
+			//_prefixVertex = Assets.getText("assets/shaders/prefix_vertex.glsl");
 		}
 		if (_prefixFragment == null) {
-			_prefixFragment = Assets.getText("assets/shaders/prefix_fragment.glsl");
+			_prefixFragment = KFShaderReader.instance().shaderWithKey("prefix_fragment");
+			//_prefixFragment = Assets.getText("assets/shaders/prefix_fragment.glsl");
 		}
-
-		// TODO : take from materials
-		var vertexDefines:String = "#define USE_COLOR\n";
-		var fragmentDefines:String = "";
 
 
 		// generate uniform declarations
 		var vertexUniforms:String = "";
+		for (uniformName in commonUniforms.keys()) {
+			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
+			vertexUniforms += "uniform " + uniformInfo.type + " " + uniformInfo.name + ";\n";
+		}
 		for (uniformName in uniforms.keys()) {
 			var uniformInfo = uniforms.get(uniformName);
 			vertexUniforms += "uniform " + uniformInfo.type + " " + uniformInfo.name + ";\n";
@@ -120,8 +128,20 @@ class KFGLProgram {
 		// Get attribute locations
 		for (identifier in KFAttributes.keys()) {
 			var attribute = GL.getAttribLocation(_program, KFAttributes.get(identifier));
-			KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + attribute);
+			//KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + attribute);
 			_attributes.set(identifier, attribute);
+		}
+
+		// Handle common uniforms
+		for (uniformName in commonUniforms.keys()) {
+			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
+			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
+
+			// Create a uniform object
+			var uniform:KFUniform = new KFUniform(uniformName, uniformInfo, uniformLocation);
+
+			// Add to all uniforms
+			_commonUniforms.set(uniformName, uniform);
 		}
 
 		// Handle uniforms
@@ -177,6 +197,15 @@ class KFGLProgram {
 	public function cloneUniforms():Map<String, KFUniform> {
 		var cloned:Map<String, KFUniform> = new Map<String, KFUniform>();
 		for (uniform in _uniforms) {
+			cloned.set(uniform.name(), uniform.clone());
+		}
+
+		return cloned;
+	}
+
+	public function cloneCommonUniforms():Map<String, KFUniform> {
+		var cloned:Map<String, KFUniform> = new Map<String, KFUniform>();
+		for (uniform in _commonUniforms) {
 			cloned.set(uniform.name(), uniform.clone());
 		}
 
