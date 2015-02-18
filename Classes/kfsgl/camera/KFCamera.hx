@@ -1,8 +1,8 @@
-package kfsgl.node;
+package kfsgl.camera;
 
 import kfsgl.node.KFNode3D;
 
-class KFScene extends KFNode3D {
+class KFCamera extends KFNode3D {
 
 	public function new() {
 		super();

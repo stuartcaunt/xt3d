@@ -33,8 +33,8 @@ class Test1 extends Sprite {
 		view.backgroundColor = new KFColor(0.8, 0.8, 0.8);
 		_director.addView(view);
 
-		var material:KFMaterial = new KFMaterial();
-		material.setProgram("test_color");
+		var material:KFMaterial = new KFMaterial("test_color");
+		material.setProgramName("test_nocolor");
 
 		KFUniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());
 

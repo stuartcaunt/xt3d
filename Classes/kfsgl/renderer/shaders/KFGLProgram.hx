@@ -13,7 +13,10 @@ import kfsgl.renderer.shaders.KFUniformLib;
 
 class KFGLProgram {
 
-	private var _name:String;
+	// properties
+	public var name(default, null):String;
+
+
 	private var _vertexProgram:String;
 	private var _fragmentProgram:String;
 	private var _program:GLProgram;
@@ -46,7 +49,7 @@ class KFGLProgram {
 	}
 
 	public function init(shaderName:String, shaderInfo:KFShaderInfo):Bool {
-		_name = shaderName;
+		this.name = shaderName;
 
 		var vertexProgram = shaderInfo.vertexProgram;
 		var fragmentProgram = shaderInfo.fragmentProgram;
@@ -120,7 +123,7 @@ class KFGLProgram {
 			return false;
 
 		} else {
-			KF.Log("Compiled and linked successfully program \"" + _name + "\"");
+			KF.Log("Compiled and linked successfully program \"" + this.name + "\"");
 			//KF.Log("Vertex program:\n" + _vertexProgram);
 			//KF.Log("Fragment program:\n" + _fragmentProgram);
 		}

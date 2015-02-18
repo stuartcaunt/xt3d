@@ -60,7 +60,7 @@ class KFDirector {
 		// Iterate over all views
 		for (view in _views) {
 			// Update the display rect (does nothing if not changed)
-			view.displayRect = displayRect;
+			view.setDisplayRect(displayRect);
 
 			// Render view
 			view.render(_renderer);

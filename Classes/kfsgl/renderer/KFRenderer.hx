@@ -1,5 +1,11 @@
 package kfsgl.renderer;
 
+import kfsgl.utils.KFColor;
+import kfsgl.utils.KF;
+import kfsgl.renderer.shaders.KFShaderManager;
+import kfsgl.camera.KFCamera;
+import kfsgl.node.KFScene;
+import kfsgl.node.KFRenderObject;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import openfl.gl.GLProgram;
@@ -7,9 +13,6 @@ import openfl.gl.GLShader;
 import openfl.gl.GLUniformLocation;
 import flash.geom.Rectangle;
 
-import kfsgl.utils.KFColor;
-import kfsgl.utils.KF;
-import kfsgl.renderer.shaders.KFShaderManager;
 
 
 class KFRenderer {
@@ -39,6 +42,18 @@ class KFRenderer {
 
 		// clear buffer bits
 		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+
+	}
+
+
+	public function renderScene(scene:KFScene, camera:KFCamera) {
+
+	}
+
+	/**
+	 * Render list of objects
+	 **/
+	public function renderObjects(objects:Array<KFRenderObject>) {
 
 	}
 

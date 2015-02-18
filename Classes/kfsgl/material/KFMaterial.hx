@@ -7,32 +7,52 @@ import kfsgl.renderer.shaders.KFGLProgram;
 
 class KFMaterial {
 
-	private var _program:KFGLProgram;
+	public var programName(default, null):String;
+	public var program(default, null):KFGLProgram;
+
 	private var _uniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
 	private var _commonUniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
 
-	public function new() {
-
+	public function new(programName:String) {
+		this.setProgramName(programName);
 	}
 
-	public function setProgram(programName:String) {
-		// cleanup
-		this.cleanup();
 
-		// get program for shader manager
-		_program = KFShaderManager.instance().programWithName(programName);
 
-		// Get common uniforms
-		_commonUniforms = _program.cloneCommonUniforms();
+	public function setProgramName(programName:String) {
+		if (programName != this.programName) {
+			// get program for shader manager
+			var program = KFShaderManager.instance().programWithName(programName);
 
-		// Get uniforms
-		_uniforms = _program.cloneUniforms();
+			this.program = program;
+		}
+
+		return this.programName;
 	}
+
+	public function setProgram(program:KFGLProgram) {
+		if (this.program != program) {
+			// cleanup
+			this.cleanup();
+
+			this.program = program;
+			this.programName = program.name;
+
+			// Get common uniforms
+			_commonUniforms = this.program.cloneCommonUniforms();
+
+			// Get uniforms
+			_uniforms = this.program.cloneUniforms();
+		}
+
+		return this.program;
+	}
+
+
 
 	public function cleanup() {
-		if (_program != null) {
-			_program = null;
-		}
+		this.program = null;
+		this.programName = null;
 
 		_uniforms = new Map<String, KFUniform>();
 		_commonUniforms = new Map<String, KFUniform>();
