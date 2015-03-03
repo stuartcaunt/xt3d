@@ -1,6 +1,6 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.errors.KFException;
+import kfsgl.errors.Exception;
 
 
 typedef KFUniformInfo = {
@@ -9,18 +9,18 @@ typedef KFUniformInfo = {
 	var defaultValue: String;
 }
 
-class KFUniformLib {
+class UniformLib {
 
 	// Members
-	private static var _instance:KFUniformLib = null;
-	private var _uniforms:Map<String, Map<String, KFUniform> > = new Map<String, Map<String, KFUniform> >();
+	private static var _instance:UniformLib = null;
+	private var _uniforms:Map<String, Map<String, Uniform> > = new Map<String, Map<String, Uniform> >();
 
 	private function new() {
 	}
 	
-	public static function instance():KFUniformLib {
+	public static function instance():UniformLib {
 		if (_instance == null) {
-			_instance = new KFUniformLib();
+			_instance = new UniformLib();
 			_instance.init();
 		}
 
@@ -42,7 +42,7 @@ class KFUniformLib {
 		for (groupName in Reflect.fields(uniformsJson)) {
 
 			// Create new map for uniforms values
-			var uniformValuesMap = new Map<String, KFUniform>();
+			var uniformValuesMap = new Map<String, Uniform>();
 			_uniforms.set(groupName, uniformValuesMap);
 
 			// Iterate over uniforms for the group
@@ -58,7 +58,7 @@ class KFUniformLib {
 				};
 
 				// Add uniform value to map
-				uniformValuesMap.set(uniformName, new KFUniform(uniformName, uniformInfo, -99));
+				uniformValuesMap.set(uniformName, new Uniform(uniformName, uniformInfo, -99));
 			}
 		}
 	}
@@ -66,8 +66,8 @@ class KFUniformLib {
 	/*
 	 * Get all uniforms from a group
 	 */
-	public function uniformsFromGroups(groups:Array<String>):Map<String, KFUniform> {
-		var uniforms = new Map<String, KFUniform>();
+	public function uniformsFromGroups(groups:Array<String>):Map<String, Uniform> {
+		var uniforms = new Map<String, Uniform>();
 
 		// Iterate over groups
 		for (group in groups) {
@@ -97,7 +97,7 @@ class KFUniformLib {
 	/*
 	 * Get specific uniform from a group (normally to set it's global value)
 	 */
-	public function uniform(groupName:String, uniformName:String):KFUniform {
+	public function uniform(groupName:String, uniformName:String):Uniform {
 		// Get uniform group and verify that it exists
 		var uniformMap = _uniforms.get(groupName);
 		if (uniformMap != null) {
@@ -107,11 +107,11 @@ class KFUniformLib {
 				return uniform;
 
 			} else {
-				throw new KFException("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" from the group \"" + groupName + "\" does not exist");
+				throw new Exception("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" from the group \"" + groupName + "\" does not exist");
 
 			}
 		} else {
-			throw new KFException("UniformGroupDoesNotExist", "The uniform group with the name \"" + groupName + "\" does not exist");
+			throw new Exception("UniformGroupDoesNotExist", "The uniform group with the name \"" + groupName + "\" does not exist");
 
 		}
 

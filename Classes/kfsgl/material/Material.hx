@@ -1,17 +1,17 @@
 package kfsgl.material;
 
-import kfsgl.errors.KFException;
-import kfsgl.renderer.shaders.KFShaderManager;
-import kfsgl.renderer.shaders.KFUniform;
-import kfsgl.renderer.shaders.KFGLProgram;
+import kfsgl.errors.Exception;
+import kfsgl.renderer.shaders.ShaderManager;
+import kfsgl.renderer.shaders.Uniform;
+import kfsgl.renderer.shaders.ShaderProgram;
 
-class KFMaterial {
+class Material {
 
 	public var programName(default, null):String;
-	public var program(default, null):KFGLProgram;
+	public var program(default, null):ShaderProgram;
 
-	private var _uniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
-	private var _commonUniforms:Map<String, KFUniform> = new Map<String, KFUniform>();
+	private var _uniforms:Map<String, Uniform> = new Map<String, Uniform>();
+	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 
 	public function new(programName:String) {
 		this.setProgramName(programName);
@@ -22,7 +22,7 @@ class KFMaterial {
 	public function setProgramName(programName:String) {
 		if (programName != this.programName) {
 			// get program for shader manager
-			var program = KFShaderManager.instance().programWithName(programName);
+			var program = ShaderManager.instance().programWithName(programName);
 
 			this.program = program;
 		}
@@ -30,7 +30,7 @@ class KFMaterial {
 		return this.programName;
 	}
 
-	public function setProgram(program:KFGLProgram) {
+	public function setProgram(program:ShaderProgram) {
 		if (this.program != program) {
 			// cleanup
 			this.cleanup();
@@ -54,11 +54,11 @@ class KFMaterial {
 		this.program = null;
 		this.programName = null;
 
-		_uniforms = new Map<String, KFUniform>();
-		_commonUniforms = new Map<String, KFUniform>();
+		_uniforms = new Map<String, Uniform>();
+		_commonUniforms = new Map<String, Uniform>();
 	}
 
-	public function uniform(uniformName:String):KFUniform {
+	public function uniform(uniformName:String):Uniform {
 		// Get uniform from uniforms
 		var uniform = _uniforms.get(uniformName);
 
@@ -67,7 +67,7 @@ class KFMaterial {
 			uniform = _commonUniforms.get(uniformName);
 
 			if (uniform == null) {
-				throw new KFException("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
+				throw new Exception("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
 			}
 		}
 

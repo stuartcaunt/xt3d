@@ -1,11 +1,11 @@
 package kfsgl.renderer;
 
-import kfsgl.utils.KFColor;
+import kfsgl.utils.Color;
 import kfsgl.utils.KF;
-import kfsgl.renderer.shaders.KFShaderManager;
-import kfsgl.camera.KFCamera;
-import kfsgl.node.KFScene;
-import kfsgl.node.KFRenderObject;
+import kfsgl.renderer.shaders.ShaderManager;
+import kfsgl.camera.Camera;
+import kfsgl.node.Scene;
+import kfsgl.node.RenderObject;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import openfl.gl.GLProgram;
@@ -15,7 +15,7 @@ import flash.geom.Rectangle;
 
 
 
-class KFRenderer {
+class Renderer {
 
 	// State
 
@@ -26,10 +26,10 @@ class KFRenderer {
 
 	public function init() {
 		// Build all shaders
-		KFShaderManager.instance().loadDefaultShaders();
+		ShaderManager.instance().loadDefaultShaders();
 	}
 
-	public function clear(viewport:Rectangle, color:KFColor) {
+	public function clear(viewport:Rectangle, color:Color) {
 		// Set the viewport
 		if (_viewport == null || !_viewport.equals(viewport)) {
 			_viewport = viewport;
@@ -46,14 +46,14 @@ class KFRenderer {
 	}
 
 
-	public function renderScene(scene:KFScene, camera:KFCamera) {
+	public function renderScene(scene:Scene, camera:Camera) {
 
 	}
 
 	/**
 	 * Render list of objects
 	 **/
-	public function renderObjects(objects:Array<KFRenderObject>) {
+	public function renderObjects(objects:Array<RenderObject>) {
 
 	}
 

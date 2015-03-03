@@ -1,5 +1,5 @@
 package kfsgl.core;
-class KFGeometry {
+class Geometry {
 	public function new() {
 	}
 }

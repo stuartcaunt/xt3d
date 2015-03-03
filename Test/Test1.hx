@@ -1,25 +1,25 @@
 package;
 
 import flash.geom.Matrix3D;
-import kfsgl.renderer.shaders.KFUniformLib;
-import kfsgl.material.KFMaterial;
+import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.material.Material;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;
 
-import kfsgl.KFDirector;
-import kfsgl.view.KFView;
-import kfsgl.utils.KFColor;
+import kfsgl.Director;
+import kfsgl.view.View;
+import kfsgl.utils.Color;
 
 class Test1 extends Sprite {
 	
-	private var _director:KFDirector;
+	private var _director:Director;
 
 
 	public function new () {
 		super ();
 
 		// Initialise director - one per application delegate
-		_director = new KFDirector();
+		_director = new Director();
 		
 		// Create opengl view and as it as a child
 		var openglView = new OpenGLView();
@@ -29,14 +29,14 @@ class Test1 extends Sprite {
 		_director.openglView = openglView;
 
 		// Create a new view and add it to the director
-		var view = new KFView();
-		view.backgroundColor = new KFColor(0.8, 0.8, 0.8);
+		var view = new View();
+		view.backgroundColor = new Color(0.8, 0.8, 0.8);
 		_director.addView(view);
 
-		var material:KFMaterial = new KFMaterial("test_color");
+		var material:Material = new Material("test_color");
 		material.setProgramName("test_nocolor");
 
-		KFUniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());
+		UniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());
 
 	}
 	

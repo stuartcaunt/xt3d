@@ -1,27 +1,27 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.renderer.shaders.KFGLProgram;
-import kfsgl.renderer.shaders.KFShaderLib;
-import kfsgl.errors.KFException;
+import kfsgl.renderer.shaders.ShaderProgram;
+import kfsgl.renderer.shaders.ShaderLib;
+import kfsgl.errors.Exception;
 import kfsgl.utils.KF;
 
-class KFShaderManager {
+class ShaderManager {
 
 
-	private var _programs:Map<String,  KFGLProgram>;
+	private var _programs:Map<String,  ShaderProgram>;
 
-	private static var _instance:KFShaderManager = null;
+	private static var _instance:ShaderManager = null;
 
-	public static function instance():KFShaderManager {
+	public static function instance():ShaderManager {
 		if (_instance == null) {
-			_instance = new KFShaderManager();
+			_instance = new ShaderManager();
 		}
 
 		return _instance;
 	}
 
 	private function new() {
-		_programs = new Map<String, KFGLProgram>();
+		_programs = new Map<String, ShaderProgram>();
 
 	}
 
@@ -42,7 +42,7 @@ class KFShaderManager {
 
 	public function loadDefaultShaders():Void {
 		// Get all shader configs
-		var shaderConfigs = KFShaderLib.instance().shaderConfigs;
+		var shaderConfigs = ShaderLib.instance().shaderConfigs;
 
 		// Iterate over all shaders
 		var shaderNames = shaderConfigs.keys();
@@ -51,7 +51,7 @@ class KFShaderManager {
 			var shaderInfo = shaderConfigs.get(shaderName);
 
 			// Create program for each shader
-			var program = KFGLProgram.create(shaderName, shaderInfo);
+			var program = ShaderProgram.create(shaderName, shaderInfo);
 
 			// Verify program
 			if (program != null) {
@@ -59,20 +59,20 @@ class KFShaderManager {
 				this.addProgramWithName(shaderName, program);
 
 			} else {
-				throw new KFException("UnableToCreateProgram", "The shader program \"" + shaderName + "\" did not compile");
+				throw new Exception("UnableToCreateProgram", "The shader program \"" + shaderName + "\" did not compile");
 			}
 		}
 	}
 	
-	public function addProgramWithName(name:String, program:KFGLProgram):Void {
+	public function addProgramWithName(name:String, program:ShaderProgram):Void {
 		// Verify that a program doesn't already exist for the given name
 		if (_programs.exists(name)) {
-			throw new KFException("ProgramAlreadyExists", "A shader program with the name \"" + name + "\" already exists");
+			throw new Exception("ProgramAlreadyExists", "A shader program with the name \"" + name + "\" already exists");
 		}
 
 		// Verify that program is not null
 		if (program == null) {
-			throw new KFException("ProgramIsNull", "The shader program with the name \"" + name + "\" is null when added");
+			throw new Exception("ProgramIsNull", "The shader program with the name \"" + name + "\" is null when added");
 		}
 
 		// Add the program
@@ -81,10 +81,10 @@ class KFShaderManager {
 		KF.Log("Added shader program \"" + name + "\"");
 	}
 
-	public function programWithName(name:String):KFGLProgram {
+	public function programWithName(name:String):ShaderProgram {
 		var program = _programs.get(name);
 		if (program == null) {
-			throw new KFException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
+			throw new Exception("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
 		}
 
 		return program;

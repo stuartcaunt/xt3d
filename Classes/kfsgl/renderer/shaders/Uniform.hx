@@ -5,11 +5,11 @@ import openfl.gl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 
-import kfsgl.renderer.shaders.KFUniformLib;
+import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.utils.KF;
-import kfsgl.errors.KFException;
+import kfsgl.errors.Exception;
 
-class KFUniform  {
+class Uniform  {
 
 	private var _name:String;
 	private var _uniformInfo:KFUniformInfo;
@@ -38,8 +38,8 @@ class KFUniform  {
 	}
 
 
-	public function clone():KFUniform {
-		return new KFUniform(_name, _uniformInfo, _location);
+	public function clone():Uniform {
+		return new Uniform(_name, _uniformInfo, _location);
 	}
 
 	public function name():String {
@@ -98,7 +98,7 @@ class KFUniform  {
 
 	public function setValue(value:Float) {
 		if (_size != 1) {
-			throw new KFException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
+			throw new Exception("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
 		} else {
 			_hasBeenSet = true;
 
@@ -111,10 +111,10 @@ class KFUniform  {
 
 	public function setArrayValue(value:Array<Float>) {
 		if (_size == 1 || _size == 16) {
-			throw new KFException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
+			throw new Exception("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
 		
 		} else if (_size != value.length) {
-			throw new KFException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
+			throw new Exception("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
 		
 		} else {
 			_hasBeenSet = true;
@@ -150,7 +150,7 @@ class KFUniform  {
 				_size = 1;
 				var floatValue:Float = Std.parseFloat(defaultValue);
 				if (floatValue == Math.NaN) {
-					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
+					throw new Exception("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
 					_defaultFloatValue = floatValue;

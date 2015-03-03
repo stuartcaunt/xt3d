@@ -1,8 +1,8 @@
 package kfsgl.node;
 
-import kfsgl.node.KFNode3D;
+import kfsgl.node.Node3D;
 
-class KFScene extends KFNode3D {
+class Scene extends Node3D {
 
 	public function new() {
 		super();

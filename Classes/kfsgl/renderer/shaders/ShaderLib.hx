@@ -1,23 +1,35 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.renderer.shaders.KFShaderInfo;
-import kfsgl.renderer.shaders.KFUniformLib;
+import kfsgl.renderer.shaders.ShaderInfo;
+import kfsgl.renderer.shaders.UniformLib;
 
-class KFShaderLib  {
+class ShaderLib  {
 
 	// Properties
-	public var shaderConfigs(get_shaderConfigs, null):Map<String, KFShaderInfo>;
+	public var shaderConfigs(get, null):Map<String, ShaderInfo>;
 
 	// Members
-	private static var _instance:KFShaderLib = null;
-	private var _shaderConfigs:Map<String, KFShaderInfo> = new Map<String, KFShaderInfo>();
+	private static var _instance:ShaderLib = null;
+	private var _shaderConfigs:Map<String, ShaderInfo> = new Map<String, ShaderInfo>();
 
 	private function new() {
 	}
-	
-	public static function instance():KFShaderLib {
+
+
+	/* ----------- Properties ----------- */
+
+
+	public function get_shaderConfigs():Map<String, ShaderInfo> {
+		return _shaderConfigs;
+	}
+
+
+	/* --------- Implementation --------- */
+
+
+	public static function instance():ShaderLib {
 		if (_instance == null) {
-			_instance = new KFShaderLib();
+			_instance = new ShaderLib();
 			_instance.init();
 		}
 
@@ -71,7 +83,7 @@ class KFShaderLib  {
 
 			}
 
-			_shaderConfigs.set(shaderName, new KFShaderInfo(
+			this._shaderConfigs.set(shaderName, new ShaderInfo(
 				vertexShaderKey,
 				fragmentShaderKey,
 				vertexDefines,
@@ -80,10 +92,6 @@ class KFShaderLib  {
 				commonUniforms
 			));
 		}
-	}
-
-	public function get_shaderConfigs():Map<String, KFShaderInfo> {
-		return _shaderConfigs;
 	}
 
 

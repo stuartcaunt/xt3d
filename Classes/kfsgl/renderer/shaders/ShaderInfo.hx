@@ -1,15 +1,15 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.renderer.shaders.KFShaderReader;
-import kfsgl.renderer.shaders.KFUniformLib;
+import kfsgl.renderer.shaders.ShaderReader;
+import kfsgl.renderer.shaders.UniformLib;
 
-class KFShaderInfo {
+class ShaderInfo {
 	public var vertexProgram:String;
 	public var fragmentProgram:String;
 	public var vertexDefines:Array<String>;
 	public var fragmentDefines:Array<String>;
 	public var uniforms:Map<String, KFUniformInfo>;
-	public var commonUniforms:Map<String, KFUniform>;
+	public var commonUniforms:Map<String, Uniform>;
 
 	public function new(vertexShaderKey:String,
 						fragmentShaderKey:String,
@@ -17,14 +17,14 @@ class KFShaderInfo {
 						fragmentDefines:Array<String>,
 						uniforms:Map<String, KFUniformInfo>,
 						commonUniformGroups:Array<String>) {
-		this.vertexProgram = KFShaderReader.instance().shaderWithKey(vertexShaderKey);
-		this.fragmentProgram = KFShaderReader.instance().shaderWithKey(fragmentShaderKey);
+		this.vertexProgram = ShaderReader.instance().shaderWithKey(vertexShaderKey);
+		this.fragmentProgram = ShaderReader.instance().shaderWithKey(fragmentShaderKey);
 		this.vertexDefines = vertexDefines;
 		this.fragmentDefines = fragmentDefines;
 		this.uniforms = uniforms;
 
 		// Convert common uniform groups into uniforms
-		this.commonUniforms = KFUniformLib.instance().uniformsFromGroups(commonUniformGroups);
+		this.commonUniforms = UniformLib.instance().uniformsFromGroups(commonUniformGroups);
 	}
 
 

@@ -1,6 +1,6 @@
 package kfsgl.utils;
 
-class KFColor  {
+class Color  {
 
 	public var red(default, default):Float = 0.0;
 	public var green(default, default):Float = 0.0;

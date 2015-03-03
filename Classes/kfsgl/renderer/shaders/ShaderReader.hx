@@ -3,20 +3,20 @@ package kfsgl.renderer.shaders;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
-import kfsgl.errors.KFException;
+import kfsgl.errors.Exception;
 
-class KFShaderReader  {
+class ShaderReader  {
 
-	private static var _instance:KFShaderReader = null;
+	private static var _instance:ShaderReader = null;
 
 	private var _shaderPrograms:Map<String, String> = new Map<String, String>();
 
 	private function new() {
 	}
 	
-	public static function instance():KFShaderReader {
+	public static function instance():ShaderReader {
 		if (_instance == null) {
-			_instance = new KFShaderReader();
+			_instance = new ShaderReader();
 			_instance.init();
 		}
 
@@ -50,7 +50,7 @@ class KFShaderReader  {
 			return _shaderPrograms.get(key);
 		}
 
-		throw new KFException("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
+		throw new Exception("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
 	}
 
 }

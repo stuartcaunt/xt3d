@@ -1,26 +1,26 @@
 package kfsgl;
 
-import kfsgl.view.KFView;
-import kfsgl.renderer.KFRenderer;
+import kfsgl.view.View;
+import kfsgl.renderer.Renderer;
 import kfsgl.utils.KF;
-import kfsgl.utils.KFColor;
+import kfsgl.utils.Color;
 
 import openfl.display.OpenGLView;
 import flash.geom.Rectangle;
 
-class KFDirector {
+class Director {
 
 	public var openglView(get_openglView, set_openglView):OpenGLView;
-	public var backgroundColor(get_backgroundColor, set_backgroundColor):KFColor;
+	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
 
 
 	private var _openglView:OpenGLView;
-	private var _backgroundColor:KFColor = new KFColor(0.2, 0.2, 0.2);
-	private var _renderer:KFRenderer;
-	private var _views:Array<KFView> = new Array<KFView>();
+	private var _backgroundColor:Color = new Color(0.2, 0.2, 0.2);
+	private var _renderer:Renderer;
+	private var _views:Array<View> = new Array<View>();
 
 	public function new() {
-		_renderer = new KFRenderer();
+		_renderer = new Renderer();
 		_renderer.init();
 	}
 	
@@ -36,7 +36,7 @@ class KFDirector {
 		return _openglView;
 	}
 
-	public function get_backgroundColor():KFColor {
+	public function get_backgroundColor():Color {
 		return _backgroundColor;
 	}
 
@@ -45,7 +45,7 @@ class KFDirector {
 		return _backgroundColor;
 	}
 
-	public function addView(view:KFView):Void {
+	public function addView(view:View):Void {
 		_views.push(view);
 	}
 
