@@ -18,9 +18,12 @@ class Node3D {
 	private var _rotationMatrixDirty:Bool = false;
 	private var _hasChildren:Bool = false;
 
-	private var _rotationX:Float;
-	private var _rotationY:Float;
-	private var _rotationZ:Float;
+	private var _rotationX:Float = 0.0;
+	private var _rotationY:Float = 0.0;
+	private var _rotationZ:Float = 0.0;
+	private var _scaleX:Float = 1.0;
+	private var _scaleY:Float = 1.0;
+	private var _scaleZ:Float = 1.0;
 
 	public function new() {
 	}
@@ -98,9 +101,8 @@ class Node3D {
 			this.updateRotationMatrix();
 		}
 
-		// TODO
 		// Scale transformation (no effect on translation)
-		//im4Scale(&_localTransformation, _scaleX, _scaleY, _scaleZ);
+		this._localTransformation.prependScale(this._scaleX, this._scaleY, this._scaleZ);
 
 		this._localTransformationDirty = false;
 		this._transformationDirty = true;
@@ -128,7 +130,7 @@ class Node3D {
 				}
 			}
 
-				// Calculate world transformation
+			// Calculate world transformation
 			if (parentTransformation != null) {
 				this._worldTransformation.copyFrom(parentTransformation);
 				this._worldTransformation.prepend(_localTransformation);
