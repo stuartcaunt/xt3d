@@ -19,7 +19,7 @@ class ShaderLib  {
 	/* ----------- Properties ----------- */
 
 
-	public function get_shaderConfigs():Map<String, ShaderInfo> {
+	public inline function get_shaderConfigs():Map<String, ShaderInfo> {
 		return _shaderConfigs;
 	}
 

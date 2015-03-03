@@ -11,6 +11,14 @@ import kfsgl.errors.Exception;
 
 class Uniform  {
 
+	// properties
+	public var name(get_name, null):String;
+	public var value(get_value, set_value):Float;
+	public var floatArrayValue(get_floatArrayValue, set_floatArrayValue):Array<Float>;
+	public var matrixValue(get_matrixValue, set_matrixValue):Matrix3D;
+
+
+	// members
 	private var _name:String;
 	private var _uniformInfo:KFUniformInfo;
 	private var _location:Int;
@@ -37,13 +45,45 @@ class Uniform  {
 		//KF.Log(toString());
 	}
 
+	/* ----------- Properties ----------- */
+
+
+	public inline function get_name():String {
+		return this._name;
+	}
+
+	public inline function get_value():Float {
+		return this._floatValue;
+	}
+
+	public function set_value(value:Float) {
+		this.setValue(value);
+		return this._floatValue;
+	}
+
+	public inline function get_floatArrayValue():Array<Float> {
+		return this._floatArrayValue;
+	}
+
+	public function set_floatArrayValue(value:Array<Float>) {
+		set_floatArrayValue(value);
+		return this._floatArrayValue;
+	}
+
+	public inline function get_matrixValue():Matrix3D {
+		return this._matrixValue;
+	}
+
+	public function set_matrixValue(value:Matrix3D) {
+		setMatrixValue(value);
+		return this._matrixValue;
+	}
+
+
+	/* --------- Implementation --------- */
 
 	public function clone():Uniform {
 		return new Uniform(_name, _uniformInfo, _location);
-	}
-
-	public function name():String {
-		return _name;
 	}
 
 	public function uniformInfo():KFUniformInfo {

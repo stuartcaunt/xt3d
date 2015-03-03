@@ -10,10 +10,12 @@ import flash.geom.Rectangle;
 
 class Director {
 
+	// properties
 	public var openglView(get_openglView, set_openglView):OpenGLView;
 	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
 
 
+	// members
 	private var _openglView:OpenGLView;
 	private var _backgroundColor:Color = new Color(0.2, 0.2, 0.2);
 	private var _renderer:Renderer;
@@ -23,12 +25,14 @@ class Director {
 		_renderer = new Renderer();
 		_renderer.init();
 	}
-	
-	public function get_openglView():OpenGLView {
+
+	/* ----------- Properties ----------- */
+
+	public inline function get_openglView():OpenGLView {
 		return _openglView;
 	}
 
-	public function set_openglView(openglView) {
+	public inline function set_openglView(openglView) {
 		_openglView = openglView;
 
 		_openglView.render = renderLoop;
@@ -36,19 +40,21 @@ class Director {
 		return _openglView;
 	}
 
-	public function get_backgroundColor():Color {
+	public inline function get_backgroundColor():Color {
 		return _backgroundColor;
 	}
 
-	public function set_backgroundColor(backgroundColor) {
+	public inline function set_backgroundColor(backgroundColor) {
 		_backgroundColor = backgroundColor;
 		return _backgroundColor;
 	}
 
+	/* --------- Implementation --------- */
+
+
 	public function addView(view:View):Void {
 		_views.push(view);
 	}
-
 
 	private function renderLoop(displayRect:Rectangle):Void {
 

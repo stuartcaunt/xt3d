@@ -40,7 +40,7 @@ class View  {
 	/* ----------- Properties ----------- */
 
 
-	public function get_displayRect():Rectangle {
+	public inline function get_displayRect():Rectangle {
 		return _displayRect;
 	}
 
@@ -49,7 +49,7 @@ class View  {
 		return this._displayRect;
 	}
 
-	public function get_viewport():Rectangle {
+	public inline function get_viewport():Rectangle {
 		return _viewport;
 	}
 
@@ -58,7 +58,7 @@ class View  {
 		return this._viewport;
 	}
 
-	public function get_viewportInPixels():Rectangle {
+	public inline function get_viewportInPixels():Rectangle {
 		return _viewportInPixels;
 	}
 
@@ -67,31 +67,28 @@ class View  {
 		return this._viewportInPixels;
 	}
 
-	public function get_backgroundColor():Color {
+	public inline function get_backgroundColor():Color {
 		return _backgroundColor;
 	}
 
-	public function set_backgroundColor(value:Color) {
-		this._backgroundColor = value;
-		return this._backgroundColor;
+	public inline function set_backgroundColor(value:Color) {
+		return this._backgroundColor = value;
 	}
 
-	public function get_scene():Scene {
+	public inline function get_scene():Scene {
 		return _scene;
 	}
 
-	public function set_scene(value:Scene) {
-		this._scene = value;
-		return this._scene;
+	public inline function set_scene(value:Scene) {
+		return this._scene = value;
 	}
 
-	public function get_camera():Camera {
+	public inline function get_camera():Camera {
 		return _camera;
 	}
 
-	public function set_camera(value:Camera) {
-		this._camera = value;
-		return this._camera;
+	public inline function set_camera(value:Camera) {
+		return this._camera = value;
 	}
 
 

@@ -42,7 +42,7 @@ class ShaderProgram {
 
 	/* ----------- Properties ----------- */
 
-	public function get_name():String {
+	public inline function get_name():String {
 		return _name;
 	}
 
@@ -211,7 +211,7 @@ class ShaderProgram {
 	public function cloneUniforms():Map<String, Uniform> {
 		var cloned:Map<String, Uniform> = new Map<String, Uniform>();
 		for (uniform in _uniforms) {
-			cloned.set(uniform.name(), uniform.clone());
+			cloned.set(uniform.name, uniform.clone());
 		}
 
 		return cloned;
@@ -220,7 +220,7 @@ class ShaderProgram {
 	public function cloneCommonUniforms():Map<String, Uniform> {
 		var cloned:Map<String, Uniform> = new Map<String, Uniform>();
 		for (uniform in _commonUniforms) {
-			cloned.set(uniform.name(), uniform.clone());
+			cloned.set(uniform.name, uniform.clone());
 		}
 
 		return cloned;

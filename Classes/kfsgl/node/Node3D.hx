@@ -28,22 +28,22 @@ class Node3D {
 
 	/* ----------- Properties ----------- */
 
-	public function get_position():Vector3D {
+	public inline function get_position():Vector3D {
 		return this._localTransformation.position;
 	}
 
 
-	public function set_position(position:Vector3D):Vector3D {
+	public inline function set_position(position:Vector3D):Vector3D {
 		this.setPosition(position);
 		return position;
 	}
 
-	public function get_transformationDirty():Bool {
+	public inline function get_transformationDirty():Bool {
 		return this._transformationDirty;
 	}
 
 
-	public function set_transformationDirty(isDirty:Bool):Bool {
+	public inline function set_transformationDirty(isDirty:Bool):Bool {
 		this.setTransformationDirty(isDirty);
 		return this.transformationDirty;
 	}
@@ -106,7 +106,7 @@ class Node3D {
 		this._transformationDirty = true;
 	}
 
-	public function setTransformationDirty(isDirty:Bool):Void {
+	public inline function setTransformationDirty(isDirty:Bool):Void {
 		this._transformationDirty = isDirty;
 	}
 
