@@ -27,6 +27,11 @@ class Quaternion {
 		return object.fromEuler(ax, ay, az);
 	}
 
+	public static function createFromAxisAngle(axis:Vector3D, angle:Float):Quaternion {
+		var object = new Quaternion();
+		return object.fromAxisAngle(axis, angle);
+	}
+
 	public function new(x:Float = 0, y:Float = 0, z:Float = 0, w:Float = 1) {
 		this._x = x;
 		this._x = x;
