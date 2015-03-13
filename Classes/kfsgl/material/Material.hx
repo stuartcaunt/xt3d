@@ -1,6 +1,6 @@
 package kfsgl.material;
 
-import kfsgl.errors.Exception;
+import kfsgl.errors.KFException;
 import kfsgl.renderer.shaders.ShaderManager;
 import kfsgl.renderer.shaders.Uniform;
 import kfsgl.renderer.shaders.ShaderProgram;
@@ -67,7 +67,7 @@ class Material {
 			uniform = _commonUniforms.get(uniformName);
 
 			if (uniform == null) {
-				throw new Exception("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
+				throw new KFException("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
 			}
 		}
 

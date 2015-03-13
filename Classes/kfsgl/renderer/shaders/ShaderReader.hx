@@ -3,7 +3,7 @@ package kfsgl.renderer.shaders;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
-import kfsgl.errors.Exception;
+import kfsgl.errors.KFException;
 
 class ShaderReader  {
 
@@ -50,7 +50,7 @@ class ShaderReader  {
 			return _shaderPrograms.get(key);
 		}
 
-		throw new Exception("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
+		throw new KFException("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
 	}
 
 }

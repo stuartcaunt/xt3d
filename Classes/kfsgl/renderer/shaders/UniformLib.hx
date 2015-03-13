@@ -1,6 +1,6 @@
 package kfsgl.renderer.shaders;
 
-import kfsgl.errors.Exception;
+import kfsgl.errors.KFException;
 
 
 typedef KFUniformInfo = {
@@ -107,11 +107,11 @@ class UniformLib {
 				return uniform;
 
 			} else {
-				throw new Exception("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" from the group \"" + groupName + "\" does not exist");
+				throw new KFException("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" from the group \"" + groupName + "\" does not exist");
 
 			}
 		} else {
-			throw new Exception("UniformGroupDoesNotExist", "The uniform group with the name \"" + groupName + "\" does not exist");
+			throw new KFException("UniformGroupDoesNotExist", "The uniform group with the name \"" + groupName + "\" does not exist");
 
 		}
 

@@ -7,7 +7,7 @@ import openfl.geom.Matrix3D;
 
 import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.utils.KF;
-import kfsgl.errors.Exception;
+import kfsgl.errors.KFException;
 
 class Uniform  {
 
@@ -138,7 +138,7 @@ class Uniform  {
 
 	public function setValue(value:Float) {
 		if (_size != 1) {
-			throw new Exception("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
+			throw new KFException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
 		} else {
 			_hasBeenSet = true;
 
@@ -151,10 +151,10 @@ class Uniform  {
 
 	public function setArrayValue(value:Array<Float>) {
 		if (_size == 1 || _size == 16) {
-			throw new Exception("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
+			throw new KFException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
 		
 		} else if (_size != value.length) {
-			throw new Exception("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
+			throw new KFException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
 		
 		} else {
 			_hasBeenSet = true;
@@ -190,7 +190,7 @@ class Uniform  {
 				_size = 1;
 				var floatValue:Float = Std.parseFloat(defaultValue);
 				if (floatValue == Math.NaN) {
-					throw new Exception("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
+					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
 					_defaultFloatValue = floatValue;
