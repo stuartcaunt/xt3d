@@ -1,13 +1,15 @@
 package kfsgl.view;
 
+import kfsgl.events.EventEmitter;
 import kfsgl.camera.Camera;
 import kfsgl.node.Scene;
 import flash.geom.Rectangle;
 
 import kfsgl.renderer.Renderer;
 import kfsgl.utils.Color;
+import kfsgl.utils.KF;
 
-class View  {
+class View extends EventEmitter {
 
 	// Viewport descriptor : {top right bottom left}
 	// can give percentages of full frame or pixel offsets
@@ -34,7 +36,9 @@ class View  {
 
 
 	public function new() {
-
+		super();
+		// Set default viewport
+		setViewport(new Rectangle(0, 0, 500, 600));
 	}
 
 	/* ----------- Properties ----------- */
@@ -114,7 +118,10 @@ class View  {
 			this._viewport = viewport;
 			this._displayRect = viewport;
 
-			this.viewportInPixels = new Rectangle(viewport.x * this._contentScaleFactor, viewport.y * this._contentScaleFactor, viewport.width * this._contentScaleFactor, viewport.height * this._contentScaleFactor);
+			this._viewportInPixels = new Rectangle(viewport.x * this._contentScaleFactor, viewport.y * this._contentScaleFactor, viewport.width * this._contentScaleFactor, viewport.height * this._contentScaleFactor);
+
+			// Emit event
+			this.emit("viewport_changed");
 		}
 	}
 
@@ -132,6 +139,9 @@ class View  {
 
 			this._viewport = viewport;
 			this._displayRect = viewport;
+
+			// Emit event
+			this.emit("viewport_changed");
 		}
 	}
 }
