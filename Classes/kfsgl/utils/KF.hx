@@ -14,7 +14,25 @@ class KF  {
 		// Do nothing
 #end		
 	}
-	
+
+	public static function Warn(v:Dynamic, ?info:haxe.PosInfos):Void {
+		#if KF_DEBUG
+		var ms = (Std.int)((Timer.stamp() - timer) * 1000) % 1000;
+		haxe.Log.trace(DateTools.format(Date.now(), "%d/%m/%Y %H:%M:%S") + "." + ms + ": " + v, info);
+#else
+		// Do nothing
+		#end
+	}
+
+	public static function Error(v:Dynamic, ?info:haxe.PosInfos):Void {
+		#if KF_DEBUG
+		var ms = (Std.int)((Timer.stamp() - timer) * 1000) % 1000;
+		haxe.Log.trace(DateTools.format(Date.now(), "%d/%m/%Y %H:%M:%S") + "." + ms + ": " + v, info);
+#else
+		// Do nothing
+		#end
+	}
+
 
 	public static function jsonToMap(jsonData:Dynamic):Map<String, String> {
 		var result = new Map<String, String>();

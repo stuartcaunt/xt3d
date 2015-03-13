@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.camera.Camera;
 import flash.geom.Matrix3D;
 import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.material.Material;
@@ -31,6 +32,11 @@ class Test1 extends Sprite {
 		// Create a new view and add it to the director
 		var view = new View();
 		view.backgroundColor = new Color(0.8, 0.8, 0.8);
+
+		// Create a camera and set it in the view
+		var camera:Camera = Camera.create(view);
+		view.camera = camera;
+
 		_director.addView(view);
 
 		var material:Material = new Material("test_color");

@@ -4,7 +4,7 @@ TODO
 - use haxe properties
 - Event emitter
 - Camera
-
+  - Camera properties
 
 - StateManager
 - BufferManager

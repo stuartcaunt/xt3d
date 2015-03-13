@@ -7,6 +7,7 @@ class Node3D {
 
 	// properties
 	public var position(get, set):Vector3D;
+	public var worldPosition:Vector3D;
 	public var transformationDirty(get, set):Bool;
 
 	// members
@@ -35,11 +36,15 @@ class Node3D {
 		return this._localTransformation.position;
 	}
 
-
 	public inline function set_position(position:Vector3D):Vector3D {
 		this.setPosition(position);
 		return position;
 	}
+
+	public inline function get_worldPosition():Vector3D {
+		return this.getWorldPosition();
+	}
+
 
 	public inline function get_transformationDirty():Bool {
 		return this._transformationDirty;
@@ -50,6 +55,8 @@ class Node3D {
 		this.setTransformationDirty(isDirty);
 		return this.transformationDirty;
 	}
+
+
 
 
 	/* --------- Implementation --------- */
@@ -81,9 +88,15 @@ class Node3D {
 		return this._localTransformation.position;
 	}
 
-	public function setPosition(position:Vector3D) {
+	inline public function setPosition(position:Vector3D) {
 		this._localTransformation.position = position;
 	}
+
+	inline public function getWorldPosition() {
+		return this._worldTransformation.position;
+	}
+
+
 
 
 	// --------- Transformation matrix calculations ---------
@@ -108,10 +121,21 @@ class Node3D {
 		this._transformationDirty = true;
 	}
 
+
+	/*
+	 * Indicates to the object that its transformation needs to be recalculated.
+	 * Note that this intended to be called internally by iSGL3D.
+	 * @param isDirty Indicates whether the transformation needs to be recalculated or not.
+	 */
 	public inline function setTransformationDirty(isDirty:Bool):Void {
 		this._transformationDirty = isDirty;
 	}
 
+	/*
+	 * Updates the world transformation of the object given the parent's world transformation.
+	 * Note that this intended to be called internally.
+	 * @param parentTransformation The parent's world transformation matrix.
+	 */
 	public function updateWorldTransformation(parentTransformation:Matrix3D):Void {
 
 		// Recalculate local transformation if necessary
