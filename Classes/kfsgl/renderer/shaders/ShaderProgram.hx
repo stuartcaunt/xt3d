@@ -152,7 +152,7 @@ class ShaderProgram {
 			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
 
 			// Create a uniform object
-			var uniform:Uniform = new Uniform(uniformName, uniformInfo, uniformLocation);
+			var uniform:Uniform = Uniform.create(uniformName, uniformInfo, uniformLocation);
 
 			// Add to all uniforms
 			_commonUniforms.set(uniformName, uniform);
@@ -164,7 +164,7 @@ class ShaderProgram {
 			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
 
 			// Create a uniform object
-			var uniform:Uniform = new Uniform(uniformName, uniformInfo, uniformLocation);
+			var uniform:Uniform = Uniform.create(uniformName, uniformInfo, uniformLocation);
 
 			// Add to all uniforms
 			_uniforms.set(uniformName, uniform);

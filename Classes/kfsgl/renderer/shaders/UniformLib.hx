@@ -1,5 +1,6 @@
 package kfsgl.renderer.shaders;
 
+import openfl.gl.GLUniformLocation;
 import kfsgl.errors.KFException;
 
 
@@ -58,7 +59,7 @@ class UniformLib {
 				};
 
 				// Add uniform value to map
-				uniformValuesMap.set(uniformName, new Uniform(uniformName, uniformInfo, -99));
+				uniformValuesMap.set(uniformName, Uniform.createEmpty(uniformName, uniformInfo));
 			}
 		}
 	}

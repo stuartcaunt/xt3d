@@ -1,5 +1,6 @@
 package kfsgl.renderer.shaders;
 
+import openfl.gl.GLUniformLocation;
 import openfl.utils.Float32Array;
 import openfl.gl.GL;
 import haxe.Json;
@@ -21,7 +22,7 @@ class Uniform  {
 	// members
 	private var _name:String;
 	private var _uniformInfo:KFUniformInfo;
-	private var _location:Int;
+	private var _location:GLUniformLocation;
 	private var _size:Int;
 
 	private var _floatValue:Float = 0.0;
@@ -35,14 +36,49 @@ class Uniform  {
 	private var _hasBeenSet:Bool = false;
 	private var _isDirty:Bool = true;
 
-	public function new(name:String, uniformInfo:KFUniformInfo, location:Int) {
+	public static function create(name:String, uniformInfo:KFUniformInfo, location:GLUniformLocation):Uniform {
+		var object = new Uniform();
+
+		if (object != null && !(object.init(name, uniformInfo, location))) {
+			object = null;
+		}
+
+		return object;
+
+	}
+
+	public static function createEmpty(name:String, uniformInfo:KFUniformInfo):Uniform {
+		var object = new Uniform();
+
+		if (object != null && !(object.initEmpty(name, uniformInfo))) {
+			object = null;
+		}
+
+		return object;
+
+	}
+
+	public function init(name:String, uniformInfo:KFUniformInfo, location:GLUniformLocation):Bool {
 		_name = name;
 		_uniformInfo = uniformInfo;
 		_location = location;
 
 		handleDefaultValue();
 
-		//KF.Log(toString());
+		return true;
+	}
+
+
+	public function initEmpty(name:String, uniformInfo:KFUniformInfo):Bool {
+		_name = name;
+		_uniformInfo = uniformInfo;
+
+		handleDefaultValue();
+
+		return true;
+	}
+
+	public function new() {
 	}
 
 	/* ----------- Properties ----------- */
@@ -83,7 +119,7 @@ class Uniform  {
 	/* --------- Implementation --------- */
 
 	public function clone():Uniform {
-		return new Uniform(_name, _uniformInfo, _location);
+		return Uniform.create(_name, _uniformInfo, _location);
 	}
 
 	public function uniformInfo():KFUniformInfo {
