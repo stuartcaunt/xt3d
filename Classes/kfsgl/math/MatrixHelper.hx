@@ -9,34 +9,39 @@ import kfsgl.utils.KF;
 
 class MatrixHelper {
 
-	private static var _rawDataContainer:Vector<Float> = [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ];
+	static public var RAW_DATA_CONTAINER(get, null):Vector<Float>;
+	static private function get_RAW_DATA_CONTAINER():Vector<Float> {
+		return [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ];
+	}
 
-	static private function rawDataContainerWithColumnMajorValues(
+
+	private static function rawDataContainerWithColumnMajorValues(
 		v0, v1, v2, v3,
 		v4, v5, v6, v7,
 		v8, v9, v10, v11,
 		v12, v13, v14, v15):Vector<Float> {
-		_rawDataContainer[0] = v0;
-		_rawDataContainer[1] = v1;
-		_rawDataContainer[2] = v2;
-		_rawDataContainer[3] = v3;
 
-		_rawDataContainer[4] = v4;
-		_rawDataContainer[5] = v5;
-		_rawDataContainer[6] = v6;
-		_rawDataContainer[7] = v7;
+		RAW_DATA_CONTAINER[0] = v0;
+		RAW_DATA_CONTAINER[1] = v1;
+		RAW_DATA_CONTAINER[2] = v2;
+		RAW_DATA_CONTAINER[3] = v3;
 
-		_rawDataContainer[8] = v8;
-		_rawDataContainer[9] = v9;
-		_rawDataContainer[10] = v10;
-		_rawDataContainer[11] = v11;
+		RAW_DATA_CONTAINER[4] = v4;
+		RAW_DATA_CONTAINER[5] = v5;
+		RAW_DATA_CONTAINER[6] = v6;
+		RAW_DATA_CONTAINER[7] = v7;
 
-		_rawDataContainer[12] = v12;
-		_rawDataContainer[13] = v13;
-		_rawDataContainer[14] = v14;
-		_rawDataContainer[15] = v15;
+		RAW_DATA_CONTAINER[8] = v8;
+		RAW_DATA_CONTAINER[9] = v9;
+		RAW_DATA_CONTAINER[10] = v10;
+		RAW_DATA_CONTAINER[11] = v11;
 
-		return _rawDataContainer;
+		RAW_DATA_CONTAINER[12] = v12;
+		RAW_DATA_CONTAINER[13] = v13;
+		RAW_DATA_CONTAINER[14] = v14;
+		RAW_DATA_CONTAINER[15] = v15;
+
+		return RAW_DATA_CONTAINER;
 	}
 
 	static private function rawDataContainerWithRowMajorValues(
@@ -44,27 +49,27 @@ class MatrixHelper {
 		v4, v5, v6, v7,
 		v8, v9, v10, v11,
 		v12, v13, v14, v15):Vector<Float> {
-		_rawDataContainer[0] = v0;
-		_rawDataContainer[4] = v1;
-		_rawDataContainer[8] = v2;
-		_rawDataContainer[12] = v3;
+		RAW_DATA_CONTAINER[0] = v0;
+		RAW_DATA_CONTAINER[4] = v1;
+		RAW_DATA_CONTAINER[8] = v2;
+		RAW_DATA_CONTAINER[12] = v3;
 
-		_rawDataContainer[1] = v4;
-		_rawDataContainer[5] = v5;
-		_rawDataContainer[9] = v6;
-		_rawDataContainer[13] = v7;
+		RAW_DATA_CONTAINER[1] = v4;
+		RAW_DATA_CONTAINER[5] = v5;
+		RAW_DATA_CONTAINER[9] = v6;
+		RAW_DATA_CONTAINER[13] = v7;
 
-		_rawDataContainer[2] = v8;
-		_rawDataContainer[6] = v9;
-		_rawDataContainer[10] = v10;
-		_rawDataContainer[14] = v11;
+		RAW_DATA_CONTAINER[2] = v8;
+		RAW_DATA_CONTAINER[6] = v9;
+		RAW_DATA_CONTAINER[10] = v10;
+		RAW_DATA_CONTAINER[14] = v11;
 
-		_rawDataContainer[3] = v12;
-		_rawDataContainer[7] = v13;
-		_rawDataContainer[11] = v14;
-		_rawDataContainer[15] = v15;
+		RAW_DATA_CONTAINER[3] = v12;
+		RAW_DATA_CONTAINER[7] = v13;
+		RAW_DATA_CONTAINER[11] = v14;
+		RAW_DATA_CONTAINER[15] = v15;
 
-		return _rawDataContainer;
+		return RAW_DATA_CONTAINER;
 	}
 
 	public function new() {
