@@ -7,7 +7,7 @@ class Node3D {
 
 	// properties
 	public var position(get, set):Vector3D;
-	public var worldPosition:Vector3D;
+	public var worldPosition(get, null):Vector3D;
 	public var transformationDirty(get, set):Bool;
 
 	// members
