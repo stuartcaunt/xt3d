@@ -5,7 +5,8 @@
 	<set name="webgl" if="html5" />
 	<haxedef name="KF_DEBUG" />
 	<haxedef name="webgl" />
-	
+    <haxedef name="source-map-content" if="html5" />
+
 
 	<meta title="Test1" package="com.kfsgl.test1" version="1.0.0" company="StepTo" />
 	<app main="Test1" path="Export" />
@@ -17,5 +18,6 @@
 	
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="Assets/openfl.svg" />
-	
+
+
 </project>
