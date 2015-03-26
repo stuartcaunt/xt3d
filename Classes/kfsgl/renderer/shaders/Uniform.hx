@@ -44,7 +44,6 @@ class Uniform  {
 		}
 
 		return object;
-
 	}
 
 	public static function createEmpty(name:String, uniformInfo:KFUniformInfo):Uniform {

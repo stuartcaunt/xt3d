@@ -7,9 +7,11 @@ import kfsgl.renderer.shaders.ShaderProgram;
 
 class Material {
 
+	// properties
 	public var programName(default, null):String;
 	public var program(default, null):ShaderProgram;
 
+	// members
 	private var _uniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 

@@ -8,9 +8,10 @@
     <haxedef name="source-map-content" if="html5" />
 
 
-	<meta title="Test1" package="com.kfsgl.test1" version="1.0.0" company="StepTo" />
+	<meta title="Test1" package="com.kfsgl" version="1.0.0" company="StepTo" />
+<!--	<app main="TestFloatVertexData" path="Export" /> -->
 	<app main="Test1" path="Export" />
-	
+
 	<source path="Test" />
 	<source path="Classes" />
 	

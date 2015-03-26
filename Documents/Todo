@@ -1,17 +1,16 @@
 TODO
 ====
 
-- use haxe properties
-- Event emitter
-- Camera
-  - Camera properties
+- Geometry
+  - VertexAttribute buffers
+  - Primitive plane
+  - primitive sphere
+
 
 - StateManager
 - BufferManager
 
 - Material implementation
-- Geometry
-  - VertexAttribute buffers
 - View
 - Scene and Node
   - scene graph
@@ -27,3 +26,7 @@ x Intellij
 x Use Float32Array and Matrix3D for KFUniform data
 x Uniform: set value in GPU
 x Global uniforms
+x use haxe properties
+x Event emitter
+x Camera
+x   Camera properties

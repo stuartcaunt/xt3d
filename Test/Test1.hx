@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.core.Geometry;
 import kfsgl.camera.Camera;
 import flash.geom.Matrix3D;
 import kfsgl.renderer.shaders.UniformLib;
@@ -37,11 +38,17 @@ class Test1 extends Sprite {
 		var camera:Camera = Camera.create(view);
 		view.camera = camera;
 
+		// Add view to director
 		_director.addView(view);
 
+		// Create a material
 		var material:Material = new Material("test_color");
 		material.setProgramName("test_nocolor");
 
+		// create a geometry
+		var geometry:Geometry = new Geometry();
+
+		// Set a common uniform
 		UniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());
 
 	}
