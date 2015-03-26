@@ -1,4 +1,4 @@
-package kfsgl.core;
+package kfsgl.utils.gl;
 
 /**
  * Used to mask if we immediately use:

@@ -1,5 +1,8 @@
 package kfsgl.core;
 
+import kfsgl.utils.gl.VertexData;
+import kfsgl.utils.gl.FloatVertexData;
+import kfsgl.utils.gl.IndexData;
 import kfsgl.errors.KFException;
 
 typedef OffsetAndStride = {

@@ -1,4 +1,4 @@
-package kfsgl.core;
+package kfsgl.utils.gl;
 
 import openfl.utils.Int16Array;
 import openfl.gl.GLBuffer;

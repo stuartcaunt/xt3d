@@ -1,4 +1,4 @@
-package kfsgl.core;
+package kfsgl.utils.gl;
 
 import kfsgl.utils.KF;
 import openfl.gl.GL;

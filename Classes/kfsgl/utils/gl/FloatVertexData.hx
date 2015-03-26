@@ -1,4 +1,4 @@
-package kfsgl.core;
+package kfsgl.utils.gl;
 
 import openfl.utils.Float32Array;
 import openfl.gl.GL;
