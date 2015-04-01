@@ -13,6 +13,44 @@ class FloatVertexData extends VertexData {
 	private var _array:Array<Float> = new Array<Float>();
 #end
 
+	public static function create():FloatVertexData {
+		var object = new FloatVertexData();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+#if use_float32array
+#else
+	public static function createWithArray(array:Array<Float>):FloatVertexData {
+		var object = new FloatVertexData();
+
+		if (object != null && !(object.initWithArray(array))) {
+			object = null;
+		}
+
+		return object;
+	}
+#end
+
+	public function init():Bool {
+		return true;
+	}
+
+#if use_float32array
+#else
+	public function initWithArray(array:Array<Float>):Bool {
+		this._array = array;
+
+		return true;
+	}
+#end
+
+
+
 	public function new() {
 		super();
 	}

@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.primitives.Sphere;
 import kfsgl.core.Geometry;
 import kfsgl.camera.Camera;
 import flash.geom.Matrix3D;
@@ -46,7 +47,7 @@ class Test1 extends Sprite {
 		material.setProgramName("test_nocolor");
 
 		// create a geometry
-		var geometry:Geometry = new Geometry();
+		var sphere = Sphere.create();
 
 		// Set a common uniform
 		UniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());

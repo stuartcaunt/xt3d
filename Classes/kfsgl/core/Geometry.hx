@@ -27,7 +27,7 @@ class Geometry {
 	};
 
 
-// properties
+	// properties
 	public var indices(get, set):IndexData;
 	public var positions(get, set):FloatVertexData;
 	public var normals(get, set):FloatVertexData;
@@ -143,11 +143,11 @@ class Geometry {
 
 	public inline function setIndexData(data:IndexData):Void {
 		_indexData = data;
-		data.isDirty = true;
+		//data.isDirty = true;
 	}
 
 	public inline function getVertexData(bufferName:String):VertexData {
-		if (_vertexData.exists(bufferName)) {
+		if (!_vertexData.exists(bufferName)) {
 			throw new KFException("VertexBufferDoesNotExist", "The vertex buffer \"" + bufferName + "\" does not exist");
 		}
 		return _vertexData[bufferName];
@@ -155,7 +155,7 @@ class Geometry {
 
 	public inline function setVertexData(bufferName:String, data:VertexData):Void {
 		_vertexData[bufferName] = data;
-		data.isDirty = true;
+		//data.isDirty = true;
 	}
 
 	public inline function setVertexDataStride(bufferName:String, stride:UInt):Void {
@@ -171,7 +171,7 @@ class Geometry {
 
 	public inline function setPositionData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.position] = data;
-		data.isDirty = true;
+		//data.isDirty = true;
 	}
 
 	public inline function getNormalData():FloatVertexData {
@@ -183,7 +183,7 @@ class Geometry {
 
 	public inline function setNormalData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.normal] = data;
-		data.isDirty = true;
+		//data.isDirty = true;
 	}
 
 	public inline function getUVData():FloatVertexData {
@@ -195,7 +195,7 @@ class Geometry {
 
 	public inline function setUVData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.uv] = data;
-		data.isDirty = true;
+		//data.isDirty = true;
 	}
 
 	public inline function getColorData():FloatVertexData {
@@ -207,7 +207,7 @@ class Geometry {
 
 	public inline function setColorData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.color] = data;
-		data.isDirty = true;
+		//data.isDirty = true;
 	}
 
 }

@@ -1,19 +1,20 @@
 TODO
 ====
 
+- Scene and Node
+  - scene graph
 - Geometry
   - VertexAttribute buffers
 - Primitives
   - plane
   - sphere
+   - interlaced data
 
 
 - StateManager
 
 - Material implementation
 - View
-- Scene and Node
-  - scene graph
 - MeshNode (Geometry and Material)
 - Render loop
 

@@ -19,6 +19,36 @@ class IndexData {
 	private var _buffer:GLBuffer = null;
 	private var _isDirty = false;
 
+	public static function create():IndexData {
+		var object = new IndexData();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createWithArray(array:Array<UInt>):IndexData {
+		var object = new IndexData();
+
+		if (object != null && !(object.initWithArray(array))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function init():Bool {
+		return true;
+	}
+
+	public function initWithArray(array:Array<UInt>):Bool {
+		this._array = array;
+
+		return true;
+	}
+
 	public function new() {
 
 	}
