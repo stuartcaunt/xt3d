@@ -15,8 +15,24 @@ class Material {
 	private var _uniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 
-	public function new(programName:String) {
+	public static function create(programName:String):Material {
+		var object = new Material();
+
+		if (object != null && !(object.init(programName))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function init(programName:String):Bool {
 		this.setProgramName(programName);
+
+		return true;
+	}
+
+
+	public function new() {
 	}
 
 

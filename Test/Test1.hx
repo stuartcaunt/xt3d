@@ -42,7 +42,7 @@ class Test1 extends Sprite {
 		_director.addView(view);
 
 		// Create a material
-		var material:Material = new Material("test_color");
+		var material:Material = Material.create("test_color");
 		material.setProgramName("test_nocolor");
 
 		// create a geometry

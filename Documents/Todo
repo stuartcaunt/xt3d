@@ -3,12 +3,12 @@ TODO
 
 - Geometry
   - VertexAttribute buffers
-  - Primitive plane
-  - primitive sphere
+- Primitives
+  - plane
+  - sphere
 
 
 - StateManager
-- BufferManager
 
 - Material implementation
 - View
