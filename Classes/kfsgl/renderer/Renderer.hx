@@ -18,8 +18,8 @@ import flash.geom.Rectangle;
 class Renderer {
 
 	// State
-	private var _currentVertexBuffer:GLBuffer = 0;
-	private var _currentElementBuffer:GLBuffer = 0;
+	private var _currentVertexBuffer:GLBuffer;
+	private var _currentElementBuffer:GLBuffer;
 
 	private var _viewport:Rectangle;
 
@@ -63,7 +63,7 @@ class Renderer {
 		if (this._currentVertexBuffer != vertexBuffer) {
 			this._currentVertexBuffer = vertexBuffer;
 
-			GL.bindBuffer(this._currentVertexBuffer);
+			GL.bindBuffer(GL.ARRAY_BUFFER, this._currentVertexBuffer);
 		}
 	}
 
@@ -71,7 +71,7 @@ class Renderer {
 		if (this._currentElementBuffer != elementBuffer) {
 			this._currentElementBuffer = elementBuffer;
 
-			GL.bindBuffer(this._currentElementBuffer);
+			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this._currentElementBuffer);
 		}
 	}
 
