@@ -1,23 +1,33 @@
 package kfsgl.node;
 
+import kfsgl.errors.KFException;
 import kfsgl.math.MatrixHelper;
 import flash.geom.Matrix3D;
 import flash.geom.Vector3D;
+
 class Node3D {
 
 	// properties
+	private var parent(get, null):Node3D;
 	public var position(get, set):Vector3D;
 	public var worldPosition(get, null):Vector3D;
 	public var transformationDirty(get, set):Bool;
 
 	// members
+	private static var ID_COUNTER = 0;
+	private var _id:UInt = ID_COUNTER++;
+
+	// scene graph
 	private var _children:Array<Node3D> = new Array<Node3D>();
+	private var _hasChildren:Bool = false;
+	private var _parent:Node3D = null;
+
+	// transformations
 	private var _localTransformation:Matrix3D = new Matrix3D();
 	private var _worldTransformation:Matrix3D = new Matrix3D();
 	private var _localTransformationDirty:Bool = false;
 	private var _transformationDirty:Bool = false;
 	private var _rotationMatrixDirty:Bool = false;
-	private var _hasChildren:Bool = false;
 
 	private var _rotationX:Float = 0.0;
 	private var _rotationY:Float = 0.0;
@@ -26,11 +36,38 @@ class Node3D {
 	private var _scaleY:Float = 1.0;
 	private var _scaleZ:Float = 1.0;
 
+
+	public static function create():Node3D {
+		var object = new Node3D();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+
+	public function init():Bool {
+		var retval = true;
+
+		this._transformationDirty = false;
+		this._localTransformationDirty = false;
+		this._rotationMatrixDirty = false;
+		this._hasChildren = false;
+
+		return retval;
+	}
+
 	public function new() {
 	}
 
 
 	/* ----------- Properties ----------- */
+
+	private inline function get_parent():Node3D {
+		return this._parent;
+	}
 
 	public inline function get_position():Vector3D {
 		return this._localTransformation.position;
@@ -61,28 +98,33 @@ class Node3D {
 
 	/* --------- Implementation --------- */
 
+	/* --------- Scene graph --------- */
 
-	public static function create():Node3D {
-		var object = new Node3D();
-
-		if (object != null && !(object.init())) {
-			object = null;
+	public function addChild(child:Node3D):Void {
+		if (child.parent != null) {
+			throw new KFException("NodeCannotBeAddedTwice", "The node with id \"" + this._id + "\" cannot be added twice");
+		}
+		if (child == null) {
+			throw new KFException("NodeCannotBeNull", "Cannot add a null node");
 		}
 
-		return object;
+		this._children.push(child);
+		child._parent = this;
+
+	}
+
+	public function removeChild(child:Node3D):Void {
+		this._children.remove(child);
 	}
 
 
-	public function init():Bool {
-		var retval = true;
-
-		this._transformationDirty = false;
-		this._localTransformationDirty = false;
-		this._rotationMatrixDirty = false;
-		this._hasChildren = false;
-
-		return retval;
+	inline public function getParent():Node3D {
+		return this._parent;
 	}
+
+
+	/* --------- Transformations --------- */
+
 
 	inline public function getPosition() {
 		return this._localTransformation.position;

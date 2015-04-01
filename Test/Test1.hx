@@ -1,5 +1,8 @@
 package;
 
+import kfsgl.node.MeshNode;
+import openfl.geom.Vector3D;
+import kfsgl.node.Scene;
 import kfsgl.primitives.Sphere;
 import kfsgl.core.Geometry;
 import kfsgl.camera.Camera;
@@ -36,8 +39,12 @@ class Test1 extends Sprite {
 		view.backgroundColor = new Color(0.8, 0.8, 0.8);
 
 		// Create a camera and set it in the view
-		var camera:Camera = Camera.create(view);
+		var camera = Camera.create(view);
 		view.camera = camera;
+
+		// Create scene and add it to the view
+		var scene = Scene.create();
+		view.scene = scene;
 
 		// Add view to director
 		_director.addView(view);
@@ -47,10 +54,11 @@ class Test1 extends Sprite {
 		material.setProgramName("test_nocolor");
 
 		// create a geometry
-		var sphere = Sphere.create();
+		var sphere = Sphere.create(2.0, 16, 16);
+		var sphereNode = MeshNode.create(sphere, material);
+		sphereNode.position = new Vector3D(0.0, 0.0, 0.0);
 
-		// Set a common uniform
-		UniformLib.instance().uniform("common", "viewMatrix").setMatrixValue(new Matrix3D());
+		scene.addChild(sphereNode);
 
 	}
 	
