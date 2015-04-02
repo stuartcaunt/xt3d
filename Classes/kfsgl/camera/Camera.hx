@@ -391,9 +391,9 @@ class Camera extends Node3D {
 			setPerspectiveProjection(45.0, 1.0, 10000);
 
 			// Initialise view matrix
-			this._localTransformationDirty = true;
+			this._matrixDirty = true;
 			var identityMatrix = new Matrix3D();
-			this.updateWorldTransformation(identityMatrix);
+			this.updateWorldMatrix();
 
 		}
 
@@ -581,7 +581,7 @@ class Camera extends Node3D {
 	 */
 	public function setLookAt(lookAt:Vector3D):Void {
 		_lookAt.copyFrom(lookAt);
-		_localTransformationDirty = true;
+		_matrixDirty = true;
 
 		if (!_isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
@@ -596,7 +596,7 @@ class Camera extends Node3D {
 	 */
 	public function setLookAtValues(x:Float, y:Float, z:Float) {
 		_lookAt.setTo(x, y, z);
-		_localTransformationDirty = true;
+		_matrixDirty = true;
 
 		if (!_isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
@@ -657,7 +657,7 @@ class Camera extends Node3D {
 	public function translateLookAt(x:Float, y:Float, z:Float) {
 		VectorHelper.translate(this._lookAt, x, y, z);
 
-		this._localTransformationDirty = true;
+		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
@@ -672,7 +672,7 @@ class Camera extends Node3D {
 	public function rotateLookAtOnX(angle:Float, centerY:Float, centerZ:Float) {
 		VectorHelper.rotateX(this._lookAt, angle, centerY, centerZ);
 
-		this._localTransformationDirty = true;
+		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
@@ -688,7 +688,7 @@ class Camera extends Node3D {
 	public function rotateLookAtOnY(angle:Float, centerX:Float, centerZ:Float) {
 		VectorHelper.rotateY(_lookAt, angle, centerX, centerZ);
 
-		this._localTransformationDirty = true;
+		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
@@ -704,7 +704,7 @@ class Camera extends Node3D {
 	public function rotateLookAtOnZ(angle:Float, centerX:Float, centerY:Float) {
 		VectorHelper.rotateZ(_lookAt, angle, centerX, centerY);
 
-		this._localTransformationDirty = true;
+		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
@@ -750,7 +750,7 @@ class Camera extends Node3D {
 	 */
 	public function setUp(up:Vector3D) {
 		this._up.copyFrom(up);
-		this._localTransformationDirty = true;
+		this._matrixDirty = true;
 
 		if (!this._isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting \"up\" has no effect");
@@ -766,7 +766,7 @@ class Camera extends Node3D {
 	 */
 	public function setUpValues(x:Float, y:Float, z:Float) {
 		this._up.setTo(x, y, z);
-		this._localTransformationDirty = true;
+		this._matrixDirty = true;
 
 		if (!this._isTargetCamera) {
 			KF.Warn("Camera : not a target camera, setting \"up\" has no effect");
@@ -774,10 +774,10 @@ class Camera extends Node3D {
 
 	}
 
-	override public function updateWorldTransformation(parentTransformation:Matrix3D):Void {
+	override public function updateWorldMatrix():Void {
 
-		var calculateViewMatrix:Bool = (this._localTransformationDirty || this._transformationDirty);
-		super.updateWorldTransformation(parentTransformation);
+		var calculateViewMatrix:Bool = (this._matrixDirty || this._worldMatrixDirty);
+		super.updateWorldMatrix();
 
 		if (calculateViewMatrix) {
 			this.calculateViewMatrix();
@@ -795,7 +795,7 @@ class Camera extends Node3D {
 
 		} else {
 			// Calculate view matrix as the inverse of the current world transformation
-			this._viewMatrix.copyFrom(this._worldTransformation);
+			this._viewMatrix.copyFrom(this._worldMatrix);
 			this._viewMatrix.invert();
 		}
 

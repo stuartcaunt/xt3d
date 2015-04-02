@@ -48,7 +48,32 @@ class Renderer {
 
 
 	public function renderScene(scene:Scene, camera:Camera) {
+		if (scene != null && camera != null) {
 
+			// send pre-render event (custom updates before rendering)
+
+			// Update world matrices of scene graph
+			scene.updateWorldMatrix();
+
+			// Update objects - anything that needs to be done before rendering
+			scene.updateObjects(scene);
+
+			// Project objects if we want to sort them in z
+
+			// Sort transparent objects
+
+
+			// Send custom-pre-render-pass event
+
+			// Render opaque objects
+
+			// Render transparent objects
+
+			// Send custom-post-render-pass event
+
+			// Send post-render event
+
+		}
 	}
 
 	/**

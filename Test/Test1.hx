@@ -60,6 +60,11 @@ class Test1 extends Sprite {
 
 		scene.addChild(sphereNode);
 
+		// custom traversal
+//		scene.traverse(function (node) {
+//			node.visible = true;
+//		});
+
 	}
 	
 }

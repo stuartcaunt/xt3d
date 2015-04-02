@@ -2,16 +2,21 @@ package kfsgl.node;
 
 import kfsgl.errors.KFException;
 import kfsgl.math.MatrixHelper;
-import flash.geom.Matrix3D;
-import flash.geom.Vector3D;
+import openfl.geom.Matrix3D;
+import openfl.geom.Vector3D;
 
 class Node3D {
 
 	// properties
-	private var parent(get, null):Node3D;
+	public var visible(get, set):Bool;
+	public var excluded(get, set):Bool;
+	public var parent(get, null):Node3D;
 	public var position(get, set):Vector3D;
 	public var worldPosition(get, null):Vector3D;
-	public var transformationDirty(get, set):Bool;
+	public var matrix(get, set):Matrix3D;
+	public var worldMatrix(get, set):Matrix3D;
+	public var worldMatrixDirty(get, set):Bool;
+
 
 	// members
 	private static var ID_COUNTER = 0;
@@ -19,14 +24,13 @@ class Node3D {
 
 	// scene graph
 	private var _children:Array<Node3D> = new Array<Node3D>();
-	private var _hasChildren:Bool = false;
 	private var _parent:Node3D = null;
 
 	// transformations
-	private var _localTransformation:Matrix3D = new Matrix3D();
-	private var _worldTransformation:Matrix3D = new Matrix3D();
-	private var _localTransformationDirty:Bool = false;
-	private var _transformationDirty:Bool = false;
+	private var _matrix:Matrix3D = new Matrix3D();
+	private var _matrixDirty:Bool = false;
+	private var _worldMatrix:Matrix3D = new Matrix3D();
+	private var _worldMatrixDirty:Bool = false;
 	private var _rotationMatrixDirty:Bool = false;
 
 	private var _rotationX:Float = 0.0;
@@ -36,6 +40,9 @@ class Node3D {
 	private var _scaleY:Float = 1.0;
 	private var _scaleZ:Float = 1.0;
 
+	// Visibility
+	private var _visible:Bool = true;
+	private var _excluded:Bool = false;
 
 	public static function create():Node3D {
 		var object = new Node3D();
@@ -51,10 +58,9 @@ class Node3D {
 	public function init():Bool {
 		var retval = true;
 
-		this._transformationDirty = false;
-		this._localTransformationDirty = false;
+		this._worldMatrixDirty = false;
+		this._matrixDirty = false;
 		this._rotationMatrixDirty = false;
-		this._hasChildren = false;
 
 		return retval;
 	}
@@ -65,12 +71,30 @@ class Node3D {
 
 	/* ----------- Properties ----------- */
 
+	public inline function get_excluded():Bool {
+		return this._excluded;
+	}
+
+	public inline function set_excluded(excluded:Bool):Bool {
+		this.setExcluded(excluded);
+		return excluded;
+	}
+
+	public inline function get_visible():Bool {
+		return this._visible;
+	}
+
+	public inline function set_visible(visible:Bool):Bool {
+		this.setVisible(visible);
+		return visible;
+	}
+
 	private inline function get_parent():Node3D {
 		return this._parent;
 	}
 
 	public inline function get_position():Vector3D {
-		return this._localTransformation.position;
+		return this._matrix.position;
 	}
 
 	public inline function set_position(position:Vector3D):Vector3D {
@@ -82,23 +106,53 @@ class Node3D {
 		return this.getWorldPosition();
 	}
 
+	public inline function get_worldMatrixDirty():Bool {
+		return this._worldMatrixDirty;
+	}
 
-	public inline function get_transformationDirty():Bool {
-		return this._transformationDirty;
+	public inline function set_worldMatrixDirty(isDirty:Bool):Bool {
+		this.setWorldMatrixDirty(isDirty);
+		return this._worldMatrixDirty;
+	}
+
+	public inline function get_worldMatrix():Matrix3D {
+		return this._worldMatrix;
+	}
+
+	public inline function set_worldMatrix(matrix:Matrix3D):Matrix3D {
+		this.setWorldMatrix(matrix);
+		return this._worldMatrix;
+	}
+
+	public inline function get_matrix():Matrix3D {
+		return this._matrix;
+	}
+
+	public inline function set_matrix(matrix:Matrix3D):Matrix3D {
+		this.setMatrix(matrix);
+		return this._matrix;
 	}
 
 
-	public inline function set_transformationDirty(isDirty:Bool):Bool {
-		this.setTransformationDirty(isDirty);
-		return this.transformationDirty;
+/* --------- Implementation --------- */
+
+	public inline function getExcluded():Bool {
+		return this._excluded;
 	}
 
+	public inline function setExcluded(excluded:Bool):Void {
+		this._excluded = excluded;
+	}
 
+	public inline function getVisible():Bool {
+		return this._visible;
+	}
 
+	public inline function setVisible(visible:Bool):Void {
+		this._visible = visible;
+	}
 
-	/* --------- Implementation --------- */
-
-	/* --------- Scene graph --------- */
+/* --------- Scene graph --------- */
 
 	public function addChild(child:Node3D):Void {
 		if (child.parent != null) {
@@ -122,45 +176,99 @@ class Node3D {
 		return this._parent;
 	}
 
+	public function updateObjects(scene:Node3D):Void {
+		// If excluded then ignore all children too
+		if (this._excluded) {
+			return;
+		}
 
-	/* --------- Transformations --------- */
+		// Individual update
+		this.updateObject();
+
+		for (child in this._children) {
+			child.updateObjects(scene);
+		}
+
+	}
+
+	public function updateObject():Void {
+		// Override me
+	}
+
+	/**
+	 * User-defined traversal function: call function recursively through the scene
+	 */
+	public function traverse(callback:Node3D->Void):Void {
+		callback(this);
+
+		for (child in this._children) {
+			child.traverse(callback);
+		}
+	}
+
+
+/* --------- Transformations --------- */
 
 
 	inline public function getPosition() {
-		return this._localTransformation.position;
+		return this._matrix.position;
 	}
 
 	inline public function setPosition(position:Vector3D) {
-		this._localTransformation.position = position;
+		this._matrix.position = position;
+		this._worldMatrixDirty = true;
 	}
 
 	inline public function getWorldPosition() {
-		return this._worldTransformation.position;
+		return this._worldMatrix.position;
 	}
 
+	public inline function getWorldMatrix():Matrix3D {
+		return this._worldMatrix;
+	}
+
+	public inline function setWorldMatrix(matrix:Matrix3D):Void {
+		this._worldMatrix = matrix;
+
+		this._matrixDirty = false; // ??? Do we force the object NOT to update the matrix, which will override this new world matrix
+		this._worldMatrixDirty = false;
+	}
+
+	public inline function getMatrix():Matrix3D {
+		return this._matrix;
+	}
+
+	public inline function setMatrix(matrix:Matrix3D):Void {
+		this._matrix = matrix;
+
+		this._matrixDirty = false;
+		this._worldMatrixDirty = true;
+	}
 
 
 
 	// --------- Transformation matrix calculations ---------
 
 	public function updateRotationMatrix():Void {
-		MatrixHelper.setRotationFromEuler(this._localTransformation, this._rotationX, this._rotationY, this._rotationZ);
+		MatrixHelper.setRotationFromEuler(this._matrix, this._rotationX, this._rotationY, this._rotationZ);
 		this._rotationMatrixDirty = false;
 	}
 
-	public function updateLocalTransformation():Void {
-		// Translation already set...
+	public function updateMatrix():Void {
+		if (this._matrixDirty) {
+			// Translation already set...
 
-		// Convert rotation matrix into euler angles if necessary
-		if (_rotationMatrixDirty) {
-			this.updateRotationMatrix();
+			// Convert rotation matrix into euler angles if necessary
+			if (_rotationMatrixDirty) {
+				this.updateRotationMatrix();
+			}
+
+			// Scale transformation (no effect on translation)
+			this._matrix.prependScale(this._scaleX, this._scaleY, this._scaleZ);
+
+			this._matrixDirty = false;
+			this._worldMatrixDirty = true;
 		}
-
-		// Scale transformation (no effect on translation)
-		this._localTransformation.prependScale(this._scaleX, this._scaleY, this._scaleZ);
-
-		this._localTransformationDirty = false;
-		this._transformationDirty = true;
 	}
 
 
@@ -169,50 +277,45 @@ class Node3D {
 	 * Note that this intended to be called internally by iSGL3D.
 	 * @param isDirty Indicates whether the transformation needs to be recalculated or not.
 	 */
-	public inline function setTransformationDirty(isDirty:Bool):Void {
-		this._transformationDirty = isDirty;
+	public inline function setWorldMatrixDirty(isDirty:Bool):Void {
+		this._worldMatrixDirty = isDirty;
 	}
 
 	/*
 	 * Updates the world transformation of the object given the parent's world transformation.
 	 * Note that this intended to be called internally.
-	 * @param parentTransformation The parent's world transformation matrix.
 	 */
-	public function updateWorldTransformation(parentTransformation:Matrix3D):Void {
+	public function updateWorldMatrix():Void {
 
 		// Recalculate local transformation if necessary
-		if (this._localTransformationDirty) {
-			this.updateLocalTransformation();
+		if (this._matrixDirty) {
+			this.updateMatrix();
 		}
 
 		// Update transformation matrices if needed
-		if (_transformationDirty) {
+		if (this._worldMatrixDirty) {
 
 			// Let all children know that they must update their world transformation,
 			//   even if they themselves have not locally changed
-			if (this._hasChildren) {
-				for (child in this._children) {
-					child.transformationDirty = true;
-				}
+			for (child in this._children) {
+				child.worldMatrixDirty = true;
 			}
 
 			// Calculate world transformation
-			if (parentTransformation != null) {
-				this._worldTransformation.copyFrom(parentTransformation);
-				this._worldTransformation.prepend(_localTransformation);
+			if (this._parent != null) {
+				this._worldMatrix.copyFrom(_parent.worldMatrix);
+				this._worldMatrix.prepend(_matrix);
 
 			} else {
-				this._worldTransformation.copyFrom(_localTransformation);
+				this._worldMatrix.copyFrom(_matrix);
 			}
 
-			this._transformationDirty = false;
+			this._worldMatrixDirty = false;
 		}
 
 		// Update all children transformations
-		if (this._hasChildren) {
-			for (child in this._children) {
-				child.updateWorldTransformation(this._worldTransformation);
-			}
+		for (child in this._children) {
+			child.updateWorldMatrix();
 		}
 	}
 
