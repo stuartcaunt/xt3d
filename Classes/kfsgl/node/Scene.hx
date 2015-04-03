@@ -65,6 +65,8 @@ class Scene extends Node3D {
 		this._transparentObjects.push(object);
 	}
 
+	/* --------- Scene graph --------- */
+
 	override public function updateObject():Void {
 		// Initialise arrays for transparent and opaque objects
 		this._opaqueObjects = new Array<Node3D>();

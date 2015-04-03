@@ -152,7 +152,7 @@ class Node3D {
 		this._visible = visible;
 	}
 
-/* --------- Scene graph --------- */
+	/* --------- Scene graph --------- */
 
 	public function addChild(child:Node3D):Void {
 		if (child.parent != null) {
