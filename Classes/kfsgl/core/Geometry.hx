@@ -80,6 +80,21 @@ class Geometry {
 	}
 
 
+	/**
+	 * Dispose of any opengl objects
+	 */
+	public function dispose():Void {
+		// Dispose of vertex buffers
+		for (vertexData in this._vertexData) {
+			vertexData.dispose();
+		}
+
+		// Dispose of index buffer
+		if (this._indexData != null) {
+			this._indexData.dispose();
+		}
+
+	}
 
 	/* ----------- Properties ----------- */
 
@@ -143,7 +158,6 @@ class Geometry {
 
 	public inline function setIndexData(data:IndexData):Void {
 		_indexData = data;
-		//data.isDirty = true;
 	}
 
 	public inline function getVertexData(bufferName:String):VertexData {
@@ -155,7 +169,6 @@ class Geometry {
 
 	public inline function setVertexData(bufferName:String, data:VertexData):Void {
 		_vertexData[bufferName] = data;
-		//data.isDirty = true;
 	}
 
 	public inline function setVertexDataStride(bufferName:String, stride:UInt):Void {
@@ -171,7 +184,6 @@ class Geometry {
 
 	public inline function setPositionData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.position] = data;
-		//data.isDirty = true;
 	}
 
 	public inline function getNormalData():FloatVertexData {
@@ -183,7 +195,6 @@ class Geometry {
 
 	public inline function setNormalData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.normal] = data;
-		//data.isDirty = true;
 	}
 
 	public inline function getUVData():FloatVertexData {
@@ -195,7 +206,6 @@ class Geometry {
 
 	public inline function setUVData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.uv] = data;
-		//data.isDirty = true;
 	}
 
 	public inline function getColorData():FloatVertexData {
@@ -207,7 +217,44 @@ class Geometry {
 
 	public inline function setColorData(data:FloatVertexData):Void {
 		_vertexData[bufferNames.color] = data;
-		//data.isDirty = true;
 	}
 
+	public inline function createPositionData():FloatVertexData {
+		return FloatVertexData.create(bufferNames.position);
+	}
+
+	public inline function createNormalData():FloatVertexData {
+		return FloatVertexData.create(bufferNames.normal);
+	}
+
+	public inline function createUVData():FloatVertexData {
+		return FloatVertexData.create(bufferNames.uv);
+	}
+
+	public inline function createColorData():FloatVertexData {
+		return FloatVertexData.create(bufferNames.color);
+	}
+
+	public inline function createIndexData():IndexData {
+		return IndexData.create();
+	}
+
+	/**
+	 * Update any buffers that are dirty
+	 */
+	public function updateGeometry():Void {
+
+		// Update vertex buffer attibutes
+		for (vertexData in this._vertexData) {
+
+			// Write buffer (if needed)
+			vertexData.writeBuffer();
+		}
+
+		// Update indices buffer
+		if (this._indexData != null) {
+			this._indexData.writeBuffer();
+		}
+
+	}
 }

@@ -1,12 +1,11 @@
 package kfsgl.utils.gl;
 
+import kfsgl.utils.gl.GLBufferManager;
 import openfl.utils.Int16Array;
 import openfl.gl.GLBuffer;
 import openfl.gl.GL;
 
 import kfsgl.utils.KF;
-import kfsgl.errors.KFAbstractMethodError;
-import kfsgl.errors.KFAbstractMethodError;
 import kfsgl.errors.KFAbstractMethodError;
 
 class IndexData {
@@ -67,20 +66,12 @@ class IndexData {
 /* --------- Implementation --------- */
 
 	public function dispose() {
-		if (_buffer != null) {
-			GL.deleteBuffer(this._buffer);
-		}
-
+		GLBufferManager.getInstance().deleteBuffer(this._buffer);
 	}
 
 	// Number of elements
 	public function getLength():Int {
 		return this._array.length;
-	}
-
-
-	public function bufferData():Void {
-		GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Int16Array(_array), GL.STATIC_DRAW);
 	}
 
 	public function setIsDirty(isDirty:Bool):Void {
@@ -90,15 +81,11 @@ class IndexData {
 	public function writeBuffer():Void {
 		if (this._isDirty) {
 			if (_buffer == null) {
-				_buffer = GL.createBuffer();
+				_buffer = GLBufferManager.getInstance().createElementBuffer(new Int16Array(_array));
+
+			} else {
+				GLBufferManager.getInstance().updateElementBuffer(_buffer, new Int16Array(_array));
 			}
-
-			KF.Log("TODO: Use buffer manager");
-			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this._buffer);
-
-			this.bufferData();
-
-			//GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, null);
 
 			this._isDirty = false;
 		}

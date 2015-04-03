@@ -1,5 +1,7 @@
 package kfsgl.utils.gl;
 
+import openfl.utils.ArrayBufferView;
+import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
 import openfl.gl.GL;
 
@@ -13,10 +15,10 @@ class FloatVertexData extends VertexData {
 	private var _array:Array<Float> = new Array<Float>();
 #end
 
-	public static function create():FloatVertexData {
+	public static function create(attributeName:String):FloatVertexData {
 		var object = new FloatVertexData();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(attributeName))) {
 			object = null;
 		}
 
@@ -25,10 +27,10 @@ class FloatVertexData extends VertexData {
 
 #if use_float32array
 #else
-	public static function createWithArray(array:Array<Float>):FloatVertexData {
+	public static function createWithArray(attributeName:String, array:Array<Float>):FloatVertexData {
 		var object = new FloatVertexData();
 
-		if (object != null && !(object.initWithArray(array))) {
+		if (object != null && !(object.initWithArray(attributeName, array))) {
 			object = null;
 		}
 
@@ -36,16 +38,25 @@ class FloatVertexData extends VertexData {
 	}
 #end
 
-	public function init():Bool {
-		return true;
+	override public function init(attributeName:String):Bool {
+		var retval;
+		if ((retval = super.init(attributeName))) {
+
+		}
+
+		return retval;
 	}
 
 #if use_float32array
 #else
-	public function initWithArray(array:Array<Float>):Bool {
-		this._array = array;
+	public function initWithArray(attributeName:String, array:Array<Float>):Bool {
+		var retval;
+		if ((retval = super.init(attributeName))) {
+			this._array = array;
 
-		return true;
+		}
+
+		return retval;
 	}
 #end
 
@@ -72,13 +83,14 @@ class FloatVertexData extends VertexData {
 #end
 	}
 
-	override public function bufferData():Void {
+	override public function getBufferData():ArrayBufferView {
 #if use_float32array
-		GL.bufferData(GL.ARRAY_BUFFER, _f32Array, GL.STATIC_DRAW);
+		return _f32Array;
 #else
-		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(_array), GL.STATIC_DRAW);
+		return new Float32Array(_array);
 #end
 	}
+
 
 
 	public inline function set(index:Int, value:Float):Void {

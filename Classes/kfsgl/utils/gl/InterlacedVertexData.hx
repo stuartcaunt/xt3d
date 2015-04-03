@@ -5,9 +5,8 @@ package kfsgl.utils.gl;
  *  - an ArrayBuffer to hold vertex data, avoiding copying data but maybe slower access
  *  - a standard Array object, doubling data usage but maybe easier access
  **/
+import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
-import flash.utils.ByteArray;
-import openfl.utils.ArrayBufferView;
 import openfl.gl.GL;
 class InterlacedVertexData<T> extends VertexData {
 
@@ -25,13 +24,12 @@ class InterlacedVertexData<T> extends VertexData {
 //		return getLength() * sizeof(T);
 //	}
 
-	override public function bufferData():Void {
-
-		var tmp:ByteArray = new ByteArray();
-
-		GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(_array), GL.STATIC_DRAW);
+	override public function getBufferData():IMemoryRange {
+#if use_float32array
+		return _f32Array;
+#else
+		return new Float32Array(_array);
+#end
 	}
-
-
 
 }

@@ -84,20 +84,4 @@ class Renderer {
 	}
 
 
-	private function setVertexBuffer(vertexBuffer:GLBuffer):Void {
-		if (this._currentVertexBuffer != vertexBuffer) {
-			this._currentVertexBuffer = vertexBuffer;
-
-			GL.bindBuffer(GL.ARRAY_BUFFER, this._currentVertexBuffer);
-		}
-	}
-
-	private function setElementBuffer(elementBuffer:GLBuffer):Void {
-		if (this._currentElementBuffer != elementBuffer) {
-			this._currentElementBuffer = elementBuffer;
-
-			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this._currentElementBuffer);
-		}
-	}
-
 }

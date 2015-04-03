@@ -46,10 +46,10 @@ class Sphere extends Geometry {
 
 	/* --------- Implementation --------- */
 	private function createGeometry():Void {
-		var positions = FloatVertexData.create();
-		var normals = FloatVertexData.create();
-		var uvs = FloatVertexData.create();
-		var indices = IndexData.create();
+		var positions = super.createPositionData();
+		var normals = super.createNormalData();
+		var uvs = super.createUVData();
+		var indices = super.createIndexData();
 
 		var theta:Float;
 		var phi:Float;
