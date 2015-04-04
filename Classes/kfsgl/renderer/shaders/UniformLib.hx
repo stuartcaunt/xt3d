@@ -30,7 +30,7 @@ class UniformLib {
 
 	public function init():Void {
 		var uniformsJson = {
-			common: {
+			matrixCommon: {
 				modelViewProjectionMatrix: { name: "u_modelViewProjectionMatrix", type: "mat4", defaultValue: "identity" },
 				modelViewMatrix: { name: "u_modelViewMatrix", type: "mat4", defaultValue: "identity" },
 				modelMatrix: { name: "u_modelMatrix", type: "mat4", defaultValue: "identity" },

@@ -92,19 +92,26 @@ class Renderer {
 	 **/
 	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera/*, lights:Array<Light>*/, useBlending:Bool/*, overrideMaterial:Material*/) {
 
-		// Set up camera
+		// Get view projection matrix
 		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
 
-		// Set global uniforms..
-		UniformLib.instance().uniform("common", "viewMatrix").matrixValue = camera.viewMatrix;
-		// matrices
+		// Set global uniforms
+		UniformLib.instance().uniform("matrixCommon", "viewMatrix").matrixValue = camera.viewMatrix;
+		UniformLib.instance().uniform("matrixCommon", "projectionMatrix").matrixValue = camera.projectionMatrix;
 
 		// lights
+		//UniformLib.instance().uniform("lights", "...").matrixValue = ...;
 
 		for (renderObject in renderObjects) {
 
 			// Update model matrices
 			renderObject.updateRenderMatrices(camera);
+
+			// Set matrices in uniform lib
+			UniformLib.instance().uniform("matrixCommon", "modelMatrix").matrixValue = renderObject.modelMatrix;
+			UniformLib.instance().uniform("matrixCommon", "modelViewMatrix").matrixValue = renderObject.modelViewMatrix;
+			UniformLib.instance().uniform("matrixCommon", "modelViewProjectionMatrix").matrixValue = renderObject.modelViewProjectionMatrix;
+			UniformLib.instance().uniform("matrixCommon", "normalMatrix").matrixValue = renderObject.normalMatrix;
 
 			// Update shader program
 			var material = renderObject.material;
@@ -145,6 +152,7 @@ class Renderer {
 			refreshMaterial = true;
 			refreshLights = true;
 		}
+
 
 	}
 

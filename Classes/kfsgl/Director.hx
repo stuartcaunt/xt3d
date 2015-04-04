@@ -67,6 +67,7 @@ class Director {
 		_globalTime += dt;
 		UniformLib.instance().uniform("time", "time").value = _globalTime;
 
+		// TODO : remove this, just used to help debugging in chrome
 		if (_globalTime < 2.0) {
 			return;
 		}

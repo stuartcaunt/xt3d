@@ -42,7 +42,7 @@ class ShaderLib  {
 				vertexShader: "test_vertex",
 				fragmentShader: "test_fragment",
 				vertexDefines: ["#define USE_COLOR"],
-				commonUniforms: ["common", "time"],
+				commonUniforms: ["matrixCommon", "time"],
 				uniforms: {
 					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
 				}
@@ -50,7 +50,7 @@ class ShaderLib  {
 			test_nocolor: {
 				vertexShader: "test_vertex",
 				fragmentShader: "test_fragment",
-				commonUniforms: ["common", "time"],
+				commonUniforms: ["matrixCommon", "time"],
 				uniforms: {
 					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
 				}
