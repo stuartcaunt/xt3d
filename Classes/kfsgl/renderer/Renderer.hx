@@ -64,6 +64,11 @@ class Renderer {
 			// Update world matrices of scene graph
 			scene.updateWorldMatrix();
 
+			// Make sure camera matrix is updated even if it has not been added to the scene
+			if (camera.parent == null) {
+				camera.updateWorldMatrix();
+			}
+
 			// Update objects - anything that needs to be done before rendering
 			scene.updateObjects(scene);
 

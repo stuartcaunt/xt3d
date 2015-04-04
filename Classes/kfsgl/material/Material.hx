@@ -1,5 +1,6 @@
 package kfsgl.material;
 
+import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.errors.KFException;
 import kfsgl.renderer.shaders.ShaderManager;
 import kfsgl.renderer.shaders.Uniform;
@@ -241,6 +242,14 @@ class Material {
 
 		// Update common uniforms
 		for (uniform in this._commonUniforms) {
+			var commonUniform = UniformLib.instance().uniform(uniform.name);
+
+			// If not been set locally in the material, copy from uniform lib location
+			// TODO
+			//if (!uniform.hasBeenSet && commonUniform.hasBeenSet) {
+				uniform.copyFrom(commonUniform);
+			//}
+
 			this._program.updateCommonUniform(uniform);
 		}
 	}

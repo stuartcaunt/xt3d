@@ -1,6 +1,7 @@
 TODO
 ====
 
+- update camera matrices if not added to the scene
 - Check handling of global uniforms at F4
 - prepareForUse in Uniform
 - Render loop

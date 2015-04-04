@@ -46,6 +46,9 @@ class Test1 extends Sprite {
 		var scene = Scene.create();
 		view.scene = scene;
 
+//		// Add camera to scene
+//		scene.addChild(camera);
+
 		// Add view to director
 		_director.addView(view);
 
