@@ -139,8 +139,8 @@ class Camera extends Node3D {
 
 	// members
 	private var _projectionMatrix:Matrix3D;
-	private var _viewMatrix:Matrix3D;
-	private var _viewProjectionMatrix:Matrix3D;
+	private var _viewMatrix:Matrix3D = new Matrix3D();
+	private var _viewProjectionMatrix:Matrix3D = new Matrix3D();
 	private var _isViewProjectionMatrixDirty:Bool;
 
 	private var _view:View;
@@ -219,7 +219,7 @@ class Camera extends Node3D {
 	}
 
 	public function get_viewProjectionMatrix():Matrix3D {
-		return this._viewProjectionMatrix;
+		return this.getViewProjectionMatrix();
 	}
 
 	public function get_isPerspective():Bool {
@@ -809,7 +809,7 @@ class Camera extends Node3D {
 
 			this._isViewProjectionMatrixDirty = false;
 		}
-		return _viewProjectionMatrix;
+		return this._viewProjectionMatrix;
 	}
 
 
