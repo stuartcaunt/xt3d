@@ -233,4 +233,16 @@ class Material {
 		return uniform;
 	}
 
+	public function updateProgramUniforms():Void {
+		// Update uniforms
+		for (uniform in this._uniforms) {
+			this._program.updateUniform(uniform);
+		}
+
+		// Update common uniforms
+		for (uniform in this._commonUniforms) {
+			this._program.updateCommonUniform(uniform);
+		}
+	}
+
 }

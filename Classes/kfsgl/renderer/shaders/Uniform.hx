@@ -15,14 +15,19 @@ class Uniform  {
 	// properties
 	public var name(get_name, null):String;
 	public var value(get_value, set_value):Float;
+	public var type(get, null):String;
 	public var floatArrayValue(get_floatArrayValue, set_floatArrayValue):Array<Float>;
 	public var matrixValue(get_matrixValue, set_matrixValue):Matrix3D;
+	public var isGlobal(get, null):Bool;
+	public var hasBeenSet(get, null):Bool;
 
 
 	// members
 	private var _name:String;
+	private var _type:String;
 	private var _uniformInfo:KFUniformInfo;
 	private var _location:GLUniformLocation;
+	private var _isGlobal:Bool = false;
 	private var _size:Int;
 
 	private var _floatValue:Float = 0.0;
@@ -58,9 +63,11 @@ class Uniform  {
 	}
 
 	public function init(name:String, uniformInfo:KFUniformInfo, location:GLUniformLocation):Bool {
-		_name = name;
-		_uniformInfo = uniformInfo;
-		_location = location;
+		this._name = name;
+		this._type = uniformInfo.type;
+		this._uniformInfo = uniformInfo;
+		this._location = location;
+		this._isGlobal = uniformInfo.global;
 
 		handleDefaultValue();
 
@@ -69,8 +76,10 @@ class Uniform  {
 
 
 	public function initEmpty(name:String, uniformInfo:KFUniformInfo):Bool {
-		_name = name;
-		_uniformInfo = uniformInfo;
+		this._name = name;
+		this._type = uniformInfo.type;
+		this._uniformInfo = uniformInfo;
+		this._isGlobal = uniformInfo.global;
 
 		handleDefaultValue();
 
@@ -87,6 +96,10 @@ class Uniform  {
 		return this._name;
 	}
 
+	public inline function get_type():String {
+		return this._type;
+	}
+
 	public inline function get_value():Float {
 		return this._floatValue;
 	}
@@ -101,7 +114,7 @@ class Uniform  {
 	}
 
 	public function set_floatArrayValue(value:Array<Float>) {
-		set_floatArrayValue(value);
+		setArrayValue(value);
 		return this._floatArrayValue;
 	}
 
@@ -114,8 +127,16 @@ class Uniform  {
 		return this._matrixValue;
 	}
 
+	public inline function get_isGlobal():Bool{
+		return this._isGlobal;
+	}
 
-	/* --------- Implementation --------- */
+	public inline function get_hasBeenSet():Bool{
+		return this._hasBeenSet;
+	}
+
+
+/* --------- Implementation --------- */
 
 	public function clone():Uniform {
 		return Uniform.create(_name, _uniformInfo, _location);
@@ -146,23 +167,23 @@ class Uniform  {
 		if (_isDirty) {
 			var type = _uniformInfo.type;
 			if (type == "float") {
-				GL.uniform1f(_location, _defaultFloatValue);
+				GL.uniform1f(_location, _floatValue);
 
 			} else if (type == "vec2") {
-				GL.uniform2f(_location, _defaultFloatArrayValue[0], _defaultFloatArrayValue[1]);
+				GL.uniform2f(_location, _floatArrayValue[0], _floatArrayValue[1]);
 
 			} else if (type == "vec3") {
-				GL.uniform3f(_location, _defaultFloatArrayValue[0], _defaultFloatArrayValue[1], _defaultFloatArrayValue[2]);
+				GL.uniform3f(_location, _floatArrayValue[0], _floatArrayValue[1], _floatArrayValue[2]);
 
 			} else if (type == "ve4") {
-				GL.uniform4f(_location, _defaultFloatArrayValue[0], _defaultFloatArrayValue[1], _defaultFloatArrayValue[2], _defaultFloatArrayValue[3]);
+				GL.uniform4f(_location, _floatArrayValue[0], _floatArrayValue[1], _floatArrayValue[2], _floatArrayValue[3]);
 
 			} else if (type == "mat3") {
-				var float32ArrayValue = new Float32Array(_defaultFloatArrayValue);
+				var float32ArrayValue = new Float32Array(_floatArrayValue);
 				GL.uniformMatrix3fv(_location, false, float32ArrayValue);
 
 			} else if (type == "mat4") {
-				var float32ArrayValue = new Float32Array(_defaultMatrixValue.rawData);
+				var float32ArrayValue = new Float32Array(_matrixValue.rawData);
 				GL.uniformMatrix4fv(_location, false, float32ArrayValue);
 			}
 
@@ -170,6 +191,22 @@ class Uniform  {
 		}
 
 	}
+
+	public function copyFrom(uniform:Uniform):Void {
+		if (uniform.type != this._type) {
+			throw new KFException("IncompatibleUniforms", "Cannot copy uniform values from different unfiform type");
+		}
+		if (this._type == "float") {
+			this.setValue(uniform.value);
+
+		} else if (this._type == "vec2" || this.type == "vec3" || this.type == "vec4") {
+			this.setArrayValue(uniform.floatArrayValue);
+
+		} else if (this._type == "mat3" || this._type == "mat4") {
+			this.setMatrixValue(uniform.matrixValue);
+		}
+	}
+
 
 	public function setValue(value:Float) {
 		if (_size != 1) {

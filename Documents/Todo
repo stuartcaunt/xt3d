@@ -1,6 +1,8 @@
 TODO
 ====
 
+- Check handling of global uniforms at F4
+- prepareForUse in Uniform
 - Render loop
 - Scene and Node
   - scene graph

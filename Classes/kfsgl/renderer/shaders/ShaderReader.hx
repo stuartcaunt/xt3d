@@ -37,7 +37,7 @@ class ShaderReader  {
 			var shaderFile = Reflect.getProperty(shaderFilesJson, key);
 
 			// Read shader file
-			KF.Log("Reading shader file " + shaderFile);
+			//KF.Log("Reading shader file " + shaderFile);
 
 			var fileContents = Assets.getText("assets/shaders/" + shaderFile);
 			_shaderPrograms.set(key, fileContents);
@@ -46,7 +46,7 @@ class ShaderReader  {
 
 	public function shaderWithKey(key):String {
 		if (_shaderPrograms.exists(key)) {
-			KF.Log("Getting shader program for key " + key);
+			//KF.Log("Getting shader program for key " + key);
 			return _shaderPrograms.get(key);
 		}
 

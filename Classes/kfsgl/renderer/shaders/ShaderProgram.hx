@@ -30,6 +30,8 @@ class ShaderProgram {
 	private var _attributes:Map<String, Int> = new Map<String, Int>();
 	private var _uniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
+	private var _globalUniforms:Map<String, Uniform> = new Map<String, Uniform>();
+	private var _updateGlobalUniforms:Bool = true;
 
 	public static var KFAttributes = KF.jsonToMap({
 		position: "a_position",
@@ -137,7 +139,7 @@ class ShaderProgram {
 			return false;
 
 		} else {
-			KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
+			//KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
 			//KF.Log("Vertex program:\n" + _vertexProgram);
 			//KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
@@ -159,6 +161,12 @@ class ShaderProgram {
 
 			// Add to all uniforms
 			_commonUniforms.set(uniformName, uniform);
+
+			// Add to global uniforms
+			if (uniform.isGlobal) {
+				_globalUniforms.set(uniformName, uniform);
+			}
+
 		}
 
 		// Handle uniforms
@@ -232,13 +240,72 @@ class ShaderProgram {
 		return cloned;
 	}
 
-	public function cloneCommonUniforms():Map<String, Uniform> {
+	public function cloneCommonUniforms(cloneGlobals:Bool = false):Map<String, Uniform> {
 		var cloned:Map<String, Uniform> = new Map<String, Uniform>();
 		for (uniform in _commonUniforms) {
-			cloned.set(uniform.name, uniform.clone());
+			// Clone non-global and global if forced
+			if (!uniform.isGlobal || (uniform.isGlobal && cloneGlobals)) {
+				cloned.set(uniform.name, uniform.clone());
+			}
 		}
 
 		return cloned;
+	}
+
+
+	/**
+	 * Update global uniforms from UniformLib
+	 */
+	public function updateGlobalUniforms():Void {
+		for (uniform in this._globalUniforms) {
+			var globalUniform = UniformLib.instance().uniform(uniform.name);
+
+			// Copy value if it has been modified
+			if (globalUniform.hasBeenSet) {
+				uniform.copyFrom(globalUniform);
+			}
+
+			// Write to GPU
+			uniform.use();
+		}
+	}
+
+	/**
+	 * Set/update a uniform value
+	 */
+	public function updateUniform(uniform:Uniform):Void {
+		if (this._uniforms.exists(uniform.name)) {
+			var uniformToUpdate = this._uniforms.get(uniform.name);
+			if (uniform.hasBeenSet) {
+				uniformToUpdate.copyFrom(uniform);
+			}
+
+			// Write to GPU
+			uniformToUpdate.use();
+
+		} else {
+			// Debugging... not really necessary
+			KF.Log("Cannot update uniform " + uniform.name + " as it does not exist in the shader " + this._name);
+		}
+	}
+
+	/**
+	 * Set/update a common uniform value
+	 */
+	public function updateCommonUniform(uniform:Uniform):Void {
+		if (this._commonUniforms.exists(uniform.name)) {
+			var uniformToUpdate = this._commonUniforms.get(uniform.name);
+			if (uniform.hasBeenSet) {
+				uniformToUpdate.copyFrom(uniform);
+			}
+
+			// Write to GPU
+			uniformToUpdate.use();
+
+		} else {
+			// Debugging... not really necessary
+			KF.Log("Cannot update common uniform " + uniform.name + " as it does not exist in the shader " + this._name);
+		}
 	}
 
 }

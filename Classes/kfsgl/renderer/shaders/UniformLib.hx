@@ -5,16 +5,18 @@ import kfsgl.errors.KFException;
 
 
 typedef KFUniformInfo = {
-	var name: String;
-	var type: String;
-	var defaultValue: String;
+	var name:String;
+	var type:String;
+	var defaultValue:String;
+	var global:Bool;
 }
 
 class UniformLib {
 
 	// Members
 	private static var _instance:UniformLib = null;
-	private var _uniforms:Map<String, Map<String, Uniform> > = new Map<String, Map<String, Uniform> >();
+	private var _uniformGroups:Map<String, Map<String, Uniform> > = new Map<String, Map<String, Uniform> >();
+	private var _allUniforms:Map<String, Uniform > = new Map<String, Uniform>();
 
 	private function new() {
 	}
@@ -29,17 +31,18 @@ class UniformLib {
 	}
 
 	public function init():Void {
+		// Not no uniform should have the same name even if in different groups
 		var uniformsJson = {
 			matrixCommon: {
 				modelViewProjectionMatrix: { name: "u_modelViewProjectionMatrix", type: "mat4", defaultValue: "identity" },
 				modelViewMatrix: { name: "u_modelViewMatrix", type: "mat4", defaultValue: "identity" },
 				modelMatrix: { name: "u_modelMatrix", type: "mat4", defaultValue: "identity" },
-				viewMatrix: { name: "u_viewMatrix", type: "mat4", defaultValue: "identity" },
-				projectionMatrix: { name: "u_projectionMatrix", type: "mat4", defaultValue: "identity" },
-				normalMatrix: { name: "u_normalMatrix", type: "mat3", efaultValue: "identity" }
+				viewMatrix: { name: "u_viewMatrix", type: "mat4", defaultValue: "identity", global: true },
+				projectionMatrix: { name: "u_projectionMatrix", type: "mat4", defaultValue: "identity", global: true },
+				normalMatrix: { name: "u_normalMatrix", type: "mat3", defaultValue: "identity" }
 			},
 			time: {
-				time: { name: "u_time", type: "float", defaultValue: 0.0}
+				time: { name: "u_time", type: "float", defaultValue: "0.0", global: true}
 			}
 		};
 
@@ -48,7 +51,7 @@ class UniformLib {
 
 			// Create new map for uniforms values
 			var uniformValuesMap = new Map<String, Uniform>();
-			_uniforms.set(groupName, uniformValuesMap);
+			this._uniformGroups.set(groupName, uniformValuesMap);
 
 			// Iterate over uniforms for the group
 			var allUniformInfoJson = Reflect.getProperty(uniformsJson, groupName);
@@ -59,13 +62,27 @@ class UniformLib {
 				var uniformInfo:KFUniformInfo = { 
 					name: uniformInfoJson.name, 
 					type: uniformInfoJson.type, 
-					defaultValue: uniformInfoJson.defaultValue
+					defaultValue: uniformInfoJson.defaultValue,
+					global: (uniformInfoJson.global != null) ? uniformInfoJson.global : false
 				};
 
 				// Add uniform value to map
 				uniformValuesMap.set(uniformName, Uniform.createEmpty(uniformName, uniformInfo));
 			}
 		}
+
+		// Pack all uniforms in a single map
+		for (uniformGroup in _uniformGroups) {
+			for (uniform in uniformGroup) {
+				if (!_allUniforms.exists(uniform.name)) {
+					_allUniforms.set(uniform.name, uniform);
+
+				} else {
+					throw new KFException("DuplicateUniform", "The uniform with the name \"" + uniform.name + "\" is duplicated");
+				}
+			}
+		}
+
 	}
 
 	/*
@@ -78,7 +95,7 @@ class UniformLib {
 		for (group in groups) {
 
 			// Get uniform group and verify that it exists
-			var uniformMap = _uniforms.get(group);
+			var uniformMap = this._uniformGroups.get(group);
 			if (uniformMap != null) {
 
 				// Iterate over uniforms in the group
@@ -100,28 +117,19 @@ class UniformLib {
 	}
 
 	/*
-	 * Get specific uniform from a group (normally to set it's global value)
+	 * Get specific uniform (normally to set it's global value)
 	 */
-	public function uniform(groupName:String, uniformName:String):Uniform {
+	public function uniform(uniformName:String):Uniform {
 		// Get uniform group and verify that it exists
-		var uniformMap = _uniforms.get(groupName);
-		if (uniformMap != null) {
-			// Get the uniform
-			var uniform = uniformMap.get(uniformName);
-			if (uniform != null) {
-				return uniform;
+		if (_allUniforms.exists(uniformName)) {
+			var uniform = _allUniforms.get(uniformName);
+			return uniform;
 
-			} else {
-				throw new KFException("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" from the group \"" + groupName + "\" does not exist");
-
-			}
 		} else {
-			throw new KFException("UniformGroupDoesNotExist", "The uniform group with the name \"" + groupName + "\" does not exist");
-
+			throw new KFException("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" does not exist");
 		}
 
 		return null;
-
 	}
 
 }

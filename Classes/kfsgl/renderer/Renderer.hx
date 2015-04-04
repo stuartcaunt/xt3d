@@ -1,5 +1,6 @@
 package kfsgl.renderer;
 
+import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.renderer.shaders.UniformLib;
 import openfl.geom.Matrix3D;
 import kfsgl.utils.Color;
@@ -26,7 +27,9 @@ class Renderer {
 	private var _viewport:Rectangle;
 	private var _viewProjectionMatrix = new Matrix3D();
 
-	private var _currentProgram = null;
+	private var _currentProgram:ShaderProgram = null;
+	private var _currentMaterial:Material = null;
+	private var _renderPassShaders:Map<String, ShaderProgram> = null;
 
 	public function new() {
 	}
@@ -44,7 +47,7 @@ class Renderer {
 		if (_viewport == null || !_viewport.equals(viewport)) {
 			_viewport = viewport;
 			GL.viewport(Std.int (_viewport.x), Std.int (_viewport.y), Std.int (_viewport.width), Std.int (_viewport.height));
-			KF.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
+			//KF.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
 		}
 
 		// Clear color
@@ -57,8 +60,6 @@ class Renderer {
 
 	public function render(scene:Scene, camera:Camera) {
 		if (scene != null && camera != null) {
-
-			// send pre-render event (custom updates before rendering)
 
 			// Update world matrices of scene graph
 			scene.updateWorldMatrix();
@@ -81,9 +82,6 @@ class Renderer {
 			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
 
 			// Send custom-post-render-pass event
-
-			// Send post-render event
-
 		}
 	}
 
@@ -96,11 +94,16 @@ class Renderer {
 		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
 
 		// Set global uniforms
-		UniformLib.instance().uniform("matrixCommon", "viewMatrix").matrixValue = camera.viewMatrix;
-		UniformLib.instance().uniform("matrixCommon", "projectionMatrix").matrixValue = camera.projectionMatrix;
+		UniformLib.instance().uniform("viewMatrix").matrixValue = camera.viewMatrix;
+		UniformLib.instance().uniform("projectionMatrix").matrixValue = camera.projectionMatrix;
 
 		// lights
 		//UniformLib.instance().uniform("lights", "...").matrixValue = ...;
+
+		// Initialise states of shader programs
+		this._renderPassShaders = new Map<String, ShaderProgram>();
+		this._currentProgram = null;
+		this._currentMaterial = null;
 
 		for (renderObject in renderObjects) {
 
@@ -108,10 +111,10 @@ class Renderer {
 			renderObject.updateRenderMatrices(camera);
 
 			// Set matrices in uniform lib
-			UniformLib.instance().uniform("matrixCommon", "modelMatrix").matrixValue = renderObject.modelMatrix;
-			UniformLib.instance().uniform("matrixCommon", "modelViewMatrix").matrixValue = renderObject.modelViewMatrix;
-			UniformLib.instance().uniform("matrixCommon", "modelViewProjectionMatrix").matrixValue = renderObject.modelViewProjectionMatrix;
-			UniformLib.instance().uniform("matrixCommon", "normalMatrix").matrixValue = renderObject.normalMatrix;
+			UniformLib.instance().uniform("modelMatrix").matrixValue = renderObject.modelMatrix;
+			UniformLib.instance().uniform("modelViewMatrix").matrixValue = renderObject.modelViewMatrix;
+			UniformLib.instance().uniform("modelViewProjectionMatrix").matrixValue = renderObject.modelViewProjectionMatrix;
+			UniformLib.instance().uniform("normalMatrix").matrixValue = renderObject.normalMatrix;
 
 			// Update shader program
 			var material = renderObject.material;
@@ -140,19 +143,32 @@ class Renderer {
 	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
 		var program = material.program;
 
-		var refreshProgram:Bool = false;
-		var refreshMaterial:Bool = false;
-		var refreshLights:Bool = false;
+		//var refreshLights:Bool = false;
 
 		if (this._currentProgram != program) {
-			program.use();
 			this._currentProgram = program;
 
-			refreshProgram = true;
-			refreshMaterial = true;
-			refreshLights = true;
+			// Use program
+			program.use();
+
+			// If the program has already been used in this render pass then don't update global uniforms
+			// NB: this just stops the values been updated locally - all uniforms check for changed values before sending to the GPU
+			if (!this._renderPassShaders.exists(program.name)) {
+				// Update global uniforms in the shader
+				program.updateGlobalUniforms();
+
+				this._renderPassShaders.set(program.name, program);
+			}
 		}
 
+
+		// If material has changed then update the program uniforms from the material uniforms
+		if (this._currentMaterial != material) {
+			this._currentMaterial = material;
+
+			// Send material uniform values to program
+			material.updateProgramUniforms();
+		}
 
 	}
 

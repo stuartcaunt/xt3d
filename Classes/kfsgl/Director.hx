@@ -65,12 +65,15 @@ class Director {
 		// Calculate time step
 		var dt = 1.0 / 60.0;
 		_globalTime += dt;
-		UniformLib.instance().uniform("time", "time").value = _globalTime;
+		UniformLib.instance().uniform("time").value = _globalTime;
 
 		// TODO : remove this, just used to help debugging in chrome
 		if (_globalTime < 2.0) {
 			return;
 		}
+
+
+		// send pre-render event (custom updates before rendering)
 
 		// Clear context wil full rectangle
 		_renderer.clear(displayRect, backgroundColor);
@@ -83,6 +86,9 @@ class Director {
 			// Render view
 			view.render(_renderer);
 		}
+
+
+		// Send post-render event
 
 	}
 

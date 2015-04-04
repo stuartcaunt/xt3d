@@ -75,7 +75,8 @@ class ShaderLib  {
 				var uniformInfo:KFUniformInfo = {
 					name: uniformInfoJson.name,
 					type: uniformInfoJson.type,
-					defaultValue: uniformInfoJson.defaultValue
+					defaultValue: uniformInfoJson.defaultValue,
+					global:  (uniformInfoJson.global != null) ? uniformInfoJson.global : false
 				};
 
 				// Add uniform info to map
