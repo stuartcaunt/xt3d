@@ -12,14 +12,14 @@ typedef OffsetAndStride = {
 
 class Geometry {
 
-	public static var bufferNames = {
+	public var bufferNames = {
 		position: "position",
 		normal: "normal",
 		uv: "uv",
 		color: "color"
 	};
 
-	public static var bufferStrides = {
+	public var bufferStrides = {
 		position: 3,
 		normal: 3,
 		uv: 2,
