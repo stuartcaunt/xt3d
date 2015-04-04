@@ -21,27 +21,29 @@ class MatrixHelper {
 		v8, v9, v10, v11,
 		v12, v13, v14, v15):Vector<Float> {
 
-		RAW_DATA_CONTAINER[0] = v0;
-		RAW_DATA_CONTAINER[1] = v1;
-		RAW_DATA_CONTAINER[2] = v2;
-		RAW_DATA_CONTAINER[3] = v3;
+		var raw:Vector<Float> = MatrixHelper.RAW_DATA_CONTAINER;
 
-		RAW_DATA_CONTAINER[4] = v4;
-		RAW_DATA_CONTAINER[5] = v5;
-		RAW_DATA_CONTAINER[6] = v6;
-		RAW_DATA_CONTAINER[7] = v7;
+		raw[0] = v0;
+		raw[1] = v1;
+		raw[2] = v2;
+		raw[3] = v3;
 
-		RAW_DATA_CONTAINER[8] = v8;
-		RAW_DATA_CONTAINER[9] = v9;
-		RAW_DATA_CONTAINER[10] = v10;
-		RAW_DATA_CONTAINER[11] = v11;
+		raw[4] = v4;
+		raw[5] = v5;
+		raw[6] = v6;
+		raw[7] = v7;
 
-		RAW_DATA_CONTAINER[12] = v12;
-		RAW_DATA_CONTAINER[13] = v13;
-		RAW_DATA_CONTAINER[14] = v14;
-		RAW_DATA_CONTAINER[15] = v15;
+		raw[8] = v8;
+		raw[9] = v9;
+		raw[10] = v10;
+		raw[11] = v11;
 
-		return RAW_DATA_CONTAINER;
+		raw[12] = v12;
+		raw[13] = v13;
+		raw[14] = v14;
+		raw[15] = v15;
+
+		return raw;
 	}
 
 	static private function rawDataContainerWithRowMajorValues(
@@ -49,27 +51,30 @@ class MatrixHelper {
 		v4, v5, v6, v7,
 		v8, v9, v10, v11,
 		v12, v13, v14, v15):Vector<Float> {
-		RAW_DATA_CONTAINER[0] = v0;
-		RAW_DATA_CONTAINER[4] = v1;
-		RAW_DATA_CONTAINER[8] = v2;
-		RAW_DATA_CONTAINER[12] = v3;
 
-		RAW_DATA_CONTAINER[1] = v4;
-		RAW_DATA_CONTAINER[5] = v5;
-		RAW_DATA_CONTAINER[9] = v6;
-		RAW_DATA_CONTAINER[13] = v7;
+		var raw:Vector<Float> = MatrixHelper.RAW_DATA_CONTAINER;
 
-		RAW_DATA_CONTAINER[2] = v8;
-		RAW_DATA_CONTAINER[6] = v9;
-		RAW_DATA_CONTAINER[10] = v10;
-		RAW_DATA_CONTAINER[14] = v11;
+		raw[0] = v0;
+		raw[4] = v1;
+		raw[8] = v2;
+		raw[12] = v3;
 
-		RAW_DATA_CONTAINER[3] = v12;
-		RAW_DATA_CONTAINER[7] = v13;
-		RAW_DATA_CONTAINER[11] = v14;
-		RAW_DATA_CONTAINER[15] = v15;
+		raw[1] = v4;
+		raw[5] = v5;
+		raw[9] = v6;
+		raw[13] = v7;
 
-		return RAW_DATA_CONTAINER;
+		raw[2] = v8;
+		raw[6] = v9;
+		raw[10] = v10;
+		raw[14] = v11;
+
+		raw[3] = v12;
+		raw[7] = v13;
+		raw[11] = v14;
+		raw[15] = v15;
+
+		return raw;
 	}
 
 	public function new() {
