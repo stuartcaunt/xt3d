@@ -20,7 +20,7 @@ class GLBufferManager {
 
 	/* --------- Implementation --------- */
 
-	public static inline function getInstance():GLBufferManager {
+	public static inline function instance():GLBufferManager {
 		if (_instance == null) {
 			// TODO Handle different managers in different contexts.
 			_instance = new GLBufferManager();

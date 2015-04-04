@@ -66,7 +66,7 @@ class IndexData {
 /* --------- Implementation --------- */
 
 	public function dispose() {
-		GLBufferManager.getInstance().deleteBuffer(this._buffer);
+		GLBufferManager.instance().deleteBuffer(this._buffer);
 	}
 
 	// Number of elements
@@ -81,10 +81,10 @@ class IndexData {
 	public function writeBuffer():Void {
 		if (this._isDirty) {
 			if (_buffer == null) {
-				_buffer = GLBufferManager.getInstance().createElementBuffer(new Int16Array(_array));
+				_buffer = GLBufferManager.instance().createElementBuffer(new Int16Array(_array));
 
 			} else {
-				GLBufferManager.getInstance().updateElementBuffer(_buffer, new Int16Array(_array));
+				GLBufferManager.instance().updateElementBuffer(_buffer, new Int16Array(_array));
 			}
 
 			this._isDirty = false;

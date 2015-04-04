@@ -39,7 +39,7 @@ class VertexData {
 	/* --------- Implementation --------- */
 
 	public function dispose() {
-		GLBufferManager.getInstance().deleteBuffer(this._buffer);
+		GLBufferManager.instance().deleteBuffer(this._buffer);
 	}
 
 	public function getLength():Int {
@@ -62,10 +62,10 @@ class VertexData {
 		if (this._isDirty) {
 			var bufferData:ArrayBufferView = this.getBufferData();
 			if (_buffer == null) {
-				_buffer = GLBufferManager.getInstance().createVertexBuffer(bufferData);
+				_buffer = GLBufferManager.instance().createVertexBuffer(bufferData);
 
 			} else {
-				GLBufferManager.getInstance().updateVertexBuffer(_buffer, bufferData);
+				GLBufferManager.instance().updateVertexBuffer(_buffer, bufferData);
 			}
 
 			this._isDirty = false;
