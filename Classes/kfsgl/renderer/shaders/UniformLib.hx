@@ -35,7 +35,11 @@ class UniformLib {
 				modelViewMatrix: { name: "u_modelViewMatrix", type: "mat4", defaultValue: "identity" },
 				modelMatrix: { name: "u_modelMatrix", type: "mat4", defaultValue: "identity" },
 				viewMatrix: { name: "u_viewMatrix", type: "mat4", defaultValue: "identity" },
+				projectionMatrix: { name: "u_projectionMatrix", type: "mat4", defaultValue: "identity" },
 				normalMatrix: { name: "u_normalMatrix", type: "mat3", efaultValue: "identity" }
+			},
+			time: {
+				time: { name: "u_time", type: "float", defaultValue: 0.0}
 			}
 		};
 

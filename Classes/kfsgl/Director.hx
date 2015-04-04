@@ -1,8 +1,8 @@
 package kfsgl;
 
+import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.view.View;
 import kfsgl.renderer.Renderer;
-import kfsgl.utils.KF;
 import kfsgl.utils.Color;
 
 import openfl.display.OpenGLView;
@@ -20,6 +20,8 @@ class Director {
 	private var _backgroundColor:Color = new Color(0.2, 0.2, 0.2);
 	private var _renderer:Renderer;
 	private var _views:Array<View> = new Array<View>();
+
+	private var _globalTime = 0.0;
 
 	public function new() {
 		_renderer = new Renderer();
@@ -60,7 +62,16 @@ class Director {
 
 		//KF.Log("render");
 
-		// Clear context wil full rectangle 
+		// Calculate time step
+		var dt = 1.0 / 60.0;
+		_globalTime += dt;
+		UniformLib.instance().uniform("time", "time").value = _globalTime;
+
+		if (_globalTime < 2.0) {
+			return;
+		}
+
+		// Clear context wil full rectangle
 		_renderer.clear(displayRect, backgroundColor);
 
 		// Iterate over all views
