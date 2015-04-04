@@ -17,6 +17,9 @@ class ShaderProgram {
 	public var name(get, null):String;
 
 	// members
+	private static var ID_COUNTER = 0;
+	private var _id:Int = ID_COUNTER++;
+	private var _retainCount = 0;
 	private var _name:String;
 	private var _vertexProgram:String;
 	private var _fragmentProgram:String;
@@ -181,6 +184,14 @@ class ShaderProgram {
 		}
 	}
 
+	public function retain():Void {
+		this._retainCount++;
+	}
+
+	public function release():Void {
+		this._retainCount--;
+	}
+
 	private function createShader(source:String, type:Int):GLShader {
 		// Create new shader
 		var shader = GL.createShader(type);
@@ -206,6 +217,10 @@ class ShaderProgram {
 		}
 		
 		return shader;
+	}
+
+	public function use():Void {
+		GL.useProgram(_program);
 	}
 
 	public function cloneUniforms():Map<String, Uniform> {

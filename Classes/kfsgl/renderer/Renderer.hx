@@ -1,5 +1,6 @@
 package kfsgl.renderer;
 
+import kfsgl.renderer.shaders.UniformLib;
 import openfl.geom.Matrix3D;
 import kfsgl.utils.Color;
 import kfsgl.utils.KF;
@@ -94,6 +95,12 @@ class Renderer {
 		// Set up camera
 		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
 
+		// Set global uniforms..
+		UniformLib.instance().uniform("common", "viewMatrix").matrixValue = camera.viewMatrix;
+		// matrices
+
+		// lights
+
 		for (renderObject in renderObjects) {
 
 			// Update model matrices
@@ -121,10 +128,25 @@ class Renderer {
 			this.setProgram(material, renderObject, camera/*, lights*/);
 
 		}
-
-
 	}
 
+	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
+		var program = material.program;
+
+		var refreshProgram:Bool = false;
+		var refreshMaterial:Bool = false;
+		var refreshLights:Bool = false;
+
+		if (this._currentProgram != program) {
+			program.use();
+			this._currentProgram = program;
+
+			refreshProgram = true;
+			refreshMaterial = true;
+			refreshLights = true;
+		}
+
+	}
 
 
 }

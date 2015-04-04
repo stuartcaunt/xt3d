@@ -178,8 +178,8 @@ class Material {
 	public inline function setProgramName(programName:String):Void {
 		if (programName != this._programName) {
 			// get program for shader manager
-			this._program = ShaderManager.instance().programWithName(programName);
-			this._programName = programName;
+			var program = ShaderManager.instance().programWithName(programName);
+			this.setProgram(program);
 		}
 	}
 
@@ -190,9 +190,10 @@ class Material {
 	public function setProgram(program:ShaderProgram):Void {
 		if (this._program != program) {
 			// cleanup
-			this.cleanup();
+			this.dispose();
 
 			this._program = program;
+			program.retain();
 			this._programName = program.name;
 
 			// Get common uniforms
@@ -205,7 +206,10 @@ class Material {
 
 
 
-	public function cleanup() {
+	public function dispose() {
+		if (this._program != null) {
+			this._program.release();
+		}
 		this._program = null;
 		this._programName = null;
 
