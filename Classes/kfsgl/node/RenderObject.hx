@@ -8,6 +8,10 @@ class RenderObject extends Node3D {
 
 	// properties
 	public var material(get, set):Material;
+	public var modelMatrix(get, null):Matrix3D;
+	public var modelViewMatrix(get, null):Matrix3D;
+	public var modelViewProjectionMatrix(get, null):Matrix3D;
+	public var normalMatrix(get, null):Matrix3D;
 
 	// members
 	private var _material:Material;
@@ -41,7 +45,24 @@ class RenderObject extends Node3D {
 		return this._material;
 	}
 
-	/* --------- Implementation --------- */
+	public function get_modelMatrix():Matrix3D {
+		return this._worldMatrix;
+	}
+
+	public function get_modelViewMatrix():Matrix3D {
+		return this._modelViewMatrix;
+	}
+
+	public function get_modelViewProjectionMatrix():Matrix3D {
+		return this._modelViewProjectionMatrix;
+	}
+
+	public function get_normalMatrix():Matrix3D {
+		return this._normalMatrix;
+	}
+
+
+/* --------- Implementation --------- */
 
 
 	public function getMaterial():Material {
