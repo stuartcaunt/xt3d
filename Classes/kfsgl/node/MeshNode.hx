@@ -63,11 +63,14 @@ class MeshNode extends RenderObject {
 
 	/* --------- Scene graph --------- */
 
-	override public function updateObject():Void {
-		super.updateObject();
+	override public function updateObject(scene:Scene):Void {
+		super.updateObject(scene);
 
 		// Make sure the geometry data is written to opengl buffers
 		this.geometry.updateGeometry();
+
+		// Add object to opaque or transparent list
+		scene.opaqueObjects.push(this);
 	}
 
 }

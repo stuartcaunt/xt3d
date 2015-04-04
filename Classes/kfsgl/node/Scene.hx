@@ -5,11 +5,12 @@ import kfsgl.node.Node3D;
 class Scene extends Node3D {
 
 	// properties
-	@:isVar public var opaqueObjects(get, null):Array<Node3D>;
-	@:isVar public var transparentObjects(get, null):Array<Node3D>;
+	@:isVar public var opaqueObjects(get, null):Array<RenderObject>;
+	@:isVar public var transparentObjects(get, null):Array<RenderObject>;
 
-	private var _opaqueObjects:Array<Node3D>;
-	private var _transparentObjects:Array<Node3D>;
+	private var _opaqueObjects:Array<RenderObject>;
+	private var _transparentObjects:Array<RenderObject>;
+//	private var _lights:Array<Light>;
 
 	// members
 	public static function create():Scene {
@@ -37,11 +38,11 @@ class Scene extends Node3D {
 
 	/* ----------- Properties ----------- */
 
-	inline public function get_opaqueObjects():Array<Node3D> {
+	inline public function get_opaqueObjects():Array<RenderObject> {
 		return this._opaqueObjects;
 	}
 
-	inline public function get_transparentObjects():Array<Node3D> {
+	inline public function get_transparentObjects():Array<RenderObject> {
 		return this._transparentObjects;
 	}
 
@@ -49,28 +50,28 @@ class Scene extends Node3D {
 
 	/* --------- Implementation --------- */
 
-	inline public function getOpaqueObjects():Array<Node3D> {
+	inline public function getOpaqueObjects():Array<RenderObject> {
 		return this._opaqueObjects;
 	}
 
-	inline public function getTransparentObjects():Array<Node3D> {
+	inline public function getTransparentObjects():Array<RenderObject> {
 		return this._transparentObjects;
 	}
 
-	inline public function addOpqueObject(object:Node3D):Void {
+	inline public function addOpqueObject(object:RenderObject):Void {
 		this._opaqueObjects.push(object);
 	}
 
-	inline public function addTransparentObject(object:Node3D):Void {
+	inline public function addTransparentObject(object:RenderObject):Void {
 		this._transparentObjects.push(object);
 	}
 
 	/* --------- Scene graph --------- */
 
-	override public function updateObject():Void {
+	override public function updateObject(scene:Scene):Void {
 		// Initialise arrays for transparent and opaque objects
-		this._opaqueObjects = new Array<Node3D>();
-		this._transparentObjects = new Array<Node3D>();
+		this._opaqueObjects = new Array<RenderObject>();
+		this._transparentObjects = new Array<RenderObject>();
 	}
 
 

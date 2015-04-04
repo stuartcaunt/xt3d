@@ -103,7 +103,7 @@ class View extends EventEmitter {
 		renderer.clear(viewport, backgroundColor);
 
 		// Render scene with camera
-		renderer.renderScene(this.scene, this.camera);
+		renderer.render(this.scene, this.camera);
 	}
 
 

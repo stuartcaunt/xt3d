@@ -176,14 +176,14 @@ class Node3D {
 		return this._parent;
 	}
 
-	public function updateObjects(scene:Node3D):Void {
+	public function updateObjects(scene:Scene):Void {
 		// If excluded then ignore all children too
 		if (this._excluded) {
 			return;
 		}
 
 		// Individual update
-		this.updateObject();
+		this.updateObject(scene);
 
 		for (child in this._children) {
 			child.updateObjects(scene);
@@ -191,7 +191,7 @@ class Node3D {
 
 	}
 
-	public function updateObject():Void {
+	public function updateObject(scene:Scene):Void {
 		// Override me
 	}
 

@@ -1,23 +1,22 @@
 TODO
 ====
 
+- Render loop
 - Scene and Node
   - scene graph
-- Geometry
-  - VertexAttribute buffers
 - Primitives
   - plane
   - sphere
    - interlaced data
-
-
-- StateManager
+- handle multiple contexts
+  - all objects created with a contextId ?
+  - render targets
+- render order : group by geometries
+  - group by materials?
 
 - Material implementation
 - View
-- MeshNode (Geometry and Material)
-- Render loop
-
+- attribute state manager
 
 
 DONE
@@ -31,3 +30,7 @@ x use haxe properties
 x Event emitter
 x Camera
 x   Camera properties
+x Geometry
+x   VertexAttribute buffers
+x StateManager
+x MeshNode (Geometry and Material)

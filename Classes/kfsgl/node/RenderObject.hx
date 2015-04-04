@@ -1,5 +1,7 @@
 package kfsgl.node;
 
+import kfsgl.camera.Camera;
+import openfl.geom.Matrix3D;
 import kfsgl.material.Material;
 
 class RenderObject extends Node3D {
@@ -9,6 +11,9 @@ class RenderObject extends Node3D {
 
 	// members
 	private var _material:Material;
+	private var _modelViewMatrix:Matrix3D = new Matrix3D();
+	private var _modelViewProjectionMatrix:Matrix3D = new Matrix3D();
+	private var _normalMatrix:Matrix3D = new Matrix3D();
 
 	public function initWithMaterial(material:Material):Bool {
 		var retval;
@@ -47,10 +52,27 @@ class RenderObject extends Node3D {
 		this._material = value;
 	}
 
+	public function updateRenderMatrices(camera:Camera):Void {
+		// Model view matrix
+		this._modelViewMatrix.copyFrom(camera.viewMatrix);
+		this._modelViewMatrix.prepend(this._worldMatrix);
+
+		// normal matrix
+		// TODO: test if normals are used in material
+		this._normalMatrix.copyFrom(_modelViewMatrix);
+		this._normalMatrix.invert();
+		this._normalMatrix.transpose();
+
+		// Model view project matrix
+		this._modelViewProjectionMatrix.copyFrom(this._modelViewMatrix);
+		this._modelViewProjectionMatrix.append(camera.projectionMatrix);
+
+	}
+
 	/* --------- Scene graph --------- */
 
-	override public function updateObject():Void {
-		super.updateObject();
+	override public function updateObject(scene:Scene):Void {
+		super.updateObject(scene);
 	}
 
 }

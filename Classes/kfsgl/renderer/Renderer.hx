@@ -1,9 +1,12 @@
 package kfsgl.renderer;
 
+import openfl.geom.Matrix3D;
 import kfsgl.utils.Color;
 import kfsgl.utils.KF;
+import kfsgl.utils.gl.KFGL;
 import kfsgl.renderer.shaders.ShaderManager;
 import kfsgl.camera.Camera;
+import kfsgl.material.Material;
 import kfsgl.node.Scene;
 import kfsgl.node.RenderObject;
 import openfl.gl.GL;
@@ -17,11 +20,12 @@ import flash.geom.Rectangle;
 
 class Renderer {
 
-	// State
-	private var _currentVertexBuffer:GLBuffer;
-	private var _currentElementBuffer:GLBuffer;
+	private var _stateManager:GLStateManager;
 
 	private var _viewport:Rectangle;
+	private var _viewProjectionMatrix = new Matrix3D();
+
+	private var _currentProgram = null;
 
 	public function new() {
 	}
@@ -29,7 +33,10 @@ class Renderer {
 	public function init() {
 		// Build all shaders
 		ShaderManager.instance().loadDefaultShaders();
+
+		_stateManager = GLStateManager.create();
 	}
+
 
 	public function clear(viewport:Rectangle, color:Color) {
 		// Set the viewport
@@ -47,7 +54,7 @@ class Renderer {
 	}
 
 
-	public function renderScene(scene:Scene, camera:Camera) {
+	public function render(scene:Scene, camera:Camera) {
 		if (scene != null && camera != null) {
 
 			// send pre-render event (custom updates before rendering)
@@ -66,8 +73,11 @@ class Renderer {
 			// Send custom-pre-render-pass event
 
 			// Render opaque objects
+			_stateManager.setBlending(KFGL.NoBlending);
+			this.renderObjects(scene.opaqueObjects, camera/*, scene.lights*/, false/*, overrideMaterial*/);
 
 			// Render transparent objects
+			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
 
 			// Send custom-post-render-pass event
 
@@ -79,9 +89,42 @@ class Renderer {
 	/**
 	 * Render list of objects
 	 **/
-	public function renderObjects(objects:Array<RenderObject>) {
+	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera/*, lights:Array<Light>*/, useBlending:Bool/*, overrideMaterial:Material*/) {
+
+		// Set up camera
+		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
+
+		for (renderObject in renderObjects) {
+
+			// Update model matrices
+			renderObject.updateRenderMatrices(camera);
+
+			// Update shader program
+			var material = renderObject.material;
+
+			// Set blending
+			if (useBlending) {
+				_stateManager.setBlending(material.blending, material.blendEquation, material.blendSrc, material.blendDst);
+			}
+
+			// Depth
+			_stateManager.setDepthTest(material.depthTest);
+			_stateManager.setDepthWrite(material.depthWrite);
+
+			// Polygon offset
+			_stateManager.setPolygonOffset(material.polygonOffset, material.polygonOffsetFactor, material.polygonOffsetUnits);
+
+			// Set material face sides
+			_stateManager.setMaterialSides(material.side);
+
+			// Set program if it is not the same
+			this.setProgram(material, renderObject, camera/*, lights*/);
+
+		}
+
 
 	}
+
 
 
 }
