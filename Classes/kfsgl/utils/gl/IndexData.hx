@@ -12,6 +12,9 @@ class IndexData {
 
 	// properties
 	public var isDirty(get, set):Bool;
+	public var count(get, null):Int;
+	public var buffer(get, null):GLBuffer;
+	public var type(get, null):Int;
 
 	// members
 	private var _array:Array<UInt> = new Array<UInt>();
@@ -52,16 +55,28 @@ class IndexData {
 
 	}
 
-/* ----------- Properties ----------- */
+	/* ----------- Properties ----------- */
 
 	public inline function get_isDirty():Bool {
 		return this._isDirty;
 	}
 
-
 	public inline function set_isDirty(value:Bool):Bool {
 		return this._isDirty = value;
 	}
+
+	public inline function get_count():Int {
+		return this.getLength();
+	}
+
+	public inline function get_buffer():GLBuffer {
+		return this._buffer;
+	}
+
+	public inline function get_type():Int {
+		return GL.UNSIGNED_INT;
+	}
+
 
 /* --------- Implementation --------- */
 
@@ -80,29 +95,32 @@ class IndexData {
 
 	public function writeBuffer():Void {
 		if (this._isDirty) {
-			if (_buffer == null) {
-				_buffer = GLBufferManager.instance().createElementBuffer(new Int16Array(_array));
+			if (this._buffer == null) {
+				this._buffer = GLBufferManager.instance().createElementBuffer(new Int16Array(this._array));
 
 			} else {
-				GLBufferManager.instance().updateElementBuffer(_buffer, new Int16Array(_array));
+				GLBufferManager.instance().updateElementBuffer(this._buffer, new Int16Array(this._array));
 			}
 
 			this._isDirty = false;
 		}
 	}
 
+	public function bind():Void {
+		GLBufferManager.instance().setElementBuffer(this._buffer);
+	}
 
 	public inline function set(index:Int, value:UInt):Void {
-		_array[index] = value;
+		this._array[index] = value;
 		this._isDirty = true;
 	}
 
 	public inline function get(index:Int):UInt {
-		return _array[index];
+		return this._array[index];
 	}
 
 	public inline function push(value:UInt):Void {
-		_array.push(value);
+		this._array.push(value);
 		this._isDirty = true;
 	}
 

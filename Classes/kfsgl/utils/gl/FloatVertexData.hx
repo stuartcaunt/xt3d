@@ -14,11 +14,12 @@ class FloatVertexData extends VertexData {
 #else
 	private var _array:Array<Float> = new Array<Float>();
 #end
+	private var _vertexSize:Int; // number of elements per vertex
 
-	public static function create(attributeName:String):FloatVertexData {
+	public static function create(attributeName:String, vertexSize:Int):FloatVertexData {
 		var object = new FloatVertexData();
 
-		if (object != null && !(object.init(attributeName))) {
+		if (object != null && !(object.init(attributeName, vertexSize))) {
 			object = null;
 		}
 
@@ -27,10 +28,10 @@ class FloatVertexData extends VertexData {
 
 #if use_float32array
 #else
-	public static function createWithArray(attributeName:String, array:Array<Float>):FloatVertexData {
+	public static function createWithArray(attributeName:String, array:Array<Float>, vertexSize:Int):FloatVertexData {
 		var object = new FloatVertexData();
 
-		if (object != null && !(object.initWithArray(attributeName, array))) {
+		if (object != null && !(object.initWithArray(attributeName, array, vertexSize))) {
 			object = null;
 		}
 
@@ -38,10 +39,10 @@ class FloatVertexData extends VertexData {
 	}
 #end
 
-	override public function init(attributeName:String):Bool {
+	public function init(attributeName:String, vertexSize:Int):Bool {
 		var retval;
-		if ((retval = super.init(attributeName))) {
-
+		if ((retval = super.initVertexData(attributeName))) {
+			this._vertexSize = vertexSize;
 		}
 
 		return retval;
@@ -49,24 +50,34 @@ class FloatVertexData extends VertexData {
 
 #if use_float32array
 #else
-	public function initWithArray(attributeName:String, array:Array<Float>):Bool {
+	public function initWithArray(attributeName:String, array:Array<Float>, vertexSize:Int):Bool {
 		var retval;
-		if ((retval = super.init(attributeName))) {
+		if ((retval = super.initVertexData(attributeName))) {
 			this._array = array;
-
-		}
+			this._vertexSize = vertexSize;
+	}
 
 		return retval;
 	}
 #end
-
 
 
 	public function new() {
 		super();
 	}
 
-	// Number of elements
+	/* ----------- Properties ----------- */
+
+	override public function get_vertexSize():Int {
+		return this._vertexSize;
+	}
+
+
+	/* --------- Implementation --------- */
+
+
+
+// Number of elements
 	override public function getLength():Int {
 #if use_float32array
 		return this._f32Array.length >> 2;
@@ -74,6 +85,7 @@ class FloatVertexData extends VertexData {
 		return this._array.length;
 #end
 	}
+
 
 	override public function getByteLength():Int {
 #if use_float32array
@@ -85,11 +97,20 @@ class FloatVertexData extends VertexData {
 
 	override public function getBufferData():ArrayBufferView {
 #if use_float32array
-		return _f32Array;
+		return this._f32Array;
 #else
-		return new Float32Array(_array);
+		return new Float32Array(this._array);
 #end
 	}
+
+	override public function bindToAttribute(attributeLocation:Int):Void {
+		// Bind the buffer
+		GLBufferManager.instance().setVertexBuffer(this._buffer);
+
+		// attach buffer to attribute
+		GL.vertexAttribPointer(attributeLocation, this._vertexSize, GL.FLOAT, false, 0, 0);
+	}
+
 
 
 

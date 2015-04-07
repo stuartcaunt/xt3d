@@ -1,5 +1,8 @@
 package kfsgl.renderer;
 
+import kfsgl.utils.gl.GLAttributeManager;
+import kfsgl.errors.KFException;
+import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.renderer.shaders.UniformLib;
 import openfl.geom.Matrix3D;
@@ -23,6 +26,7 @@ import flash.geom.Rectangle;
 class Renderer {
 
 	private var _stateManager:GLStateManager;
+	private var _attributeManager:GLAttributeManager;
 
 	private var _viewport:Rectangle;
 	private var _viewProjectionMatrix = new Matrix3D();
@@ -37,6 +41,8 @@ class Renderer {
 	public function init() {
 		// Build all shaders
 		ShaderManager.instance().loadDefaultShaders();
+
+		_attributeManager = GLAttributeManager.create();
 
 		_stateManager = GLStateManager.create();
 	}
@@ -139,13 +145,30 @@ class Renderer {
 			// Set material face sides
 			_stateManager.setMaterialSides(material.side);
 
-			// Set program if it is not the same
-			this.setProgram(material, renderObject, camera/*, lights*/);
+			// Render the object buffers
+			this.renderBuffer(material, renderObject, camera/*, lights*/);
+
 
 		}
 	}
 
+	private function renderBuffer(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
+
+		// Set program and uniforms
+		this.setProgram(material, renderObject, camera/*, lights*/);
+
+		// Get the program
+		var program = material.program;
+
+		// Set buffer attibutes
+		var attributes = program.attributes;
+
+		// Render the buffers
+		renderObject.renderBuffer(attributes, this._attributeManager);
+	}
+
 	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
+
 		var program = material.program;
 
 		//var refreshLights:Bool = false;
@@ -166,14 +189,17 @@ class Renderer {
 			}
 		}
 
-
 		// If material has changed then update the program uniforms from the material uniforms
+		// TODO: maybe should always update uniforms... if they haven't changed then they are not sent to the GPU anyway
 		if (this._currentMaterial != material) {
 			this._currentMaterial = material;
 
 			// Send material uniform values to program
 			material.updateProgramUniforms();
 		}
+
+		// Set textures
+		// TODO
 
 	}
 

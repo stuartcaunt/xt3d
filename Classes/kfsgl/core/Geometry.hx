@@ -12,36 +12,51 @@ typedef OffsetAndStride = {
 
 class Geometry {
 
-	public var bufferNames = {
+	// Default buffer names - !! NOTE !! identical to attribute names
+	public static var bufferNames = {
 		position: "position",
 		normal: "normal",
 		uv: "uv",
 		color: "color"
 	};
 
-	public var bufferStrides = {
+	// Number of elements per vertex
+	public static var bufferVertexSizes = {
 		position: 3,
 		normal: 3,
 		uv: 2,
 		color: 4
 	};
 
+	// Buffers strides in bytes ?
+//	public var bufferStrides = {
+//		position: 3,
+//		normal: 3,
+//		uv: 2,
+//		color: 4
+//	};
 
-	// properties
+
+// properties
 	public var indices(get, set):IndexData;
 	public var positions(get, set):FloatVertexData;
 	public var normals(get, set):FloatVertexData;
 	public var uvs(get, set):FloatVertexData;
 	public var colors(get, set):FloatVertexData;
+	public var vertexData(get, null):Map<String, VertexData>;
+	public var vertexDataOffsets(get, null):Map<String, UInt>;
+	public var isIndexed(get, null):Bool;
+	public var isInterleaved(get, null):Bool;
+	public var vertexCount(get, set):Int;
 
 	// members
 	public static var INTERLEAVED_BUFFER_NAME = "intlvd";
 	private var _isInterleaved:Bool = false;
-	private var _isIndexed:Bool = false;
 	private var _vertexData:Map<String, VertexData> = new Map<String, VertexData>(); // attribute name, raw data
-	private var _vertexDataStrides:Map<String, UInt> = new Map<String, UInt>(); // attribute name, stride
+	private var _vertexDataOffsets:Map<String, UInt> = new Map<String, UInt>(); // attribute name, offset
 	private var _indexData:IndexData;
 	private var _interleavedDataStructure:Map<String, OffsetAndStride>; // attribute name, OffsetAndStride
+	private var _vertexCount:Int = -1;
 
 	public static function create(isInterleaved:Bool = false, interleavedDataStructure:Map<String, OffsetAndStride> = null):Geometry {
 		var object = new Geometry();
@@ -64,14 +79,17 @@ class Geometry {
 
 			// TODO
 			//_bufferData.set(INTERLEAVED_BUFFER_NAME, new ...)
+
+		} else {
+
+			// Initialise offsets - can be changed by used later
+			_vertexDataOffsets[bufferNames.position] = 0;
+			_vertexDataOffsets[bufferNames.normal] = 0;
+			_vertexDataOffsets[bufferNames.uv] = 0;
+			_vertexDataOffsets[bufferNames.color] = 0;
+
 		}
 
-
-		// Initialise strides - can be changed by used later
-		_vertexDataStrides[bufferNames.position] = bufferStrides.position;
-		_vertexDataStrides[bufferNames.normal] = bufferStrides.normal;
-		_vertexDataStrides[bufferNames.uv] = bufferStrides.uv;
-		_vertexDataStrides[bufferNames.color] = bufferStrides.color;
 
 		return true;
 	}
@@ -149,15 +167,40 @@ class Geometry {
 		return value;
 	}
 
+	public inline function get_vertexData():Map<String, VertexData> {
+		return this._vertexData;
+	}
+
+	public inline function get_vertexDataOffsets():Map<String, UInt> {
+		return this._vertexDataOffsets;
+	}
+
+	public inline function get_isIndexed():Bool {
+		return (this._indexData != null);
+	}
+
+	public inline function get_isInterleaved():Bool {
+		return this._isInterleaved;
+	}
+
+	public inline function get_vertexCount():Int {
+		return getVertexCount();
+	}
+
+	public inline function set_vertexCount(value:Int) {
+		return this._vertexCount = value;
+	}
+
+
 	/* --------- Implementation --------- */
 
 
 	public inline function getIndexData():IndexData {
-		return _indexData;
+		return this._indexData;
 	}
 
 	public inline function setIndexData(data:IndexData):Void {
-		_indexData = data;
+		this._indexData = data;
 	}
 
 	public inline function getVertexData(bufferName:String):VertexData {
@@ -171,15 +214,11 @@ class Geometry {
 		_vertexData[bufferName] = data;
 	}
 
-	public inline function setVertexDataStride(bufferName:String, stride:UInt):Void {
-		_vertexDataStrides[bufferName] = stride;
-	}
-
 	public inline function getPositionData():FloatVertexData {
-		if (_vertexData[bufferNames.position] == null) {
-			return null;
+		if (_vertexData.exists(bufferNames.position)) {
+			return cast _vertexData[bufferNames.position];
 		}
-		return cast _vertexData[bufferNames.position];
+		return null;
 	}
 
 	public inline function setPositionData(data:FloatVertexData):Void {
@@ -187,10 +226,10 @@ class Geometry {
 	}
 
 	public inline function getNormalData():FloatVertexData {
-		if (_vertexData[bufferNames.normal] == null) {
-			return null;
+		if (_vertexData.exists(bufferNames.normal)) {
+			return cast _vertexData[bufferNames.normal];
 		}
-		return cast _vertexData[bufferNames.normal];
+		return null;
 	}
 
 	public inline function setNormalData(data:FloatVertexData):Void {
@@ -198,10 +237,10 @@ class Geometry {
 	}
 
 	public inline function getUVData():FloatVertexData {
-		if (_vertexData[bufferNames.uv] == null) {
-			return null;
+		if (_vertexData.exists(bufferNames.uv)) {
+			return cast _vertexData[bufferNames.uv];
 		}
-		return cast _vertexData[bufferNames.uv];
+		return null;
 	}
 
 	public inline function setUVData(data:FloatVertexData):Void {
@@ -209,10 +248,10 @@ class Geometry {
 	}
 
 	public inline function getColorData():FloatVertexData {
-		if (_vertexData[bufferNames.color] == null) {
-			return null;
+		if (_vertexData.exists(bufferNames.color)) {
+			return cast _vertexData[bufferNames.color];
 		}
-		return cast _vertexData[bufferNames.color];
+		return null;
 	}
 
 	public inline function setColorData(data:FloatVertexData):Void {
@@ -220,23 +259,40 @@ class Geometry {
 	}
 
 	public inline function createPositionData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.position);
+		return FloatVertexData.create(bufferNames.position, bufferVertexSizes.position);
 	}
 
 	public inline function createNormalData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.normal);
+		return FloatVertexData.create(bufferNames.normal, bufferVertexSizes.normal);
 	}
 
 	public inline function createUVData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.uv);
+		return FloatVertexData.create(bufferNames.uv, bufferVertexSizes.uv);
 	}
 
 	public inline function createColorData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.color);
+		return FloatVertexData.create(bufferNames.color, bufferVertexSizes.color);
 	}
 
 	public inline function createIndexData():IndexData {
 		return IndexData.create();
+	}
+
+	public function getVertexCount():Int {
+		if (this.vertexCount >= 0) {
+			return this._vertexCount;
+
+		} else {
+			var vertexDataKeys = this._vertexData.keys();
+
+			if (vertexDataKeys.hasNext()) {
+				var vertexData = this._vertexData.get(vertexDataKeys.next());
+
+				return vertexData.getVertexCount();
+			} else {
+				return 0;
+			}
+		}
 	}
 
 	/**

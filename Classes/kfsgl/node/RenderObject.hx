@@ -1,5 +1,8 @@
 package kfsgl.node;
 
+import kfsgl.utils.gl.GLAttributeManager;
+import openfl.gl.GL;
+import kfsgl.core.Geometry;
 import kfsgl.camera.Camera;
 import openfl.geom.Matrix3D;
 import kfsgl.material.Material;
@@ -8,21 +11,31 @@ class RenderObject extends Node3D {
 
 	// properties
 	public var material(get, set):Material;
+	public var geometry(get, set):Geometry;
 	public var modelMatrix(get, null):Matrix3D;
 	public var modelViewMatrix(get, null):Matrix3D;
 	public var modelViewProjectionMatrix(get, null):Matrix3D;
 	public var normalMatrix(get, null):Matrix3D;
+	public var renderElementsOffset(get, set):Int;
+	public var renderElementsCount(get, set):Int;
 
 	// members
 	private var _material:Material;
+	private var _geometry:Geometry;
+	private var _drawMode:Int;
 	private var _modelViewMatrix:Matrix3D = new Matrix3D();
 	private var _modelViewProjectionMatrix:Matrix3D = new Matrix3D();
 	private var _normalMatrix:Matrix3D = new Matrix3D();
 
-	public function initWithMaterial(material:Material):Bool {
+	private var _renderElementsOffset = -1;
+	private var _renderElementsCount = -1;
+
+	public function initRenderObject(geometry:Geometry, material:Material, drawMode:Int):Bool {
 		var retval;
 		if ((retval = super.init())) {
+			this._geometry = geometry;
 			this._material = material;
+			this._drawMode = drawMode;
 
 		}
 
@@ -35,6 +48,16 @@ class RenderObject extends Node3D {
 	}
 
 	/* ----------- Properties ----------- */
+
+
+	public function get_geometry():Geometry {
+		return this._geometry;
+	}
+
+	public function set_geometry(value:Geometry) {
+		this.setGeometry(value);
+		return this._geometry;
+	}
 
 	public function get_material():Material {
 		return this._material;
@@ -61,8 +84,32 @@ class RenderObject extends Node3D {
 		return this._normalMatrix;
 	}
 
+	public function get_renderElementsOffset():Int {
+		return this._renderElementsOffset;
+	}
 
-/* --------- Implementation --------- */
+	public function set_renderElementsOffset(value:Int) {
+		return this._renderElementsOffset = value;
+	}
+
+	public function get_renderElementsCount():Int {
+		return this._renderElementsCount;
+	}
+
+	public function set_renderElementsCount(value:Int) {
+		return this._renderElementsCount = value;
+	}
+
+
+	/* --------- Implementation --------- */
+
+	public function getGeometry():Geometry {
+		return this._geometry;
+	}
+
+	public function setGeometry(value:Geometry) {
+		this._geometry = value;
+	}
 
 
 	public function getMaterial():Material {
@@ -90,10 +137,69 @@ class RenderObject extends Node3D {
 
 	}
 
+	public function renderBuffer(programAttributes:Map<String, Int>, attributeManager:GLAttributeManager):Void {
+		var isIndexed = this._geometry.isIndexed;
+		var isInterleaved = this._geometry.isInterleaved;
+		var allVertexData = this._geometry.vertexData;
+
+		// Initialise attribute manager for this object
+		attributeManager.initForRenderObject();
+
+		if (isInterleaved) {
+
+		} else {
+			// Iterate over all vertex data in the geometry
+			for (vertexData in allVertexData) {
+				var attributeName = vertexData.attributeName;
+
+				// If attribute exists in the program then set it
+				if (programAttributes.exists(attributeName)) {
+					var attributeLocation = programAttributes.get(attributeName);
+
+					// Verify that the attribute is used by the program
+					if (attributeLocation >= 0) {
+						// Enable the attribute
+						attributeManager.enableAttribute(attributeLocation);
+
+						// Attach buffer to attribute pointer
+						vertexData.bindToAttribute(attributeLocation);
+
+					}
+				}
+			}
+		}
+
+		// Disable unused attributes
+		attributeManager.disableUnusedAttributes();
+
+
+		var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
+		var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.vertexCount;
+
+		if (isIndexed) {
+			var indices = this._geometry.indices;
+
+			// Bind the indices
+			indices.bind();
+
+			// Draw the indexed vertices
+			GL.drawElements(this._drawMode, elementCount, indices.type, elementOffset);
+
+		} else {
+
+			GL.drawArrays(this._drawMode, elementOffset, elementCount);
+		}
+
+
+	}
+
 	/* --------- Scene graph --------- */
 
 	override public function updateObject(scene:Scene):Void {
 		super.updateObject(scene);
+
+		// Make sure the geometry data is written to opengl buffers
+		this.geometry.updateGeometry();
 	}
 
 }

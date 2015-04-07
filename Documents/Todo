@@ -1,7 +1,11 @@
 TODO
 ====
 
-- update camera matrices if not added to the scene
+- store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
+- handle "prepareForUse" in program
+- pass state managers to vertex data (remove singleton)
+- verify inlines of all propertie
+- handle ubyte color arrays
 - Check handling of global uniforms at F4
 - prepareForUse in Uniform
 - Render loop
@@ -37,3 +41,4 @@ x Geometry
 x   VertexAttribute buffers
 x StateManager
 x MeshNode (Geometry and Material)
+x update camera matrices if not added to the scene

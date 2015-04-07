@@ -15,6 +15,7 @@ class ShaderProgram {
 
 	// properties
 	public var name(get, null):String;
+	public var attributes(get, null):Map<String, Int>;
 
 	// members
 	private static var ID_COUNTER = 0;
@@ -48,11 +49,15 @@ class ShaderProgram {
 	/* ----------- Properties ----------- */
 
 	public inline function get_name():String {
-		return _name;
+		return this._name;
+	}
+
+	public inline function get_attributes():Map<String, Int> {
+		return this._attributes;
 	}
 
 
-	/* --------- Implementation --------- */
+/* --------- Implementation --------- */
 
 	public static function create(shaderName:String, shaderInfo:ShaderInfo):ShaderProgram {
 		var program = new ShaderProgram();

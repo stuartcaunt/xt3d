@@ -8,7 +8,7 @@ package kfsgl.utils.gl;
 import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
 import openfl.gl.GL;
-class InterlacedVertexData<T> extends VertexData {
+class InterleavedVertexData<T> extends VertexData {
 
 	private var _array:Array<Float> = new Array<Float>();
 
@@ -16,9 +16,11 @@ class InterlacedVertexData<T> extends VertexData {
 		super();
 	}
 
-	override public function getLength():Int {
-		return this._array.length;
-	}
+	/* ----------- Properties ----------- */
+
+	/* --------- Implementation --------- */
+
+
 
 //	public function getByteLength():Int {
 //		return getLength() * sizeof(T);
