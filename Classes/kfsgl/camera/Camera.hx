@@ -178,154 +178,154 @@ class Camera extends Node3D {
 
 	/* ----------- Properties ----------- */
 
-	public function get_initialPosition():Vector3D {
+	public inline function get_initialPosition():Vector3D {
 		return this._initialPosition;
 	}
 
-	public function set_initialPosition(value:Vector3D) {
+	public inline function set_initialPosition(value:Vector3D) {
 		this._initialPosition.copyFrom(value);
 		return this._initialPosition;
 	}
 
-	public function get_initialLookAt():Vector3D {
+	public inline function get_initialLookAt():Vector3D {
 		return this._initialLookAt;
 	}
 
-	public function set_initialLookAt(value:Vector3D) {
+	public inline function set_initialLookAt(value:Vector3D) {
 		this._initialLookAt.copyFrom(value);
 		return this._initialLookAt;
 	}
 
-	public function get_up():Vector3D {
+	public inline function get_up():Vector3D {
 		return this._up;
 	}
 
-	public function set_up(value:Vector3D) {
+	public inline function set_up(value:Vector3D) {
 		setUp(value);
 		return this._up;
 	}
 
-	public function get_viewMatrix():Matrix3D {
+	public inline function get_viewMatrix():Matrix3D {
 		return this._viewMatrix;
 	}
 
-	public function get_projectionMatrix():Matrix3D {
+	public inline function get_projectionMatrix():Matrix3D {
 		return this._projectionMatrix;
 	}
 
-	public function set_projectionMatrix(value:Matrix3D) {
+	public inline function set_projectionMatrix(value:Matrix3D) {
 		this._projectionMatrix.copyFrom(value);
 		return this._projectionMatrix;
 	}
 
-	public function get_viewProjectionMatrix():Matrix3D {
+	public inline function get_viewProjectionMatrix():Matrix3D {
 		return this.getViewProjectionMatrix();
 	}
 
-	public function get_isPerspective():Bool {
+	public inline function get_isPerspective():Bool {
 		return this._isPerspective;
 	}
 
-	public function set_isPerspective(value):Bool {
+	public inline function set_isPerspective(value):Bool {
 		return this._isPerspective = value;
 	}
 
-	public function get_fov():Float {
+	public inline function get_fov():Float {
 		return getFov();
 	}
 
-	public function set_fov(value:Float) {
+	public inline function set_fov(value:Float) {
 		setFov(value);
 		return this._fov;
 	}
 
-	public function get_zoom():Float {
+	public inline function get_zoom():Float {
 		return this._zoom;
 	}
 
-	public function set_zoom(value:Float) {
+	public inline function set_zoom(value:Float) {
 		setZoom(value);
 		return this._zoom;
 	}
 
-	public function get_focus():Float {
+	public inline function get_focus():Float {
 		return this._focus;
 	}
 
-	public function set_focus(value:Float) {
+	public inline function set_focus(value:Float) {
 		setFocus(value);
 		return this._focus;
 	}
 
-	public function get_aspect():Float {
+	public inline function get_aspect():Float {
 		return this._aspect;
 	}
 
-	public function set_aspect(value:Float) {
+	public inline function set_aspect(value:Float) {
 		return this._aspect = aspect;
 	}
 
-	public function get_near():Float {
+	public inline function get_near():Float {
 		return this._near;
 	}
 
-	public function set_near(value:Float) {
+	public inline function set_near(value:Float) {
 		return this._near = value;
 	}
 
-	public function get_far():Float {
+	public inline function get_far():Float {
 		return this._far;
 	}
 
-	public function set_far(value:Float) {
+	public inline function set_far(value:Float) {
 		return this._far = value;
 	}
 
-	public function get_left():Float {
+	public inline function get_left():Float {
 		return this._left;
 	}
 
-	public function set_left(value:Float) {
+	public inline function set_left(value:Float) {
 		return this._left = value;
 	}
 
-	public function get_right():Float {
+	public inline function get_right():Float {
 		return this._right;
 	}
 
-	public function set_right(value:Float) {
+	public inline function set_right(value:Float) {
 		return this._right = value;
 	}
 
-	public function get_top():Float {
+	public inline function get_top():Float {
 		return this._top;
 	}
 
-	public function set_top(value:Float) {
+	public inline function set_top(value:Float) {
 		return this._top = value;
 	}
 
-	public function get_bottom():Float {
+	public inline function get_bottom():Float {
 		return this._bottom;
 	}
 
-	public function set_bottom(value:Float) {
+	public inline function set_bottom(value:Float) {
 		return this._bottom = value;
 	}
 
-	public function get_width():Float {
+	public inline function get_width():Float {
 		return _width;
 	}
 
-	public function set_width(value:Float) {
+	public inline function set_width(value:Float) {
 		return this._width = value;
 	}
 
-	public function get_height():Float {
+	public inline function get_height():Float {
 		return _height;
 	}
 
-	public function set_height(value:Float) {
+	public inline function set_height(value:Float) {
 		return this._height = value;
 	}
 
@@ -529,7 +529,7 @@ class Camera extends Node3D {
 		}
 	}
 
-	public function getFov():Float {
+	public inline function getFov():Float {
 		return _fov;
 	}
 
@@ -550,7 +550,7 @@ class Camera extends Node3D {
 		}
 	}
 
-	public function getFocus():Float {
+	public inline function getFocus():Float {
 		return _focus;
 	}
 
@@ -571,7 +571,7 @@ class Camera extends Node3D {
 		}
 	}
 
-	public function getZoom():Float {
+	public inline function getZoom():Float {
 		return _zoom;
 	}
 
@@ -607,7 +607,7 @@ class Camera extends Node3D {
 	 * Used to obtain the look-at position as a vector.
 	 * @return The look-at position as a vector
 	 */
-	public function getLookAt():Vector3D {
+	public inline function getLookAt():Vector3D {
 		return this._lookAt;
 	}
 
@@ -628,7 +628,7 @@ class Camera extends Node3D {
 	 * Returns the x component of the look-at position.
 	 * @return the x component of the look-at position.
 	 */
-	public function getLookAtX():Float {
+	public inline function getLookAtX():Float {
 		return this._lookAt.x;
 	}
 
@@ -636,7 +636,7 @@ class Camera extends Node3D {
 	 * Returns the y component of the look-at position.
 	 * @return the y component of the look-at position.
 	 */
-	public function getLookAtY():Float {
+	public inline function getLookAtY():Float {
 		return this._lookAt.y;
 	}
 
@@ -644,7 +644,7 @@ class Camera extends Node3D {
 	 * Returns the z component of the look-at position.
 	 * @return the z component of the look-at position.
 	 */
-	public function getLookAtZ():Float {
+	public inline function getLookAtZ():Float {
 		return this._lookAt.z;
 	}
 
@@ -715,7 +715,7 @@ class Camera extends Node3D {
 	 * Returns the distance from the camera's location to the look-at position.
 	 * @return The distance from the camera's location to the look-at position.
 	 */
-	public function getDistanceToLookAt():Float {
+	public inline function getDistanceToLookAt():Float {
 		return Vector3D.distance(this.getWorldPosition(), this._lookAt);
 	}
 

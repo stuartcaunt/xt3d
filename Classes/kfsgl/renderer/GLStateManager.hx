@@ -172,7 +172,7 @@ class GLStateManager {
 		}
 	}
 
-	public function setDepthTest(depthTest) {
+	public inline function setDepthTest(depthTest) {
 		if (this._oldDepthTest != depthTest) {
 			if (depthTest) {
 				GL.enable(GL.DEPTH_TEST);
@@ -184,7 +184,7 @@ class GLStateManager {
 		}
 	}
 
-	public function setDepthWrite(depthWrite) {
+	public inline function setDepthWrite(depthWrite) {
 		if (this._oldDepthWrite != depthWrite) {
 			GL.depthMask(depthWrite);
 
@@ -239,7 +239,7 @@ class GLStateManager {
 	}
 
 
-	public function setCullFaceEnabled(cullFaceEnabled) {
+	public inline function setCullFaceEnabled(cullFaceEnabled) {
 		// Disable face culling
 		if (this._oldCullFaceEnabled != cullFaceEnabled) {
 			if (cullFaceEnabled) {
@@ -253,7 +253,7 @@ class GLStateManager {
 	}
 
 
-	public function setFrontFaceDirection(direction:Int) {
+	public inline function setFrontFaceDirection(direction:Int) {
 		if (this._oldFrontFaceDirection != direction) {
 			GL.frontFace(KFGL.toGLParam(direction));
 

@@ -50,73 +50,73 @@ class RenderObject extends Node3D {
 	/* ----------- Properties ----------- */
 
 
-	public function get_geometry():Geometry {
+	public inline function get_geometry():Geometry {
 		return this._geometry;
 	}
 
-	public function set_geometry(value:Geometry) {
+	public inline function set_geometry(value:Geometry) {
 		this.setGeometry(value);
 		return this._geometry;
 	}
 
-	public function get_material():Material {
+	public inline function get_material():Material {
 		return this._material;
 	}
 
-	public function set_material(value:Material) {
+	public inline function set_material(value:Material) {
 		this.setMaterial(value);
 		return this._material;
 	}
 
-	public function get_modelMatrix():Matrix3D {
+	public inline function get_modelMatrix():Matrix3D {
 		return this._worldMatrix;
 	}
 
-	public function get_modelViewMatrix():Matrix3D {
+	public inline function get_modelViewMatrix():Matrix3D {
 		return this._modelViewMatrix;
 	}
 
-	public function get_modelViewProjectionMatrix():Matrix3D {
+	public inline function get_modelViewProjectionMatrix():Matrix3D {
 		return this._modelViewProjectionMatrix;
 	}
 
-	public function get_normalMatrix():Matrix3D {
+	public inline function get_normalMatrix():Matrix3D {
 		return this._normalMatrix;
 	}
 
-	public function get_renderElementsOffset():Int {
+	public inline function get_renderElementsOffset():Int {
 		return this._renderElementsOffset;
 	}
 
-	public function set_renderElementsOffset(value:Int) {
+	public inline function set_renderElementsOffset(value:Int) {
 		return this._renderElementsOffset = value;
 	}
 
-	public function get_renderElementsCount():Int {
+	public inline function get_renderElementsCount():Int {
 		return this._renderElementsCount;
 	}
 
-	public function set_renderElementsCount(value:Int) {
+	public inline function set_renderElementsCount(value:Int) {
 		return this._renderElementsCount = value;
 	}
 
 
 	/* --------- Implementation --------- */
 
-	public function getGeometry():Geometry {
+	public inline function getGeometry():Geometry {
 		return this._geometry;
 	}
 
-	public function setGeometry(value:Geometry) {
+	public inline function setGeometry(value:Geometry) {
 		this._geometry = value;
 	}
 
 
-	public function getMaterial():Material {
+	public inline function getMaterial():Material {
 		return this._material;
 	}
 
-	public function setMaterial(value:Material) {
+	public inline function setMaterial(value:Material) {
 		this._material = value;
 	}
 
