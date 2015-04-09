@@ -139,11 +139,11 @@ class Uniform  {
 /* --------- Implementation --------- */
 
 	public function clone():Uniform {
-		return Uniform.create(_name, _uniformInfo, _location);
+		return Uniform.create(this._name, this._uniformInfo, this._location);
 	}
 
 	public function uniformInfo():KFUniformInfo {
-		return _uniformInfo;
+		return this._uniformInfo;
 	}
 
 
@@ -154,37 +154,37 @@ class Uniform  {
 	public function use() {
 		// If hasn't been set then use the default value
 		if (!_hasBeenSet) {
-			if (_size == 1) {
-				setValue(_defaultFloatValue);
-			} else if (_size < 16) {
-				setArrayValue(_defaultFloatArrayValue);
+			if (this._size == 1) {
+				setValue(this._defaultFloatValue);
+			} else if (this._size < 16) {
+				setArrayValue(this._defaultFloatArrayValue);
 			} else {
-				setMatrixValue(_defaultMatrixValue);
+				setMatrixValue(this._defaultMatrixValue);
 			}
 		}
 
 		// Send value to the GPU if it is dirty
 		if (_isDirty) {
-			var type = _uniformInfo.type;
+			var type = this._uniformInfo.type;
 			if (type == "float") {
-				GL.uniform1f(_location, _floatValue);
+				GL.uniform1f(this._location, this._floatValue);
 
 			} else if (type == "vec2") {
-				GL.uniform2f(_location, _floatArrayValue[0], _floatArrayValue[1]);
+				GL.uniform2f(this._location, this._floatArrayValue[0], this._floatArrayValue[1]);
 
 			} else if (type == "vec3") {
-				GL.uniform3f(_location, _floatArrayValue[0], _floatArrayValue[1], _floatArrayValue[2]);
+				GL.uniform3f(this._location, this._floatArrayValue[0], this._floatArrayValue[1], this._floatArrayValue[2]);
 
-			} else if (type == "ve4") {
-				GL.uniform4f(_location, _floatArrayValue[0], _floatArrayValue[1], _floatArrayValue[2], _floatArrayValue[3]);
+			} else if (type == "vec4") {
+				GL.uniform4f(this._location, this._floatArrayValue[0], this._floatArrayValue[1], this._floatArrayValue[2], this._floatArrayValue[3]);
 
 			} else if (type == "mat3") {
-				var float32ArrayValue = new Float32Array(_floatArrayValue);
-				GL.uniformMatrix3fv(_location, false, float32ArrayValue);
+				var float32ArrayValue = new Float32Array(this._floatArrayValue);
+				GL.uniformMatrix3fv(this._location, false, float32ArrayValue);
 
 			} else if (type == "mat4") {
-				var float32ArrayValue = new Float32Array(_matrixValue.rawData);
-				GL.uniformMatrix4fv(_location, false, float32ArrayValue);
+				var float32ArrayValue = new Float32Array(this._matrixValue.rawData);
+				GL.uniformMatrix4fv(this._location, false, float32ArrayValue);
 			}
 
 			_isDirty = false;
@@ -209,7 +209,7 @@ class Uniform  {
 
 
 	public function setValue(value:Float) {
-		if (_size != 1) {
+		if (this._size != 1) {
 			throw new KFException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
 		} else {
 			_hasBeenSet = true;
@@ -229,78 +229,78 @@ class Uniform  {
 			throw new KFException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
 		
 		} else {
-			_hasBeenSet = true;
+			this._hasBeenSet = true;
 
 			// Comparison of both arrays
-			if (value.toString() != _floatArrayValue.toString()) {
+			if (value.toString() != this._floatArrayValue.toString()) {
 				// Copy array values
-				_floatArrayValue = value.copy();
-				_isDirty = true;
+				this._floatArrayValue = value.copy();
+				this._isDirty = true;
 			}
 
 		}
 	}
 
 	public function setMatrixValue(value:Matrix3D) {
-		_hasBeenSet = true;
+		this._hasBeenSet = true;
 
 		// Comparison of both matrices
-		if (value.rawData.toString() != _matrixValue.rawData.toString()) {
+		if (value.rawData.toString() != this._matrixValue.rawData.toString()) {
 
 			// Copy array values
-			_matrixValue.copyFrom(value);
-			_isDirty = true;
+			this._matrixValue.copyFrom(value);
+			this._isDirty = true;
 		}
 	}
 
+
 	public function handleDefaultValue() {
-		var defaultValue = _uniformInfo.defaultValue;
+		var defaultValue = this._uniformInfo.defaultValue;
 		if (defaultValue != null) {
-			var type = _uniformInfo.type;
+			var type = this._uniformInfo.type;
 
 			if (type == "float") {
-				_size = 1;
+				this._size = 1;
 				var floatValue:Float = Std.parseFloat(defaultValue);
 				if (floatValue == Math.NaN) {
 					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
-					_defaultFloatValue = floatValue;
-					setValue(_defaultFloatValue);
+					this._defaultFloatValue = floatValue;
+					setValue(this._defaultFloatValue);
 				}
 
 			} else if (type == "vec2") {
-				_defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				_size = 2;
-				setArrayValue(_defaultFloatArrayValue);
+				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
+				this._size = 2;
+				setArrayValue(this._defaultFloatArrayValue);
 
 			} else if (type == "vec3") {
-				_defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				_size = 3;
-				setArrayValue(_defaultFloatArrayValue);
+				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
+				this._size = 3;
+				setArrayValue(this._defaultFloatArrayValue);
 
-			} else if (type == "ve4") {
-				setArrayValue(_defaultFloatArrayValue);
-				_defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				_size = 4;
-				setArrayValue(_defaultFloatArrayValue);
+			} else if (type == "vec4") {
+				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
+				this._size = 4;
+				setArrayValue(this._defaultFloatArrayValue);
 
 			} else if (type == "mat3") {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 1, 0, 0, 0, 1]";
 				}
-				_defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				_size = 9;
-				setArrayValue(_defaultFloatArrayValue);
+				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
+				this._size = 9;
+				setArrayValue(this._defaultFloatArrayValue);
 
 			} else if (type == "mat4") {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]";
 				}
 				var floatArray:Array<Float> = haxe.Json.parse(defaultValue);
-				_defaultMatrixValue.copyRawDataFrom(floatArray);
-				_size = 16;
-				setMatrixValue(_defaultMatrixValue);
+				this._defaultMatrixValue.copyRawDataFrom(floatArray);
+				this._size = 16;
+				setMatrixValue(this._defaultMatrixValue);
 
 			}
 		}
