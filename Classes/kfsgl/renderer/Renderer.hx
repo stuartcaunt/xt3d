@@ -160,11 +160,8 @@ class Renderer {
 		// Get the program
 		var program = material.program;
 
-		// Set buffer attibutes
-		var attributes = program.attributes;
-
 		// Render the buffers
-		renderObject.renderBuffer(attributes, this._attributeManager);
+		renderObject.renderBuffer(program, this._attributeManager);
 	}
 
 	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {

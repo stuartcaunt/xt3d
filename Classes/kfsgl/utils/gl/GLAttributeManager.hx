@@ -58,7 +58,7 @@ class GLAttributeManager {
 		if (attributeState.enabled == false) {
 
 			GL.enableVertexAttribArray(attributeLocation);
-			attributeState.enabled == true;
+			attributeState.enabled = true;
 		}
 
 	}
@@ -67,7 +67,7 @@ class GLAttributeManager {
 		for (attributeState in this._attributeStates) {
 			if (!attributeState.used && attributeState.enabled) {
 				GL.disableVertexAttribArray(attributeState.location);
-				attributeState.enabled == false;
+				attributeState.enabled = false;
 			}
 		}
 	}

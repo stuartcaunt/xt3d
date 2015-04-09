@@ -55,6 +55,7 @@ class Test1 extends Sprite {
 		// Create a material
 		var material:Material = Material.create("test_color");
 		material.setProgramName("test_nocolor");
+		material.uniform("color").floatArrayValue = [1, 0, 0, 1];
 
 		// create a geometry
 		var sphere = Sphere.create(2.0, 16, 16);

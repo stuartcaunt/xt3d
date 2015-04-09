@@ -11,11 +11,18 @@ import kfsgl.renderer.shaders.ShaderReader;
 import kfsgl.renderer.shaders.Uniform;
 import kfsgl.renderer.shaders.UniformLib;
 
+typedef ProgramAttributeState = {
+	var name:String;
+	var location:Int;
+	var used:Bool;
+}
+
+
 class ShaderProgram {
 
 	// properties
 	public var name(get, null):String;
-	public var attributes(get, null):Map<String, Int>;
+	public var attributes(get, null):Map<String, ProgramAttributeState>;
 
 	// members
 	private static var ID_COUNTER = 0;
@@ -28,7 +35,7 @@ class ShaderProgram {
 	private static var _prefixVertex:String = null;
 	private static var _prefixFragment:String = null;
 
-	private var _attributes:Map<String, Int> = new Map<String, Int>();
+	private var _attributes:Map<String, ProgramAttributeState> = new Map<String, ProgramAttributeState>();
 	private var _uniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _globalUniforms:Map<String, Uniform> = new Map<String, Uniform>();
@@ -52,7 +59,7 @@ class ShaderProgram {
 		return this._name;
 	}
 
-	public inline function get_attributes():Map<String, Int> {
+	public inline function get_attributes():Map<String, ProgramAttributeState> {
 		return this._attributes;
 	}
 
@@ -151,9 +158,9 @@ class ShaderProgram {
 
 		// Get attribute locations
 		for (identifier in KFAttributes.keys()) {
-			var attribute = GL.getAttribLocation(_program, KFAttributes.get(identifier));
-			//KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + attribute);
-			_attributes.set(identifier, attribute);
+			var location = GL.getAttribLocation(_program, KFAttributes.get(identifier));
+			//KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + location);
+			_attributes.set(identifier, { name:identifier, location:location, used:false });
 		}
 
 		// Handle common uniforms

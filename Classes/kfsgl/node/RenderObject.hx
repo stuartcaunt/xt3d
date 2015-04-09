@@ -1,5 +1,7 @@
 package kfsgl.node;
 
+import kfsgl.renderer.shaders.ShaderProgram;
+import kfsgl.errors.KFException;
 import kfsgl.utils.gl.GLAttributeManager;
 import openfl.gl.GL;
 import kfsgl.core.Geometry;
@@ -137,7 +139,8 @@ class RenderObject extends Node3D {
 
 	}
 
-	public function renderBuffer(programAttributes:Map<String, Int>, attributeManager:GLAttributeManager):Void {
+	public function renderBuffer(program:ShaderProgram, attributeManager:GLAttributeManager):Void {
+		var programAttributes = program.attributes;
 		var isIndexed = this._geometry.isIndexed;
 		var isInterleaved = this._geometry.isInterleaved;
 		var allVertexData = this._geometry.vertexData;
@@ -145,7 +148,13 @@ class RenderObject extends Node3D {
 		// Initialise attribute manager for this object
 		attributeManager.initForRenderObject();
 
+		// Initialise state of attributes before render
+		for (attributeState in programAttributes) {
+			attributeState.used = false;
+		}
+
 		if (isInterleaved) {
+			// TODO handle interleaved data
 
 		} else {
 			// Iterate over all vertex data in the geometry
@@ -154,7 +163,8 @@ class RenderObject extends Node3D {
 
 				// If attribute exists in the program then set it
 				if (programAttributes.exists(attributeName)) {
-					var attributeLocation = programAttributes.get(attributeName);
+					var attributeState = programAttributes.get(attributeName);
+					var attributeLocation = attributeState.location;
 
 					// Verify that the attribute is used by the program
 					if (attributeLocation >= 0) {
@@ -164,6 +174,8 @@ class RenderObject extends Node3D {
 						// Attach buffer to attribute pointer
 						vertexData.bindToAttribute(attributeLocation);
 
+						// Set the state as used
+						attributeState.used = true;
 					}
 				}
 			}
@@ -171,6 +183,13 @@ class RenderObject extends Node3D {
 
 		// Disable unused attributes
 		attributeManager.disableUnusedAttributes();
+
+		// Verify that all attributes are used
+		for (attributeState in programAttributes) {
+			if (attributeState.location >= 0 && !attributeState.used) {
+				throw new KFException("UnusedVertexAttribute", "The vertex attribute \"" + attributeState.name + "\" is unused for the program \"" + program.name + "\"");
+			}
+		}
 
 
 		if (isIndexed) {

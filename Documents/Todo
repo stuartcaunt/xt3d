@@ -1,6 +1,8 @@
 TODO
 ====
 
+- interleaved data
+- custom attributes
 - get OpenGL doc offline
 - Int32Array indexes not working?
 - verify/set float precisions in shaders
