@@ -4,12 +4,12 @@ import openfl.gl.GLUniformLocation;
 import kfsgl.errors.KFException;
 
 
-typedef KFUniformInfo = {
-	var name:String;
-	var type:String;
-	var defaultValue:String;
-	var global:Bool;
-}
+//typedef KFUniformInfo = {
+//	var name:String;
+//	var type:String;
+//	var defaultValue:String;
+//	var global:Bool;
+//}
 
 class UniformLib {
 
@@ -59,7 +59,7 @@ class UniformLib {
 
 				// Convert uniform json into type
 				var uniformInfoJson = Reflect.getProperty(allUniformInfoJson, uniformName);
-				var uniformInfo:KFUniformInfo = { 
+				var uniformInfo:UniformInfo = {
 					name: uniformInfoJson.name, 
 					type: uniformInfoJson.type, 
 					defaultValue: uniformInfoJson.defaultValue,

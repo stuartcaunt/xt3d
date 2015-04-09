@@ -6,7 +6,7 @@ import openfl.gl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 
-import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.renderer.shaders.UniformInfo;
 import kfsgl.utils.KF;
 import kfsgl.errors.KFException;
 
@@ -25,7 +25,7 @@ class Uniform  {
 	// members
 	private var _name:String;
 	private var _type:String;
-	private var _uniformInfo:KFUniformInfo;
+	private var _uniformInfo:UniformInfo;
 	private var _location:GLUniformLocation;
 	private var _isGlobal:Bool = false;
 	private var _size:Int;
@@ -41,7 +41,7 @@ class Uniform  {
 	private var _hasBeenSet:Bool = false;
 	private var _isDirty:Bool = true;
 
-	public static function create(name:String, uniformInfo:KFUniformInfo, location:GLUniformLocation):Uniform {
+	public static function create(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Uniform {
 		var object = new Uniform();
 
 		if (object != null && !(object.init(name, uniformInfo, location))) {
@@ -51,7 +51,7 @@ class Uniform  {
 		return object;
 	}
 
-	public static function createEmpty(name:String, uniformInfo:KFUniformInfo):Uniform {
+	public static function createEmpty(name:String, uniformInfo:UniformInfo):Uniform {
 		var object = new Uniform();
 
 		if (object != null && !(object.initEmpty(name, uniformInfo))) {
@@ -62,7 +62,7 @@ class Uniform  {
 
 	}
 
-	public function init(name:String, uniformInfo:KFUniformInfo, location:GLUniformLocation):Bool {
+	public function init(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Bool {
 		this._name = name;
 		this._type = uniformInfo.type;
 		this._uniformInfo = uniformInfo;
@@ -75,7 +75,7 @@ class Uniform  {
 	}
 
 
-	public function initEmpty(name:String, uniformInfo:KFUniformInfo):Bool {
+	public function initEmpty(name:String, uniformInfo:UniformInfo):Bool {
 		this._name = name;
 		this._type = uniformInfo.type;
 		this._uniformInfo = uniformInfo;
@@ -142,7 +142,7 @@ class Uniform  {
 		return Uniform.create(this._name, this._uniformInfo, this._location);
 	}
 
-	public function uniformInfo():KFUniformInfo {
+	public function uniformInfo():UniformInfo {
 		return this._uniformInfo;
 	}
 

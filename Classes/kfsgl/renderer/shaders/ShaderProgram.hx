@@ -85,6 +85,7 @@ class ShaderProgram {
 		var fragmentDefines= shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.join('\n') : "";
 		var uniforms = shaderInfo.uniforms;
 		var commonUniforms = shaderInfo.commonUniforms;
+		var attributes = shaderInfo.attributes;
 
 		// Load prefixes
 		if (_prefixVertex == null) {
@@ -97,6 +98,13 @@ class ShaderProgram {
 		}
 
 
+		// generate attribute declarations
+		var vertexAttributes:String = "";
+		for (attributeName in attributes.keys()) {
+			var attributeInfo = attributes.get(attributeName);
+			vertexAttributes += "attribute " + attributeInfo.type + " " + attributeInfo.name + ";\n";
+		}
+
 		// generate uniform declarations
 		var vertexUniforms:String = "";
 		for (uniformName in commonUniforms.keys()) {
@@ -108,10 +116,9 @@ class ShaderProgram {
 			vertexUniforms += "uniform " + uniformInfo.type + " " + uniformInfo.name + ";\n";
 		}
 
-
 		// Add prefixes
-		_vertexProgram = "// vertexDefines:\n" + vertexDefines + "\n// prefixVertex:\n" + _prefixVertex + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
-		_fragmentProgram = "// fragmentDefines:\n" + fragmentDefines + "\n// prefixFragment:\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
+		_vertexProgram = "// vertex shader: " + shaderName +  "\n\n// vertexDefines:\n" + vertexDefines + "\n// prefixVertex:\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
+		_fragmentProgram = "// fragment shader: " + shaderName +  "\n\n// fragmentDefines:\n" + fragmentDefines + "\n// prefixFragment:\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();
@@ -156,11 +163,18 @@ class ShaderProgram {
 			//KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
-		// Get attribute locations
+		// Get attribute locations from common attributes
 		for (identifier in KFAttributes.keys()) {
 			var location = GL.getAttribLocation(_program, KFAttributes.get(identifier));
 			//KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + location);
 			_attributes.set(identifier, { name:identifier, location:location, used:false });
+		}
+
+		// Get attribute locations from user-defined attributes
+		for (attributeIdentifier in attributes.keys()) {
+			var attribute = attributes.get(attributeIdentifier);
+			var location = GL.getAttribLocation(_program, attribute.name);
+			_attributes.set(attributeIdentifier, { name:attributeIdentifier, location:location, used:false });
 		}
 
 		// Handle common uniforms
