@@ -73,8 +73,8 @@ class IndexData {
 		return this._buffer;
 	}
 
-	public inline function get_type():Int {
-		return GL.UNSIGNED_INT;
+	public inline function get_type():UInt {
+		return GL.UNSIGNED_SHORT;
 	}
 
 
@@ -93,7 +93,11 @@ class IndexData {
 		this._isDirty = isDirty;
 	}
 
-	public function writeBuffer():Void {
+	public function getIndexCount():Int {
+		return this.getLength();
+	}
+
+	public function writeBuffer():Bool {
 		if (this._isDirty) {
 			if (this._buffer == null) {
 				this._buffer = GLBufferManager.instance().createElementBuffer(new Int16Array(this._array));
@@ -103,7 +107,9 @@ class IndexData {
 			}
 
 			this._isDirty = false;
+			return true;
 		}
+		return false;
 	}
 
 	public function bind():Void {

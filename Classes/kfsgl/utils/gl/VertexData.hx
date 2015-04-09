@@ -86,7 +86,7 @@ class VertexData {
 		return Std.int(this.getLength() / this.vertexSize);
 	}
 
-	public function writeBuffer():Void {
+	public function writeBuffer():Bool {
 		if (this._isDirty) {
 			var bufferData:ArrayBufferView = this.getBufferData();
 			if (this._buffer == null) {
@@ -97,7 +97,9 @@ class VertexData {
 			}
 
 			this._isDirty = false;
+			return true;
 		}
+		return false;
 	}
 
 	public function bindToAttribute(attributeLocation:Int):Void {

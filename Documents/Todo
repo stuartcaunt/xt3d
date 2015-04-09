@@ -1,10 +1,11 @@
 TODO
 ====
 
+- get OpenGL doc offline
+- Int32Array indexes not working?
 - store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
 - handle "prepareForUse" in program
 - pass state managers to vertex data (remove singleton)
-- verify inlines of all propertie
 - handle ubyte color arrays
 - Check handling of global uniforms at F4
 - prepareForUse in Uniform

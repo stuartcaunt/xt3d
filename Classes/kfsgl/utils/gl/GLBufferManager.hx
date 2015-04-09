@@ -1,8 +1,6 @@
 package kfsgl.utils.gl;
 
 import openfl.utils.ArrayBufferView;
-import openfl.utils.Int16Array;
-import openfl.utils.Float32Array;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 class GLBufferManager {

@@ -22,7 +22,7 @@ class RenderObject extends Node3D {
 	// members
 	private var _material:Material;
 	private var _geometry:Geometry;
-	private var _drawMode:Int;
+	private var _drawMode:UInt;
 	private var _modelViewMatrix:Matrix3D = new Matrix3D();
 	private var _modelViewProjectionMatrix:Matrix3D = new Matrix3D();
 	private var _normalMatrix:Matrix3D = new Matrix3D();
@@ -173,19 +173,22 @@ class RenderObject extends Node3D {
 		attributeManager.disableUnusedAttributes();
 
 
-		var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
-		var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.vertexCount;
-
 		if (isIndexed) {
 			var indices = this._geometry.indices;
 
 			// Bind the indices
 			indices.bind();
 
+			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
+			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.indexCount;
+
+
 			// Draw the indexed vertices
 			GL.drawElements(this._drawMode, elementCount, indices.type, elementOffset);
 
 		} else {
+			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
+			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.vertexCount;
 
 			GL.drawArrays(this._drawMode, elementOffset, elementCount);
 		}

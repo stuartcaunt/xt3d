@@ -171,6 +171,75 @@ class Camera extends Node3D {
 	private var _zoom:Float;
 	private var _focus:Float;
 
+
+	public static function create(view:View, position:Vector3D = null, up:Vector3D = null, lookAt:Vector3D = null):Camera {
+		var object = new Camera();
+
+		if (object != null && !(object.initWithView(view, position, up, lookAt))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+
+/**
+	 * Initialises the camera with user-defined geometry.
+	 * Perspective projection is used as default.
+	 * @param view The view used in association with the camera.
+	 * @param position The position of the camera. Defaults to (0.0, 0.0, 10.0)
+	 * @param up The up vector. Defaults to (0.0, 1.0, 0.0)
+	 * @param lookAt The position where the camera will look at. Defaults to (0.0, 0.0, 0.0)
+	 */
+	public function initWithView(view:View, position:Vector3D = null, up:Vector3D = null, lookAt:Vector3D = null):Bool {
+
+		var retval;
+		if ((retval = super.init())) {
+
+			if (position == null) {
+				position = new Vector3D(0.0, 0.0, 10.0);
+			}
+			if (up == null) {
+				up = new Vector3D(0.0, 1.0, 0.0);
+			}
+			if (lookAt == null) {
+				lookAt = new Vector3D(0.0, 0.0, 0.0);
+			}
+
+// add event listener to view
+			view.on('viewport_changed', this.onViewportChanged);
+
+			this.setPosition(position);
+			this._initialPosition = position.clone();
+
+			this._up.copyFrom(up);
+			this._lookAt.copyFrom(lookAt);
+			this._initialLookAt.copyFrom(lookAt);
+
+			this._isTargetCamera = true;
+			this._zoom = 1.0;
+			this._isPerspective = true;
+			this._isViewProjectionMatrixDirty = true;
+
+			this._view = view;
+			var viewportSize = view.viewport;
+			this._width = viewportSize.width;
+			this._height = viewportSize.height;
+
+// Set perspective projection with default values
+			setPerspectiveProjection(45.0, 1.0, 10000);
+
+// Initialise view matrix
+			this._matrixDirty = true;
+			var identityMatrix = new Matrix3D();
+			this.updateWorldMatrix();
+
+		}
+
+		return retval;
+	}
+
+
 	public function new() {
 		super();
 	}
@@ -331,74 +400,6 @@ class Camera extends Node3D {
 
 
 	/* --------- Implementation --------- */
-
-
-	public static function create(view:View, position:Vector3D = null, up:Vector3D = null, lookAt:Vector3D = null):Camera {
-		var object = new Camera();
-
-		if (object != null && !(object.initWithView(view, position, up, lookAt))) {
-			object = null;
-		}
-
-		return object;
-	}
-
-
-	/**
-	 * Initialises the camera with user-defined geometry.
-	 * Perspective projection is used as default.
-	 * @param view The view used in association with the camera.
-	 * @param position The position of the camera. Defaults to (0.0, 0.0, 10.0)
-	 * @param up The up vector. Defaults to (0.0, 1.0, 0.0)
-	 * @param lookAt The position where the camera will look at. Defaults to (0.0, 0.0, 0.0)
-	 */
-	public function initWithView(view:View, position:Vector3D = null, up:Vector3D = null, lookAt:Vector3D = null):Bool {
-
-		var retval;
-		if ((retval = super.init())) {
-
-			if (position == null) {
-				position = new Vector3D(0.0, 0.0, 10.0);
-			}
-			if (up == null) {
-				up = new Vector3D(0.0, 1.0, 0.0);
-			}
-			if (lookAt == null) {
-				lookAt = new Vector3D(0.0, 0.0, 0.0);
-			}
-
-			// add event listener to view
-			view.on('viewport_changed', this.onViewportChanged);
-
-			this.setPosition(position);
-			this._initialPosition = position.clone();
-
-			this._up.copyFrom(up);
-			this._lookAt.copyFrom(lookAt);
-			this._initialLookAt.copyFrom(lookAt);
-
-			this._isTargetCamera = true;
-			this._zoom = 1.0;
-			this._isPerspective = true;
-			this._isViewProjectionMatrixDirty = true;
-
-			this._view = view;
-			var viewportSize = view.viewport;
-			this._width = viewportSize.width;
-			this._height = viewportSize.height;
-
-			// Set perspective projection with default values
-			setPerspectiveProjection(45.0, 1.0, 10000);
-
-			// Initialise view matrix
-			this._matrixDirty = true;
-			var identityMatrix = new Matrix3D();
-			this.updateWorldMatrix();
-
-		}
-
-		return retval;
-	}
 
 	/**
 	 * Callback when viewport changes

@@ -48,6 +48,7 @@ class Geometry {
 	public var isIndexed(get, null):Bool;
 	public var isInterleaved(get, null):Bool;
 	public var vertexCount(get, set):Int;
+	public var indexCount(get, set):Int;
 
 	// members
 	public static var INTERLEAVED_BUFFER_NAME = "intlvd";
@@ -57,6 +58,9 @@ class Geometry {
 	private var _indexData:IndexData;
 	private var _interleavedDataStructure:Map<String, OffsetAndStride>; // attribute name, OffsetAndStride
 	private var _vertexCount:Int = -1;
+	private var _inferredVertexCount:Int = 0;
+	private var _indexCount:Int = -1;
+	private var _inferredIndexCount:Int = 0;
 
 	public static function create(isInterleaved:Bool = false, interleavedDataStructure:Map<String, OffsetAndStride> = null):Geometry {
 		var object = new Geometry();
@@ -191,6 +195,14 @@ class Geometry {
 		return this._vertexCount = value;
 	}
 
+	public inline function get_indexCount():Int {
+		return getIndexCount();
+	}
+
+	public inline function set_indexCount(value:Int) {
+		return this._indexCount = value;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -283,15 +295,16 @@ class Geometry {
 			return this._vertexCount;
 
 		} else {
-			var vertexDataKeys = this._vertexData.keys();
+			return this._inferredVertexCount;
+		}
+	}
 
-			if (vertexDataKeys.hasNext()) {
-				var vertexData = this._vertexData.get(vertexDataKeys.next());
+	public function getIndexCount():Int {
+		if (this._indexCount >= 0) {
+			return this._indexCount;
 
-				return vertexData.getVertexCount();
-			} else {
-				return 0;
-			}
+		} else {
+			return this._inferredIndexCount;
 		}
 	}
 
@@ -301,15 +314,25 @@ class Geometry {
 	public function updateGeometry():Void {
 
 		// Update vertex buffer attibutes
-		for (vertexData in this._vertexData) {
+		var verticesUpdated:Bool = false;
+		var vertexData = null;
+		for (vertexDataIterator in this._vertexData) {
 
 			// Write buffer (if needed)
-			vertexData.writeBuffer();
+			verticesUpdated = (verticesUpdated || vertexDataIterator.writeBuffer());
+			vertexData = vertexDataIterator;
+		}
+
+		// Get vertex data count from vertex data
+		if (verticesUpdated) {
+			this._inferredVertexCount = vertexData.getVertexCount();
 		}
 
 		// Update indices buffer
 		if (this._indexData != null) {
-			this._indexData.writeBuffer();
+			if (this._indexData.writeBuffer()) {
+				this._inferredIndexCount = this._indexData.getIndexCount();
+			}
 		}
 
 	}
