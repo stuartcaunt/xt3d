@@ -262,7 +262,7 @@ class Camera extends Node3D {
 	}
 
 	public inline function set_aspect(value:Float) {
-		return this._aspect = aspect;
+		return this._aspect = value;
 	}
 
 	public inline function get_near():Float {
