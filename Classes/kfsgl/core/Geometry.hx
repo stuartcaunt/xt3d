@@ -279,7 +279,7 @@ class Geometry {
 	}
 
 	public function getVertexCount():Int {
-		if (this.vertexCount >= 0) {
+		if (this._vertexCount >= 0) {
 			return this._vertexCount;
 
 		} else {
