@@ -1,5 +1,6 @@
 package kfsgl.node;
 
+import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.errors.KFException;
 import kfsgl.utils.gl.GLAttributeManager;
@@ -139,7 +140,7 @@ class RenderObject extends Node3D {
 
 	}
 
-	public function renderBuffer(program:ShaderProgram, attributeManager:GLAttributeManager):Void {
+	public function renderBuffer(program:ShaderProgram, attributeManager:GLAttributeManager, bufferManager:GLBufferManager):Void {
 		var programAttributes = program.attributes;
 		var isIndexed = this._geometry.isIndexed;
 		var isInterleaved = this._geometry.isInterleaved;
@@ -152,6 +153,9 @@ class RenderObject extends Node3D {
 		for (attributeState in programAttributes) {
 			attributeState.used = false;
 		}
+
+		// Make sure the geometry data is up to date and is written to opengl buffers
+		this.geometry.updateGeometry(bufferManager);
 
 		if (isInterleaved) {
 			// TODO handle interleaved data
@@ -172,7 +176,7 @@ class RenderObject extends Node3D {
 						attributeManager.enableAttribute(attributeLocation);
 
 						// Attach buffer to attribute pointer
-						vertexData.bindToAttribute(attributeLocation);
+						vertexData.bindToAttribute(attributeLocation, bufferManager);
 
 						// Set the state as used
 						attributeState.used = true;
@@ -196,7 +200,7 @@ class RenderObject extends Node3D {
 			var indices = this._geometry.indices;
 
 			// Bind the indices
-			indices.bind();
+			indices.bind(bufferManager);
 
 			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
 			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.indexCount;
@@ -219,9 +223,6 @@ class RenderObject extends Node3D {
 
 	override public function updateObject(scene:Scene):Void {
 		super.updateObject(scene);
-
-		// Make sure the geometry data is written to opengl buffers
-		this.geometry.updateGeometry();
 	}
 
 }

@@ -103,9 +103,9 @@ class FloatVertexData extends VertexData {
 #end
 	}
 
-	override public function bindToAttribute(attributeLocation:Int):Void {
+	override public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
 		// Bind the buffer
-		GLBufferManager.instance().setVertexBuffer(this._buffer);
+		bufferManager.setVertexBuffer(this._buffer);
 
 		// attach buffer to attribute
 		GL.vertexAttribPointer(attributeLocation, this._vertexSize, GL.FLOAT, false, 0, 0);

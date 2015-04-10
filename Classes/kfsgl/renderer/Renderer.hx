@@ -1,8 +1,10 @@
 package kfsgl.renderer;
 
+import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.GLAttributeManager;
 import kfsgl.errors.KFException;
 import kfsgl.utils.gl.GLBufferManager;
+import kfsgl.utils.gl.GLStateManager;
 import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.renderer.shaders.UniformLib;
 import openfl.geom.Matrix3D;
@@ -26,6 +28,7 @@ import flash.geom.Rectangle;
 class Renderer {
 
 	private var _stateManager:GLStateManager;
+	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
 
 	private var _viewport:Rectangle;
@@ -35,17 +38,32 @@ class Renderer {
 	private var _currentMaterial:Material = null;
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;
 
-	public function new() {
+	public static function create():Renderer {
+		var object = new Renderer();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
 	}
 
-	public function init() {
+	public function init():Bool {
 		// Build all shaders
 		ShaderManager.instance().loadDefaultShaders();
 
+		_stateManager = GLStateManager.create();
+		_bufferManager = GLBufferManager.create();
 		_attributeManager = GLAttributeManager.create();
 
-		_stateManager = GLStateManager.create();
+		return true;
 	}
+
+
+
+	public function new() {
+	}
+
 
 
 	public function clear(viewport:Rectangle, color:Color) {
@@ -157,11 +175,8 @@ class Renderer {
 		// Set program and uniforms
 		this.setProgram(material, renderObject, camera/*, lights*/);
 
-		// Get the program
-		var program = material.program;
-
 		// Render the buffers
-		renderObject.renderBuffer(program, this._attributeManager);
+		renderObject.renderBuffer(material.program, this._attributeManager, this._bufferManager);
 	}
 
 	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {

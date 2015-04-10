@@ -59,7 +59,9 @@ class VertexData {
 	/* --------- Implementation --------- */
 
 	public function dispose() {
-		GLBufferManager.instance().deleteBuffer(this._buffer);
+		if (this._buffer != null) {
+			GL.deleteBuffer(this._buffer);
+		}
 	}
 
 	public function getLength():Int {
@@ -86,14 +88,14 @@ class VertexData {
 		return Std.int(this.getLength() / this.vertexSize);
 	}
 
-	public function writeBuffer():Bool {
+	public function writeBuffer(bufferManager:GLBufferManager):Bool {
 		if (this._isDirty) {
 			var bufferData:ArrayBufferView = this.getBufferData();
 			if (this._buffer == null) {
-				this._buffer = GLBufferManager.instance().createVertexBuffer(bufferData);
+				this._buffer = bufferManager.createVertexBuffer(bufferData);
 
 			} else {
-				GLBufferManager.instance().updateVertexBuffer(this._buffer, bufferData);
+				bufferManager.updateVertexBuffer(this._buffer, bufferData);
 			}
 
 			this._isDirty = false;
@@ -102,7 +104,7 @@ class VertexData {
 		return false;
 	}
 
-	public function bindToAttribute(attributeLocation:Int):Void {
+	public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
 		throw new KFAbstractMethodError();
 	}
 

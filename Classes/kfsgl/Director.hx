@@ -24,8 +24,7 @@ class Director {
 	private var _globalTime = 0.0;
 
 	public function new() {
-		_renderer = new Renderer();
-		_renderer.init();
+		_renderer = Renderer.create();
 	}
 
 	/* ----------- Properties ----------- */

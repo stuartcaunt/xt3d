@@ -6,25 +6,32 @@ import openfl.gl.GLBuffer;
 class GLBufferManager {
 
 	// members
-	private static var _instance:GLBufferManager;
 
 	// State
 	private var _currentVertexBuffer:GLBuffer;
 	private var _currentElementBuffer:GLBuffer;
 
-	private function new() {
+
+	public static function create():GLBufferManager {
+		var object = new GLBufferManager();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function init():Bool {
+
+		return true;
+	}
+
+	public function new() {
 	}
 
 
 	/* --------- Implementation --------- */
-
-	public static inline function instance():GLBufferManager {
-		if (_instance == null) {
-			// TODO Handle different managers in different contexts.
-			_instance = new GLBufferManager();
-		}
-		return _instance;
-	}
 
 
 	public inline function createVertexBuffer(data:ArrayBufferView):GLBuffer {
@@ -83,13 +90,5 @@ class GLBufferManager {
 			GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, this._currentElementBuffer);
 		}
 	}
-
-	public inline function deleteBuffer(buffer:GLBuffer):Void {
-		if (buffer != null) {
-			GL.deleteBuffer(buffer);
-		}
-	}
-
-
 
 }

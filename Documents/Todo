@@ -6,9 +6,9 @@ TODO
 - get OpenGL doc offline
 - Int32Array indexes not working?
 - verify/set float precisions in shaders
+- textures
 - store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
 - handle "prepareForUse" in program uniforms
-- pass state managers to vertex data (remove singleton)
 - handle ubyte color arrays
 - Check handling of global uniforms at F4
 - Render loop
@@ -25,8 +25,9 @@ TODO
   - group by materials?
 
 - Material implementation
+  - texture material
+  - color material
 - View
-- attribute state manager
 
 
 DONE
@@ -45,3 +46,5 @@ x   VertexAttribute buffers
 x StateManager
 x MeshNode (Geometry and Material)
 x update camera matrices if not added to the scene
+x attribute state manager
+x pass state managers to vertex data (remove singleton)

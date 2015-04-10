@@ -78,10 +78,12 @@ class IndexData {
 	}
 
 
-/* --------- Implementation --------- */
+	/* --------- Implementation --------- */
 
 	public function dispose() {
-		GLBufferManager.instance().deleteBuffer(this._buffer);
+		if (this._buffer != null) {
+			GL.deleteBuffer(this._buffer);
+		}
 	}
 
 	// Number of elements
@@ -97,13 +99,13 @@ class IndexData {
 		return this.getLength();
 	}
 
-	public function writeBuffer():Bool {
+	public function writeBuffer(bufferManager:GLBufferManager):Bool {
 		if (this._isDirty) {
 			if (this._buffer == null) {
-				this._buffer = GLBufferManager.instance().createElementBuffer(new Int16Array(this._array));
+				this._buffer = bufferManager.createElementBuffer(new Int16Array(this._array));
 
 			} else {
-				GLBufferManager.instance().updateElementBuffer(this._buffer, new Int16Array(this._array));
+				bufferManager.updateElementBuffer(this._buffer, new Int16Array(this._array));
 			}
 
 			this._isDirty = false;
@@ -112,8 +114,8 @@ class IndexData {
 		return false;
 	}
 
-	public function bind():Void {
-		GLBufferManager.instance().setElementBuffer(this._buffer);
+	public function bind(bufferManager:GLBufferManager):Void {
+		bufferManager.setElementBuffer(this._buffer);
 	}
 
 	public inline function set(index:Int, value:UInt):Void {

@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.VertexData;
 import kfsgl.utils.gl.FloatVertexData;
 import kfsgl.utils.gl.IndexData;
@@ -311,7 +312,7 @@ class Geometry {
 	/**
 	 * Update any buffers that are dirty
 	 */
-	public function updateGeometry():Void {
+	public function updateGeometry(bufferManager:GLBufferManager):Void {
 
 		// Update vertex buffer attibutes
 		var verticesUpdated:Bool = false;
@@ -319,7 +320,7 @@ class Geometry {
 		for (vertexDataIterator in this._vertexData) {
 
 			// Write buffer (if needed)
-			verticesUpdated = (verticesUpdated || vertexDataIterator.writeBuffer());
+			verticesUpdated = (verticesUpdated || vertexDataIterator.writeBuffer(bufferManager));
 			vertexData = vertexDataIterator;
 		}
 
@@ -330,7 +331,7 @@ class Geometry {
 
 		// Update indices buffer
 		if (this._indexData != null) {
-			if (this._indexData.writeBuffer()) {
+			if (this._indexData.writeBuffer(bufferManager)) {
 				this._inferredIndexCount = this._indexData.getIndexCount();
 			}
 		}
