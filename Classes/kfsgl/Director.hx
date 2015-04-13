@@ -1,5 +1,6 @@
 package kfsgl;
 
+import kfsgl.events.EventEmitter;
 import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.view.View;
 import kfsgl.renderer.Renderer;
@@ -8,7 +9,7 @@ import kfsgl.utils.Color;
 import openfl.display.OpenGLView;
 import flash.geom.Rectangle;
 
-class Director {
+class Director extends EventEmitter {
 
 	// properties
 	public var openglView(get_openglView, set_openglView):OpenGLView;
@@ -24,6 +25,7 @@ class Director {
 	private var _globalTime = 0.0;
 
 	public function new() {
+		super();
 		_renderer = Renderer.create();
 	}
 
@@ -71,8 +73,8 @@ class Director {
 //			return;
 //		}
 
-
 		// send pre-render event (custom updates before rendering)
+		this.emit("pre_render");
 
 		// Clear context wil full rectangle
 		_renderer.clear(displayRect, backgroundColor);
@@ -86,8 +88,8 @@ class Director {
 			view.render(_renderer);
 		}
 
-
-		// Send post-render event
+		// send pre-render event (custom updates before rendering)
+		this.emit("post_render");
 
 	}
 

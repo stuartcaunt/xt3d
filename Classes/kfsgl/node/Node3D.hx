@@ -17,6 +17,10 @@ class Node3D {
 	public var worldMatrix(get, set):Matrix3D;
 	public var worldMatrixDirty(get, set):Bool;
 
+	public var rotationX(get, set):Float;
+	public var rotationY(get, set):Float;
+	public var rotationZ(get, set):Float;
+
 
 	// members
 	private static var ID_COUNTER = 0;
@@ -32,6 +36,7 @@ class Node3D {
 	private var _worldMatrix:Matrix3D = new Matrix3D();
 	private var _worldMatrixDirty:Bool = false;
 	private var _rotationMatrixDirty:Bool = false;
+	private var _eulerAnglesDirty:Bool = false;
 
 	private var _rotationX:Float = 0.0;
 	private var _rotationY:Float = 0.0;
@@ -133,6 +138,33 @@ class Node3D {
 		return this._matrix;
 	}
 
+	inline public function get_rotationX():Float {
+		return this.getRotationX();
+	}
+
+	inline public function set_rotationX(rotationX:Float):Float {
+		this.setRotationX(rotationX);
+		return this._rotationX;
+	}
+
+	inline public function get_rotationY():Float {
+		return this.getRotationY();
+	}
+
+	inline public function set_rotationY(rotationY:Float):Float {
+		this.setRotationY(rotationY);
+		return this._rotationY;
+	}
+
+	inline public function get_rotationZ():Float {
+		return this.getRotationZ();
+	}
+
+	inline public function set_rotationZ(rotationZ:Float):Float {
+		this.setRotationZ(rotationZ);
+		return this._rotationZ;
+	}
+
 
 /* --------- Implementation --------- */
 
@@ -207,17 +239,71 @@ class Node3D {
 	}
 
 
-/* --------- Transformations --------- */
+	/* --------- Transformation manipulation --------- */
 
 
-	inline public function getPosition() {
+	inline public function getPosition():Vector3D {
 		return this._matrix.position;
 	}
 
-	inline public function setPosition(position:Vector3D) {
+	inline public function setPosition(position:Vector3D):Void {
 		this._matrix.position = position;
 		this._worldMatrixDirty = true;
 	}
+
+	inline public function getRotationX():Float {
+		if (this._eulerAnglesDirty) {
+			this.updateEulerAngles();
+		}
+		return this._rotationX;
+	}
+
+	inline public function setRotationX(rotationX:Float):Void {
+		this._rotationX = rotationX;
+
+		this._rotationMatrixDirty = true;
+		this._matrixDirty = true;
+	}
+
+	inline public function getRotationY():Float {
+		if (this._eulerAnglesDirty) {
+			this.updateEulerAngles();
+		}
+		return this._rotationY;
+	}
+
+	inline public function setRotationY(rotationY:Float):Void {
+		this._rotationY = rotationY;
+
+		this._rotationMatrixDirty = true;
+		this._matrixDirty = true;
+	}
+
+	inline public function getRotationZ():Float {
+		if (this._eulerAnglesDirty) {
+			this.updateEulerAngles();
+		}
+		return this._rotationZ;
+	}
+
+	inline public function setRotationZ(rotationZ:Float):Void {
+		this._rotationZ = rotationZ;
+
+		this._rotationMatrixDirty = true;
+		this._matrixDirty = true;
+	}
+
+	private function updateEulerAngles():Void {
+		var r:Vector3D = MatrixHelper.getEulerRotationFromMatrix(this._matrix);
+		this._rotationX = r.x;
+		this._rotationY = r.y;
+		this._rotationZ = r.z;
+
+		this._eulerAnglesDirty = false;
+	}
+
+
+/* --------- Matrix Transformations --------- */
 
 	inline public function getWorldPosition() {
 		return this._worldMatrix.position;
@@ -232,6 +318,7 @@ class Node3D {
 
 		this._matrixDirty = false; // ??? Do we force the object NOT to update the matrix, which will override this new world matrix
 		this._worldMatrixDirty = false;
+		this._eulerAnglesDirty = true;
 	}
 
 	public inline function getMatrix():Matrix3D {
@@ -243,6 +330,7 @@ class Node3D {
 
 		this._matrixDirty = false;
 		this._worldMatrixDirty = true;
+		this._eulerAnglesDirty = true;
 	}
 
 

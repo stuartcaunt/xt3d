@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.utils.KF;
 import kfsgl.node.MeshNode;
 import openfl.geom.Vector3D;
 import kfsgl.node.Scene;
@@ -69,6 +70,13 @@ class Test1 extends Sprite {
 //		scene.traverse(function (node) {
 //			node.visible = true;
 //		});
+
+
+		var rotationX:Float = 0.0;
+		_director.on("pre_render", function () {
+			rotationX += 1.0;
+			sphereNode.rotationX = rotationX;
+		});
 
 	}
 	

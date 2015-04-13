@@ -9,6 +9,24 @@ import kfsgl.utils.KF;
 
 class MatrixHelper {
 
+//	float sxx; // 0
+//	float syx; // 1
+//	float szx; // 2
+//	float swx; // 3
+//	float sxy; // 4
+//	float syy; // 5
+//	float szy; // 6
+//	float swy; // 7
+//	float sxz; // 8
+//	float syz; // 9
+//	float szz; // 10
+//	float swz; // 11
+//	float tx;  // 12
+//	float ty;  // 13
+//	float tz;  // 14
+//	float tw;  // 15
+
+
 	static public var RAW_DATA_CONTAINER(get, null):Vector<Float>;
 	static private function get_RAW_DATA_CONTAINER():Vector<Float> {
 		return [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ];
@@ -151,6 +169,97 @@ class MatrixHelper {
 		KF.Log("TODO: MatrixHelp.setRotationFromQuaternion check set raw data to matrix");
 	}
 
+	/**
+	 * Returns the equivalent Euler angles of the rotational components of a matrix.
+	 * @param m The matrix.
+	 * @result Vector containing the rotations about x, y and z (in degrees)
+	 */
+	public static function getEulerRotationFromMatrix(m:Matrix3D):Vector3D {
+		var raw:Vector<Float> = m.rawData;
+
+		// Get rotation about X
+		var rotX:Float = -Math.atan2(raw[6], raw[10]);
+
+		// Create rotation matrix around X
+		var matrix = new Matrix3D();
+		MatrixHelper.setRotation(matrix, new Vector3D(1, 0, 0), rotX * 180.0 / Math.PI);
+
+		// left-multipy rotation matrix with self to remove X rotation from transformation
+		matrix.append(m);
+		raw = matrix.rawData;
+
+		// Get rotation about Y
+		var cosRotY:Float = Math.sqrt(raw[0] * raw[0] + raw[1] * raw[1]);
+		var rotY:Float = Math.atan2(-raw[2], cosRotY);
+
+		// get rotation about Z
+		var rotZ:Float = Math.atan2(-raw[4], raw[5]);
+
+
+		// Fix angles (from Away3D)
+		if (Math.round(rotZ / Math.PI) == 1.0) {
+			if (rotY > 0.0) {
+				rotY = -(rotY - Math.PI);
+			} else {
+				rotY = -(rotY + Math.PI);
+			}
+
+			rotZ -= Math.PI;
+
+			if (rotX > 0.0) {
+				rotX -= Math.PI;
+			} else {
+				rotX += Math.PI;
+			}
+
+		} else if (Math.round(rotZ / Math.PI) == -1.0) {
+			if (rotY > 0.0)
+				rotY = -(rotY - Math.PI);
+			else
+				rotY = -(rotY + Math.PI);
+
+			rotZ += Math.PI;
+
+			if (rotX > 0.0) {
+				rotX -= Math.PI;
+			} else {
+				rotX += Math.PI;
+			}
+
+		} else if (Math.round(rotX / Math.PI) == 1.0) {
+			if (rotY > 0.0) {
+				rotY = -(rotY - Math.PI);
+			} else {
+				rotY = -(rotY + Math.PI);
+			}
+
+			rotX -= Math.PI;
+
+			if (rotZ > 0.0) {
+				rotZ -= Math.PI;
+			} else {
+				rotZ += Math.PI;
+			}
+
+		} else if (Math.round(rotX / Math.PI) == -1.0) {
+			if (rotY > 0.0) {
+				rotY = -(rotY - Math.PI);
+			} else {
+				rotY = -(rotY + Math.PI);
+			}
+
+			rotX += Math.PI;
+
+			if (rotZ > 0.0) {
+				rotZ -= Math.PI;
+			} else {
+				rotZ += Math.PI;
+			}
+		}
+
+		return new Vector3D(-rotX * 180.0 / Math.PI, rotY * 180.0 / Math.PI, rotZ * 180.0 / Math.PI);
+
+	}
 
 
 	/**
@@ -295,6 +404,8 @@ class MatrixHelper {
 
 		var matrix:Matrix3D = new Matrix3D();
 		var raw:Vector<Float> = matrix.rawData;
+
+		// THE FOLLOWING INDICES ARE PROBABLY WRONG
 
 //		if (orientation == Isgl3dOrientation0) {
 		raw[0] = 2.0 / (right - left);

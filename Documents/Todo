@@ -4,6 +4,9 @@ TODO
 - handle ubyte color arrays
 - Int32Array indexes not working?
 - verify/set float precisions in shaders
+- modify opengl context
+  - control over depth/stencil
+  - render target
 - textures
 - handle "prepareForUse" in program uniforms
 - Check handling of global uniforms at F4
