@@ -54,6 +54,7 @@ class Sphere extends Geometry {
 //		var positions = super.createPositionData();
 //		var normals = super.createNormalData();
 //		var uvs = super.createUVData();
+		var colors = super.createByteColorData();
 		var indices = super.createIndexData();
 
 		var theta:Float;
@@ -67,6 +68,10 @@ class Sphere extends Geometry {
 		var z:Float;
 		var u:Float;
 		var v:Float;
+		var colorFrequency:Float = 2.0 * Math.PI;
+		var colorWidth:Float = 95;
+		var colorCenter:Float = 160;
+
 
 		// Calculate vertex data attributes
 		for (iLat in 0 ... this._lats + 1) {
@@ -95,6 +100,19 @@ class Sphere extends Geometry {
 
 				vertexData.push(u);
 				vertexData.push(v);
+
+				// Color as function of y
+				// http://krazydad.com/tutorials/makecolors.php
+				var f:Float = 0.5 * (y + 1);
+
+				var red = Math.sin(colorFrequency * f + 0) * colorWidth + colorCenter;
+				var green = Math.sin(colorFrequency * f + 2) * colorWidth + colorCenter;
+				var blue = Math.sin(colorFrequency * f + 4) * colorWidth + colorCenter;
+
+				colors.push(Std.int(red));
+				colors.push(Std.int(green));
+				colors.push(Std.int(blue));
+				colors.push(255);
 
 //				positions.push(this._radius * x);
 //				positions.push(this._radius * y);

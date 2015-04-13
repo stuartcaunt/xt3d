@@ -1,18 +1,16 @@
 package kfsgl.utils.gl;
 
+import kfsgl.utils.gl.PrimitiveVertexData;
 import openfl.utils.ArrayBufferView;
 import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
 import openfl.gl.GL;
 
-class FloatVertexData extends VertexData {
+class FloatVertexData extends PrimitiveVertexData {
 
 	// properties
-	public var attributeName(get, null):String;
-	public var vertexSize(get, null):Int;
 
 	// members
-	private var _attributeName:String;
 #if use_float32array
 	private var _f32Array:Float32Array = new Float32Array(0);
 	private var _capacity:Int = 0;
@@ -20,7 +18,6 @@ class FloatVertexData extends VertexData {
 #else
 	private var _array:Array<Float> = new Array<Float>();
 #end
-	private var _vertexSize:Int; // number of elements per vertex
 
 	public static function create(attributeName:String, vertexSize:Int):FloatVertexData {
 		var object = new FloatVertexData();
@@ -47,9 +44,7 @@ class FloatVertexData extends VertexData {
 
 	public function init(attributeName:String, vertexSize:Int):Bool {
 		var retval;
-		if ((retval = super.initVertexData())) {
-			this._attributeName = attributeName;
-			this._vertexSize = vertexSize;
+		if ((retval = super.initPrimitiveVertexData(attributeName, vertexSize))) {
 		}
 
 		return retval;
@@ -59,10 +54,8 @@ class FloatVertexData extends VertexData {
 #else
 	public function initWithArray(attributeName:String, array:Array<Float>, vertexSize:Int):Bool {
 		var retval;
-		if ((retval = super.initVertexData())) {
-			this._attributeName = attributeName;
+		if ((retval = super.initPrimitiveVertexData(attributeName, vertexSize))) {
 			this._array = array;
-			this._vertexSize = vertexSize;
 		}
 
 		return retval;
@@ -76,24 +69,9 @@ class FloatVertexData extends VertexData {
 
 	/* ----------- Properties ----------- */
 
-	public inline function get_attributeName():String {
-		return this._attributeName;
-	}
-
-	public inline function get_vertexSize():Int {
-		return this._vertexSize;
-	}
-
 
 	/* --------- Implementation --------- */
 
-	override public function getVertexCount():Int {
-		return Std.int(this.getLength() / this._vertexSize);
-	}
-
-	public inline function getAttributeName():String {
-		return this._attributeName;
-	}
 
 
 	// Number of elements
@@ -114,15 +92,13 @@ class FloatVertexData extends VertexData {
 #end
 	}
 
-	public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
+	override public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
 		// Bind the buffer
 		bufferManager.setVertexBuffer(this._buffer);
 
 		// attach buffer to attribute
 		GL.vertexAttribPointer(attributeLocation, this._vertexSize, GL.FLOAT, false, 0, 0);
 	}
-
-
 
 
 	public inline function set(index:Int, value:Float):Void {

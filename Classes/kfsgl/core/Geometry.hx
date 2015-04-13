@@ -1,5 +1,7 @@
 package kfsgl.core;
 
+import kfsgl.utils.gl.UByteVertexData;
+import kfsgl.utils.gl.PrimitiveVertexData;
 import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.VertexData;
 import kfsgl.utils.gl.FloatVertexData;
@@ -39,15 +41,16 @@ class Geometry {
 	public var positions(get, set):FloatVertexData;
 	public var normals(get, set):FloatVertexData;
 	public var uvs(get, set):FloatVertexData;
-	public var colors(get, set):FloatVertexData;
-	public var allVertexData(get, set):Map<String, FloatVertexData>;
+	public var floatColors(get, set):FloatVertexData;
+	public var byteColors(get, set):UByteVertexData;
+	public var allVertexData(get, set):Map<String, PrimitiveVertexData>;
 	public var interleavedVertexData(get, set):InterleavedVertexData;
 	public var isIndexed(get, null):Bool;
 	public var vertexCount(get, set):Int;
 	public var indexCount(get, set):Int;
 
 	// members
-	private var _vertexData:Map<String, FloatVertexData> = new Map<String, FloatVertexData>(); // attribute name, raw data
+	private var _vertexData:Map<String, PrimitiveVertexData> = new Map<String, PrimitiveVertexData>(); // attribute name, raw data
 	private var _interleavedVertexData:InterleavedVertexData = null;
 	private var _indexData:IndexData;
 	private var _vertexCount:Int = -1;
@@ -132,21 +135,29 @@ class Geometry {
 		return value;
 	}
 
-	public inline function get_colors():FloatVertexData {
-		return this.getColorData();
+	public inline function get_floatColors():FloatVertexData {
+		return this.getFloatColorData();
 	}
 
-
-	public inline function set_colors(value:FloatVertexData):FloatVertexData {
-		this.setColorData(value);
+	public inline function set_floatColors(value:FloatVertexData):FloatVertexData {
+		this.setFloatColorData(value);
 		return value;
 	}
 
-	public inline function get_allVertexData():Map<String, FloatVertexData> {
+	public inline function get_byteColors():UByteVertexData {
+		return this.getByteColorData();
+	}
+
+	public inline function set_byteColors(value:UByteVertexData):UByteVertexData {
+		this.setByteColorData(value);
+		return value;
+	}
+
+	public inline function get_allVertexData():Map<String, PrimitiveVertexData> {
 		return this._vertexData;
 	}
 
-	public inline function set_allVertexData(vertexData:Map<String, FloatVertexData>):Map<String, FloatVertexData> {
+	public inline function set_allVertexData(vertexData:Map<String, PrimitiveVertexData>):Map<String, PrimitiveVertexData> {
 		this.setAllVertexData(vertexData);
 		return this._vertexData;
 	}
@@ -201,22 +212,22 @@ class Geometry {
 		this._indexData = data;
 	}
 
-	public inline function getVertexData(bufferName:String):FloatVertexData {
+	public inline function getVertexData(bufferName:String):PrimitiveVertexData {
 		if (!_vertexData.exists(bufferName)) {
 			throw new KFException("VertexBufferDoesNotExist", "The vertex buffer \"" + bufferName + "\" does not exist");
 		}
 		return _vertexData[bufferName];
 	}
 
-	public inline function setVertexData(bufferName:String, data:FloatVertexData):Void {
+	public inline function setVertexData(bufferName:String, data:PrimitiveVertexData):Void {
 		this._vertexData[bufferName] = data;
 	}
 
-	public inline function setAllVertexData(vertexData:Map<String, FloatVertexData>):Void {
+	public inline function setAllVertexData(vertexData:Map<String, PrimitiveVertexData>):Void {
 		this._vertexData = vertexData;
 	}
 
-	public inline function getAllVertexData():Map<String, FloatVertexData> {
+	public inline function getAllVertexData():Map<String, PrimitiveVertexData> {
 		return this._vertexData;
 	}
 
@@ -229,7 +240,7 @@ class Geometry {
 	}
 
 	public inline function getPositionData():FloatVertexData {
-		return _vertexData[bufferNames.position];
+		return cast _vertexData[bufferNames.position];
 	}
 
 	public inline function setPositionData(data:FloatVertexData):Void {
@@ -237,7 +248,7 @@ class Geometry {
 	}
 
 	public inline function getNormalData():FloatVertexData {
-		return _vertexData[bufferNames.normal];
+		return cast _vertexData[bufferNames.normal];
 	}
 
 	public inline function setNormalData(data:FloatVertexData):Void {
@@ -245,18 +256,26 @@ class Geometry {
 	}
 
 	public inline function getUVData():FloatVertexData {
-		return _vertexData[bufferNames.uv];
+		return cast _vertexData[bufferNames.uv];
 	}
 
 	public inline function setUVData(data:FloatVertexData):Void {
 		this._vertexData[bufferNames.uv] = data;
 	}
 
-	public inline function getColorData():FloatVertexData {
-		return _vertexData[bufferNames.color];
+	public inline function getFloatColorData():FloatVertexData {
+		return cast _vertexData[bufferNames.color];
 	}
 
-	public inline function setColorData(data:FloatVertexData):Void {
+	public inline function setFloatColorData(data:FloatVertexData):Void {
+		this._vertexData[bufferNames.color] = data;
+	}
+
+	public inline function getByteColorData():UByteVertexData {
+		return cast _vertexData[bufferNames.color];
+	}
+
+	public inline function setByteColorData(data:UByteVertexData):Void {
 		this._vertexData[bufferNames.color] = data;
 	}
 
@@ -287,9 +306,15 @@ class Geometry {
 		return vertexData;
 	}
 
-	public inline function createColorData():FloatVertexData {
+	public inline function createFloatColorData():FloatVertexData {
 		var vertexData = FloatVertexData.create(bufferNames.color, bufferVertexSizes.color);
-		this.setColorData(vertexData);
+		this.setFloatColorData(vertexData);
+		return vertexData;
+	}
+
+	public inline function createByteColorData():UByteVertexData {
+		var vertexData = UByteVertexData.create(bufferNames.color, bufferVertexSizes.color);
+		this.setByteColorData(vertexData);
 		return vertexData;
 	}
 
