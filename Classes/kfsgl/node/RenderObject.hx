@@ -143,8 +143,6 @@ class RenderObject extends Node3D {
 	public function renderBuffer(program:ShaderProgram, attributeManager:GLAttributeManager, bufferManager:GLBufferManager):Void {
 		var programAttributes = program.attributes;
 		var isIndexed = this._geometry.isIndexed;
-		var isInterleaved = this._geometry.isInterleaved;
-		var allVertexData = this._geometry.vertexData;
 
 		// Initialise attribute manager for this object
 		attributeManager.initForRenderObject();
@@ -155,34 +153,27 @@ class RenderObject extends Node3D {
 		}
 
 		// Make sure the geometry data is up to date and is written to opengl buffers
-		this.geometry.updateGeometry(bufferManager);
+		this._geometry.updateGeometry(bufferManager);
 
-		if (isInterleaved) {
-			// TODO handle interleaved data
+		// Iterate over program attributes
+		for (programAttributeState in programAttributes) {
+			var attributeName = programAttributeState.name;
+			var attributeLocation = programAttributeState.location;
 
-		} else {
-			// Iterate over all vertex data in the geometry
-			for (vertexData in allVertexData) {
-				var attributeName = vertexData.attributeName;
+			// Verify that the attribute is used by the program AND contained by the geometry
+			if (attributeLocation >= 0) {
 
-				// If attribute exists in the program then set it
-				if (programAttributes.exists(attributeName)) {
-					var attributeState = programAttributes.get(attributeName);
-					var attributeLocation = attributeState.location;
+				// Attach buffer to attribute pointer
+				if (geometry.bindVertexBufferToAttribute(attributeName, attributeLocation, bufferManager)) {
 
-					// Verify that the attribute is used by the program
-					if (attributeLocation >= 0) {
-						// Enable the attribute
-						attributeManager.enableAttribute(attributeLocation);
+					// Enable the attribute
+					attributeManager.enableAttribute(attributeLocation);
 
-						// Attach buffer to attribute pointer
-						vertexData.bindToAttribute(attributeLocation, bufferManager);
-
-						// Set the state as used
-						attributeState.used = true;
-					}
+					// Set the state as used
+					programAttributeState.used = true;
 				}
 			}
+
 		}
 
 		// Disable unused attributes

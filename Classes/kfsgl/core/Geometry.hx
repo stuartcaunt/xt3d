@@ -3,13 +3,10 @@ package kfsgl.core;
 import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.VertexData;
 import kfsgl.utils.gl.FloatVertexData;
+import kfsgl.utils.gl.InterleavedVertexData;
 import kfsgl.utils.gl.IndexData;
 import kfsgl.errors.KFException;
 
-typedef OffsetAndStride = {
-	var offset: UInt;
-	var stride: UInt;
-}
 
 class Geometry {
 
@@ -29,72 +26,46 @@ class Geometry {
 		color: 4
 	};
 
-	// Buffers strides in bytes ?
-//	public var bufferStrides = {
-//		position: 3,
-//		normal: 3,
-//		uv: 2,
-//		color: 4
-//	};
+	private static var defaultInterleavedStructure:Map<String, VertexInfo> = [
+		bufferNames.position => { name: bufferNames.position, vertexSize: bufferVertexSizes.position, offset: -1}, // not used by default
+		bufferNames.normal => { name: bufferNames.normal, vertexSize: bufferVertexSizes.normal, offset: -1}, // not used by default
+		bufferNames.uv => { name: bufferNames.uv, vertexSize: bufferVertexSizes.uv, offset: -1}, // not used by default
+		bufferNames.color => { name: bufferNames.color, vertexSize: bufferVertexSizes.color, offset: -1} // not used by default
+	];
 
 
-// properties
+	// properties
 	public var indices(get, set):IndexData;
 	public var positions(get, set):FloatVertexData;
 	public var normals(get, set):FloatVertexData;
 	public var uvs(get, set):FloatVertexData;
 	public var colors(get, set):FloatVertexData;
-	public var vertexData(get, null):Map<String, VertexData>;
-	public var vertexDataOffsets(get, null):Map<String, UInt>;
+	public var allVertexData(get, set):Map<String, FloatVertexData>;
+	public var interleavedVertexData(get, set):InterleavedVertexData;
 	public var isIndexed(get, null):Bool;
-	public var isInterleaved(get, null):Bool;
 	public var vertexCount(get, set):Int;
 	public var indexCount(get, set):Int;
 
 	// members
-	public static var INTERLEAVED_BUFFER_NAME = "intlvd";
-	private var _isInterleaved:Bool = false;
-	private var _vertexData:Map<String, VertexData> = new Map<String, VertexData>(); // attribute name, raw data
-	private var _vertexDataOffsets:Map<String, UInt> = new Map<String, UInt>(); // attribute name, offset
+	private var _vertexData:Map<String, FloatVertexData> = new Map<String, FloatVertexData>(); // attribute name, raw data
+	private var _interleavedVertexData:InterleavedVertexData = null;
 	private var _indexData:IndexData;
-	private var _interleavedDataStructure:Map<String, OffsetAndStride>; // attribute name, OffsetAndStride
 	private var _vertexCount:Int = -1;
 	private var _inferredVertexCount:Int = 0;
 	private var _indexCount:Int = -1;
 	private var _inferredIndexCount:Int = 0;
 
-	public static function create(isInterleaved:Bool = false, interleavedDataStructure:Map<String, OffsetAndStride> = null):Geometry {
+	public static function create():Geometry {
 		var object = new Geometry();
 
-		if (object != null && !(object.init(isInterleaved, interleavedDataStructure))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(isInterleaved:Bool = false, interleavedDataStructure:Map<String, OffsetAndStride> = null):Bool {
-		this._isInterleaved = isInterleaved;
-		this._interleavedDataStructure = interleavedDataStructure;
-
-		if (this._isInterleaved) {
-			if (_interleavedDataStructure == null) {
-				throw new KFException("InterleavedGeometryBufferMustHaveStructure", "You must provide a structure for interleaved geometry buffer data");
-			}
-
-			// TODO
-			//_bufferData.set(INTERLEAVED_BUFFER_NAME, new ...)
-
-		} else {
-
-			// Initialise offsets - can be changed by used later
-			_vertexDataOffsets[bufferNames.position] = 0;
-			_vertexDataOffsets[bufferNames.normal] = 0;
-			_vertexDataOffsets[bufferNames.uv] = 0;
-			_vertexDataOffsets[bufferNames.color] = 0;
-
-		}
-
+	public function init():Bool {
 
 		return true;
 	}
@@ -136,7 +107,6 @@ class Geometry {
 		return this.getPositionData();
 	}
 
-
 	public inline function set_positions(value:FloatVertexData):FloatVertexData {
 		this.setPositionData(value);
 		return value;
@@ -172,20 +142,26 @@ class Geometry {
 		return value;
 	}
 
-	public inline function get_vertexData():Map<String, VertexData> {
+	public inline function get_allVertexData():Map<String, FloatVertexData> {
 		return this._vertexData;
 	}
 
-	public inline function get_vertexDataOffsets():Map<String, UInt> {
-		return this._vertexDataOffsets;
+	public inline function set_allVertexData(vertexData:Map<String, FloatVertexData>):Map<String, FloatVertexData> {
+		this.setAllVertexData(vertexData);
+		return this._vertexData;
+	}
+
+	public inline function get_interleavedVertexData():InterleavedVertexData {
+		return this._interleavedVertexData;
+	}
+
+	public inline function set_interleavedVertexData(interleavedVertexData:InterleavedVertexData):InterleavedVertexData {
+		this.setInterleavedVertexData(interleavedVertexData);
+		return this._interleavedVertexData;
 	}
 
 	public inline function get_isIndexed():Bool {
 		return (this._indexData != null);
-	}
-
-	public inline function get_isInterleaved():Bool {
-		return this._isInterleaved;
 	}
 
 	public inline function get_vertexCount():Int {
@@ -208,6 +184,15 @@ class Geometry {
 	/* --------- Implementation --------- */
 
 
+	public inline function cloneDefaultInterleavedStructure():Map<String, VertexInfo> {
+		var clone = new Map<String, VertexInfo>();
+		for (vertexInfo in defaultInterleavedStructure) {
+			clone.set(vertexInfo.name, vertexInfo);
+		}
+
+		return clone;
+	}
+
 	public inline function getIndexData():IndexData {
 		return this._indexData;
 	}
@@ -216,79 +201,102 @@ class Geometry {
 		this._indexData = data;
 	}
 
-	public inline function getVertexData(bufferName:String):VertexData {
+	public inline function getVertexData(bufferName:String):FloatVertexData {
 		if (!_vertexData.exists(bufferName)) {
 			throw new KFException("VertexBufferDoesNotExist", "The vertex buffer \"" + bufferName + "\" does not exist");
 		}
 		return _vertexData[bufferName];
 	}
 
-	public inline function setVertexData(bufferName:String, data:VertexData):Void {
-		_vertexData[bufferName] = data;
+	public inline function setVertexData(bufferName:String, data:FloatVertexData):Void {
+		this._vertexData[bufferName] = data;
+	}
+
+	public inline function setAllVertexData(vertexData:Map<String, FloatVertexData>):Void {
+		this._vertexData = vertexData;
+	}
+
+	public inline function getAllVertexData():Map<String, FloatVertexData> {
+		return this._vertexData;
+	}
+
+	public inline function getInterleavedVertexData():InterleavedVertexData {
+		return this._interleavedVertexData;
+	}
+
+	public inline function setInterleavedVertexData(data:InterleavedVertexData):Void {
+		this._interleavedVertexData = data;
 	}
 
 	public inline function getPositionData():FloatVertexData {
-		if (_vertexData.exists(bufferNames.position)) {
-			return cast _vertexData[bufferNames.position];
-		}
-		return null;
+		return _vertexData[bufferNames.position];
 	}
 
 	public inline function setPositionData(data:FloatVertexData):Void {
-		_vertexData[bufferNames.position] = data;
+		this._vertexData[bufferNames.position] = data;
 	}
 
 	public inline function getNormalData():FloatVertexData {
-		if (_vertexData.exists(bufferNames.normal)) {
-			return cast _vertexData[bufferNames.normal];
-		}
-		return null;
+		return _vertexData[bufferNames.normal];
 	}
 
 	public inline function setNormalData(data:FloatVertexData):Void {
-		_vertexData[bufferNames.normal] = data;
+		this._vertexData[bufferNames.normal] = data;
 	}
 
 	public inline function getUVData():FloatVertexData {
-		if (_vertexData.exists(bufferNames.uv)) {
-			return cast _vertexData[bufferNames.uv];
-		}
-		return null;
+		return _vertexData[bufferNames.uv];
 	}
 
 	public inline function setUVData(data:FloatVertexData):Void {
-		_vertexData[bufferNames.uv] = data;
+		this._vertexData[bufferNames.uv] = data;
 	}
 
 	public inline function getColorData():FloatVertexData {
-		if (_vertexData.exists(bufferNames.color)) {
-			return cast _vertexData[bufferNames.color];
-		}
-		return null;
+		return _vertexData[bufferNames.color];
 	}
 
 	public inline function setColorData(data:FloatVertexData):Void {
-		_vertexData[bufferNames.color] = data;
+		this._vertexData[bufferNames.color] = data;
+	}
+
+	public inline function createInterleavedVertexData(stride:Int, interleavedDataStructure:Map<String, VertexInfo> = null):InterleavedVertexData {
+		if (interleavedDataStructure == null) {
+			interleavedDataStructure = this.cloneDefaultInterleavedStructure();
+		}
+		var vertexData = InterleavedVertexData.create(stride, interleavedDataStructure);
+		this.setInterleavedVertexData(vertexData);
+		return vertexData;
 	}
 
 	public inline function createPositionData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.position, bufferVertexSizes.position);
+		var vertexData = FloatVertexData.create(bufferNames.position, bufferVertexSizes.position);
+		this.setPositionData(vertexData);
+		return vertexData;
 	}
 
 	public inline function createNormalData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.normal, bufferVertexSizes.normal);
+		var vertexData = FloatVertexData.create(bufferNames.normal, bufferVertexSizes.normal);
+		this.setNormalData(vertexData);
+		return vertexData;
 	}
 
 	public inline function createUVData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.uv, bufferVertexSizes.uv);
+		var vertexData = FloatVertexData.create(bufferNames.uv, bufferVertexSizes.uv);
+		this.setUVData(vertexData);
+		return vertexData;
 	}
 
 	public inline function createColorData():FloatVertexData {
-		return FloatVertexData.create(bufferNames.color, bufferVertexSizes.color);
+		var vertexData = FloatVertexData.create(bufferNames.color, bufferVertexSizes.color);
+		this.setColorData(vertexData);
+		return vertexData;
 	}
 
 	public inline function createIndexData():IndexData {
-		return IndexData.create();
+		var indexData = IndexData.create();
+		this.setIndexData(indexData);
+		return indexData;
 	}
 
 	public function getVertexCount():Int {
@@ -324,9 +332,19 @@ class Geometry {
 			vertexData = vertexDataIterator;
 		}
 
+		// Update interleaved vertex buffer data
+		if (this._interleavedVertexData != null) {
+			verticesUpdated = (verticesUpdated || this._interleavedVertexData.writeBuffer(bufferManager));
+		}
+
 		// Get vertex data count from vertex data
 		if (verticesUpdated) {
-			this._inferredVertexCount = vertexData.getVertexCount();
+			if (this._interleavedVertexData != null) {
+				this._inferredVertexCount = this._interleavedVertexData.getVertexCount();
+
+			} else {
+				this._inferredVertexCount = vertexData.getVertexCount();
+			}
 		}
 
 		// Update indices buffer
@@ -335,6 +353,27 @@ class Geometry {
 				this._inferredIndexCount = this._indexData.getIndexCount();
 			}
 		}
-
 	}
+
+
+	public function bindVertexBufferToAttribute(attributeName:String, attributeLocation:Int, bufferManager:GLBufferManager):Bool {
+		// Check for interleaved attribute first
+		if ((this._interleavedVertexData != null) && this._interleavedVertexData.bindToAttribute(attributeName, attributeLocation, bufferManager)) {
+			// Interleaved buffer has been bound to program attribute
+			return true;
+		}
+
+		// Otherwise look for individual buffer
+		if (this._vertexData.exists(attributeName)) {
+			var vertexData = this._vertexData.get(attributeName);
+
+			// Bind to attribute location for individual buffer
+			vertexData.bindToAttribute(attributeLocation, bufferManager);
+
+			return true;
+		}
+
+		return false;
+	}
+
 }

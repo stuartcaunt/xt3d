@@ -1,15 +1,11 @@
 TODO
 ====
 
-- interleaved data
-- custom attributes
-- get OpenGL doc offline
+- handle ubyte color arrays
 - Int32Array indexes not working?
 - verify/set float precisions in shaders
 - textures
-- store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
 - handle "prepareForUse" in program uniforms
-- handle ubyte color arrays
 - Check handling of global uniforms at F4
 - Render loop
 - Scene and Node
@@ -48,3 +44,7 @@ x MeshNode (Geometry and Material)
 x update camera matrices if not added to the scene
 x attribute state manager
 x pass state managers to vertex data (remove singleton)
+x get OpenGL doc offline
+x custom attributes
+x interleaved data
+x store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps

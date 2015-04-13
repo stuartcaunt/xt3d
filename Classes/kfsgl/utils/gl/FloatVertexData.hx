@@ -7,6 +7,12 @@ import openfl.gl.GL;
 
 class FloatVertexData extends VertexData {
 
+	// properties
+	public var attributeName(get, null):String;
+	public var vertexSize(get, null):Int;
+
+	// members
+	private var _attributeName:String;
 #if use_float32array
 	private var _f32Array:Float32Array = new Float32Array(0);
 	private var _capacity:Int = 0;
@@ -41,7 +47,8 @@ class FloatVertexData extends VertexData {
 
 	public function init(attributeName:String, vertexSize:Int):Bool {
 		var retval;
-		if ((retval = super.initVertexData(attributeName))) {
+		if ((retval = super.initVertexData())) {
+			this._attributeName = attributeName;
 			this._vertexSize = vertexSize;
 		}
 
@@ -52,10 +59,11 @@ class FloatVertexData extends VertexData {
 #else
 	public function initWithArray(attributeName:String, array:Array<Float>, vertexSize:Int):Bool {
 		var retval;
-		if ((retval = super.initVertexData(attributeName))) {
+		if ((retval = super.initVertexData())) {
+			this._attributeName = attributeName;
 			this._array = array;
 			this._vertexSize = vertexSize;
-	}
+		}
 
 		return retval;
 	}
@@ -68,16 +76,27 @@ class FloatVertexData extends VertexData {
 
 	/* ----------- Properties ----------- */
 
-	override public function get_vertexSize():Int {
+	public inline function get_attributeName():String {
+		return this._attributeName;
+	}
+
+	public inline function get_vertexSize():Int {
 		return this._vertexSize;
 	}
 
 
 	/* --------- Implementation --------- */
 
+	override public function getVertexCount():Int {
+		return Std.int(this.getLength() / this._vertexSize);
+	}
+
+	public inline function getAttributeName():String {
+		return this._attributeName;
+	}
 
 
-// Number of elements
+	// Number of elements
 	override public function getLength():Int {
 #if use_float32array
 		return this._f32Array.length >> 2;
@@ -87,14 +106,6 @@ class FloatVertexData extends VertexData {
 	}
 
 
-	override public function getByteLength():Int {
-#if use_float32array
-		return this._f32Array.length;
-#else
-		return getLength() * 4;
-#end
-	}
-
 	override public function getBufferData():ArrayBufferView {
 #if use_float32array
 		return this._f32Array;
@@ -103,7 +114,7 @@ class FloatVertexData extends VertexData {
 #end
 	}
 
-	override public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
+	public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
 		// Bind the buffer
 		bufferManager.setVertexBuffer(this._buffer);
 

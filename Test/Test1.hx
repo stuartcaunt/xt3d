@@ -41,6 +41,7 @@ class Test1 extends Sprite {
 		// Create a camera and set it in the view
 		var camera = Camera.create(view);
 		view.camera = camera;
+//		camera.position = new Vector3D(0, 5, 10);
 
 		// Create scene and add it to the view
 		var scene = Scene.create();

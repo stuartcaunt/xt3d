@@ -46,9 +46,14 @@ class Sphere extends Geometry {
 
 	/* --------- Implementation --------- */
 	private function createGeometry():Void {
-		var positions = super.createPositionData();
-		var normals = super.createNormalData();
-		var uvs = super.createUVData();
+		var vertexData = super.createInterleavedVertexData(8);
+		vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
+		vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
+		vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
+
+//		var positions = super.createPositionData();
+//		var normals = super.createNormalData();
+//		var uvs = super.createUVData();
 		var indices = super.createIndexData();
 
 		var theta:Float;
@@ -80,16 +85,27 @@ class Sphere extends Geometry {
 				u = 1.0 - (1.0 * iLon / this._lons);
 				v = 1.0 * iLat / this._lats;
 
-				positions.push(this._radius * x);
-				positions.push(this._radius * y);
-				positions.push(this._radius * z);
+				vertexData.push(this._radius * x);
+				vertexData.push(this._radius * y);
+				vertexData.push(this._radius * z);
 
-				normals.push(x);
-				normals.push(y);
-				normals.push(z);
+				vertexData.push(x);
+				vertexData.push(y);
+				vertexData.push(z);
 
-				uvs.push(u);
-				uvs.push(v);
+				vertexData.push(u);
+				vertexData.push(v);
+
+//				positions.push(this._radius * x);
+//				positions.push(this._radius * y);
+//				positions.push(this._radius * z);
+//
+//				normals.push(x);
+//				normals.push(y);
+//				normals.push(z);
+//
+//				uvs.push(u);
+//				uvs.push(v);
 			}
 		}
 
@@ -117,10 +133,6 @@ class Sphere extends Geometry {
 			}
 		}
 
-		super.positions = positions;
-		super.normals = normals;
-		super.uvs = uvs;
-		super.indices = indices;
 	}
 
 

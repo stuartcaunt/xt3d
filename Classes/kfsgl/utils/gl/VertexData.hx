@@ -11,17 +11,13 @@ class VertexData {
 	// properties
 	public var isDirty(get, set):Bool;
 	public var buffer(get, null):GLBuffer;
-	public var attributeName(get, null):String;
-	public var vertexSize(get, null):Int;
 	public var length(get, null):Int;
 
 	// members
-	private var _attributeName:String;
 	private var _buffer:GLBuffer = null;
 	private var _isDirty = false;
 
-	public function initVertexData(attributeName:String):Bool {
-		this._attributeName = attributeName;
+	public function initVertexData():Bool {
 
 		return true;
 	}
@@ -47,14 +43,6 @@ class VertexData {
 		return this.getLength();
 	}
 
-	public inline function get_attributeName():String {
-		return this._attributeName;
-	}
-
-	public function get_vertexSize():Int {
-		throw new KFAbstractMethodError();
-	}
-
 
 	/* --------- Implementation --------- */
 
@@ -68,10 +56,6 @@ class VertexData {
 		throw new KFAbstractMethodError();
 	}
 
-	public function getByteLength():Int {
-		throw new KFAbstractMethodError();
-	}
-
 	public function setIsDirty(isDirty:Bool):Void {
 		this._isDirty = isDirty;
 	}
@@ -80,12 +64,8 @@ class VertexData {
 		throw new KFAbstractMethodError();
 	}
 
-	public inline function getAttributeName():String {
-		return this._attributeName;
-	}
-
 	public function getVertexCount():Int {
-		return Std.int(this.getLength() / this.vertexSize);
+		throw new KFAbstractMethodError();
 	}
 
 	public function writeBuffer(bufferManager:GLBufferManager):Bool {
@@ -103,10 +83,5 @@ class VertexData {
 		}
 		return false;
 	}
-
-	public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
-		throw new KFAbstractMethodError();
-	}
-
 
 }
