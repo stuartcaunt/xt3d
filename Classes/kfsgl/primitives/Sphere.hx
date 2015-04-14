@@ -101,6 +101,17 @@ class Sphere extends Geometry {
 				vertexData.push(u);
 				vertexData.push(v);
 
+//				positions.push(this._radius * x);
+//				positions.push(this._radius * y);
+//				positions.push(this._radius * z);
+//
+//				normals.push(x);
+//				normals.push(y);
+//				normals.push(z);
+//
+//				uvs.push(u);
+//				uvs.push(v);
+
 				// Color as function of y
 				// http://krazydad.com/tutorials/makecolors.php
 				var f:Float = 0.5 * (y + 1);
@@ -113,17 +124,6 @@ class Sphere extends Geometry {
 				colors.push(Std.int(green));
 				colors.push(Std.int(blue));
 				colors.push(255);
-
-//				positions.push(this._radius * x);
-//				positions.push(this._radius * y);
-//				positions.push(this._radius * z);
-//
-//				normals.push(x);
-//				normals.push(y);
-//				normals.push(z);
-//
-//				uvs.push(u);
-//				uvs.push(v);
 			}
 		}
 
@@ -152,6 +152,4 @@ class Sphere extends Geometry {
 		}
 
 	}
-
-
 }

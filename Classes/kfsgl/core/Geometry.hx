@@ -353,13 +353,13 @@ class Geometry {
 		for (vertexDataIterator in this._vertexData) {
 
 			// Write buffer (if needed)
-			verticesUpdated = (verticesUpdated || vertexDataIterator.writeBuffer(bufferManager));
+			verticesUpdated = (vertexDataIterator.writeBuffer(bufferManager) || verticesUpdated);
 			vertexData = vertexDataIterator;
 		}
 
 		// Update interleaved vertex buffer data
 		if (this._interleavedVertexData != null) {
-			verticesUpdated = (verticesUpdated || this._interleavedVertexData.writeBuffer(bufferManager));
+			verticesUpdated = (this._interleavedVertexData.writeBuffer(bufferManager) || verticesUpdated);
 		}
 
 		// Get vertex data count from vertex data

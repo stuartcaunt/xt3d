@@ -1,7 +1,6 @@
 TODO
 ====
 
-- handle ubyte color arrays
 - Int32Array indexes not working?
 - verify/set float precisions in shaders
 - modify opengl context
@@ -51,3 +50,4 @@ x get OpenGL doc offline
 x custom attributes
 x interleaved data
 x store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
+x handle ubyte color arrays
