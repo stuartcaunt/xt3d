@@ -1,5 +1,7 @@
 package;
 
+import kfsgl.node.Node3D;
+import kfsgl.node.Node3D;
 import kfsgl.utils.KF;
 import kfsgl.node.MeshNode;
 import openfl.geom.Vector3D;
@@ -42,14 +44,14 @@ class Test1 extends Sprite {
 		// Create a camera and set it in the view
 		var camera = Camera.create(view);
 		view.camera = camera;
-//		camera.position = new Vector3D(0, 5, 10);
+		camera.position = new Vector3D(0, 5, 10);
 
 		// Create scene and add it to the view
 		var scene = Scene.create();
 		view.scene = scene;
 
-//		// Add camera to scene
-//		scene.addChild(camera);
+		// Add camera to scene
+		scene.addChild(camera);
 
 		// Add view to director
 		_director.addView(view);
@@ -57,22 +59,24 @@ class Test1 extends Sprite {
 		// Create a material
 		var material:Material = Material.create("test_color");
 
+		var parent = Node3D.create();
+		scene.addChild(parent);
+
 		// create a geometry
 		var sphere = Sphere.create(2.0, 16, 16);
 		var sphereNode = MeshNode.create(sphere, material);
-		sphereNode.position = new Vector3D(0.0, 0.0, 0.0);
+		sphereNode.position = new Vector3D(-1.0, 0.0, 0.0);
 
-		scene.addChild(sphereNode);
+		parent.addChild(sphereNode);
 
 		var material2:Material = Material.create("test_nocolor");
 		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
 
 		// create a geometry
-		var sphere2 = Sphere.create(2.0, 16, 16);
-		var sphereNode2 = MeshNode.create(sphere2, material2);
+		var sphereNode2 = MeshNode.create(sphere, material2);
 		sphereNode2.position = new Vector3D(1.0, 0.0, 0.0);
 
-		scene.addChild(sphereNode2);
+		parent.addChild(sphereNode2);
 
 		// custom traversal
 //		scene.traverse(function (node) {
@@ -84,7 +88,7 @@ class Test1 extends Sprite {
 		_director.on("pre_render", function () {
 			rotation += 1.0;
 			sphereNode.rotationX = rotation	;
-			scene.rotationY = rotation	;
+			parent.rotationY = rotation	;
 		});
 
 	}
