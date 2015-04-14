@@ -63,7 +63,7 @@ class UniformLib {
 					name: uniformInfoJson.name, 
 					type: uniformInfoJson.type, 
 					defaultValue: uniformInfoJson.defaultValue,
-					global: (uniformInfoJson.global != null) ? uniformInfoJson.global : false
+					global: uniformInfoJson.global == true ? true : false
 				};
 
 				// Add uniform value to map

@@ -30,6 +30,7 @@ class Renderer {
 	private var _stateManager:GLStateManager;
 	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
+	private var _needsStateInit:Bool = true;
 
 	private var _viewport:Rectangle;
 	private var _viewProjectionMatrix = new Matrix3D();
@@ -60,10 +61,8 @@ class Renderer {
 	}
 
 
-
 	public function new() {
 	}
-
 
 
 	public function clear(viewport:Rectangle, color:Color) {
@@ -83,6 +82,13 @@ class Renderer {
 
 
 	public function render(scene:Scene, camera:Camera) {
+
+		// Not great... can only set the default here ? Not before the first render ?
+		if (this._needsStateInit) {
+			this._stateManager.setDefaultGLState();
+			this._needsStateInit = false;
+		}
+
 		if (scene != null && camera != null) {
 
 			// Update world matrices of scene graph

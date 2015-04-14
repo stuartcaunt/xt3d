@@ -164,9 +164,6 @@ class MatrixHelper {
 		raw[8] =     2 * (xz + yw);
 		raw[9] =     2 * (zw - xy);
 		raw[10] = 1 - 2 * (yy + zz);
-
-		// Set raw back again?
-		KF.Log("TODO: MatrixHelp.setRotationFromQuaternion check set raw data to matrix");
 	}
 
 	/**

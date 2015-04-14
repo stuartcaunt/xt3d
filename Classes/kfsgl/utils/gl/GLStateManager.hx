@@ -16,7 +16,7 @@ class GLStateManager {
 
 	// Depth test
 	private var _oldDepthTest = false;
-	private var _oldDepthWrite = true;
+	private var _oldDepthWrite = false;
 
 	// Culling and face direction
 	private var _oldCullFaceEnabled = false;
@@ -58,6 +58,11 @@ class GLStateManager {
 		this._oldDepthTest = false;
 		this.setDepthTest(true);
 		GL.depthFunc(GL.LEQUAL);
+
+		// Depth write
+		this._oldDepthWrite = false;
+		this.setDepthWrite(true);
+		GL.clearDepth(1.0);
 
 		// Culling
 		this._oldCullFaceEnabled = false;

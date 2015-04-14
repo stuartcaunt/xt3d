@@ -26,7 +26,6 @@ class Director extends EventEmitter {
 
 	public function new() {
 		super();
-		_renderer = Renderer.create();
 	}
 
 	/* ----------- Properties ----------- */
@@ -37,6 +36,9 @@ class Director extends EventEmitter {
 
 	public inline function set_openglView(openglView) {
 		_openglView = openglView;
+
+		// Create new renderer for opengl view
+		_renderer = Renderer.create();
 
 		_openglView.render = renderLoop;
 

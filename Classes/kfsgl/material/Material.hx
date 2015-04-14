@@ -35,17 +35,17 @@ class Material {
 	private var _opacity:Float = 1;
 	private var _transparent:Bool = false;
 
-	private var _blending:Int;
-	private var _blendSrc:Int;
-	private var _blendDst:Int;
-	private var _blendEquation:Int;
+	private var _blending:Int = KFGL.NormalBlending;
+	private var _blendSrc:Int = KFGL.GL_SRC_ALPHA;
+	private var _blendDst:Int = KFGL.GL_ONE_MINUS_SRC_ALPHA;
+	private var _blendEquation:Int = KFGL.GL_FUNC_ADD;
 
-	private var _depthTest:Bool;
-	private var _depthWrite:Bool;
+	private var _depthTest:Bool = true;
+	private var _depthWrite:Bool = true;
 
-	private var _polygonOffset:Bool;
-	private var _polygonOffsetFactor:Float;
-	private var _polygonOffsetUnits:Float;
+	private var _polygonOffset:Bool = false;
+	private var _polygonOffsetFactor:Float = 0.0;
+	private var _polygonOffsetUnits:Float = 0.0;
 	private var _side:Int = KFGL.FrontSide;
 
 	public static function create(programName:String):Material {

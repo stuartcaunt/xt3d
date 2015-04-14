@@ -56,8 +56,6 @@ class Test1 extends Sprite {
 
 		// Create a material
 		var material:Material = Material.create("test_color");
-//		material.setProgramName("test_nocolor");
-//		material.uniform("color").floatArrayValue = [1, 0, 0, 1];
 
 		// create a geometry
 		var sphere = Sphere.create(2.0, 16, 16);
@@ -66,16 +64,27 @@ class Test1 extends Sprite {
 
 		scene.addChild(sphereNode);
 
+		var material2:Material = Material.create("test_nocolor");
+		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
+
+		// create a geometry
+		var sphere2 = Sphere.create(2.0, 16, 16);
+		var sphereNode2 = MeshNode.create(sphere2, material2);
+		sphereNode2.position = new Vector3D(1.0, 0.0, 0.0);
+
+		scene.addChild(sphereNode2);
+
 		// custom traversal
 //		scene.traverse(function (node) {
 //			node.visible = true;
 //		});
 
 
-		var rotationX:Float = 0.0;
+		var rotation:Float = 0.0;
 		_director.on("pre_render", function () {
-			rotationX += 1.0;
-			sphereNode.rotationX = rotationX;
+			rotation += 1.0;
+			sphereNode.rotationX = rotation	;
+			scene.rotationY = rotation	;
 		});
 
 	}
