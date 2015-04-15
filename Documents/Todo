@@ -1,7 +1,6 @@
 TODO
 ====
 
-- Int32Array indexes not working?
 - verify/set float precisions in shaders
 - modify opengl context
   - control over depth/stencil
@@ -26,7 +25,7 @@ TODO
   - texture material
   - color material
 - View
-
+- html5 development env to automatically build and re-deploy on server
 
 DONE
 ====
@@ -52,3 +51,4 @@ x interleaved data
 x store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
 x handle ubyte color arrays
 x update haxe, openfl, lime
+x Int32Array indexes not working?
