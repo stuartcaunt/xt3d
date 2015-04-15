@@ -80,7 +80,7 @@ class GLStateManager {
 	}
 
 
-	public function setBlending(blending:UInt, blendEquation:UInt = KFGL.GL_FUNC_ADD, blendSrc:UInt = KFGL.GL_SRC_ALPHA, blendDst:UInt = KFGL.GL_ONE_MINUS_SRC_ALPHA) {
+	public function setBlending(blending:Int, blendEquation:Int = KFGL.GL_FUNC_ADD, blendSrc:Int = KFGL.GL_SRC_ALPHA, blendDst:Int = KFGL.GL_ONE_MINUS_SRC_ALPHA) {
 		if (blending != this._oldBlending || blending == KFGL.CustomBlending) {
 
 			if (blending == KFGL.NoBlending) {

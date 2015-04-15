@@ -51,3 +51,4 @@ x custom attributes
 x interleaved data
 x store vertex attribute size, type (GL.Float, etc) in VertexData rather than separate maps
 x handle ubyte color arrays
+x update haxe, openfl, lime

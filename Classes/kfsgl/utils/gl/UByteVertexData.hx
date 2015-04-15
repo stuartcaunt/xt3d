@@ -40,7 +40,7 @@ class UByteVertexData extends PrimitiveVertexData {
 		return retval;
 	}
 
-	public function initWithArray(attributeName:String, array:Array<Int>, vertexSize:Int):Bool {
+	public function initWithArray(attributeName:String, array:Array<UInt>, vertexSize:Int):Bool {
 		var retval;
 		if ((retval = super.initPrimitiveVertexData(attributeName, vertexSize))) {
 			this._array = array;
