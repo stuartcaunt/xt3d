@@ -4,7 +4,11 @@ import openfl.gl.GL;
 class KFGL {
 
 
-	// GL STATE CONSTANTS
+	public static inline var LOW_PRECISION:String = "lowp";
+	public static inline var MEDIUM_PRECISION:String = "mediump";
+	public static inline var HIGH_PRECISION:String = "highp";
+
+// GL STATE CONSTANTS
 
 	public static inline var CullFaceNone:Int = 0;
 	public static inline var CullFaceBack:Int = 1;

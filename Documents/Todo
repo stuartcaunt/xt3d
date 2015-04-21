@@ -1,7 +1,7 @@
 TODO
 ====
 
-- verify/set float precisions in shaders
+- remove all singletons?
 - modify opengl context
   - control over depth/stencil
   - render target
@@ -52,3 +52,4 @@ x store vertex attribute size, type (GL.Float, etc) in VertexData rather than se
 x handle ubyte color arrays
 x update haxe, openfl, lime
 x Int32Array indexes not working?
+x verify/set float precisions in shaders

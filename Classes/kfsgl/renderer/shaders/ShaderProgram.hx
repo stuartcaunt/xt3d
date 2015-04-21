@@ -66,17 +66,17 @@ class ShaderProgram {
 
 /* --------- Implementation --------- */
 
-	public static function create(shaderName:String, shaderInfo:ShaderInfo):ShaderProgram {
+	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String):ShaderProgram {
 		var program = new ShaderProgram();
 		
-		if (program != null && !(program.init(shaderName, shaderInfo))) {
+		if (program != null && !(program.init(shaderName, shaderInfo, precision))) {
 			program = null;
 		}
 
 		return program;
 	}
 
-	public function init(shaderName:String, shaderInfo:ShaderInfo):Bool {
+	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String):Bool {
 		this._name = shaderName;
 
 		var vertexProgram = shaderInfo.vertexProgram;
@@ -90,13 +90,13 @@ class ShaderProgram {
 		// Load prefixes
 		if (_prefixVertex == null) {
 			_prefixVertex = ShaderReader.instance().shaderWithKey("prefix_vertex");
-			//_prefixVertex = Assets.getText("assets/shaders/prefix_vertex.glsl");
 		}
 		if (_prefixFragment == null) {
 			_prefixFragment = ShaderReader.instance().shaderWithKey("prefix_fragment");
-			//_prefixFragment = Assets.getText("assets/shaders/prefix_fragment.glsl");
 		}
 
+		// precision
+		var precisionText = (precision == null) ? "" : "\n\nprecision " + precision + " float;";
 
 		// generate attribute declarations
 		var vertexAttributes:String = "";
@@ -117,8 +117,8 @@ class ShaderProgram {
 		}
 
 		// Add prefixes
-		_vertexProgram = "// vertex shader: " + shaderName +  "\n\n// vertexDefines:\n" + vertexDefines + "\n// prefixVertex:\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
-		_fragmentProgram = "// fragment shader: " + shaderName +  "\n\n// fragmentDefines:\n" + fragmentDefines + "\n// prefixFragment:\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
+		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n// prefixVertex:\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
+		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n// prefixFragment:\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();
@@ -159,8 +159,8 @@ class ShaderProgram {
 
 		} else {
 			//KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
-			//KF.Log("Vertex program:\n" + _vertexProgram);
-			//KF.Log("Fragment program:\n" + _fragmentProgram);
+			KF.Log("Vertex program:\n" + _vertexProgram);
+			KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
 		// Get attribute locations from common attributes

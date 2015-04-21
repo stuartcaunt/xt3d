@@ -1,5 +1,9 @@
 package kfsgl.renderer.shaders;
 
+import kfsgl.utils.gl.KFGL;
+import kfsgl.utils.gl.KFGL;
+import openfl.gl.GL;
+import openfl.gl.GLShaderPrecisionFormat;
 import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.renderer.shaders.ShaderLib;
 import kfsgl.errors.KFException;
@@ -12,17 +16,65 @@ class ShaderManager {
 
 	private static var _instance:ShaderManager = null;
 
+	private var _desiredPrecision:String = KFGL.MEDIUM_PRECISION;
+	private var _precision:String;
+	private var _highPrecisionAvailable:Bool = true;
+	private var _mediumPrecisionAvailable:Bool = true;
+	private var _precisionAvailable:Bool = true;
+
 	public static function instance():ShaderManager {
 		if (_instance == null) {
 			_instance = new ShaderManager();
+			_instance.init();
 		}
 
 		return _instance;
 	}
 
 	private function new() {
+	}
+
+	private function init():Void {
 		_programs = new Map<String, ShaderProgram>();
 
+		// Get available precisions
+		var vertexShaderPrecisionHighpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.VERTEX_SHADER, GL.HIGH_FLOAT);
+		var vertexShaderPrecisionMediumpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.VERTEX_SHADER, GL.MEDIUM_FLOAT);
+		var fragmentShaderPrecisionHighpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.HIGH_FLOAT);
+		var fragmentShaderPrecisionMediumpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.MEDIUM_FLOAT);
+
+		if (vertexShaderPrecisionHighpFloat != null) {
+			this._highPrecisionAvailable = (vertexShaderPrecisionHighpFloat.precision > 0 && fragmentShaderPrecisionHighpFloat.precision > 0);
+			this._mediumPrecisionAvailable = (vertexShaderPrecisionMediumpFloat.precision > 0 && fragmentShaderPrecisionMediumpFloat.precision > 0);
+
+		} else {
+			this._precisionAvailable = false;
+		}
+
+		// Set max precision (compared to desired precision) in shader lib
+		this.setShaderPrecision(this._desiredPrecision);
+	}
+
+	public function setShaderPrecision(precision:String):Void {
+		this._desiredPrecision = precision;
+		if (this._precisionAvailable) {
+			this._precision = precision;
+			if (precision == KFGL.HIGH_PRECISION && !this._highPrecisionAvailable) {
+				if (this._mediumPrecisionAvailable) {
+					this._precision = KFGL.MEDIUM_PRECISION;
+					KF.Warn("high precision not supported, reverting to medium precision");
+
+				} else {
+					this._precision = KFGL.LOW_PRECISION;
+					KF.Warn("high precision not supported, reverting to low precision");
+				}
+			} else if (precision == KFGL.MEDIUM_PRECISION && !this._mediumPrecisionAvailable) {
+				this._precision = KFGL.LOW_PRECISION;
+				KF.Warn("medium precision not supported, reverting to low precision");
+			}
+		} else {
+			this._precision = null;
+		}
 	}
 
 	public function purgeShaders():Void {
@@ -51,7 +103,7 @@ class ShaderManager {
 			var shaderInfo = shaderConfigs.get(shaderName);
 
 			// Create program for each shader
-			var program = ShaderProgram.create(shaderName, shaderInfo);
+			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision);
 
 			// Verify program
 			if (program != null) {
