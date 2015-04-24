@@ -1,7 +1,7 @@
 package kfsgl.node;
 
-import kfsgl.errors.KFException;
-import kfsgl.math.MatrixHelper;
+import kfsgl.utils.errors.KFException;
+import kfsgl.utils.math.MatrixHelper;
 import openfl.geom.Matrix3D;
 import openfl.geom.Vector3D;
 

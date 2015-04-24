@@ -11,6 +11,7 @@
 	<meta title="Test1" package="com.kfsgl" version="1.0.0" company="StepTo" />
 <!--	<app main="TestFloatVertexData" path="Export" /> -->
 	<app main="Test1" path="Export" />
+	<!--<app main="TestContext3D" path="Export" />-->
 
 	<source path="Test" />
 	<source path="Classes" />

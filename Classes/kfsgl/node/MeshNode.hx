@@ -4,7 +4,7 @@ package kfsgl.node;
 import openfl.gl.GL;
 import kfsgl.node.RenderObject;
 import kfsgl.core.Geometry;
-import kfsgl.material.Material;
+import kfsgl.core.Material;
 
 class MeshNode extends RenderObject {
 

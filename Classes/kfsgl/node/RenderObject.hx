@@ -2,13 +2,13 @@ package kfsgl.node;
 
 import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.renderer.shaders.ShaderProgram;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 import kfsgl.utils.gl.GLAttributeManager;
 import openfl.gl.GL;
 import kfsgl.core.Geometry;
-import kfsgl.camera.Camera;
+import kfsgl.core.Camera;
 import openfl.geom.Matrix3D;
-import kfsgl.material.Material;
+import kfsgl.core.Material;
 
 class RenderObject extends Node3D {
 

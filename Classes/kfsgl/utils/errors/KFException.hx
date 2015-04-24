@@ -1,4 +1,4 @@
-package kfsgl.errors;
+package kfsgl.utils.errors;
 
 import openfl.errors.Error;
 

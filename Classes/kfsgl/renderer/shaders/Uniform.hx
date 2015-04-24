@@ -8,7 +8,7 @@ import openfl.geom.Matrix3D;
 
 import kfsgl.renderer.shaders.UniformInfo;
 import kfsgl.utils.KF;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 
 class Uniform  {
 

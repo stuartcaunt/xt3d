@@ -1,22 +1,18 @@
 package;
 
 import kfsgl.node.Node3D;
-import kfsgl.node.Node3D;
-import kfsgl.utils.KF;
 import kfsgl.node.MeshNode;
 import openfl.geom.Vector3D;
 import kfsgl.node.Scene;
 import kfsgl.primitives.Sphere;
 import kfsgl.core.Geometry;
-import kfsgl.camera.Camera;
-import flash.geom.Matrix3D;
-import kfsgl.renderer.shaders.UniformLib;
-import kfsgl.material.Material;
+import kfsgl.core.Camera;
+import kfsgl.core.Material;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;
 
 import kfsgl.Director;
-import kfsgl.view.View;
+import kfsgl.core.View;
 import kfsgl.utils.Color;
 
 class Test1 extends Sprite {
@@ -29,10 +25,10 @@ class Test1 extends Sprite {
 
 		// Initialise director - one per application delegate
 		_director = new Director();
-		
+
 		// Create opengl view and as it as a child
 		var openglView = new OpenGLView();
-		addChild(openglView);
+		this.addChild(openglView);
 
 		// Set opengl view in director
 		_director.openglView = openglView;

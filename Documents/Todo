@@ -1,11 +1,24 @@
 TODO
 ====
 
+- textures
+  - load from png
+  - load from jpg
+  - assets or url
+  - different formats
+  - non-pow2 images
+    - need to modify UVs ?
+    - three.js offsetRepeat uniform to dynamically scale/translate UVs
+
+- Render texture
+
 - remove all singletons?
+  - use "current" director
 - modify opengl context
   - control over depth/stencil
   - render target
-- textures
+
+
 - handle "prepareForUse" in program uniforms
 - Check handling of global uniforms at F4
 - Render loop

@@ -3,7 +3,7 @@ package kfsgl.renderer.shaders;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 
 class ShaderReader  {
 

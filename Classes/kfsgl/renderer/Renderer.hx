@@ -2,26 +2,19 @@ package kfsgl.renderer;
 
 import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.GLAttributeManager;
-import kfsgl.errors.KFException;
-import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.GLStateManager;
 import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.renderer.shaders.UniformLib;
 import openfl.geom.Matrix3D;
 import kfsgl.utils.Color;
-import kfsgl.utils.KF;
 import kfsgl.utils.gl.KFGL;
 import kfsgl.renderer.shaders.ShaderManager;
-import kfsgl.camera.Camera;
-import kfsgl.material.Material;
+import kfsgl.core.Camera;
+import kfsgl.core.Material;
 import kfsgl.node.Scene;
 import kfsgl.node.RenderObject;
 import openfl.gl.GL;
-import openfl.gl.GLBuffer;
-import openfl.gl.GLProgram;
-import openfl.gl.GLShader;
-import openfl.gl.GLUniformLocation;
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 
 
 

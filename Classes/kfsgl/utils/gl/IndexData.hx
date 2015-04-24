@@ -6,7 +6,7 @@ import openfl.gl.GLBuffer;
 import openfl.gl.GL;
 
 import kfsgl.utils.KF;
-import kfsgl.errors.KFAbstractMethodError;
+import kfsgl.utils.errors.KFAbstractMethodError;
 
 class IndexData {
 

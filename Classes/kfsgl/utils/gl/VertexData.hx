@@ -5,7 +5,7 @@ import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.KF;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
-import kfsgl.errors.KFAbstractMethodError;
+import kfsgl.utils.errors.KFAbstractMethodError;
 class VertexData {
 
 	// properties

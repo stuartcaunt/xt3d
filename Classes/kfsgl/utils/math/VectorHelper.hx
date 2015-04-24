@@ -1,6 +1,6 @@
-package kfsgl.math;
+package kfsgl.utils.math;
 
-import flash.geom.Vector3D;
+import openfl.geom.Vector3D;
 
 class VectorHelper {
 

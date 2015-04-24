@@ -1,6 +1,6 @@
 package kfsgl.utils.gl;
 
-import kfsgl.errors.KFAbstractMethodError;
+import kfsgl.utils.errors.KFAbstractMethodError;
 import openfl.utils.ArrayBufferView;
 import openfl.gl.GL;
 

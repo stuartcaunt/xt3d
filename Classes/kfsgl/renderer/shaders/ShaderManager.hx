@@ -6,7 +6,7 @@ import openfl.gl.GL;
 import openfl.gl.GLShaderPrecisionFormat;
 import kfsgl.renderer.shaders.ShaderProgram;
 import kfsgl.renderer.shaders.ShaderLib;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 import kfsgl.utils.KF;
 
 class ShaderManager {

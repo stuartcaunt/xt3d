@@ -1,4 +1,4 @@
-package kfsgl.errors;
+package kfsgl.utils.errors;
 
 class KFAbstractMethodError extends KFException {
 

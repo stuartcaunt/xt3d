@@ -1,15 +1,7 @@
 package kfsgl.renderer.shaders;
 
 import openfl.gl.GLUniformLocation;
-import kfsgl.errors.KFException;
-
-
-//typedef KFUniformInfo = {
-//	var name:String;
-//	var type:String;
-//	var defaultValue:String;
-//	var global:Bool;
-//}
+import kfsgl.utils.errors.KFException;
 
 class UniformLib {
 

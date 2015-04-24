@@ -1,11 +1,10 @@
-package kfsgl.math;
+package kfsgl.utils.math;
 
-import flash.geom.Vector3D;
+import openfl.geom.Vector3D;
 import openfl.Vector;
-import flash.geom.Matrix3D;
+import openfl.geom.Matrix3D;
 
-import kfsgl.math.Quaternion;
-import kfsgl.utils.KF;
+import kfsgl.utils.math.Quaternion;
 
 class MatrixHelper {
 

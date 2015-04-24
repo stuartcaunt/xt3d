@@ -1,7 +1,7 @@
-package kfsgl.material;
+package kfsgl.core;
 
 import kfsgl.renderer.shaders.UniformLib;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 import kfsgl.renderer.shaders.ShaderManager;
 import kfsgl.renderer.shaders.Uniform;
 import kfsgl.renderer.shaders.ShaderProgram;

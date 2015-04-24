@@ -1,4 +1,4 @@
-package kfsgl.events;
+package kfsgl.core;
 
 class EventEmitter {
 

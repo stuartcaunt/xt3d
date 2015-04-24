@@ -1,14 +1,12 @@
-package kfsgl.camera;
+package kfsgl.core;
 
-import flash.geom.Rectangle;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 import kfsgl.utils.KF;
-import kfsgl.utils.Types;
-import kfsgl.math.MatrixHelper;
-import kfsgl.math.VectorHelper;
-import flash.geom.Vector3D;
-import kfsgl.view.View;
-import flash.geom.Matrix3D;
+import kfsgl.utils.math.MatrixHelper;
+import kfsgl.utils.math.VectorHelper;
+import openfl.geom.Vector3D;
+import kfsgl.core.View;
+import openfl.geom.Matrix3D;
 
 import kfsgl.node.Node3D;
 
@@ -512,7 +510,7 @@ class Camera extends Node3D {
 	 * Sets the orientation (rotation about z) for the projection.
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public function setOrientation(orientation:DeviceOrientation):Void {
+	public function setOrientation(/*orientation:DeviceOrientation*/):Void {
 //		_orientation = orientation;
 //		if (_isPerspective) {
 //			[self setPerspectiveProjection:_fov near:_near far:_far orientation:_orientation];

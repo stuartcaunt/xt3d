@@ -7,7 +7,7 @@ import kfsgl.utils.gl.VertexData;
 import kfsgl.utils.gl.FloatVertexData;
 import kfsgl.utils.gl.InterleavedVertexData;
 import kfsgl.utils.gl.IndexData;
-import kfsgl.errors.KFException;
+import kfsgl.utils.errors.KFException;
 
 
 class Geometry {

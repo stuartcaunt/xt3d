@@ -1,13 +1,12 @@
-package kfsgl.view;
+package kfsgl.core;
 
-import kfsgl.events.EventEmitter;
-import kfsgl.camera.Camera;
+import kfsgl.core.EventEmitter;
+import kfsgl.core.Camera;
 import kfsgl.node.Scene;
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 
 import kfsgl.renderer.Renderer;
 import kfsgl.utils.Color;
-import kfsgl.utils.KF;
 
 class View extends EventEmitter {
 

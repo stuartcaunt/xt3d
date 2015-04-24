@@ -159,8 +159,8 @@ class ShaderProgram {
 
 		} else {
 			//KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
-			KF.Log("Vertex program:\n" + _vertexProgram);
-			KF.Log("Fragment program:\n" + _fragmentProgram);
+			//KF.Log("Vertex program:\n" + _vertexProgram);
+			//KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
 		// Get attribute locations from common attributes

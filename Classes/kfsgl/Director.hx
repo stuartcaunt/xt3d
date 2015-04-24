@@ -1,13 +1,13 @@
 package kfsgl;
 
-import kfsgl.events.EventEmitter;
+import kfsgl.core.EventEmitter;
 import kfsgl.renderer.shaders.UniformLib;
-import kfsgl.view.View;
+import kfsgl.core.View;
 import kfsgl.renderer.Renderer;
 import kfsgl.utils.Color;
 
 import openfl.display.OpenGLView;
-import flash.geom.Rectangle;
+import openfl.geom.Rectangle;
 
 class Director extends EventEmitter {
 
