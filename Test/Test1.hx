@@ -1,5 +1,7 @@
 package;
 
+import kfsgl.textures.TextureCache;
+import kfsgl.textures.Texture2D;
 import kfsgl.node.Node3D;
 import kfsgl.node.MeshNode;
 import openfl.geom.Vector3D;
@@ -51,6 +53,8 @@ class Test1 extends Sprite {
 
 		// Add view to director
 		_director.addView(view);
+
+		var texture:Texture2D = TextureCache.instance().addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
 
 		// Create a material
 		var material:Material = Material.create("test_color");

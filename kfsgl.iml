@@ -18,5 +18,16 @@
     <orderEntry type="jdk" jdkName="Haxe 3.1.3" jdkType="Haxe toolkit" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="OpenFL 3,0,2" level="project" />
+    <orderEntry type="module-library">
+      <library name="haxelib|/Users/stuart/Documents/Projects/StepTo/haxelib/openfl/3,0,2">
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/../haxelib/openfl/3,0,2" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="file://$MODULE_DIR$/../haxelib/openfl/3,0,2" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>

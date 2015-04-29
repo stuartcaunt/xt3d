@@ -63,9 +63,25 @@ class KFGL {
 	public static inline var GL_ONE_MINUS_CONSTANT_ALPHA:Int = 0x010D;
 	public static inline var GL_SRC_ALPHA_SATURATE:Int = 0x010E;
 
-
+	// Winding
 	public static inline var GL_CW:Int = 0x0200;
 	public static inline var GL_CCW:Int = 0x0201;
+
+	// Texture options
+	// Wrapping modes
+
+	public static inline var GL_REPEAT = 0x0300;
+	public static inline var GL_CLAMP_TO_EDGE = 0x0301;
+	public static inline var GL_MIRRORED_REPEAT = 0x0302;
+
+	// Filters
+	public static inline var GL_NEAREST = 0x0400;
+	public static inline var GL_NEAREST_MIPMAP_NEAREST = 0x0401;
+	public static inline var GL_NEAREST_MIPMAP_LINEAR = 0x0402;
+	public static inline var GL_LINEAR = 0x0403;
+	public static inline var GL_LINEAR_MIPMAP_NEAREST = 0x0404;
+	public static inline var GL_LINEAR_MIPMAP_LINEAR = 0x0405;
+
 
 	public static inline function toGLParam(param):Int {
 		if (param == GL_FUNC_ADD) return GL.FUNC_ADD;
@@ -92,6 +108,16 @@ class KFGL {
 
 		if (param == GL_CW) return GL.CW;
 		if (param == GL_CCW) return GL.CCW;
+
+		if (param == GL_REPEAT) return GL.REPEAT;
+		if (param == GL_CLAMP_TO_EDGE) return GL.CLAMP_TO_EDGE;
+		if (param == GL_NEAREST) return GL.NEAREST;
+		if (param == GL_REPEAT) return GL.REPEAT;
+		if (param == GL_NEAREST_MIPMAP_NEAREST) return GL.NEAREST_MIPMAP_NEAREST;
+		if (param == GL_NEAREST_MIPMAP_LINEAR) return GL.NEAREST_MIPMAP_LINEAR;
+		if (param == GL_LINEAR) return GL.LINEAR;
+		if (param == GL_LINEAR_MIPMAP_NEAREST) return GL.LINEAR_MIPMAP_NEAREST;
+		if (param == GL_LINEAR_MIPMAP_LINEAR) return GL.LINEAR_MIPMAP_LINEAR;
 
 		return 0;
 	}

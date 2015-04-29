@@ -9,6 +9,7 @@ TODO
   - non-pow2 images
     - need to modify UVs ?
     - three.js offsetRepeat uniform to dynamically scale/translate UVs
+  - use state/texture manager for binding textures
 
 - Render texture
 

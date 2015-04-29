@@ -49,6 +49,7 @@ class VertexData {
 	public function dispose() {
 		if (this._buffer != null) {
 			GL.deleteBuffer(this._buffer);
+			this._buffer = null;
 		}
 	}
 
