@@ -121,8 +121,8 @@ class ShaderProgram {
 		}
 
 		// Add prefixes
-		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n// prefixVertex:\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
-		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n// prefixFragment:\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
+		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
+		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();
