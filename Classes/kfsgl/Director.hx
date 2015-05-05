@@ -1,5 +1,6 @@
 package kfsgl;
 
+import kfsgl.textures.TextureCache;
 import kfsgl.core.EventEmitter;
 import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.core.View;
@@ -12,50 +13,79 @@ import openfl.geom.Rectangle;
 class Director extends EventEmitter {
 
 	// properties
-	public var openglView(get_openglView, set_openglView):OpenGLView;
+	public var openGLView(get_openGLView, set_openGLView):OpenGLView;
 	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
-
+	public var textureCache(get, null):TextureCache;
 
 	// members
-	private var _openglView:OpenGLView;
+	private var _openGLView:OpenGLView;
 	private var _backgroundColor:Color = new Color(0.2, 0.2, 0.2);
 	private var _renderer:Renderer;
+	private var _textureCache:TextureCache;
 	private var _views:Array<View> = new Array<View>();
 
 	private var _globalTime = 0.0;
+
+	public static function create(openGLView:OpenGLView):Director {
+		var object = new Director();
+
+		if (object != null && !(object.init(openGLView))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function init(openGLView:OpenGLView):Bool {
+		this.setOpenglView(openGLView);
+
+		return true;
+	}
 
 	public function new() {
 		super();
 	}
 
+
 	/* ----------- Properties ----------- */
 
-	public inline function get_openglView():OpenGLView {
-		return _openglView;
+	public function get_textureCache():TextureCache {
+		return this._textureCache;
 	}
 
-	public inline function set_openglView(openglView) {
-		_openglView = openglView;
+	public inline function get_openGLView():OpenGLView {
+		return this._openGLView;
+	}
 
-		// Create new renderer for opengl view
-		_renderer = Renderer.create();
-
-		_openglView.render = renderLoop;
-
-		return _openglView;
+	public inline function set_openGLView(openGLView) {
+		this.setOpenglView(openGLView);
+		return this._openGLView;
 	}
 
 	public inline function get_backgroundColor():Color {
-		return _backgroundColor;
+		return this._backgroundColor;
 	}
 
 	public inline function set_backgroundColor(backgroundColor) {
-		_backgroundColor = backgroundColor;
-		return _backgroundColor;
+		return this._backgroundColor = backgroundColor;
 	}
 
 	/* --------- Implementation --------- */
 
+	public function setOpenglView(openGLView:OpenGLView):Void {
+		this._openGLView = openGLView;
+
+		// Create new renderer for opengl view
+		this._renderer = Renderer.create();
+
+		// Create new texture cache
+		if (this._textureCache != null) {
+			this._textureCache.removeAllTextures();
+		}
+		this._textureCache = TextureCache.create(this._renderer.textureManager);
+
+		_openGLView.render = renderLoop;
+	}
 
 	public function addView(view:View):Void {
 		_views.push(view);

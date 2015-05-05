@@ -1,5 +1,6 @@
 package kfsgl.renderer.shaders;
 
+import kfsgl.utils.gl.GLTextureManager;
 import kfsgl.utils.gl.KFGL;
 import kfsgl.utils.gl.KFGL;
 import openfl.gl.GL;
@@ -92,7 +93,7 @@ class ShaderManager {
 		}
 	}
 
-	public function loadDefaultShaders():Void {
+	public function loadDefaultShaders(textureManager:GLTextureManager):Void {
 		// Get all shader configs
 		var shaderConfigs = ShaderLib.instance().shaderConfigs;
 
@@ -103,7 +104,7 @@ class ShaderManager {
 			var shaderInfo = shaderConfigs.get(shaderName);
 
 			// Create program for each shader
-			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision);
+			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, textureManager.maxTextureSlots);
 
 			// Verify program
 			if (program != null) {

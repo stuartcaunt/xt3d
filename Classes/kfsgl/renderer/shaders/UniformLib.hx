@@ -55,8 +55,13 @@ class UniformLib {
 					name: uniformInfoJson.name, 
 					type: uniformInfoJson.type, 
 					defaultValue: uniformInfoJson.defaultValue,
-					global: uniformInfoJson.global == true ? true : false
+					global: uniformInfoJson.global == true ? true : false,
+					slot: -1
 				};
+
+				if (Reflect.hasField(uniformInfoJson, "slot")) {
+					uniformInfo.slot = uniformInfoJson.slot;
+				}
 
 				// Add uniform value to map
 				uniformValuesMap.set(uniformName, Uniform.createEmpty(uniformName, uniformInfo));

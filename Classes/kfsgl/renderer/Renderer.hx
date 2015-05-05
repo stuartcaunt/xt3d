@@ -1,5 +1,6 @@
 package kfsgl.renderer;
 
+import kfsgl.utils.gl.GLTextureManager;
 import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.GLAttributeManager;
 import kfsgl.utils.gl.GLStateManager;
@@ -20,9 +21,15 @@ import openfl.geom.Rectangle;
 
 class Renderer {
 
+	// properties
+	public var textureManager(get, null):GLTextureManager;
+
+
+	// members
 	private var _stateManager:GLStateManager;
 	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
+	private var _textureManager:GLTextureManager;
 	private var _needsStateInit:Bool = true;
 
 	private var _viewport:Rectangle;
@@ -43,12 +50,14 @@ class Renderer {
 	}
 
 	public function init():Bool {
-		// Build all shaders
-		ShaderManager.instance().loadDefaultShaders();
 
-		_stateManager = GLStateManager.create();
-		_bufferManager = GLBufferManager.create();
-		_attributeManager = GLAttributeManager.create();
+		this._stateManager = GLStateManager.create();
+		this._bufferManager = GLBufferManager.create();
+		this._attributeManager = GLAttributeManager.create();
+		this._textureManager = GLTextureManager.create();
+
+		// Build all shaders
+		ShaderManager.instance().loadDefaultShaders(this._textureManager);
 
 		return true;
 	}
@@ -57,6 +66,15 @@ class Renderer {
 	public function new() {
 	}
 
+
+	// Properties
+
+	public function get_textureManager():GLTextureManager {
+		return this._textureManager;
+	}
+
+
+// Implementation
 
 	public function clear(viewport:Rectangle, color:Color) {
 		// Set the viewport
@@ -194,7 +212,7 @@ class Renderer {
 			// NB: this just stops the values been updated locally - all uniforms check for changed values before sending to the GPU
 			if (!this._renderPassShaders.exists(program.name)) {
 				// Update global uniforms in the shader
-				program.updateGlobalUniforms();
+				program.updateGlobalUniforms(this._textureManager);
 
 				this._renderPassShaders.set(program.name, program);
 			}
@@ -206,7 +224,7 @@ class Renderer {
 			this._currentMaterial = material;
 
 			// Send material uniform values to program
-			material.updateProgramUniforms();
+			material.updateProgramUniforms(this._textureManager);
 		}
 
 		// Set textures

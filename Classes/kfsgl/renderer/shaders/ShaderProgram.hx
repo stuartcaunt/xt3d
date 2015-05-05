@@ -1,5 +1,6 @@
 package kfsgl.renderer.shaders;
 
+import kfsgl.utils.gl.GLTextureManager;
 import openfl.gl.GL;
 import openfl.gl.GLProgram;
 import openfl.gl.GLShader;
@@ -40,6 +41,8 @@ class ShaderProgram {
 	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _globalUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _updateGlobalUniforms:Bool = true;
+	private var _availableTextureSlots:Array<Bool> = new Array<Bool>();
+	private var _maxTextureSlots:Int;
 
 	public static var KFAttributes = KF.jsonToMap({
 		position: "a_position",
@@ -66,18 +69,23 @@ class ShaderProgram {
 
 /* --------- Implementation --------- */
 
-	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String):ShaderProgram {
+	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String, maxTextureSlots:Int):ShaderProgram {
 		var program = new ShaderProgram();
 		
-		if (program != null && !(program.init(shaderName, shaderInfo, precision))) {
+		if (program != null && !(program.init(shaderName, shaderInfo, precision, maxTextureSlots))) {
 			program = null;
 		}
 
 		return program;
 	}
 
-	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String):Bool {
+	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String, maxTextureSlots:Int):Bool {
 		this._name = shaderName;
+
+		this._maxTextureSlots = maxTextureSlots;
+		for (i in 0 ... maxTextureSlots) {
+			this._availableTextureSlots[i] = true;
+		}
 
 		var vertexProgram = shaderInfo.vertexProgram;
 		var fragmentProgram = shaderInfo.fragmentProgram;
@@ -109,11 +117,7 @@ class ShaderProgram {
 		var vertexUniforms:String = "";
 		for (uniformName in commonUniforms.keys()) {
 			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
-			vertexUniforms += "uniform " + uniformInfo.type + " " + uniformInfo.name + ";\n";
-		}
-		for (uniformName in uniforms.keys()) {
-			var uniformInfo = uniforms.get(uniformName);
-			vertexUniforms += "uniform " + uniformInfo.type + " " + uniformInfo.name + ";\n";
+			vertexUniforms += "uniform " + Uniform.codeType(uniformInfo.type) + " " + uniformInfo.name + ";\n";
 		}
 
 		// Add prefixes
@@ -180,13 +184,15 @@ class ShaderProgram {
 		// Handle common uniforms
 		for (uniformName in commonUniforms.keys()) {
 			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
-			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
 
-			// Create a uniform object
-			var uniform:Uniform = Uniform.create(uniformName, uniformInfo, uniformLocation);
+			// Create uniform
+			var uniform = this.createUniform(uniformName, uniformInfo);
 
 			// Add to all uniforms
 			_commonUniforms.set(uniformName, uniform);
+			if (uniform == null) {
+				return false;
+			}
 
 			// Add to global uniforms
 			if (uniform.isGlobal) {
@@ -200,8 +206,11 @@ class ShaderProgram {
 			var uniformInfo = uniforms.get(uniformName);
 			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
 
-			// Create a uniform object
-			var uniform:Uniform = Uniform.create(uniformName, uniformInfo, uniformLocation);
+			// Create uniform
+			var uniform = this.createUniform(uniformName, uniformInfo);
+			if (uniform == null) {
+				return false;
+			}
 
 			// Add to all uniforms
 			_uniforms.set(uniformName, uniform);
@@ -253,6 +262,50 @@ class ShaderProgram {
 		return shader;
 	}
 
+	private function createUniform(uniformName:String, uniformInfo:UniformInfo):Uniform {
+		var uniformLocation = GL.getUniformLocation(this._program, uniformInfo.name);
+
+		// Create a uniform object
+		var uniform:Uniform = Uniform.create(uniformName, uniformInfo, uniformLocation);
+
+		// Handle texture slots
+		if (uniform.type == "texture") {
+			var textureSlot = uniform.textureSlot;
+			if (textureSlot > 0) {
+				if (!this._availableTextureSlots[textureSlot]) {
+					KF.Error("ERROR: Uniform " + uniformName + " attempting to use unavailable texture slot " + textureSlot);
+					return null;
+				}
+			} else {
+				textureSlot = this.getNextAvailableTextureSlot();
+				uniform.textureSlot = textureSlot;
+			}
+
+			if (textureSlot > this._maxTextureSlots) {
+				KF.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
+				return null;
+			}
+
+			// Mark slot as unavailable
+			this._availableTextureSlots[textureSlot] = false;
+		}
+
+		return uniform;
+	}
+
+
+	private function getNextAvailableTextureSlot():Int {
+
+		var nextSlot = 0;
+		for (i in 0 ... this._availableTextureSlots.length) {
+			if (this._availableTextureSlots[i]) {
+				nextSlot = nextSlot < i ? nextSlot : i;
+			}
+		}
+
+		return nextSlot;
+	}
+
 	public function use():Void {
 		GL.useProgram(_program);
 	}
@@ -282,7 +335,7 @@ class ShaderProgram {
 	/**
 	 * Update global uniforms from UniformLib
 	 */
-	public function updateGlobalUniforms():Void {
+	public function updateGlobalUniforms(textureManager:GLTextureManager):Void {
 		for (uniform in this._globalUniforms) {
 			var globalUniform = UniformLib.instance().uniform(uniform.name);
 
@@ -292,14 +345,14 @@ class ShaderProgram {
 			}
 
 			// Write to GPU
-			uniform.use();
+			uniform.use(textureManager);
 		}
 	}
 
 	/**
 	 * Set/update a uniform value
 	 */
-	public function updateUniform(uniform:Uniform):Void {
+	public function updateUniform(uniform:Uniform, textureManager:GLTextureManager):Void {
 		if (this._uniforms.exists(uniform.name)) {
 			var uniformToUpdate = this._uniforms.get(uniform.name);
 			if (uniform.hasBeenSet) {
@@ -307,7 +360,7 @@ class ShaderProgram {
 			}
 
 			// Write to GPU
-			uniformToUpdate.use();
+			uniformToUpdate.use(textureManager);
 
 		} else {
 			// Debugging... not really necessary
@@ -318,7 +371,7 @@ class ShaderProgram {
 	/**
 	 * Set/update a common uniform value
 	 */
-	public function updateCommonUniform(uniform:Uniform):Void {
+	public function updateCommonUniform(uniform:Uniform, textureManager:GLTextureManager):Void {
 		if (this._commonUniforms.exists(uniform.name)) {
 			var uniformToUpdate = this._commonUniforms.get(uniform.name);
 			if (uniform.hasBeenSet) {
@@ -326,7 +379,7 @@ class ShaderProgram {
 			}
 
 			// Write to GPU
-			uniformToUpdate.use();
+			uniformToUpdate.use(textureManager);
 
 		} else {
 			// Debugging... not really necessary

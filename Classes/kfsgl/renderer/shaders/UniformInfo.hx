@@ -5,5 +5,6 @@ typedef UniformInfo = {
 	var type:String;
 	var defaultValue:String;
 	var global:Bool;
+	var slot:Int;
 }
 

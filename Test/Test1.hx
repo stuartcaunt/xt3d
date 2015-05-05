@@ -25,15 +25,12 @@ class Test1 extends Sprite {
 	public function new () {
 		super ();
 
-		// Initialise director - one per application delegate
-		_director = new Director();
-
 		// Create opengl view and as it as a child
-		var openglView = new OpenGLView();
-		this.addChild(openglView);
+		var openGLView = new OpenGLView();
+		this.addChild(openGLView);
 
-		// Set opengl view in director
-		_director.openglView = openglView;
+		// Initialise director - one per application delegate
+		_director = Director.create(openGLView);
 
 		// Create a new view and add it to the director
 		var view = new View();
@@ -54,7 +51,7 @@ class Test1 extends Sprite {
 		// Add view to director
 		_director.addView(view);
 
-		var texture:Texture2D = TextureCache.instance().addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
+		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
 
 		// Create a material
 		var material:Material = Material.create("test_color");

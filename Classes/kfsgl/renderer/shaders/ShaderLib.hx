@@ -57,9 +57,17 @@ class ShaderLib  {
 				uniforms: {
 					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
 				}
-//				attributes: {
-//					userData: { name: "a_userData", type: "vec2" }
-//				}
+			},
+			test_texture: {
+				vertexShader: "test_vertex",
+				fragmentShader: "test_fragment",
+				vertexDefines: ["#define USE_TEXTURE"],
+				fragmentDefines: ["#define USE_TEXTURE"],
+				commonUniforms: ["matrixCommon", "time"],
+				uniforms: {
+					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" },
+					texture: { name: "u_texture", type: "texture", slot: 5 }
+				}
 			}
 		}
 
@@ -81,8 +89,13 @@ class ShaderLib  {
 					name: uniformInfoJson.name,
 					type: uniformInfoJson.type,
 					defaultValue: uniformInfoJson.defaultValue,
-					global: uniformInfoJson.global == true ? true : false
+					global: uniformInfoJson.global == true ? true : false,
+					slot: -1
 				};
+
+				if (Reflect.hasField(uniformInfoJson, "slot")) {
+					uniformInfo.slot = uniformInfoJson.slot;
+				}
 
 				// Add uniform info to map
 				uniformMap.set(uniformName, uniformInfo);

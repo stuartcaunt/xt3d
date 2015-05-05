@@ -1,29 +1,35 @@
 package kfsgl.textures;
 
+import kfsgl.utils.gl.GLTextureManager;
 import kfsgl.utils.KF;
 class TextureCache {
 
 	// properties
 
 	// members
-	private static var _instance:TextureCache = null;
+	private var _textureManager:GLTextureManager;
 	private var _textures:Map<String, Texture2D>;
 
 
 	private function new() {
 	}
 
-	public static function instance():TextureCache {
-		if (_instance == null) {
-			_instance = new TextureCache();
-			_instance.init();
+
+	public static function create(textureManager:GLTextureManager):TextureCache {
+		var object = new TextureCache();
+
+		if (object != null && !(object.init(textureManager))) {
+			object = null;
 		}
 
-		return _instance;
+		return object;
 	}
 
-	private function init():Void {
+	private function init(textureManager:GLTextureManager):Bool {
 		this._textures = new Map<String, Texture2D>();
+		this._textureManager = textureManager;
+
+		return true;
 	}
 
 
@@ -40,7 +46,7 @@ class TextureCache {
 			return this._textures.get(imagePath);
 		}
 
-		var texture = Texture2D.createFromAssetImage(imagePath, textureOptions);
+		var texture = Texture2D.createFromAssetImage(imagePath, textureOptions, this._textureManager);
 		this._textures.set(imagePath, texture);
 
 		return texture;
@@ -66,7 +72,7 @@ class TextureCache {
 			var texture = this._textures.get(textureKey);
 
 			// Dispose of the gl object
-			texture.dispose();
+			texture.dispose(this._textureManager);
 
 			this._textures.remove(textureKey);
 		}

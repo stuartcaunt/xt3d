@@ -1,5 +1,7 @@
 package kfsgl.textures;
 
+import kfsgl.utils.gl.GLTextureManager;
+import kfsgl.utils.gl.KFGL;
 import flash.utils.ByteArray;
 import openfl.utils.UInt8Array;
 import kfsgl.utils.KF;
@@ -14,13 +16,21 @@ import kfsgl.utils.CountedObject;
 class Texture2D extends CountedObject {
 
 	// properties
+	public var name(get, null):String;
+	public var isDirty(get, set):Bool;
+	public var glTexture(get, set):GLTexture;
 	public var generateMipMaps(get, set):Bool;
 	public var minFilter(get, set):Int;
 	public var magFilter(get, set):Int;
 	public var wrapS(get, set):Int;
 	public var wrapT(get, set):Int;
 
+	@:isVar public var bitmapData(get, null):BitmapData;
+	@:isVar public var pixelsWidth(get, null):Int;
+	@:isVar public var pixelsHeight(get, null):Int;
+
 	// members
+	private var _name:String;
 	private var _contentSize:Size<Int>;
 	private var _pixelsWidth:Int;
 	private var _pixelsHeight:Int;
@@ -31,25 +41,32 @@ class Texture2D extends CountedObject {
 	private var _wrapS:Int;
 	private var _wrapT:Int;
 
-	private var _texture:GLTexture = null;
+	private var _glTexture:GLTexture = null;
+	private var _bitmapData:BitmapData = null;
+	private var _isDirty:Bool = false;
 
 	/** helper object */
 	private static var _sOrigin:Point = new Point();
 
-	public static function createFromAssetImage(imagePath:String, textureOptions:TextureOptions = null):Texture2D {
+	public static function createFromAssetImage(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initFromAssetImage(imagePath, textureOptions))) {
+		if (object != null && !(object.initFromAssetImage(imagePath, textureOptions, textureManager))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initFromAssetImage(imagePath:String, textureOptions:TextureOptions = null):Bool {
+	public function initFromAssetImage(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+		this._name = imagePath;
+
 		if (textureOptions == null) {
 			textureOptions = new TextureOptions();
 		}
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
 
 		// Get bitmap data from asset
 		var bitmapData = Assets.getBitmapData(imagePath);
@@ -72,23 +89,13 @@ class Texture2D extends CountedObject {
 			}
 		}
 
-		// Create GL Texture
-		this._texture = GL.createTexture();
-		if (this._texture == null) {
-			KF.Error("Cannot create a new GLTexture");
-			return false;
+		this._bitmapData = bitmapData;
+		this._isDirty = true;
+
+		// Upload texture immediately if we have a texture manager
+		if (textureManager != null) {
+			textureManager.uploadTexture(this);
 		}
-
-		GL.bindTexture(GL.TEXTURE_2D, this._texture);
-
-		this.uploadImageData(bitmapData, this._pixelsWidth, this._pixelsHeight);
-
-
-
-		// Set texture options
-		this.setTextureOptions(textureOptions);
-
-		GL.bindTexture(GL.TEXTURE_2D, null);
 
 		return true;
 	}
@@ -101,6 +108,26 @@ class Texture2D extends CountedObject {
 
 
 	/* ----------- Properties ----------- */
+
+	public function get_name():String {
+		return this._name;
+	}
+
+	public function get_isDirty():Bool {
+		return this._isDirty;
+	}
+
+	public function set_isDirty(value:Bool):Bool {
+		return this._isDirty = value;
+	}
+
+	public function get_glTexture():GLTexture {
+		return this._glTexture;
+	}
+
+	public function set_glTexture(value:GLTexture) {
+		return this._glTexture = value;
+	}
 
 	public function get_generateMipMaps():Bool {
 		return this._generateMipMaps;
@@ -142,36 +169,25 @@ class Texture2D extends CountedObject {
 		return this._wrapT = value;
 	}
 
+	public function get_bitmapData():BitmapData {
+		return this._bitmapData;
+	}
+
+	public function get_pixelsWidth():Int {
+		return this._pixelsWidth;
+	}
+
+	public function get_pixelsHeight():Int {
+		return this._pixelsHeight;
+	}
+
+
 	/* --------- Implementation --------- */
 
-	public function dispose():Void {
-		if (this._texture != null) {
-			GL.deleteTexture(this._texture);
-			this._texture = null;
-		}
+	public function dispose(textureManager:GLTextureManager):Void {
+		textureManager.deleteTexture(this);
+		this._glTexture = null;
 	}
-
-	private function uploadImageData(bitmapData:BitmapData, textureWidth:Int, textureHeight:Int):Void {
-
-#if js
-		var byteArray = ByteArray.__ofBuffer (@:privateAccess (bitmapData.__image).data.buffer);
-		var source = new UInt8Array(byteArray.length);
-		byteArray.position = 0;
-
-		var i:Int = 0;
-		while (byteArray.position < byteArray.length) {
-
-			source[i] = byteArray.readUnsignedByte ();
-			i++;
-		}
-#else
-		var byteArray = @:privateAccess (bitmapData.__image).data.buffer;
-		var source = new UInt8Array(byteArray);
-#end
-
-		GL.texImage2D (GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, source);
-	}
-
 
 	private function setTextureOptions(options:TextureOptions):Void {
 		this._generateMipMaps = options.generateMipMaps;

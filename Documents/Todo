@@ -10,6 +10,13 @@ TODO
     - need to modify UVs ?
     - three.js offsetRepeat uniform to dynamically scale/translate UVs
   - use state/texture manager for binding textures
+  - don't create GLTexture immediately : wait until 'update' render phase
+    - always load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
+  - texture uniforms
+    - automatically bind texture on material update
+  - texture units ?
+    - manual or automatic ?
+  - unbind texture when deleted
 
 - Render texture
 

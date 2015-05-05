@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.gl.GLTextureManager;
 import kfsgl.renderer.shaders.UniformLib;
 import kfsgl.utils.errors.KFException;
 import kfsgl.renderer.shaders.ShaderManager;
@@ -234,10 +235,10 @@ class Material {
 		return uniform;
 	}
 
-	public function updateProgramUniforms():Void {
+	public function updateProgramUniforms(textureManager:GLTextureManager):Void {
 		// Update uniforms
 		for (uniform in this._uniforms) {
-			this._program.updateUniform(uniform);
+			this._program.updateUniform(uniform, textureManager);
 		}
 
 		// Update common uniforms
@@ -250,7 +251,7 @@ class Material {
 				uniform.copyFrom(commonUniform);
 			//}
 
-			this._program.updateCommonUniform(uniform);
+			this._program.updateCommonUniform(uniform, textureManager);
 		}
 	}
 

@@ -1,5 +1,7 @@
 package kfsgl.renderer.shaders;
 
+import kfsgl.utils.gl.GLTextureManager;
+import kfsgl.textures.Texture2D;
 import openfl.gl.GLUniformLocation;
 import openfl.utils.Float32Array;
 import openfl.gl.GL;
@@ -18,6 +20,8 @@ class Uniform  {
 	public var type(get, null):String;
 	public var floatArrayValue(get_floatArrayValue, set_floatArrayValue):Array<Float>;
 	public var matrixValue(get_matrixValue, set_matrixValue):Matrix3D;
+	public var texture(get_texture, set_texture):Texture2D;
+	public var textureSlot(get_textureSlot, set_textureSlot):Int;
 	public var isGlobal(get, null):Bool;
 	public var hasBeenSet(get, null):Bool;
 
@@ -33,10 +37,14 @@ class Uniform  {
 	private var _floatValue:Float = 0.0;
 	private var _floatArrayValue:Array<Float> = new Array<Float>();
 	private var _matrixValue:Matrix3D = new Matrix3D();
+	private var _texture:Texture2D = null;
+	private var _textureSlot:Int = -1;
 
 	private var _defaultFloatValue:Float;
 	private var _defaultFloatArrayValue:Array<Float> = new Array<Float>();
 	private var _defaultMatrixValue:Matrix3D = new Matrix3D();
+	private var _defaultTexture:Texture2D = null;
+	private var _defaultTextureSlot:Int = -1;
 
 	private var _hasBeenSet:Bool = false;
 	private var _isDirty:Bool = true;
@@ -127,6 +135,24 @@ class Uniform  {
 		return this._matrixValue;
 	}
 
+	public function get_texture():Texture2D {
+		return this._texture;
+	}
+
+	public function set_texture(value:Texture2D) {
+		this.setTexture(value);
+		return this._texture;
+	}
+
+	public function get_textureSlot():Int {
+		return this._textureSlot;
+	}
+
+	public function set_textureSlot(value:Int) {
+		this.setTextureSlot(value);
+		return this._textureSlot;
+	}
+
 	public inline function get_isGlobal():Bool{
 		return this._isGlobal;
 	}
@@ -137,6 +163,15 @@ class Uniform  {
 
 
 /* --------- Implementation --------- */
+
+	public static function codeType(uniformType:String):String {
+		if (uniformType == "texture") {
+			return "sampler";
+		} else {
+			return uniformType;
+		}
+	}
+
 
 	public function clone():Uniform {
 		return Uniform.create(this._name, this._uniformInfo, this._location);
@@ -151,11 +186,17 @@ class Uniform  {
 		_hasBeenSet = false;
 	}
 
-	public function use() {
+	public function use(textureManager:GLTextureManager) {
+		var type = this._type;
+
 		// If hasn't been set then use the default value
 		if (!_hasBeenSet) {
 			if (this._size == 1) {
-				setValue(this._defaultFloatValue);
+				if (type == "float") {
+					setValue(this._defaultFloatValue);
+				} else if (type == "texture") {
+					setTextureSlot(this._defaultTextureSlot);
+				}
 			} else if (this._size < 16) {
 				setArrayValue(this._defaultFloatArrayValue);
 			} else {
@@ -165,9 +206,11 @@ class Uniform  {
 
 		// Send value to the GPU if it is dirty
 		if (_isDirty) {
-			var type = this._uniformInfo.type;
 			if (type == "float") {
 				GL.uniform1f(this._location, this._floatValue);
+
+			} else if (type == "texture") {
+				GL.uniform1i(this._location, this._textureSlot);
 
 			} else if (type == "vec2") {
 				GL.uniform2f(this._location, this._floatArrayValue[0], this._floatArrayValue[1]);
@@ -190,6 +233,11 @@ class Uniform  {
 			_isDirty = false;
 		}
 
+		// Bind texture
+		if (type == 'texture') {
+			textureManager.setTexture(this._texture, this._textureSlot);
+		}
+
 	}
 
 	public function copyFrom(uniform:Uniform):Void {
@@ -204,6 +252,9 @@ class Uniform  {
 
 		} else if (this._type == "mat3" || this._type == "mat4") {
 			this.setMatrixValue(uniform.matrixValue);
+
+		} else if (this._type == "texture") {
+			this.setTexture(uniform.texture);
 		}
 	}
 
@@ -253,9 +304,31 @@ class Uniform  {
 		}
 	}
 
+	public function setTexture(value:Texture2D) {
+		if (this._texture != value) {
+			this._texture = value;
+		}
+	}
 
-	public function handleDefaultValue() {
+	public function setTextureSlot(value:Int) {
+		if (this._type != "texture") {
+			throw new KFException("IncoherentUniformValue", "A texture slot is being set for a non-texture uniform");
+		} else {
+			_hasBeenSet = true;
+
+			if (_textureSlot != value) {
+				_textureSlot = value;
+				_isDirty = true;
+			}
+		}
+	}
+
+	public function handleDefaultValue():Void {
 		var defaultValue = this._uniformInfo.defaultValue;
+		if (this._type == "texture") {
+			// Convert to string... not great
+			defaultValue = "" + this._uniformInfo.slot;
+		}
 		if (defaultValue != null) {
 			var type = this._uniformInfo.type;
 
@@ -302,6 +375,16 @@ class Uniform  {
 				this._size = 16;
 				setMatrixValue(this._defaultMatrixValue);
 
+			} else if (type == "texture") {
+				this._size = 1;
+				var value:Int = Std.parseInt(defaultValue);
+				if (value == Math.NaN) {
+					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
+
+				} else {
+					this._defaultTextureSlot = value;
+					setTextureSlot(this._defaultTextureSlot);
+				}
 			}
 		}
 	}
@@ -327,6 +410,13 @@ class Uniform  {
 
 		} else if (type == "mat4") {
 			text += _matrixValue.rawData.toString();
+
+		} else if (type == "texture") {
+			if (this._texture != null) {
+				text += this._texture.name;
+			} else {
+				text += "NULL texture";
+			}
 
 		}
 
