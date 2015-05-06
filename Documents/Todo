@@ -20,6 +20,8 @@ TODO
 
 - Render texture
 
+- verify blending (transparency)
+
 - remove all singletons?
   - use "current" director
 - modify opengl context

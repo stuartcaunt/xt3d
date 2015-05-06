@@ -83,7 +83,7 @@ class GLTextureManager {
 	public function setTexture(texture:Texture2D, textureSlot:Int):Void {
 
 		// Set texture slot
-		this.setActiveTextureSlot(GL.TEXTURE0 + textureSlot);
+		this.setActiveTextureSlot(textureSlot);
 
 		// Upload or just bind texture
 		if (texture.isDirty) {
@@ -99,8 +99,10 @@ class GLTextureManager {
 		if (textureSlot > this._maxTextureSlots) {
 			KF.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._maxTextureSlots);
 		} else {
-			GL.activeTexture(GL.TEXTURE0 + textureSlot);
-			this._activeTextureSlot = textureSlot;
+			if (textureSlot != this._activeTextureSlot) {
+				GL.activeTexture(GL.TEXTURE0 + textureSlot);
+				this._activeTextureSlot = textureSlot;
+			}
 		}
 	}
 
@@ -120,8 +122,8 @@ class GLTextureManager {
 				texture.glTexture = this.createTexture();
 				if (texture.glTexture == null) {
 					KF.Error("Cannot create a new GLTexture");
+					return false;
 				}
-				return false;
 			}
 
 			this.bindTexture(texture);

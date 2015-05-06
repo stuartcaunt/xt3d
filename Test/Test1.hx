@@ -51,31 +51,41 @@ class Test1 extends Sprite {
 		// Add view to director
 		_director.addView(view);
 
-		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
-
-		// Create a material
-		var material:Material = Material.create("test_color");
 
 		var parent = Node3D.create();
 		scene.addChild(parent);
 
+		// Create a material
+		var material:Material = Material.create("test_color");
+
 		// create a geometry
 		var sphere = Sphere.create(2.0, 16, 16);
-		var sphereNode = MeshNode.create(sphere, material);
-		sphereNode.position = new Vector3D(-1.0, 0.0, 0.0);
 
+		// Create mesh node
+		var sphereNode = MeshNode.create(sphere, material);
+		sphereNode.position = new Vector3D(0.0, 0.0, -1.0);
 		parent.addChild(sphereNode);
 
 		var material2:Material = Material.create("test_nocolor");
-		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
+		material2.uniform("color").floatArrayValue = [0, 0, 1, 0.1];
 
-		// create a geometry
+		// Create mesh node
 		var sphereNode2 = MeshNode.create(sphere, material2);
-		sphereNode2.position = new Vector3D(1.0, 0.0, 0.0);
-
+		sphereNode2.position = new Vector3D(0.7, 0.0, 0.7);
 		parent.addChild(sphereNode2);
 
-		// custom traversal
+		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
+		var textureMaterial:Material = Material.create("test_texture");
+		textureMaterial.uniform("texture").texture = texture;
+		textureMaterial.uniform("color").floatArrayValue = [1, 1, 1, 0.1];
+
+		// Create mesh node
+		var sphereNode3 = MeshNode.create(sphere, textureMaterial);
+		sphereNode3.position = new Vector3D(-0.7, 0.0, 0.7);
+		parent.addChild(sphereNode3);
+
+
+// custom traversal
 //		scene.traverse(function (node) {
 //			node.visible = true;
 //		});

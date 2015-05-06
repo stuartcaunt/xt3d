@@ -44,11 +44,12 @@ class ShaderProgram {
 	private var _availableTextureSlots:Array<Bool> = new Array<Bool>();
 	private var _maxTextureSlots:Int;
 
+	// These are as they appear in prefix_vertex.glsl
 	public static var KFAttributes = KF.jsonToMap({
 		position: "a_position",
 		normal: "a_normal",
 		color: "a_color",
-		texCoord: "a_texCoord"
+		uv: "a_uv"
 	});
 
 	public function new() {
