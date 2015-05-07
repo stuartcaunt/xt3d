@@ -387,6 +387,7 @@ class Uniform  {
 					setTextureSlot(this._defaultTextureSlot);
 				}
 			}
+			this._hasBeenSet = false;
 		}
 	}
 

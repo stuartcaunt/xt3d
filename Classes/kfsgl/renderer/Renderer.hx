@@ -128,7 +128,8 @@ class Renderer {
 			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
 
 			// Prepare objects for the next frame
-			scene.prepareObjectForNextFrame();
+			scene.prepareObjectsForNextFrame();
+
 
 			// Prepare all common uniforms too
 			UniformLib.instance().prepareUniforms();

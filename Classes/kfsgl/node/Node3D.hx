@@ -233,7 +233,7 @@ class Node3D {
 		this.prepareObjectForNextFrame();
 
 		for (child in this._children) {
-			child.prepareObjects();
+			child.prepareObjectsForNextFrame();
 		}
 
 	}

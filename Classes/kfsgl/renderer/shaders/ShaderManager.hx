@@ -131,7 +131,7 @@ class ShaderManager {
 		// Add the program
 		_programs.set(name, program);
 
-		KF.Log("Added shader program \"" + name + "\"");
+		//KF.Log("Added shader program \"" + name + "\"");
 	}
 
 	public function programWithName(name:String):ShaderProgram {

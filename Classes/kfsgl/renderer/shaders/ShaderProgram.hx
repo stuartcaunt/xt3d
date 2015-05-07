@@ -242,7 +242,7 @@ class ShaderProgram {
 					_globalUniforms.set(uniformName, uniform);
 				}
 			} else {
-				KF.Log("Ignoring common uniform " + uniformName + " : overridden by shader uniform");
+				//KF.Log("Ignoring common uniform " + uniformName + " : overridden by shader uniform");
 			}
 
 
