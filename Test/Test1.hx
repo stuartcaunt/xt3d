@@ -55,11 +55,12 @@ class Test1 extends Sprite {
 		var parent = Node3D.create();
 		scene.addChild(parent);
 
-		// Create a material
-		var material:Material = Material.create("test_color");
 
 		// create a geometry
 		var sphere = Sphere.create(2.0, 16, 16);
+
+		// Create a material
+		var material:Material = Material.create("test_color");
 
 		// Create mesh node
 		var sphereNode = MeshNode.create(sphere, material);
@@ -67,7 +68,7 @@ class Test1 extends Sprite {
 		parent.addChild(sphereNode);
 
 		var material2:Material = Material.create("test_nocolor");
-		material2.uniform("color").floatArrayValue = [0, 0, 1, 0.1];
+		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
 
 		// Create mesh node
 		var sphereNode2 = MeshNode.create(sphere, material2);
@@ -77,7 +78,8 @@ class Test1 extends Sprite {
 		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
 		var textureMaterial:Material = Material.create("test_texture");
 		textureMaterial.uniform("texture").texture = texture;
-		textureMaterial.uniform("color").floatArrayValue = [1, 1, 1, 0.1];
+		textureMaterial.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
+		textureMaterial.uniform("color").floatArrayValue = [1, 1, 1, 1];
 
 		// Create mesh node
 		var sphereNode3 = MeshNode.create(sphere, textureMaterial);
@@ -95,6 +97,7 @@ class Test1 extends Sprite {
 		_director.on("pre_render", function () {
 			rotation += 1.0;
 			sphereNode.rotationX = rotation	;
+			sphereNode3.rotationY = rotation;
 			parent.rotationY = rotation	;
 		});
 

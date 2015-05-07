@@ -223,7 +223,26 @@ class Node3D {
 
 	}
 
+	public function prepareObjectsForNextFrame():Void {
+		// If excluded then ignore all children too
+		if (this._excluded) {
+			return;
+		}
+
+		// Individual update
+		this.prepareObjectForNextFrame();
+
+		for (child in this._children) {
+			child.prepareObjects();
+		}
+
+	}
+
 	public function updateObject(scene:Scene):Void {
+		// Override me
+	}
+
+	public function prepareObjectForNextFrame():Void {
 		// Override me
 	}
 

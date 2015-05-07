@@ -25,15 +25,21 @@ class Texture2D extends CountedObject {
 	public var wrapS(get, set):Int;
 	public var wrapT(get, set):Int;
 
-	@:isVar public var bitmapData(get, null):BitmapData;
-	@:isVar public var pixelsWidth(get, null):Int;
-	@:isVar public var pixelsHeight(get, null):Int;
+	public var bitmapData(get, null):BitmapData;
+	public var pixelsWidth(get, null):Int;
+	public var pixelsHeight(get, null):Int;
+
+	public var uvScaleOffset(get, null):Array<Float>;
 
 	// members
 	private var _name:String;
 	private var _contentSize:Size<Int>;
 	private var _pixelsWidth:Int;
 	private var _pixelsHeight:Int;
+	private var _uvScaleX:Float = 1.0;
+	private var _uvScaleY:Float = 1.0;
+	private var _uvOffsetX:Float = 0.0;
+	private var _uvOffsetY:Float = 0.0;
 
 	private var _generateMipMaps:Bool;
 	private var _minFilter:Int;
@@ -86,6 +92,9 @@ class Texture2D extends CountedObject {
 				var potBitmapData = new BitmapData(this._pixelsWidth, this._pixelsHeight, true, 0);
 				potBitmapData.copyPixels(bitmapData, bitmapData.rect, _sOrigin);
 				bitmapData = potBitmapData;
+
+				this._uvScaleX = this._contentSize.width / this._pixelsWidth;
+				this._uvScaleY = this._contentSize.height / this._pixelsHeight;
 			}
 		}
 
@@ -179,6 +188,11 @@ class Texture2D extends CountedObject {
 
 	public function get_pixelsHeight():Int {
 		return this._pixelsHeight;
+	}
+
+
+	public function get_uvScaleOffset():Array<Float> {
+		return [this._uvScaleX, this._uvScaleY, this._uvOffsetX, this._uvOffsetY];
 	}
 
 

@@ -44,7 +44,7 @@ class ShaderLib  {
 				vertexDefines: ["#define USE_COLOR"],
 				commonUniforms: ["matrixCommon", "time"],
 				uniforms: {
-					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
+					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
 				}
 //				attributes: {
 //					userData: { name: "a_userData", type: "vec2" }
@@ -55,7 +55,7 @@ class ShaderLib  {
 				fragmentShader: "test_fragment",
 				commonUniforms: ["matrixCommon", "time"],
 				uniforms: {
-					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" }
+					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
 				}
 			},
 			test_texture: {
@@ -63,10 +63,11 @@ class ShaderLib  {
 				fragmentShader: "test_fragment",
 				vertexDefines: ["#define USE_TEXTURE"],
 				fragmentDefines: ["#define USE_TEXTURE"],
-				commonUniforms: ["matrixCommon", "time"],
+				commonUniforms: ["matrixCommon", "time", "texture"],
 				uniforms: {
-					color: { name: "u_color", type: "vec4", defaultValue: "[1, 1, 1, 1]" },
-					texture: { name: "u_texture", type: "texture", slot: 5 }
+					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" },
+					// Example of overriding common uniform
+					texture: { name: "u_texture", type: "texture", shader: "f", slot: 5 }
 				}
 			}
 		}
@@ -88,6 +89,7 @@ class ShaderLib  {
 				var uniformInfo:UniformInfo = {
 					name: uniformInfoJson.name,
 					type: uniformInfoJson.type,
+					shader: uniformInfoJson.shader,
 					defaultValue: uniformInfoJson.defaultValue,
 					global: uniformInfoJson.global == true ? true : false,
 					slot: -1

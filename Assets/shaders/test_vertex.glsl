@@ -8,8 +8,6 @@ varying vec4 v_color;
 varying vec2 v_uv;
 #endif
 
-uniform vec4 u_color;
-
 void main(void) {
 
 #ifdef USE_COLOR
@@ -19,7 +17,7 @@ void main(void) {
 #endif
 
 #ifdef USE_TEXTURE
-	v_uv = a_uv;
+	v_uv = a_uv * u_uvScaleOffset.xy + u_uvScaleOffset.zw;
 #endif
 
 	gl_Position = u_modelViewProjectionMatrix * a_position;

@@ -26,15 +26,19 @@ class UniformLib {
 		// Not no uniform should have the same name even if in different groups
 		var uniformsJson = {
 			matrixCommon: {
-				modelViewProjectionMatrix: { name: "u_modelViewProjectionMatrix", type: "mat4", defaultValue: "identity" },
-				modelViewMatrix: { name: "u_modelViewMatrix", type: "mat4", defaultValue: "identity" },
-				modelMatrix: { name: "u_modelMatrix", type: "mat4", defaultValue: "identity" },
-				viewMatrix: { name: "u_viewMatrix", type: "mat4", defaultValue: "identity", global: true },
-				projectionMatrix: { name: "u_projectionMatrix", type: "mat4", defaultValue: "identity", global: true },
-				normalMatrix: { name: "u_normalMatrix", type: "mat3", defaultValue: "identity" }
+				modelViewProjectionMatrix: { name: "u_modelViewProjectionMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
+				modelViewMatrix: { name: "u_modelViewMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
+				modelMatrix: { name: "u_modelMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
+				viewMatrix: { name: "u_viewMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
+				projectionMatrix: { name: "u_projectionMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
+				normalMatrix: { name: "u_normalMatrix", type: "mat3", shader: "v", defaultValue: "identity" }
 			},
 			time: {
-				time: { name: "u_time", type: "float", defaultValue: "0.0", global: true}
+				time: { name: "u_time", type: "float", shader: "fv", defaultValue: "0.0", global: true}
+			},
+			texture: {
+				texture: { name: "u_texture", type: "texture", shader: "f", slot: 0 },
+				uvScaleOffset: { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
 			}
 		};
 
@@ -54,6 +58,7 @@ class UniformLib {
 				var uniformInfo:UniformInfo = {
 					name: uniformInfoJson.name, 
 					type: uniformInfoJson.type, 
+					shader: uniformInfoJson.shader,
 					defaultValue: uniformInfoJson.defaultValue,
 					global: uniformInfoJson.global == true ? true : false,
 					slot: -1
@@ -127,6 +132,12 @@ class UniformLib {
 		}
 
 		return null;
+	}
+
+	public function prepareUniforms():Void {
+		for (uniform in this._allUniforms) {
+			uniform.prepareForUse();
+		}
 	}
 
 }

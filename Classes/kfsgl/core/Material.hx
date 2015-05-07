@@ -246,13 +246,25 @@ class Material {
 			var commonUniform = UniformLib.instance().uniform(uniform.name);
 
 			// If not been set locally in the material, copy from uniform lib location
-			// TODO
-			//if (!uniform.hasBeenSet && commonUniform.hasBeenSet) {
+			if (!uniform.hasBeenSet && commonUniform.hasBeenSet) {
 				uniform.copyFrom(commonUniform);
-			//}
+			}
 
 			this._program.updateCommonUniform(uniform, textureManager);
 		}
 	}
+
+	public function prepareUniforms():Void {
+		// Prepare all uniforms so we know if they have changed in the next frame
+		for (uniform in this._uniforms) {
+			uniform.prepareForUse();
+		}
+
+		// Prepare all common uniforms
+		for (uniform in this._commonUniforms) {
+			uniform.prepareForUse();
+		}
+	}
+
 
 }

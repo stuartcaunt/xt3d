@@ -5,18 +5,8 @@ TODO
   - load from png
   - load from jpg
   - assets or url
-  - different formats
-  - non-pow2 images
-    - need to modify UVs ?
-    - three.js offsetRepeat uniform to dynamically scale/translate UVs
-  - use state/texture manager for binding textures
-  - don't create GLTexture immediately : wait until 'update' render phase
-    - always load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
-  - texture uniforms
-    - automatically bind texture on material update
-  - texture units ?
-    - manual or automatic ?
-  - unbind texture when deleted
+  - different bit formats (8888, 4444)
+  - load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
 
 - Render texture
 
@@ -76,3 +66,14 @@ x handle ubyte color arrays
 x update haxe, openfl, lime
 x Int32Array indexes not working?
 x verify/set float precisions in shaders
+x textures
+x   use state/texture manager for binding textures
+x   don't create GLTexture immediately : wait until 'update' render phase
+x   texture uniforms
+x     automatically bind texture on material update
+x   texture units ?
+x     manual or automatic ?
+x   unbind texture when deleted
+x   non-pow2 images
+x     need to modify UVs ?
+x     three.js offsetRepeat uniform to dynamically scale/translate UVs

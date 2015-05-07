@@ -127,6 +127,12 @@ class Renderer {
 			// Render transparent objects
 			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
 
+			// Prepare objects for the next frame
+			scene.prepareObjectForNextFrame();
+
+			// Prepare all common uniforms too
+			UniformLib.instance().prepareUniforms();
+
 			// Send custom-post-render-pass event
 		}
 	}

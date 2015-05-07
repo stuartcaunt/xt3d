@@ -114,16 +114,42 @@ class ShaderProgram {
 			vertexAttributes += "attribute " + attributeInfo.type + " " + attributeInfo.name + ";\n";
 		}
 
-		// generate uniform declarations
-		var vertexUniforms:String = "";
+		// Regroup common and program-specific uniforms
+		var allVertexUniforms = new Map<String, UniformInfo>();
+		var allFragmentUniforms = new Map<String, UniformInfo>();
+		for (uniformName in uniforms.keys()) {
+			var uniformInfo = uniforms.get(uniformName);
+			if (uniformInfo.shader.indexOf("v") != -1) {
+				allVertexUniforms.set(uniformName, uniformInfo);
+			} else if (uniformInfo.shader.indexOf("v") != -1) {
+				allFragmentUniforms.set(uniformName, uniformInfo);
+			}
+		}
 		for (uniformName in commonUniforms.keys()) {
 			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
+			if (uniformInfo.shader.indexOf("v") != -1 && !allVertexUniforms.exists(uniformName)) {
+				allVertexUniforms.set(uniformName, uniformInfo);
+			} else if (uniformInfo.shader.indexOf("v") != -1 && !allFragmentUniforms.exists(uniformName)) {
+				allFragmentUniforms.set(uniformName, uniformInfo);
+			}
+		}
+
+
+		// generate uniform declarations
+		var vertexUniforms:String = "";
+		var fragmentUniforms:String = "";
+		for (uniformName in allVertexUniforms.keys()) {
+			var uniformInfo = allVertexUniforms.get(uniformName);
 			vertexUniforms += "uniform " + Uniform.codeType(uniformInfo.type) + " " + uniformInfo.name + ";\n";
+		}
+		for (uniformName in allFragmentUniforms.keys()) {
+			var uniformInfo = allFragmentUniforms.get(uniformName);
+			fragmentUniforms += "uniform " + Uniform.codeType(uniformInfo.type) + " " + uniformInfo.name + ";\n";
 		}
 
 		// Add prefixes
 		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
-		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n" + _prefixFragment + "\n// fragmentProgram:\n" + fragmentProgram;
+		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n" + _prefixFragment + "\n// fragmentUniforms:\n" + fragmentUniforms + "\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();
@@ -182,26 +208,6 @@ class ShaderProgram {
 			_attributes.set(attributeIdentifier, { name:attributeIdentifier, location:location, used:false });
 		}
 
-		// Handle common uniforms
-		for (uniformName in commonUniforms.keys()) {
-			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
-
-			// Create uniform
-			var uniform = this.createUniform(uniformName, uniformInfo);
-
-			// Add to all uniforms
-			_commonUniforms.set(uniformName, uniform);
-			if (uniform == null) {
-				return false;
-			}
-
-			// Add to global uniforms
-			if (uniform.isGlobal) {
-				_globalUniforms.set(uniformName, uniform);
-			}
-
-		}
-
 		// Handle uniforms
 		for (uniformName in uniforms.keys()) {
 			var uniformInfo = uniforms.get(uniformName);
@@ -215,6 +221,31 @@ class ShaderProgram {
 
 			// Add to all uniforms
 			_uniforms.set(uniformName, uniform);
+		}
+
+		// Handle common uniforms
+		for (uniformName in commonUniforms.keys()) {
+			if (!_uniforms.exists(uniformName)) {
+				var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
+
+				// Create uniform
+				var uniform = this.createUniform(uniformName, uniformInfo);
+
+				// Add to all uniforms
+				_commonUniforms.set(uniformName, uniform);
+				if (uniform == null) {
+					return false;
+				}
+
+				// Add to global uniforms
+				if (uniform.isGlobal) {
+					_globalUniforms.set(uniformName, uniform);
+				}
+			} else {
+				KF.Log("Ignoring common uniform " + uniformName + " : overridden by shader uniform");
+			}
+
+
 		}
 
 		return true;
@@ -340,10 +371,8 @@ class ShaderProgram {
 		for (uniform in this._globalUniforms) {
 			var globalUniform = UniformLib.instance().uniform(uniform.name);
 
-			// Copy value if it has been modified
-			if (globalUniform.hasBeenSet) {
-				uniform.copyFrom(globalUniform);
-			}
+			// Copy value to program
+			uniform.copyFrom(globalUniform);
 
 			// Write to GPU
 			uniform.use(textureManager);
@@ -356,9 +385,9 @@ class ShaderProgram {
 	public function updateUniform(uniform:Uniform, textureManager:GLTextureManager):Void {
 		if (this._uniforms.exists(uniform.name)) {
 			var uniformToUpdate = this._uniforms.get(uniform.name);
-			if (uniform.hasBeenSet) {
-				uniformToUpdate.copyFrom(uniform);
-			}
+
+			// Copy value to program
+			uniformToUpdate.copyFrom(uniform);
 
 			// Write to GPU
 			uniformToUpdate.use(textureManager);
@@ -375,9 +404,9 @@ class ShaderProgram {
 	public function updateCommonUniform(uniform:Uniform, textureManager:GLTextureManager):Void {
 		if (this._commonUniforms.exists(uniform.name)) {
 			var uniformToUpdate = this._commonUniforms.get(uniform.name);
-			if (uniform.hasBeenSet) {
-				uniformToUpdate.copyFrom(uniform);
-			}
+
+			// Copy value to program
+			uniformToUpdate.copyFrom(uniform);
 
 			// Write to GPU
 			uniformToUpdate.use(textureManager);

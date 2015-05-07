@@ -206,6 +206,7 @@ class Uniform  {
 
 		// Send value to the GPU if it is dirty
 		if (_isDirty) {
+			//KF.Log("Setting uniform " + this._name);
 			if (type == "float") {
 				GL.uniform1f(this._location, this._floatValue);
 

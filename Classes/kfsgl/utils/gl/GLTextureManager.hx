@@ -81,18 +81,19 @@ class GLTextureManager {
 	}
 
 	public function setTexture(texture:Texture2D, textureSlot:Int):Void {
+		if (texture != null) {
 
-		// Set texture slot
-		this.setActiveTextureSlot(textureSlot);
+			// Set texture slot
+			this.setActiveTextureSlot(textureSlot);
 
-		// Upload or just bind texture
-		if (texture.isDirty) {
-			this.uploadTexture(texture);
+			// Upload or just bind texture
+			if (texture.isDirty) {
+				this.uploadTexture(texture);
 
-		} else {
-			this.bindTexture(texture);
+			} else {
+				this.bindTexture(texture);
+			}
 		}
-
 	}
 
 	public function setActiveTextureSlot(textureSlot:Int):Void {

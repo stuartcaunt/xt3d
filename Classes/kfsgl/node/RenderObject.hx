@@ -216,4 +216,9 @@ class RenderObject extends Node3D {
 		super.updateObject(scene);
 	}
 
+	override public function prepareObjectForNextFrame():Void {
+		super.prepareObjectForNextFrame();
+		this._material.prepareUniforms();
+	}
+
 }
