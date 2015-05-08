@@ -19,6 +19,29 @@ class KFGL {
 	public static inline var FrontFaceDirectionCCW:Int = 1;
 
 
+	// PIXEL FORMAT
+	// 32-bit texture: RGBA8888
+	public static inline var Texture2DPixelFormat_RGBA8888:Int = 0;
+	// 24-bit texture: RGBA888
+	public static inline var Texture2DPixelFormat_RGB888:Int = 1;
+	// 16-bit textures: RGBA4444
+	public static inline var Texture2DPixelFormat_RGBA4444:Int = 6;
+	// 16-bit texture without Alpha channel
+	public static inline var Texture2DPixelFormat_RGB565:Int = 2;
+	// 16-bit textures: RGB5A1
+	public static inline var Texture2DPixelFormat_RGB5A1:Int = 7;
+	// 8-bit textures used as masks
+	public static inline var Texture2DPixelFormat_A8:Int = 3;
+	// 8-bit intensity texture
+	public static inline var Texture2DPixelFormat_I8:Int = 4;
+	// 16-bit textures used as masks
+	public static inline var Texture2DPixelFormat_AI88:Int = 5;
+	// 4-bit PVRTC-compressed texture: PVRTC4
+	public static inline var Texture2DPixelFormat_PVRTC4:Int = 8;
+	// 2-bit PVRTC-compressed texture: PVRTC2
+	public static inline var Texture2DPixelFormat_PVRTC2:Int = 9;
+
+
 	// MATERIAL CONSTANTS
 
 	// Tells a material which side of a geometry is to be rendered

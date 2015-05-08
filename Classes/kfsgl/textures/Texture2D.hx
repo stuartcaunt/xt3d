@@ -25,6 +25,7 @@ import kfsgl.utils.CountedObject;
 	public var magFilter(get, set):Int;
 	public var wrapS(get, set):Int;
 	public var wrapT(get, set):Int;
+	public var pixelFormat(get, set):Int;
 
 	public var bitmapData(get, null):BitmapData;
 	public var pixelsWidth(get, null):Int;
@@ -47,6 +48,7 @@ import kfsgl.utils.CountedObject;
 	private var _magFilter:Int;
 	private var _wrapS:Int;
 	private var _wrapT:Int;
+	private var _pixelFormat:Int;
 	private var _forcePOT:Bool;
 
 	private var _glTexture:GLTexture = null;
@@ -237,6 +239,14 @@ import kfsgl.utils.CountedObject;
 		return this._wrapT = value;
 	}
 
+	public function get_pixelFormat():Int {
+		return this._pixelFormat;
+	}
+
+	public function set_pixelFormat(value:Int) {
+		return this._pixelFormat = value;
+	}
+
 	public function get_bitmapData():BitmapData {
 		return this._bitmapData;
 	}
@@ -275,6 +285,7 @@ import kfsgl.utils.CountedObject;
 		this._magFilter = textureOptions.magFilter;
 		this._wrapS = textureOptions.wrapS;
 		this._wrapT = textureOptions.wrapT;
+		this._pixelFormat = textureOptions.pixelFormat;
 		this._forcePOT = textureOptions.forcePOT;
 	}
 

@@ -1,5 +1,7 @@
 package kfsgl.gl;
 
+import openfl.utils.Int16Array;
+import openfl.utils.ArrayBufferView;
 import kfsgl.utils.KF;
 import kfsgl.textures.Texture2D;
 import openfl.utils.ByteArray;
@@ -131,11 +133,11 @@ class GLTextureManager {
 
 			this.bindTexture(texture);
 
-			// Upload image data
-			this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight);
-
 			// Handle texture params
 			this.handleTextureParams(texture);
+
+			// Upload image data
+			this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
 
 			// Mipmapping
 			if (texture.generateMipMaps) {
@@ -155,24 +157,162 @@ class GLTextureManager {
 
 
 
-	private function uploadImageData(bitmapData:BitmapData, textureWidth:Int, textureHeight:Int):Void {
+	private function uploadImageData(bitmapData:BitmapData, textureWidth:Int, textureHeight:Int, pixelFormat:Int):Void {
 
-#if js
-		var byteArray = ByteArray.__ofBuffer (@:privateAccess (bitmapData.__image).data.buffer);
-		var source = new UInt8Array(byteArray.length);
-		byteArray.position = 0;
-
-		var i:Int = 0;
-		while (byteArray.position < byteArray.length) {
-			source[i] = byteArray.readUnsignedByte ();
-			i++;
-		}
-#else
+//#if js
+//		var byteArray = ByteArray.__ofBuffer (@:privateAccess (bitmapData.__image).data.buffer);
+//		var source = new UInt8Array(byteArray.length);
+//		byteArray.position = 0;
+//
+//		var i:Int = 0;
+//		while (byteArray.position < byteArray.length) {
+//			source[i] = byteArray.readUnsignedByte ();
+//			i++;
+//		}
+//#else
 		var byteArray = @:privateAccess (bitmapData.__image).data.buffer;
 		var source = new UInt8Array(byteArray);
-#end
+//#end
 
-		GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, source);
+
+		var formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
+
+		var bitsPerPixel:Int = this.getBitsPerPixelForFormat(pixelFormat);
+		var bytesPerRow:Int = Std.int(textureWidth * bitsPerPixel / 8);
+
+		if(bytesPerRow % 8 == 0) {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 8);
+
+		} else if(bytesPerRow % 4 == 0) {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4);
+
+		} else if(bytesPerRow % 2 == 0) {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 2);
+
+		} else {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
+		}
+
+		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA4444) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_SHORT_4_4_4_4, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB565) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.UNSIGNED_SHORT_5_6_5, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB5A1) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_SHORT_5_5_5_1, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_A8) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.ALPHA, textureWidth, textureHeight, 0, GL.ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_I8) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE, textureWidth, textureHeight, 0, GL.LUMINANCE, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_AI88) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE_ALPHA, textureWidth, textureHeight, 0, GL.LUMINANCE_ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
+		}
+	}
+
+	private function formatData(source:UInt8Array, width:Int, height:Int, pixelFormat:Int):ArrayBufferView {
+		var numberOfPixels = width * height;
+		var outPosition = 0;
+		var inPosition = 0;
+		var r, g, b, a;
+
+		// Does data from asset ever NOT have alpha ? In this case need to handle 3 bytes per pixel as source
+		if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
+			var formattedLength = numberOfPixels * 3;
+			var formattedSource = new UInt8Array(formattedLength);
+			for (i in 0 ... numberOfPixels) {
+				r = (source[inPosition++]);
+				g = (source[inPosition++]);
+				b = (source[inPosition++]);
+				inPosition++;
+				formattedSource[outPosition++] = r;
+				formattedSource[outPosition++] = g;
+				formattedSource[outPosition++] = b;
+			}
+			return formattedSource;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA4444) {
+			var formattedSource = new Int16Array(numberOfPixels);
+			for (i in 0 ... numberOfPixels) {
+				r = (source[inPosition++] >> 4);
+				g = (source[inPosition++] >> 4);
+				b = (source[inPosition++] >> 4);
+				a = (source[inPosition++] >> 4);
+				formattedSource[outPosition++] = (r << 12) | (g << 8) | (b << 4) | (a << 0);
+			}
+			return formattedSource;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB565) {
+			var formattedSource = new Int16Array(numberOfPixels);
+			for (i in 0 ... numberOfPixels) {
+				r = (source[inPosition++] >> 3);
+				g = (source[inPosition++] >> 2);
+				b = (source[inPosition++] >> 3);
+				inPosition++;
+				formattedSource[outPosition++] = (r << 11) | (g << 5) | (b << 0);
+			}
+			return formattedSource;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB5A1) {
+			var formattedSource = new Int16Array(numberOfPixels);
+			for (i in 0 ... numberOfPixels) {
+				r = (source[inPosition++] >> 3);
+				g = (source[inPosition++] >> 3);
+				b = (source[inPosition++] >> 3);
+				a = (source[inPosition++] >> 7);
+				formattedSource[outPosition++] = (r << 11) | (g << 6) | (b << 1) | (a << 0);
+			}
+			return formattedSource;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_A8) {
+			var formattedSource = new UInt8Array(numberOfPixels);
+			for (i in 0 ... numberOfPixels) {
+				inPosition += 3;
+				a = (source[inPosition++]);
+				formattedSource[outPosition++] = a;
+			}
+			return formattedSource;
+
+		}
+
+		return source;
+	}
+
+	private function getBitsPerPixelForFormat(pixelFormat:Int):Int {
+		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {
+			return 32;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
+			return 24;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA4444) {
+			return 16;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB565) {
+			return 16;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB5A1) {
+			return 16;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_A8) {
+			return 8;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_I8) {
+			return 8;
+
+		} else if (pixelFormat == KFGL.Texture2DPixelFormat_AI88) {
+			return 16;
+		}
+		return 32;
 	}
 
 }

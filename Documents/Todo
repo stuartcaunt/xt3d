@@ -2,9 +2,7 @@ TODO
 ====
 
 - textures
-  - assets or url
-  - different bit formats (8888, 4444)
-  - load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
+  - from color
 
 - Render texture
 
@@ -77,6 +75,10 @@ x     need to modify UVs ?
 x     three.js offsetRepeat uniform to dynamically scale/translate UVs
 x   load from png
 x   load from jpg
+x   assets or url
+x   load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
+x   different bit formats (8888, 4444)
+
 x handle "prepareForUse" in program uniforms
 
 

@@ -10,6 +10,7 @@ class TextureOptions {
 	public var magFilter(get, set):Int;
 	public var wrapS(get, set):Int;
 	public var wrapT(get, set):Int;
+	public var pixelFormat(get, set):Int;
 
 	// members
 	private var _forcePOT:Bool = true;
@@ -18,6 +19,8 @@ class TextureOptions {
 	private var _magFilter:Int = KFGL.GL_NEAREST;
 	private var _wrapS:Int = KFGL.GL_REPEAT;
 	private var _wrapT:Int = KFGL.GL_REPEAT;
+
+	private var _pixelFormat:Int = KFGL.Texture2DPixelFormat_RGBA8888;
 
 	public function new() {
 
@@ -75,9 +78,15 @@ class TextureOptions {
 		return this._wrapT = value;
 	}
 
+	public function get_pixelFormat():Int {
+		return this._pixelFormat;
+	}
+
+	public function set_pixelFormat(value:Int) {
+		return this._pixelFormat = value;
+	}
 
 
-
-	/* --------- Implementation --------- */
+/* --------- Implementation --------- */
 
 }
