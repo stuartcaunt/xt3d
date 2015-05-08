@@ -79,6 +79,17 @@ import kfsgl.utils.CountedObject;
 	}
 #end
 
+	public static function createFromImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Texture2D {
+		var object = new Texture2D();
+
+		if (object != null && !(object.initFromImageAssetAsync(imagePath, textureOptions, callback))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+
 	public function initFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
 		this._name = imagePath;
 
@@ -128,6 +139,34 @@ import kfsgl.utils.CountedObject;
 		return true;
 	}
 #end
+
+	public function initFromImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Bool {
+		this._name = imagePath;
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
+
+		// Get bitmap data from asset in async
+		Assets.loadBitmapData(imagePath, function (bitmapData:BitmapData) {
+			if (bitmapData == null) {
+				KF.Error("Cannot get bitmap data from \"" + imagePath + "\"");
+
+			} else {
+				// Handle the bitmap data
+				this.handleBitmapData(bitmapData);
+
+				this._isReady = true;
+
+				// user callback
+				if (callback != null) {
+					callback(this);
+				}
+			}
+
+		});
+
+		return true;
+	}
 
 
 	public function new() {

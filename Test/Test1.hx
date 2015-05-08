@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.utils.KF;
 import kfsgl.textures.TextureCache;
 import kfsgl.textures.Texture2D;
 import kfsgl.node.Node3D;
@@ -87,17 +88,22 @@ class Test1 extends Sprite {
 		sphereNode3.position = new Vector3D(-0.7, -0.7, 0.7);
 		parent.addChild(sphereNode3);
 
+		var sphereNode4 = null;
 		//var texture2:Texture2D = _director.textureCache.addTextureFromImageUrl("http://blog.tartiflop.com/wp-content/uploads/2008/11/checker.jpg");
-		var texture2:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/checker.jpg");
-		texture2.retain();
-		var textureMaterial2:Material = Material.create("test_texture");
-		textureMaterial2.uniform("texture").textureSlot = 1;
-		textureMaterial2.uniform("texture").texture = texture2;
+		_director.textureCache.addTextureFromImageAssetAsync("assets/images/checker.jpg", null, function (texture2:Texture2D) {
 
-		// Create mesh node
-		var sphereNode4 = MeshNode.create(sphere, textureMaterial2);
-		sphereNode4.position = new Vector3D(0.0, 1.0, 0.0);
-		parent.addChild(sphereNode4);
+			texture2.retain();
+			var textureMaterial2:Material = Material.create("test_texture");
+			textureMaterial2.uniform("texture").textureSlot = 1;
+			textureMaterial2.uniform("texture").texture = texture2;
+
+
+			// Create mesh node
+			sphereNode4 = MeshNode.create(sphere, textureMaterial2);
+			sphereNode4.position = new Vector3D(0.0, 1.0, 0.0);
+			parent.addChild(sphereNode4);
+
+		});
 
 
 // custom traversal
@@ -113,7 +119,9 @@ class Test1 extends Sprite {
 			sphereNode2.rotationX = rotation;
 			sphereNode2.rotationZ = rotation;
 			sphereNode3.rotationY = rotation;
-			sphereNode4.rotationZ = rotation;
+			if (sphereNode4 != null) {
+				sphereNode4.rotationZ = rotation;
+			}
 			parent.rotationY = rotation	;
 		});
 

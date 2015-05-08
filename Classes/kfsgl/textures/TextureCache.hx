@@ -65,8 +65,15 @@ class TextureCache {
 	}
 #end
 
-	public function asyncAddTextureFromAssetImage(imagePath:String, callback:Texture2D -> Void):Void {
+	public function addTextureFromImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Texture2D {
+		if (this._textures.exists(imagePath)) {
+			return this._textures.get(imagePath);
+		}
 
+		var texture = Texture2D.createFromImageAssetAsync(imagePath, textureOptions, callback);
+		this._textures.set(imagePath, texture);
+
+		return texture;
 	}
 
 
