@@ -81,18 +81,17 @@ class GLTextureManager {
 	}
 
 	public function setTexture(texture:Texture2D, textureSlot:Int):Void {
-		if (texture != null) {
+		//KF.Log("set texture " + texture.name + " at " + textureSlot);
 
-			// Set texture slot
-			this.setActiveTextureSlot(textureSlot);
+		// Set texture slot
+		this.setActiveTextureSlot(textureSlot);
 
-			// Upload or just bind texture
-			if (texture.isDirty) {
-				this.uploadTexture(texture);
+		// Upload or just bind texture
+		if (texture != null && texture.isDirty) {
+			this.uploadTexture(texture);
 
-			} else {
-				this.bindTexture(texture);
-			}
+		} else {
+			this.bindTexture(texture);
 		}
 	}
 
@@ -110,7 +109,9 @@ class GLTextureManager {
 	private function bindTexture(texture:Texture2D):Void {
 		if (this._currentTextures[this._activeTextureSlot] != texture) {
 			this._currentTextures[this._activeTextureSlot] = texture;
-			GL.bindTexture(GL.TEXTURE_2D, texture.glTexture);
+			var glTexture = texture != null ? texture.glTexture : null;
+			GL.bindTexture(GL.TEXTURE_2D, glTexture);
+			//KF.Log("Binding texture " + texture.name);
 		}
 	}
 

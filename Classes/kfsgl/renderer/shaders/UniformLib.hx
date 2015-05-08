@@ -37,7 +37,7 @@ class UniformLib {
 				time: { name: "u_time", type: "float", shader: "fv", defaultValue: "0.0", global: true}
 			},
 			texture: {
-				texture: { name: "u_texture", type: "texture", shader: "f", slot: 0 },
+				texture: { name: "u_texture", type: "texture", shader: "f" },
 				uvScaleOffset: { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
 			}
 		};

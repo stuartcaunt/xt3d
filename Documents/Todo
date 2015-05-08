@@ -2,8 +2,6 @@ TODO
 ====
 
 - textures
-  - load from png
-  - load from jpg
   - assets or url
   - different bit formats (8888, 4444)
   - load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
@@ -77,3 +75,5 @@ x   unbind texture when deleted
 x   non-pow2 images
 x     need to modify UVs ?
 x     three.js offsetRepeat uniform to dynamically scale/translate UVs
+x   load from png
+x   load from jpg

@@ -240,6 +240,11 @@ class Uniform  {
 
 		} else if (this._type == "texture") {
 			this.setTexture(uniform.texture);
+
+			// Override program-specified texture slot _only_ if set by the user (default value changed)
+			var textureSlot = (uniform.textureSlot != -1) ? uniform.textureSlot :this._defaultTextureSlot;
+			this.setTextureSlot(textureSlot);
+			//KF.Log(this._textureSlot);
 		}
 	}
 
@@ -305,7 +310,12 @@ class Uniform  {
 				_textureSlot = value;
 				_isDirty = true;
 			}
+
 		}
+	}
+
+	public function setDefaultTextureSlot(value:Int) {
+		_defaultTextureSlot = value;
 	}
 
 	public function handleDefaultValue():Void {

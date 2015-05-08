@@ -64,7 +64,7 @@ class Test1 extends Sprite {
 
 		// Create mesh node
 		var sphereNode = MeshNode.create(sphere, material);
-		sphereNode.position = new Vector3D(0.0, 0.0, -1.0);
+		sphereNode.position = new Vector3D(0.0, -0.7, -1.0);
 		parent.addChild(sphereNode);
 
 		var material2:Material = Material.create("test_nocolor");
@@ -72,7 +72,7 @@ class Test1 extends Sprite {
 
 		// Create mesh node
 		var sphereNode2 = MeshNode.create(sphere, material);
-		sphereNode2.position = new Vector3D(0.7, 0.0, 0.7);
+		sphereNode2.position = new Vector3D(0.7, -0.7, 0.7);
 		parent.addChild(sphereNode2);
 
 		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
@@ -84,8 +84,19 @@ class Test1 extends Sprite {
 
 		// Create mesh node
 		var sphereNode3 = MeshNode.create(sphere, textureMaterial);
-		sphereNode3.position = new Vector3D(-0.7, 0.0, 0.7);
+		sphereNode3.position = new Vector3D(-0.7, -0.7, 0.7);
 		parent.addChild(sphereNode3);
+
+		var texture2:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/checker.jpg");
+		texture2.retain();
+		var textureMaterial2:Material = Material.create("test_texture");
+		textureMaterial2.uniform("texture").textureSlot = 1;
+		textureMaterial2.uniform("texture").texture = texture2;
+
+		// Create mesh node
+		var sphereNode4 = MeshNode.create(sphere, textureMaterial2);
+		sphereNode4.position = new Vector3D(0.0, 1.0, 0.0);
+		parent.addChild(sphereNode4);
 
 
 // custom traversal
@@ -99,6 +110,7 @@ class Test1 extends Sprite {
 			rotation += 1.0;
 			sphereNode.rotationX = rotation	;
 			sphereNode3.rotationY = rotation;
+			sphereNode4.rotationZ = rotation;
 			parent.rotationY = rotation	;
 		});
 

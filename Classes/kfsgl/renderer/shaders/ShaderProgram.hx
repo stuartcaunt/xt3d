@@ -313,6 +313,9 @@ class ShaderProgram {
 				uniform.textureSlot = textureSlot;
 			}
 
+			// Set the default slot for the texture in case slot is overriden by user value
+			uniform.setDefaultTextureSlot(textureSlot);
+
 			if (textureSlot > this._maxTextureSlots) {
 				KF.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
 				return null;
