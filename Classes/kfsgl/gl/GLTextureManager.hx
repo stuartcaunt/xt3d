@@ -1,5 +1,6 @@
-package kfsgl.utils.gl;
+package kfsgl.gl;
 
+import kfsgl.utils.KF;
 import kfsgl.textures.Texture2D;
 import openfl.utils.ByteArray;
 import openfl.utils.UInt8Array;

@@ -17,7 +17,6 @@ TODO
   - render target
 
 
-- handle "prepareForUse" in program uniforms
 - Check handling of global uniforms at F4
 - Render loop
 - Scene and Node
@@ -25,7 +24,6 @@ TODO
 - Primitives
   - plane
   - sphere
-   - interlaced data
 - handle multiple contexts
   - all objects created with a contextId ?
   - render targets
@@ -77,3 +75,11 @@ x     need to modify UVs ?
 x     three.js offsetRepeat uniform to dynamically scale/translate UVs
 x   load from png
 x   load from jpg
+x handle "prepareForUse" in program uniforms
+
+
+NAMES
+=====
+
+- Pigalle (platform independent graphics library)
+- Glass (Graphics Library Agnostic System)

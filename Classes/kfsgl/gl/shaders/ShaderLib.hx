@@ -1,7 +1,7 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
-import kfsgl.renderer.shaders.ShaderInfo;
-import kfsgl.renderer.shaders.UniformInfo;
+import kfsgl.gl.shaders.ShaderInfo;
+import kfsgl.gl.shaders.UniformInfo;
 
 class ShaderLib  {
 

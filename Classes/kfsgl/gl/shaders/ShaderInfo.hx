@@ -1,8 +1,8 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
-import kfsgl.renderer.shaders.ShaderReader;
-import kfsgl.renderer.shaders.UniformInfo;
-import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.gl.shaders.ShaderReader;
+import kfsgl.gl.shaders.UniformInfo;
+import kfsgl.gl.shaders.UniformLib;
 
 class ShaderInfo {
 	public var vertexProgram:String;

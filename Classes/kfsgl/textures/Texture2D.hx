@@ -1,7 +1,7 @@
 package kfsgl.textures;
 
-import kfsgl.utils.gl.GLTextureManager;
-import kfsgl.utils.gl.KFGL;
+import kfsgl.gl.GLTextureManager;
+import kfsgl.gl.KFGL;
 import flash.utils.ByteArray;
 import openfl.utils.UInt8Array;
 import kfsgl.utils.KF;

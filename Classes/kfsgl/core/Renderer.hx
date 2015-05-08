@@ -1,16 +1,16 @@
-package kfsgl.renderer;
+package kfsgl.core;
 
 import kfsgl.utils.KF;
-import kfsgl.utils.gl.GLTextureManager;
-import kfsgl.utils.gl.GLBufferManager;
-import kfsgl.utils.gl.GLAttributeManager;
-import kfsgl.utils.gl.GLStateManager;
-import kfsgl.renderer.shaders.ShaderProgram;
-import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.gl.GLTextureManager;
+import kfsgl.gl.GLBufferManager;
+import kfsgl.gl.GLAttributeManager;
+import kfsgl.gl.GLStateManager;
+import kfsgl.gl.shaders.ShaderProgram;
+import kfsgl.gl.shaders.UniformLib;
 import openfl.geom.Matrix3D;
 import kfsgl.utils.Color;
-import kfsgl.utils.gl.KFGL;
-import kfsgl.renderer.shaders.ShaderManager;
+import kfsgl.gl.KFGL;
+import kfsgl.gl.shaders.ShaderManager;
 import kfsgl.core.Camera;
 import kfsgl.core.Material;
 import kfsgl.node.Scene;

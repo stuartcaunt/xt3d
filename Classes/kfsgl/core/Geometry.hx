@@ -1,12 +1,12 @@
 package kfsgl.core;
 
-import kfsgl.utils.gl.UByteVertexData;
-import kfsgl.utils.gl.PrimitiveVertexData;
-import kfsgl.utils.gl.GLBufferManager;
-import kfsgl.utils.gl.VertexData;
-import kfsgl.utils.gl.FloatVertexData;
-import kfsgl.utils.gl.InterleavedVertexData;
-import kfsgl.utils.gl.IndexData;
+import kfsgl.gl.vertexdata.UByteVertexData;
+import kfsgl.gl.vertexdata.PrimitiveVertexData;
+import kfsgl.gl.GLBufferManager;
+import kfsgl.gl.vertexdata.VertexData;
+import kfsgl.gl.vertexdata.FloatVertexData;
+import kfsgl.gl.vertexdata.InterleavedVertexData;
+import kfsgl.gl.vertexdata.IndexData;
 import kfsgl.utils.errors.KFException;
 
 

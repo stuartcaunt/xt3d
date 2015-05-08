@@ -109,6 +109,8 @@ class Test1 extends Sprite {
 		_director.on("pre_render", function () {
 			rotation += 1.0;
 			sphereNode.rotationX = rotation	;
+			sphereNode2.rotationX = rotation;
+			sphereNode2.rotationZ = rotation;
 			sphereNode3.rotationY = rotation;
 			sphereNode4.rotationZ = rotation;
 			parent.rotationY = rotation	;

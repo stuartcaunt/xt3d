@@ -1,12 +1,12 @@
 package kfsgl.core;
 
-import kfsgl.utils.gl.GLTextureManager;
-import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.gl.GLTextureManager;
+import kfsgl.gl.shaders.UniformLib;
 import kfsgl.utils.errors.KFException;
-import kfsgl.renderer.shaders.ShaderManager;
-import kfsgl.renderer.shaders.Uniform;
-import kfsgl.renderer.shaders.ShaderProgram;
-import kfsgl.utils.gl.KFGL;
+import kfsgl.gl.shaders.ShaderManager;
+import kfsgl.gl.shaders.Uniform;
+import kfsgl.gl.shaders.ShaderProgram;
+import kfsgl.gl.KFGL;
 
 class Material {
 

@@ -1,6 +1,6 @@
-package kfsgl.utils.gl;
+package kfsgl.gl.vertexdata;
 
-import kfsgl.utils.gl.PrimitiveVertexData;
+import kfsgl.gl.vertexdata.PrimitiveVertexData;
 import openfl.utils.ArrayBufferView;
 import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;

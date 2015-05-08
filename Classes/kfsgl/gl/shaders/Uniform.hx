@@ -1,6 +1,6 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
-import kfsgl.utils.gl.GLTextureManager;
+import kfsgl.gl.GLTextureManager;
 import kfsgl.textures.Texture2D;
 import openfl.gl.GLUniformLocation;
 import openfl.utils.Float32Array;
@@ -8,7 +8,7 @@ import openfl.gl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 
-import kfsgl.renderer.shaders.UniformInfo;
+import kfsgl.gl.shaders.UniformInfo;
 import kfsgl.utils.KF;
 import kfsgl.utils.errors.KFException;
 

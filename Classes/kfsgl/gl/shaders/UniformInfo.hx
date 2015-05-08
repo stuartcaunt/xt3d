@@ -1,4 +1,4 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
 typedef UniformInfo = {
 	var name:String;

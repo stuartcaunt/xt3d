@@ -1,4 +1,4 @@
-package kfsgl.utils.gl;
+package kfsgl.gl.vertexdata;
 
 import kfsgl.utils.errors.KFAbstractMethodError;
 import openfl.utils.ArrayBufferView;

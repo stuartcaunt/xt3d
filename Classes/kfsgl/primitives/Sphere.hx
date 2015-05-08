@@ -1,7 +1,7 @@
 package kfsgl.primitives;
 
-import kfsgl.utils.gl.IndexData;
-import kfsgl.utils.gl.FloatVertexData;
+import kfsgl.gl.vertexdata.IndexData;
+import kfsgl.gl.vertexdata.FloatVertexData;
 import kfsgl.core.Geometry;
 
 class Sphere extends Geometry {

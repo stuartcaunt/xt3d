@@ -1,7 +1,7 @@
-package kfsgl.utils.gl;
+package kfsgl.gl.vertexdata;
 
 import openfl.utils.ArrayBufferView;
-import kfsgl.utils.gl.GLBufferManager;
+import kfsgl.gl.GLBufferManager;
 import kfsgl.utils.KF;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;

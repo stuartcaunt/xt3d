@@ -1,6 +1,6 @@
 package kfsgl.textures;
 
-import kfsgl.utils.gl.GLTextureManager;
+import kfsgl.gl.GLTextureManager;
 import kfsgl.utils.KF;
 class TextureCache {
 

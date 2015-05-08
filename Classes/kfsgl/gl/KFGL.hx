@@ -1,4 +1,4 @@
-package kfsgl.utils.gl;
+package kfsgl.gl;
 
 import openfl.gl.GL;
 class KFGL {

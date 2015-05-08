@@ -1,4 +1,4 @@
-package kfsgl.utils.gl;
+package kfsgl.gl.vertexdata;
 
 /**
  * Used to mask if we immediately use:

@@ -1,6 +1,6 @@
 package kfsgl.textures;
 
-import kfsgl.utils.gl.KFGL;
+import kfsgl.gl.KFGL;
 class TextureOptions {
 
 	// properties

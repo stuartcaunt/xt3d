@@ -1,6 +1,6 @@
-package kfsgl.utils.gl;
+package kfsgl.gl;
 
-import kfsgl.utils.gl.KFGL;
+import kfsgl.gl.KFGL;
 import openfl.gl.GL;
 
 class GLStateManager {

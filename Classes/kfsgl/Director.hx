@@ -2,9 +2,9 @@ package kfsgl;
 
 import kfsgl.textures.TextureCache;
 import kfsgl.core.EventEmitter;
-import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.gl.shaders.UniformLib;
 import kfsgl.core.View;
-import kfsgl.renderer.Renderer;
+import kfsgl.core.Renderer;
 import kfsgl.utils.Color;
 
 import openfl.display.OpenGLView;

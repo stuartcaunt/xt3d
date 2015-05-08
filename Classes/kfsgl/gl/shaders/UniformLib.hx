@@ -1,4 +1,4 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
 import openfl.gl.GLUniformLocation;
 import kfsgl.utils.errors.KFException;

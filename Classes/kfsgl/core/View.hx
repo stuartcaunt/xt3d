@@ -1,11 +1,7 @@
 package kfsgl.core;
 
-import kfsgl.core.EventEmitter;
-import kfsgl.core.Camera;
 import kfsgl.node.Scene;
 import openfl.geom.Rectangle;
-
-import kfsgl.renderer.Renderer;
 import kfsgl.utils.Color;
 
 class View extends EventEmitter {

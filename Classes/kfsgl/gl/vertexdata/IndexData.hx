@@ -1,6 +1,6 @@
-package kfsgl.utils.gl;
+package kfsgl.gl.vertexdata;
 
-import kfsgl.utils.gl.GLBufferManager;
+import kfsgl.gl.GLBufferManager;
 import openfl.utils.Int16Array;
 import openfl.gl.GLBuffer;
 import openfl.gl.GL;

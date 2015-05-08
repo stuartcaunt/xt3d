@@ -1,12 +1,12 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
-import kfsgl.utils.gl.GLTextureManager;
-import kfsgl.utils.gl.KFGL;
-import kfsgl.utils.gl.KFGL;
+import kfsgl.gl.GLTextureManager;
+import kfsgl.gl.KFGL;
+import kfsgl.gl.KFGL;
 import openfl.gl.GL;
 import openfl.gl.GLShaderPrecisionFormat;
-import kfsgl.renderer.shaders.ShaderProgram;
-import kfsgl.renderer.shaders.ShaderLib;
+import kfsgl.gl.shaders.ShaderProgram;
+import kfsgl.gl.shaders.ShaderLib;
 import kfsgl.utils.errors.KFException;
 import kfsgl.utils.KF;
 

@@ -1,9 +1,9 @@
 package kfsgl.node;
 
-import kfsgl.utils.gl.GLBufferManager;
-import kfsgl.renderer.shaders.ShaderProgram;
+import kfsgl.gl.GLBufferManager;
+import kfsgl.gl.shaders.ShaderProgram;
 import kfsgl.utils.errors.KFException;
-import kfsgl.utils.gl.GLAttributeManager;
+import kfsgl.gl.GLAttributeManager;
 import openfl.gl.GL;
 import kfsgl.core.Geometry;
 import kfsgl.core.Camera;

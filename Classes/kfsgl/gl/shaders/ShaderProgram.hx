@@ -1,16 +1,16 @@
-package kfsgl.renderer.shaders;
+package kfsgl.gl.shaders;
 
-import kfsgl.utils.gl.GLTextureManager;
+import kfsgl.gl.GLTextureManager;
 import openfl.gl.GL;
 import openfl.gl.GLProgram;
 import openfl.gl.GLShader;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
-import kfsgl.renderer.shaders.ShaderInfo;
-import kfsgl.renderer.shaders.ShaderReader;
-import kfsgl.renderer.shaders.Uniform;
-import kfsgl.renderer.shaders.UniformLib;
+import kfsgl.gl.shaders.ShaderInfo;
+import kfsgl.gl.shaders.ShaderReader;
+import kfsgl.gl.shaders.Uniform;
+import kfsgl.gl.shaders.UniformLib;
 
 typedef ProgramAttributeState = {
 	var name:String;
