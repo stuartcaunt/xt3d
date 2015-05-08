@@ -1,5 +1,6 @@
 package kfsgl.textures;
 
+import kfsgl.utils.Color;
 import kfsgl.utils.ImageLoader;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.gl.KFGL;
@@ -91,6 +92,16 @@ import kfsgl.utils.CountedObject;
 		return object;
 	}
 
+	public static function createFromColor(color:Color, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+		var object = new Texture2D();
+
+		if (object != null && !(object.initFromColor(color, textureOptions, textureManager))) {
+			object = null;
+		}
+
+		return object;
+	}
+
 
 	public function initFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
 		this._name = imagePath;
@@ -170,6 +181,32 @@ import kfsgl.utils.CountedObject;
 		return true;
 	}
 
+
+	public function initFromColor(color:Color, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+		this._name = color.toString();
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
+
+		// Get bitmap data from asset
+		var bitmapData = new BitmapData(2, 2, true, color.intValue());
+		if (bitmapData == null) {
+			KF.Error("Cannot get bitmap data from color \"" + color.toString + "\"");
+			return false;
+		}
+
+		// Handle the bitmap data
+		this.handleBitmapData(bitmapData);
+
+		// Upload texture immediately if we have a texture manager
+		if (textureManager != null) {
+			textureManager.uploadTexture(this);
+		}
+
+		this._isReady = true;
+
+		return true;
+	}
 
 	public function new() {
 		super();

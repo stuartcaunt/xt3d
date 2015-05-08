@@ -77,6 +77,7 @@ class Test1 extends Sprite {
 		parent.addChild(sphereNode2);
 
 		var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
+		//var texture:Texture2D = _director.textureCache.addTextureFromColor(new Color(1, 1, 0, 0.0));
 		texture.retain();
 		var textureMaterial:Material = Material.create("test_texture");
 		textureMaterial.uniform("texture").texture = texture;

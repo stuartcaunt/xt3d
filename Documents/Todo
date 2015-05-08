@@ -1,12 +1,9 @@
 TODO
 ====
 
-- textures
-  - from color
+- verify blending (transparency)
 
 - Render texture
-
-- verify blending (transparency)
 
 - remove all singletons?
   - use "current" director
@@ -78,6 +75,7 @@ x   load from jpg
 x   assets or url
 x   load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
 x   different bit formats (8888, 4444)
+x   from color
 
 x handle "prepareForUse" in program uniforms
 

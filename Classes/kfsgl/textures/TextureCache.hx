@@ -1,5 +1,6 @@
 package kfsgl.textures;
 
+import kfsgl.utils.Color;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.utils.KF;
 class TextureCache {
@@ -72,6 +73,17 @@ class TextureCache {
 
 		var texture = Texture2D.createFromImageAssetAsync(imagePath, textureOptions, callback);
 		this._textures.set(imagePath, texture);
+
+		return texture;
+	}
+
+	public function addTextureFromColor(color:Color, textureOptions:TextureOptions = null):Texture2D {
+		if (this._textures.exists(color.toString())) {
+			return this._textures.get(color.toString());
+		}
+
+		var texture = Texture2D.createFromColor(color, textureOptions, this._textureManager);
+		this._textures.set(color.toString(), texture);
 
 		return texture;
 	}
