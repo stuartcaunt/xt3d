@@ -189,21 +189,6 @@ class Uniform  {
 	public function use(textureManager:GLTextureManager) {
 		var type = this._type;
 
-		// If hasn't been set then use the default value
-		if (!_hasBeenSet) {
-			if (this._size == 1) {
-				if (type == "float") {
-					setValue(this._defaultFloatValue);
-				} else if (type == "texture") {
-					setTextureSlot(this._defaultTextureSlot);
-				}
-			} else if (this._size < 16) {
-				setArrayValue(this._defaultFloatArrayValue);
-			} else {
-				setMatrixValue(this._defaultMatrixValue);
-			}
-		}
-
 		// Send value to the GPU if it is dirty
 		if (_isDirty) {
 			//KF.Log("Setting uniform " + this._name);
@@ -238,7 +223,6 @@ class Uniform  {
 		if (type == 'texture') {
 			textureManager.setTexture(this._texture, this._textureSlot);
 		}
-
 	}
 
 	public function copyFrom(uniform:Uniform):Void {
@@ -387,6 +371,8 @@ class Uniform  {
 					setTextureSlot(this._defaultTextureSlot);
 				}
 			}
+
+			// Reset has been set indicating that it hasn't been set by a user value
 			this._hasBeenSet = false;
 		}
 	}

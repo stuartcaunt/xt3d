@@ -71,11 +71,12 @@ class Test1 extends Sprite {
 		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
 
 		// Create mesh node
-		var sphereNode2 = MeshNode.create(sphere, material2);
+		var sphereNode2 = MeshNode.create(sphere, material);
 		sphereNode2.position = new Vector3D(0.7, 0.0, 0.7);
 		parent.addChild(sphereNode2);
 
 		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
+		texture.retain();
 		var textureMaterial:Material = Material.create("test_texture");
 		textureMaterial.uniform("texture").texture = texture;
 		textureMaterial.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;

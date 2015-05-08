@@ -8,6 +8,7 @@ import openfl.geom.Vector3D;
 class Node3D {
 
 	// properties
+	public var id(get, null):UInt;
 	public var visible(get, set):Bool;
 	public var excluded(get, set):Bool;
 	public var parent(get, null):Node3D;
@@ -75,6 +76,10 @@ class Node3D {
 
 
 	/* ----------- Properties ----------- */
+
+	public inline function get_id():UInt {
+		return this._id;
+	}
 
 	public inline function get_excluded():Bool {
 		return this._excluded;
@@ -223,26 +228,8 @@ class Node3D {
 
 	}
 
-	public function prepareObjectsForNextFrame():Void {
-		// If excluded then ignore all children too
-		if (this._excluded) {
-			return;
-		}
-
-		// Individual update
-		this.prepareObjectForNextFrame();
-
-		for (child in this._children) {
-			child.prepareObjectsForNextFrame();
-		}
-
-	}
 
 	public function updateObject(scene:Scene):Void {
-		// Override me
-	}
-
-	public function prepareObjectForNextFrame():Void {
 		// Override me
 	}
 

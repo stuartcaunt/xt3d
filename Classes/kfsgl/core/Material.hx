@@ -254,17 +254,4 @@ class Material {
 		}
 	}
 
-	public function prepareUniforms():Void {
-		// Prepare all uniforms so we know if they have changed in the next frame
-		for (uniform in this._uniforms) {
-			uniform.prepareForUse();
-		}
-
-		// Prepare all common uniforms
-		for (uniform in this._commonUniforms) {
-			uniform.prepareForUse();
-		}
-	}
-
-
 }

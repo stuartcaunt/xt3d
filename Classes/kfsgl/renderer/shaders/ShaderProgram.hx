@@ -392,6 +392,9 @@ class ShaderProgram {
 			// Write to GPU
 			uniformToUpdate.use(textureManager);
 
+			// Prepare uniform for next render so we know if it has changed
+			uniform.prepareForUse();
+
 		} else {
 			// Debugging... not really necessary
 			KF.Log("Cannot update uniform " + uniform.name + " as it does not exist in the shader " + this._name);
@@ -410,6 +413,9 @@ class ShaderProgram {
 
 			// Write to GPU
 			uniformToUpdate.use(textureManager);
+
+			// Prepare uniform for next render so we know if it has changed
+			uniform.prepareForUse();
 
 		} else {
 			// Debugging... not really necessary

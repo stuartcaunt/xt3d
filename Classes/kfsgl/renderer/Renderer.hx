@@ -1,5 +1,6 @@
 package kfsgl.renderer;
 
+import kfsgl.utils.KF;
 import kfsgl.utils.gl.GLTextureManager;
 import kfsgl.utils.gl.GLBufferManager;
 import kfsgl.utils.gl.GLAttributeManager;
@@ -36,7 +37,6 @@ class Renderer {
 	private var _viewProjectionMatrix = new Matrix3D();
 
 	private var _currentProgram:ShaderProgram = null;
-	private var _currentMaterial:Material = null;
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;
 
 	public static function create():Renderer {
@@ -127,11 +127,7 @@ class Renderer {
 			// Render transparent objects
 			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
 
-			// Prepare objects for the next frame
-			scene.prepareObjectsForNextFrame();
-
-
-			// Prepare all common uniforms too
+			// Prepare all common uniforms
 			UniformLib.instance().prepareUniforms();
 
 			// Send custom-post-render-pass event
@@ -156,9 +152,9 @@ class Renderer {
 		// Initialise states of shader programs
 		this._renderPassShaders = new Map<String, ShaderProgram>();
 		this._currentProgram = null;
-		this._currentMaterial = null;
 
 		for (renderObject in renderObjects) {
+			//KF.Log("Rendering object " + renderObject.id);
 
 			// Update model matrices
 			renderObject.updateRenderMatrices(camera);
@@ -189,8 +185,6 @@ class Renderer {
 
 			// Render the object buffers
 			this.renderBuffer(material, renderObject, camera/*, lights*/);
-
-
 		}
 	}
 
@@ -225,18 +219,9 @@ class Renderer {
 			}
 		}
 
-		// If material has changed then update the program uniforms from the material uniforms
-		// TODO: maybe should always update uniforms... if they haven't changed then they are not sent to the GPU anyway
-		if (this._currentMaterial != material) {
-			this._currentMaterial = material;
-
-			// Send material uniform values to program
-			material.updateProgramUniforms(this._textureManager);
-		}
-
-		// Set textures
-		// TODO
-
+		// Always update material - may be shared between different objects and require new uniform values (eg mvp matrices)
+		// Send material uniform values to program
+		material.updateProgramUniforms(this._textureManager);
 	}
 
 
