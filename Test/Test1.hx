@@ -75,7 +75,7 @@ class Test1 extends Sprite {
 		sphereNode2.position = new Vector3D(0.7, -0.7, 0.7);
 		parent.addChild(sphereNode2);
 
-		var texture:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/HedgeHogAdventure.png");
+		var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
 		texture.retain();
 		var textureMaterial:Material = Material.create("test_texture");
 		textureMaterial.uniform("texture").texture = texture;
@@ -87,7 +87,8 @@ class Test1 extends Sprite {
 		sphereNode3.position = new Vector3D(-0.7, -0.7, 0.7);
 		parent.addChild(sphereNode3);
 
-		var texture2:Texture2D = _director.textureCache.addTextureFromAssetImage("assets/images/checker.jpg");
+		//var texture2:Texture2D = _director.textureCache.addTextureFromImageUrl("http://blog.tartiflop.com/wp-content/uploads/2008/11/checker.jpg");
+		var texture2:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/checker.jpg");
 		texture2.retain();
 		var textureMaterial2:Material = Material.create("test_texture");
 		textureMaterial2.uniform("texture").textureSlot = 1;

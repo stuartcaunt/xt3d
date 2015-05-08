@@ -41,16 +41,29 @@ class TextureCache {
 
 	}
 
-	public function addTextureFromAssetImage(imagePath:String, textureOptions:TextureOptions = null):Texture2D {
+	public function addTextureFromImageAsset(imagePath:String, textureOptions:TextureOptions = null):Texture2D {
 		if (this._textures.exists(imagePath)) {
 			return this._textures.get(imagePath);
 		}
 
-		var texture = Texture2D.createFromAssetImage(imagePath, textureOptions, this._textureManager);
+		var texture = Texture2D.createFromImageAsset(imagePath, textureOptions, this._textureManager);
 		this._textures.set(imagePath, texture);
 
 		return texture;
 	}
+
+#if js
+	public function addTextureFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Texture2D {
+		if (this._textures.exists(imageUrl)) {
+			return this._textures.get(imageUrl);
+		}
+
+		var texture = Texture2D.createFromImageUrl(imageUrl, textureOptions);
+		this._textures.set(imageUrl, texture);
+
+		return texture;
+	}
+#end
 
 	public function asyncAddTextureFromAssetImage(imagePath:String, callback:Texture2D -> Void):Void {
 

@@ -131,11 +131,11 @@ class GLTextureManager {
 
 			this.bindTexture(texture);
 
-			// Handle texture params
-			this.handleTextureParams(texture);
-
 			// Upload image data
 			this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight);
+
+			// Handle texture params
+			this.handleTextureParams(texture);
 
 			// Mipmapping
 			if (texture.generateMipMaps) {

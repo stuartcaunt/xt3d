@@ -30,6 +30,8 @@ TODO
 - render order : group by geometries
   - group by materials?
 
+- schedule callbacks in nodes (update with dt)
+
 - Material implementation
   - texture material
   - color material

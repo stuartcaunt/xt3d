@@ -15,7 +15,7 @@
 
 	<source path="Test" />
 	<source path="Classes" />
-	
+
 	<haxelib name="openfl" />
 	
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />

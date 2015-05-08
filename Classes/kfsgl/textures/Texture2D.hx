@@ -1,5 +1,6 @@
 package kfsgl.textures;
 
+import kfsgl.utils.ImageLoader;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.gl.KFGL;
 import flash.utils.ByteArray;
@@ -13,7 +14,7 @@ import kfsgl.utils.Size;
 import openfl.Assets;
 import kfsgl.utils.CountedObject;
 
-class Texture2D extends CountedObject {
+	class Texture2D extends CountedObject {
 
 	// properties
 	public var name(get, null):String;
@@ -46,30 +47,40 @@ class Texture2D extends CountedObject {
 	private var _magFilter:Int;
 	private var _wrapS:Int;
 	private var _wrapT:Int;
+	private var _forcePOT:Bool;
 
 	private var _glTexture:GLTexture = null;
 	private var _bitmapData:BitmapData = null;
+	private var _isReady:Bool = false;
 	private var _isDirty:Bool = false;
 
 	/** helper object */
 	private static var _sOrigin:Point = new Point();
 
-	public static function createFromAssetImage(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+	public static function createFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initFromAssetImage(imagePath, textureOptions, textureManager))) {
+		if (object != null && !(object.initFromImageAsset(imagePath, textureOptions, textureManager))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initFromAssetImage(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
-		this._name = imagePath;
+#if js
+	public static function createFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Texture2D {
+		var object = new Texture2D();
 
-		if (textureOptions == null) {
-			textureOptions = new TextureOptions();
+		if (object != null && !(object.initFromImageUrl(imageUrl, textureOptions))) {
+			object = null;
 		}
+
+		return object;
+	}
+#end
+
+	public function initFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+		this._name = imagePath;
 
 		// Set texture options
 		this.setTextureOptions(textureOptions);
@@ -81,33 +92,42 @@ class Texture2D extends CountedObject {
 			return false;
 		}
 
-		var size = new Size<Int>();
-		this._contentSize = Size.createIntSize(bitmapData.width, bitmapData.height);
-
-		// Create power-of-two bitmap data
-		if (textureOptions.forcePOT) {
-			this._pixelsWidth = this.getNextPOT(this._contentSize.width);
-			this._pixelsHeight = this.getNextPOT(this._contentSize.height);
-			if (this._pixelsWidth != bitmapData.width || this._pixelsHeight != bitmapData.height) {
-				var potBitmapData = new BitmapData(this._pixelsWidth, this._pixelsHeight, true, 0);
-				potBitmapData.copyPixels(bitmapData, bitmapData.rect, _sOrigin);
-				bitmapData = potBitmapData;
-
-				this._uvScaleX = this._contentSize.width / this._pixelsWidth;
-				this._uvScaleY = this._contentSize.height / this._pixelsHeight;
-			}
-		}
-
-		this._bitmapData = bitmapData;
-		this._isDirty = true;
+		// Handle the bitmap data
+		this.handleBitmapData(bitmapData);
 
 		// Upload texture immediately if we have a texture manager
 		if (textureManager != null) {
 			textureManager.uploadTexture(this);
 		}
 
+		this._isReady = true;
+
 		return true;
 	}
+
+#if js
+	public function initFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Bool {
+		this._name = imageUrl;
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
+
+
+		var imageLoader = ImageLoader.create(imageUrl,
+			function (bitmapData:BitmapData) {
+				// Handle the bitmap data
+				this.handleBitmapData(bitmapData);
+
+				this._isReady = true;
+			},
+			function (error) {
+				KF.Error("Texture2D failed to create texture: " + error);
+			});
+
+
+		return true;
+	}
+#end
 
 
 	public function new() {
@@ -201,14 +221,45 @@ class Texture2D extends CountedObject {
 	public function dispose(textureManager:GLTextureManager):Void {
 		textureManager.deleteTexture(this);
 		this._glTexture = null;
+
+		// Dispose of data
+		this._bitmapData.dispose();
 	}
 
-	private function setTextureOptions(options:TextureOptions):Void {
-		this._generateMipMaps = options.generateMipMaps;
-		this._minFilter = options.minFilter;
-		this._magFilter = options.magFilter;
-		this._wrapS = options.wrapS;
-		this._wrapT = options.wrapT;
+	private function setTextureOptions(textureOptions:TextureOptions):Void {
+		if (textureOptions == null) {
+			textureOptions = new TextureOptions();
+		}
+
+		this._generateMipMaps = textureOptions.generateMipMaps;
+		this._minFilter = textureOptions.minFilter;
+		this._magFilter = textureOptions.magFilter;
+		this._wrapS = textureOptions.wrapS;
+		this._wrapT = textureOptions.wrapT;
+		this._forcePOT = textureOptions.forcePOT;
+	}
+
+	private function handleBitmapData(bitmapData:BitmapData):Void {
+
+		var size = new Size<Int>();
+		this._contentSize = Size.createIntSize(bitmapData.width, bitmapData.height);
+
+// Create power-of-two bitmap data
+		if (this._forcePOT) {
+			this._pixelsWidth = this.getNextPOT(this._contentSize.width);
+			this._pixelsHeight = this.getNextPOT(this._contentSize.height);
+			if (this._pixelsWidth != bitmapData.width || this._pixelsHeight != bitmapData.height) {
+				var potBitmapData = new BitmapData(this._pixelsWidth, this._pixelsHeight, true, 0);
+				potBitmapData.copyPixels(bitmapData, bitmapData.rect, _sOrigin);
+				bitmapData = potBitmapData;
+
+				this._uvScaleX = this._contentSize.width / this._pixelsWidth;
+				this._uvScaleY = this._contentSize.height / this._pixelsHeight;
+			}
+		}
+
+		this._bitmapData = bitmapData;
+		this._isDirty = true;
 	}
 
 	private function getNextPOT(value:Int):Int {
