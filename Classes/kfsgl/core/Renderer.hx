@@ -24,6 +24,7 @@ class Renderer {
 
 	// properties
 	public var textureManager(get, null):GLTextureManager;
+	public var sortingEnabled(get, set):Bool;
 
 
 	// members
@@ -38,6 +39,7 @@ class Renderer {
 
 	private var _currentProgram:ShaderProgram = null;
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;
+	private var _sortingEnabled:Bool = true;
 
 	public static function create():Renderer {
 		var object = new Renderer();
@@ -73,8 +75,16 @@ class Renderer {
 		return this._textureManager;
 	}
 
+	public function get_sortingEnabled():Bool {
+		return this._sortingEnabled;
+	}
 
-// Implementation
+	public function set_sortingEnabled(value:Bool) {
+		return this._sortingEnabled = value;
+	}
+
+
+	// Implementation
 
 	public function clear(viewport:Rectangle, color:Color) {
 		// Set the viewport
@@ -110,12 +120,31 @@ class Renderer {
 				camera.updateWorldMatrix();
 			}
 
+			// Get view projection matrix
+			this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
+
 			// Update objects - anything that needs to be done before rendering
 			scene.updateObjects(scene);
 
-			// Project objects if we want to sort them in z
+			// Sort objects
+			if (this._sortingEnabled) {
+				// Sort opaque objects by material Id (avoid swapping shaders often)
+				scene.opaqueObjects.sort(this.materialSortStable);
 
-			// Sort transparent objects
+				if (scene.zSortingEnabled) {
+					// Project transparent objects if we want to sort them in z
+					for (renderObject in scene.transparentObjects) {
+						renderObject.calculateRenderZ(this._viewProjectionMatrix);
+					}
+
+					// Sort transparent objects by z
+					scene.transparentObjects.sort(this.reversePainterSortStable);
+				} else {
+					// Sort transparent obejcts by material/object id (group by shader)
+					scene.transparentObjects.sort(this.materialSortStable);
+				}
+
+			}
 
 
 			// Send custom-pre-render-pass event
@@ -138,9 +167,6 @@ class Renderer {
 	 * Render list of objects
 	 **/
 	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera/*, lights:Array<Light>*/, useBlending:Bool/*, overrideMaterial:Material*/) {
-
-		// Get view projection matrix
-		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
 
 		// Set global uniforms
 		UniformLib.instance().uniform("viewMatrix").matrixValue = camera.viewMatrix;
@@ -222,6 +248,38 @@ class Renderer {
 		// Always update material - may be shared between different objects and require new uniform values (eg mvp matrices)
 		// Send material uniform values to program
 		material.updateProgramUniforms(this._textureManager);
+	}
+
+
+	private function materialSortStable(a:RenderObject, b:RenderObject):Int {
+		if (a.material.programId != b.material.programId) {
+			return b.material.programId - a.material.programId;
+		} else {
+			return a.id - b.id;
+		}
+	}
+
+	private function painterSortStable(a:RenderObject, b:RenderObject):Int {
+
+		if (a.material.programId != b.material.programId) {
+			return b.material.programId - a.material.programId;
+
+		} else if (a.renderZ != b.renderZ) {
+			return (a.renderZ - b.renderZ) < 0.0 ? -1 : 1;
+
+		} else {
+			return a.id - b.id;
+		}
+	}
+
+	function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
+
+		if (a.renderZ != b.renderZ) {
+			return (b.renderZ - a.renderZ) < 0.0 ? -1 : 1;
+
+		} else {
+			return a.id - b.id;
+		}
 	}
 
 

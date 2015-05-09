@@ -22,11 +22,12 @@ typedef ProgramAttributeState = {
 class ShaderProgram {
 
 	// properties
+	public var id(get, null):Int;
 	public var name(get, null):String;
 	public var attributes(get, null):Map<String, ProgramAttributeState>;
 
 	// members
-	private static var ID_COUNTER = 0;
+	private static var ID_COUNTER:Int = 0;
 	private var _id:Int = ID_COUNTER++;
 	private var _retainCount = 0;
 	private var _name:String;
@@ -58,6 +59,10 @@ class ShaderProgram {
 
 
 	/* ----------- Properties ----------- */
+
+	public function get_id():Int {
+		return this._id;
+	}
 
 	public inline function get_name():String {
 		return this._name;

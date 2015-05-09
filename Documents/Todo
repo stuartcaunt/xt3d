@@ -1,7 +1,9 @@
 TODO
 ====
 
-- verify blending (transparency)
+- Primitives
+  - plane
+  - sphere
 
 - Render texture
 
@@ -16,14 +18,9 @@ TODO
 - Render loop
 - Scene and Node
   - scene graph
-- Primitives
-  - plane
-  - sphere
 - handle multiple contexts
   - all objects created with a contextId ?
   - render targets
-- render order : group by geometries
-  - group by materials?
 
 - schedule callbacks in nodes (update with dt)
 
@@ -76,9 +73,10 @@ x   assets or url
 x   load textures asynchronously and use callback to indicate that the data can be uploaded to gpu
 x   different bit formats (8888, 4444)
 x   from color
-
 x handle "prepareForUse" in program uniforms
-
+x verify blending (transparency)
+x render order : group by geometries
+x   group by materials?
 
 NAMES
 =====

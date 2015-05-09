@@ -1,5 +1,7 @@
 package kfsgl.utils.math;
 
+import openfl.Vector;
+import openfl.geom.Matrix3D;
 import openfl.geom.Vector3D;
 
 class VectorHelper {
@@ -102,6 +104,33 @@ class VectorHelper {
 
 		a.x = (tempX * cosRY ) - (tempY * sinRY);
 		a.y = (tempX * sinRY ) + (tempY * cosRY);
+	}
+
+	public static function transform(v:Vector3D, m:Matrix3D):Void {
+		var x:Float = v.x;
+		var y:Float = v.y;
+		var z:Float = v.z;
+
+		var rawData:Vector<Float> = m.rawData;
+
+		v.x = (x * rawData[0] + y * rawData[4] + z * rawData[8] + rawData[12]);
+		v.y = (x * rawData[1] + y * rawData[5] + z * rawData[9] + rawData[13]);
+		v.z = (x * rawData[2] + y * rawData[6] + z * rawData[10] + rawData[14]);
+		v.w = (x * rawData[3] + y * rawData[7] + z * rawData[11] + rawData[15]);
+	}
+
+	public static function applyProjection(v:Vector3D, m:Matrix3D):Void {
+		var x:Float = v.x;
+		var y:Float = v.y;
+		var z:Float = v.z;
+
+		var rawData:Vector<Float> = m.rawData;
+
+		var d = 1.0 / (x * rawData[3] + y * rawData[7] + z * rawData[11] + rawData[15]);
+
+		v.x = (x * rawData[0] + y * rawData[4] + z * rawData[8] + rawData[12]) * d;
+		v.y = (x * rawData[1] + y * rawData[5] + z * rawData[9] + rawData[13]) * d;
+		v.z = (x * rawData[2] + y * rawData[6] + z * rawData[10] + rawData[14]) * d;
 	}
 
 }

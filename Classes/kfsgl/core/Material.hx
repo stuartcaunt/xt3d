@@ -12,6 +12,8 @@ import kfsgl.gl.KFGL;
 class Material {
 
 	// properties
+	public var id(get, null):Int;
+	public var programId(get, null):Int;
 	public var programName(get, set):String;
 	public var program(get, set):ShaderProgram;
 	public var opacity(get, set):Float;
@@ -29,6 +31,9 @@ class Material {
 
 
 	// members
+	private static var ID_COUNTER:Int = 0;
+	private var _id:Int = ID_COUNTER++;
+	private var _programId:Int = -1;
 	private var _programName:String;
 	private var _program:ShaderProgram;
 
@@ -72,6 +77,14 @@ class Material {
 	}
 
 	/* ----------- Properties ----------- */
+
+	public function get_id():Int {
+		return this._id;
+	}
+
+	public function get_programId():Int {
+		return this._programId;
+	}
 
 	public inline function get_programName():String {
 		return this._programName;
@@ -216,6 +229,7 @@ class Material {
 			this._program = program;
 			program.retain();
 			this._programName = program.name;
+			this._programId = program.id;
 
 			// Get common uniforms
 			this._commonUniforms = this.program.cloneCommonUniforms();

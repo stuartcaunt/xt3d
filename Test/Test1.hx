@@ -56,21 +56,22 @@ class Test1 extends Sprite {
 
 		var parent = Node3D.create();
 		scene.addChild(parent);
-
+		//scene.zSortingEnabled = false;
 
 		// create a geometry
 		var sphere = Sphere.create(2.0, 16, 16);
 
 		// Create a material
 		var material:Material = Material.create("test_color");
+		//material.opacity = 0.5;
 
 		// Create mesh node
 		var sphereNode = MeshNode.create(sphere, material);
 		sphereNode.position = new Vector3D(0.0, -0.7, -1.0);
 		parent.addChild(sphereNode);
 
-		var material2:Material = Material.create("test_nocolor");
-		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
+//		var material2:Material = Material.create("test_nocolor");
+//		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
 
 		// Create mesh node
 		var sphereNode2 = MeshNode.create(sphere, material);

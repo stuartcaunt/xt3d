@@ -1,5 +1,7 @@
 package kfsgl.node;
 
+import openfl.geom.Vector3D;
+import kfsgl.utils.math.VectorHelper;
 import kfsgl.gl.GLBufferManager;
 import kfsgl.gl.shaders.ShaderProgram;
 import kfsgl.utils.errors.KFException;
@@ -21,6 +23,7 @@ class RenderObject extends Node3D {
 	public var normalMatrix(get, null):Matrix3D;
 	public var renderElementsOffset(get, set):Int;
 	public var renderElementsCount(get, set):Int;
+	public var renderZ(get, null):Float;
 
 	// members
 	private var _material:Material;
@@ -32,6 +35,8 @@ class RenderObject extends Node3D {
 
 	private var _renderElementsOffset = -1;
 	private var _renderElementsCount = -1;
+
+	private var _renderZ:Float = 0.0;
 
 	public function initRenderObject(geometry:Geometry, material:Material, drawMode:Int):Bool {
 		var retval;
@@ -101,6 +106,10 @@ class RenderObject extends Node3D {
 
 	public inline function set_renderElementsCount(value:Int) {
 		return this._renderElementsCount = value;
+	}
+
+	public function get_renderZ():Float {
+		return this._renderZ;
 	}
 
 
@@ -206,9 +215,16 @@ class RenderObject extends Node3D {
 
 			GL.drawArrays(this._drawMode, elementOffset, elementCount);
 		}
-
-
 	}
+
+
+	public function calculateRenderZ(screenProjectionMatrix:Matrix3D):Void {
+		var position:Vector3D = this.worldPosition;
+		VectorHelper.applyProjection(position, screenProjectionMatrix);
+
+		this._renderZ = position.z;
+	}
+
 
 	/* --------- Scene graph --------- */
 

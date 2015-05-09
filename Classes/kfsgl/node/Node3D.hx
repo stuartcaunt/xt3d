@@ -25,7 +25,7 @@ class Node3D {
 
 	// members
 	private static var ID_COUNTER = 0;
-	private var _id:UInt = ID_COUNTER++;
+	private var _id:Int = ID_COUNTER++;
 
 	// scene graph
 	private var _children:Array<Node3D> = new Array<Node3D>();
@@ -77,7 +77,7 @@ class Node3D {
 
 	/* ----------- Properties ----------- */
 
-	public inline function get_id():UInt {
+	public inline function get_id():Int {
 		return this._id;
 	}
 
