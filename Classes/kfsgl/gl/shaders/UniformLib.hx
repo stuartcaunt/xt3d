@@ -39,6 +39,9 @@ class UniformLib {
 			texture: {
 				texture: { name: "u_texture", type: "texture", shader: "f" },
 				uvScaleOffset: { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
+			},
+			opacity: {
+				opacity: { name: "u_opacity", type: "float", shader: "f", defaultValue: "1.0" }
 			}
 		};
 

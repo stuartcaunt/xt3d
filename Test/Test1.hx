@@ -1,5 +1,6 @@
 package;
 
+import kfsgl.gl.KFGL;
 import kfsgl.utils.KF;
 import kfsgl.textures.TextureCache;
 import kfsgl.textures.Texture2D;
@@ -76,13 +77,13 @@ class Test1 extends Sprite {
 		sphereNode2.position = new Vector3D(0.7, -0.7, 0.7);
 		parent.addChild(sphereNode2);
 
-		var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
-		//var texture:Texture2D = _director.textureCache.addTextureFromColor(new Color(1, 1, 0, 0.0));
+		//var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
+		var texture:Texture2D = _director.textureCache.addTextureFromColor(new Color(1, 1, 0, 0.2));
 		texture.retain();
 		var textureMaterial:Material = Material.create("test_texture");
 		textureMaterial.uniform("texture").texture = texture;
-		textureMaterial.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
-		textureMaterial.uniform("color").floatArrayValue = [1, 1, 1, 1];
+		//textureMaterial.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
+		textureMaterial.transparent = true;
 
 		// Create mesh node
 		var sphereNode3 = MeshNode.create(sphere, textureMaterial);
@@ -97,7 +98,7 @@ class Test1 extends Sprite {
 			var textureMaterial2:Material = Material.create("test_texture");
 			textureMaterial2.uniform("texture").textureSlot = 1;
 			textureMaterial2.uniform("texture").texture = texture2;
-
+			textureMaterial2.opacity = 0.5;
 
 			// Create mesh node
 			sphereNode4 = MeshNode.create(sphere, textureMaterial2);

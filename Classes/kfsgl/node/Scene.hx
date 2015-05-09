@@ -5,11 +5,13 @@ import kfsgl.node.Node3D;
 class Scene extends Node3D {
 
 	// properties
-	@:isVar public var opaqueObjects(get, null):Array<RenderObject>;
-	@:isVar public var transparentObjects(get, null):Array<RenderObject>;
+	public var opaqueObjects(get, null):Array<RenderObject>;
+	public var transparentObjects(get, null):Array<RenderObject>;
+	public var zSortingEnabled(get, set):Bool;
 
 	private var _opaqueObjects:Array<RenderObject>;
 	private var _transparentObjects:Array<RenderObject>;
+	private var _zSortingEnabled:Bool = true;
 //	private var _lights:Array<Light>;
 
 	// members
@@ -65,6 +67,15 @@ class Scene extends Node3D {
 	inline public function addTransparentObject(object:RenderObject):Void {
 		this._transparentObjects.push(object);
 	}
+
+	public function get_zSortingEnabled():Bool {
+		return this._zSortingEnabled;
+	}
+
+	public function set_zSortingEnabled(value:Bool) {
+		return this._zSortingEnabled = value;
+	}
+
 
 	/* --------- Scene graph --------- */
 

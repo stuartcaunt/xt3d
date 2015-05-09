@@ -42,7 +42,7 @@ class ShaderLib  {
 				vertexShader: "test_vertex",
 				fragmentShader: "test_fragment",
 				vertexDefines: ["#define USE_COLOR"],
-				commonUniforms: ["matrixCommon", "time"],
+				commonUniforms: ["matrixCommon", "time", "opacity"],
 				uniforms: {
 					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
 				}
@@ -53,7 +53,7 @@ class ShaderLib  {
 			test_nocolor: {
 				vertexShader: "test_vertex",
 				fragmentShader: "test_fragment",
-				commonUniforms: ["matrixCommon", "time"],
+				commonUniforms: ["matrixCommon", "time", "opacity"],
 				uniforms: {
 					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
 				}
@@ -63,7 +63,7 @@ class ShaderLib  {
 				fragmentShader: "test_fragment",
 				vertexDefines: ["#define USE_TEXTURE"],
 				fragmentDefines: ["#define USE_TEXTURE"],
-				commonUniforms: ["matrixCommon", "time", "texture"],
+				commonUniforms: ["matrixCommon", "time", "texture", "opacity"],
 				uniforms: {
 					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" },
 					// Example of overriding common uniform

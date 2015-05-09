@@ -46,9 +46,6 @@ class MeshNode extends RenderObject {
 
 	override public function updateObject(scene:Scene):Void {
 		super.updateObject(scene);
-
-		// Add object to opaque or transparent list
-		scene.opaqueObjects.push(this);
 	}
 
 }

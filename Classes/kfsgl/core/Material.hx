@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.KF;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.gl.shaders.UniformLib;
 import kfsgl.utils.errors.KFException;
@@ -13,6 +14,8 @@ class Material {
 	// properties
 	public var programName(get, set):String;
 	public var program(get, set):ShaderProgram;
+	public var opacity(get, set):Float;
+	public var transparent(get, set):Bool;
 	public var blending(get, set):Int;
 	public var blendEquation(get, set):Int;
 	public var blendSrc(get, set):Int;
@@ -23,7 +26,6 @@ class Material {
 	public var polygonOffsetFactor(get, set):Float;
 	public var polygonOffsetUnits(get, set):Float;
 	public var side(get, set):Int;
-
 
 
 	// members
@@ -87,6 +89,23 @@ class Material {
 	public inline function set_program(value:ShaderProgram):ShaderProgram {
 		this.setProgram(value);
 		return this._program;
+	}
+
+	public function get_opacity():Float {
+		return this._opacity;
+	}
+
+	public function set_opacity(value:Float) {
+		this.setOpacity(value);
+		return this._opacity;
+	}
+
+	public function get_transparent():Bool {
+		return this._transparent;
+	}
+
+	public function set_transparent(value:Bool) {
+		return this._transparent = value;
 	}
 
 	public inline function get_blending():Int {
@@ -206,8 +225,6 @@ class Material {
 		}
 	}
 
-
-
 	public function dispose() {
 		if (this._program != null) {
 			this._program.release();
@@ -217,6 +234,18 @@ class Material {
 
 		_uniforms = new Map<String, Uniform>();
 		_commonUniforms = new Map<String, Uniform>();
+	}
+
+	public function setOpacity(opacity:Float):Void {
+		// Check if shader supports opacity
+		try {
+			var uniform = this.uniform("opacity");
+			uniform.value = opacity;
+			this._opacity = opacity;
+
+		} catch (e:KFException) {
+			KF.Warn("Cannot explicity set opacity in material \"" + this._programName + "\".");
+		}
 	}
 
 	public function uniform(uniformName:String):Uniform {

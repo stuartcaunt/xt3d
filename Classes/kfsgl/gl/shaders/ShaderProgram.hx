@@ -129,7 +129,7 @@ class ShaderProgram {
 			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
 			if (uniformInfo.shader.indexOf("v") != -1 && !allVertexUniforms.exists(uniformName)) {
 				allVertexUniforms.set(uniformName, uniformInfo);
-			} else if (uniformInfo.shader.indexOf("v") != -1 && !allFragmentUniforms.exists(uniformName)) {
+			} else if (uniformInfo.shader.indexOf("f") != -1 && !allFragmentUniforms.exists(uniformName)) {
 				allFragmentUniforms.set(uniformName, uniformInfo);
 			}
 		}
@@ -148,8 +148,8 @@ class ShaderProgram {
 		}
 
 		// Add prefixes
-		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n" + _prefixVertex + "\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
-		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n" + _prefixFragment + "\n// fragmentUniforms:\n" + fragmentUniforms + "\n// fragmentProgram:\n" + fragmentProgram;
+		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n" + _prefixVertex + "\n\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
+		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n" + _prefixFragment + "\n\n// fragmentUniforms:\n" + fragmentUniforms + "\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();

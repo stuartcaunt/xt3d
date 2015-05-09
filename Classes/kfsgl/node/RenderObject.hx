@@ -214,6 +214,15 @@ class RenderObject extends Node3D {
 
 	override public function updateObject(scene:Scene):Void {
 		super.updateObject(scene);
+
+		if (this._visible) {
+			// Add object to opaque or transparent list
+			if (this._material.transparent || this._material.opacity < 1.0) {
+				scene.transparentObjects.push(this);
+			} else {
+				scene.opaqueObjects.push(this);
+			}
+		}
 	}
 
 }

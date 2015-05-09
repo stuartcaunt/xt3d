@@ -40,7 +40,7 @@ class Uniform  {
 	private var _texture:Texture2D = null;
 	private var _textureSlot:Int = -1;
 
-	private var _defaultFloatValue:Float;
+	private var _defaultFloatValue:Float = 0.0;
 	private var _defaultFloatArrayValue:Array<Float> = new Array<Float>();
 	private var _defaultMatrixValue:Matrix3D = new Matrix3D();
 	private var _defaultTexture:Texture2D = null;
@@ -166,7 +166,7 @@ class Uniform  {
 
 	public static function codeType(uniformType:String):String {
 		if (uniformType == "texture") {
-			return "sampler";
+			return "sampler2D";
 		} else {
 			return uniformType;
 		}
@@ -324,67 +324,79 @@ class Uniform  {
 			// Convert to string... not great
 			defaultValue = "" + this._uniformInfo.slot;
 		}
-		if (defaultValue != null) {
-			var type = this._uniformInfo.type;
+		var type = this._uniformInfo.type;
 
-			if (type == "float") {
-				this._size = 1;
+		if (type == "float") {
+			this._size = 1;
+			if (defaultValue != null) {
 				var floatValue:Float = Std.parseFloat(defaultValue);
 				if (floatValue == Math.NaN) {
 					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
 					this._defaultFloatValue = floatValue;
-					setValue(this._defaultFloatValue);
 				}
+			}
+			setValue(this._defaultFloatValue);
 
-			} else if (type == "vec2") {
+		} else if (type == "vec2") {
+			this._size = 2;
+			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				this._size = 2;
-				setArrayValue(this._defaultFloatArrayValue);
+			}
+			setArrayValue(this._defaultFloatArrayValue);
 
-			} else if (type == "vec3") {
+		} else if (type == "vec3") {
+			this._size = 3;
+			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				this._size = 3;
-				setArrayValue(this._defaultFloatArrayValue);
+			}
+			setArrayValue(this._defaultFloatArrayValue);
 
-			} else if (type == "vec4") {
+		} else if (type == "vec4") {
+			this._size = 4;
+			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				this._size = 4;
-				setArrayValue(this._defaultFloatArrayValue);
+			}
+			setArrayValue(this._defaultFloatArrayValue);
 
-			} else if (type == "mat3") {
+		} else if (type == "mat3") {
+			this._size = 9;
+			if (defaultValue != null) {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 1, 0, 0, 0, 1]";
 				}
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
-				this._size = 9;
-				setArrayValue(this._defaultFloatArrayValue);
+			}
+			setArrayValue(this._defaultFloatArrayValue);
 
-			} else if (type == "mat4") {
+		} else if (type == "mat4") {
+			this._size = 16;
+			if (defaultValue != null) {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]";
 				}
 				var floatArray:Array<Float> = haxe.Json.parse(defaultValue);
 				this._defaultMatrixValue.copyRawDataFrom(floatArray);
-				this._size = 16;
-				setMatrixValue(this._defaultMatrixValue);
+			}
+			setMatrixValue(this._defaultMatrixValue);
 
-			} else if (type == "texture") {
-				this._size = 1;
+		} else if (type == "texture") {
+			this._size = 1;
+			if (defaultValue != null) {
 				var value:Int = Std.parseInt(defaultValue);
 				if (value == Math.NaN) {
 					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
 					this._defaultTextureSlot = value;
-					setTextureSlot(this._defaultTextureSlot);
 				}
 			}
-
-			// Reset has been set indicating that it hasn't been set by a user value
-			this._hasBeenSet = false;
+			setTextureSlot(this._defaultTextureSlot);
 		}
+
+		// Reset has been set indicating that it hasn't been set by a user value
+		this._hasBeenSet = false;
 	}
 
 	public function toString() {

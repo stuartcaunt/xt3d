@@ -1,5 +1,6 @@
 package kfsgl.gl;
 
+import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 import openfl.gl.GL;
 
@@ -96,11 +97,10 @@ class GLStateManager {
 					GL.enable(GL.BLEND);
 					this._oldBlendingEnabled = 1;
 
-					// Reset blending ?
-					//this._oldBlendEquation = -1;
-					//this._oldBlendSrc = -1;
-					//this._oldBlendDst = -1;
-
+					// Reset blending
+					this._oldBlendEquation = -1;
+					this._oldBlendSrc = -1;
+					this._oldBlendDst = -1;
 				}
 
 				// Determine blend equation and parameters
