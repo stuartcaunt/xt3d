@@ -1,5 +1,7 @@
 package;
 
+import kfsgl.primitives.Plane;
+import kfsgl.primitives.Plane;
 import kfsgl.gl.KFGL;
 import kfsgl.utils.KF;
 import kfsgl.textures.TextureCache;
@@ -41,7 +43,7 @@ class Test1 extends Sprite {
 		// Create a camera and set it in the view
 		var camera = Camera.create(view);
 		view.camera = camera;
-		camera.position = new Vector3D(0, 5, 10);
+		camera.position = new Vector3D(0, 10, 10);
 
 		// Create scene and add it to the view
 		var scene = Scene.create();
@@ -58,20 +60,34 @@ class Test1 extends Sprite {
 		scene.addChild(parent);
 		//scene.zSortingEnabled = false;
 
-		// create a geometry
+		// create geometries
 		var sphere = Sphere.create(2.0, 16, 16);
+		var plane = Plane.create(10.0, 10.0, 4, 4);
 
 		// Create a material
 		var material:Material = Material.create("test_color");
 		//material.opacity = 0.5;
 
-		// Create mesh node
-		var sphereNode = MeshNode.create(sphere, material);
-		sphereNode.position = new Vector3D(0.0, -0.7, -1.0);
-		parent.addChild(sphereNode);
+		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
+		planeTexture.retain();
+		var planeMaterial:Material = Material.create("test_texture");
+		planeMaterial.uniform("texture").texture = planeTexture;
+		planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
+//		planeMaterial.depthTest = false;
+//		planeMaterial.depthWrite = false;
 
 //		var material2:Material = Material.create("test_nocolor");
 //		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
+
+
+		// Create plane mesh node
+		var planeNode = MeshNode.create(plane, planeMaterial);
+		scene.addChild(planeNode);
+
+		// Create sphere mesh node
+		var sphereNode = MeshNode.create(sphere, material);
+		sphereNode.position = new Vector3D(0.0, -0.7, -1.0);
+		parent.addChild(sphereNode);
 
 		// Create mesh node
 		var sphereNode2 = MeshNode.create(sphere, material);

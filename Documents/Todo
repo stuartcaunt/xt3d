@@ -1,16 +1,19 @@
 TODO
 ====
 
+- material depth testing
+  - enable/disable depth test ?
+
 - Performance
   - reuse Float32Array in Uniform.use
   - Try fixed size Float32Array for vertex data
   - Determine if array or matrix values are different (uniform.setMatrix)
 
-- Primitives
-  - plane
-  - sphere
-
 - Render texture
+
+- schedule callbacks in nodes (update with dt)
+
+- lighting
 
 - remove all singletons?
   - use "current" director
@@ -26,8 +29,6 @@ TODO
 - handle multiple contexts
   - all objects created with a contextId ?
   - render targets
-
-- schedule callbacks in nodes (update with dt)
 
 - Material implementation
   - texture material
@@ -82,6 +83,9 @@ x handle "prepareForUse" in program uniforms
 x verify blending (transparency)
 x render order : group by geometries
 x   group by materials?
+x Primitives
+x   plane
+x   sphere
 
 NAMES
 =====
