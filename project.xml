@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- use next version of openfl -->
-	<!--<set name="webgl" if="html5" />-->
+	<set name="webgl" if="html5" />
 	<haxedef name="KF_DEBUG" />
-	<!--<haxedef name="webgl" />-->
     <haxedef name="source-map-content" if="html5" />
 
 
