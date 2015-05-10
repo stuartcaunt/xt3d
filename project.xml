@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<!-- use next version of openfl -->
-	<set name="next" />
-	<set name="webgl" if="html5" />
+	<!--<set name="webgl" if="html5" />-->
 	<haxedef name="KF_DEBUG" />
-	<haxedef name="webgl" />
+	<!--<haxedef name="webgl" />-->
     <haxedef name="source-map-content" if="html5" />
 
 
@@ -13,11 +12,13 @@
 	<app main="Test1" path="Export" />
 	<!--<app main="TestContext3D" path="Export" />-->
 
+	<!--<window fps="90" if="ios" />-->
+
 	<source path="Test" />
 	<source path="Classes" />
 
 	<haxelib name="openfl" />
-	
+
 	<assets path="Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="Assets/openfl.svg" />
 

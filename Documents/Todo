@@ -1,6 +1,11 @@
 TODO
 ====
 
+- Performance
+  - reuse Float32Array in Uniform.use
+  - Try fixed size Float32Array for vertex data
+  - Determine if array or matrix values are different (uniform.setMatrix)
+
 - Primitives
   - plane
   - sphere

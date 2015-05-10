@@ -208,10 +208,12 @@ class Uniform  {
 				GL.uniform4f(this._location, this._floatArrayValue[0], this._floatArrayValue[1], this._floatArrayValue[2], this._floatArrayValue[3]);
 
 			} else if (type == "mat3") {
+				// TODO reuse Float32Array
 				var float32ArrayValue = new Float32Array(this._floatArrayValue);
 				GL.uniformMatrix3fv(this._location, false, float32ArrayValue);
 
 			} else if (type == "mat4") {
+				// TODO reuse Float32Array
 				var float32ArrayValue = new Float32Array(this._matrixValue.rawData);
 				GL.uniformMatrix4fv(this._location, false, float32ArrayValue);
 			}
@@ -273,11 +275,12 @@ class Uniform  {
 			this._hasBeenSet = true;
 
 			// Comparison of both arrays
-			if (value.toString() != this._floatArrayValue.toString()) {
+			// TODO Find a quick comparison method (the following kills perf on ios)
+//			if (value.toString() != this._floatArrayValue.toString()) {
 				// Copy array values
 				this._floatArrayValue = value.copy();
 				this._isDirty = true;
-			}
+//			}
 
 		}
 	}
@@ -286,12 +289,13 @@ class Uniform  {
 		this._hasBeenSet = true;
 
 		// Comparison of both matrices
-		if (value.rawData.toString() != this._matrixValue.rawData.toString()) {
+		// TODO Find a quick comparison method (the following kills perf on ios)
+//		if (value.rawData.toString() != this._matrixValue.rawData.toString()) {
 
 			// Copy array values
 			this._matrixValue.copyFrom(value);
 			this._isDirty = true;
-		}
+//		}
 	}
 
 	public function setTexture(value:Texture2D) {

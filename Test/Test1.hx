@@ -117,7 +117,7 @@ class Test1 extends Sprite {
 
 		var rotation:Float = 0.0;
 		_director.on("pre_render", function () {
-			rotation += 1.0;
+			rotation += 180.0 / 60.0;
 			sphereNode.rotationX = rotation	;
 			sphereNode2.rotationX = rotation;
 			sphereNode2.rotationZ = rotation;
