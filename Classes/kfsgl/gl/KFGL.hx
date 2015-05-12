@@ -18,6 +18,11 @@ class KFGL {
 	public static inline var FrontFaceDirectionCW:Int = 0;
 	public static inline var FrontFaceDirectionCCW:Int = 1;
 
+	public static inline var ZSortingNone:Int = 0;
+	public static inline var ZSortingTransparent:Int = 1;
+	public static inline var ZSortingOpaque:Int = 2;
+	public static inline var ZSortingAll:Int = ZSortingTransparent | ZSortingOpaque;
+
 
 	// PIXEL FORMAT
 	// 32-bit texture: RGBA8888

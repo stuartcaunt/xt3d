@@ -1,5 +1,6 @@
 package kfsgl.node;
 
+import kfsgl.gl.KFGL;
 import kfsgl.node.Node3D;
 
 class Scene extends Node3D {
@@ -7,11 +8,11 @@ class Scene extends Node3D {
 	// properties
 	public var opaqueObjects(get, null):Array<RenderObject>;
 	public var transparentObjects(get, null):Array<RenderObject>;
-	public var zSortingEnabled(get, set):Bool;
+	public var zSortingStrategy(get, set):Int;
 
 	private var _opaqueObjects:Array<RenderObject>;
 	private var _transparentObjects:Array<RenderObject>;
-	private var _zSortingEnabled:Bool = true;
+	private var _zSortingStrategy:Int = KFGL.ZSortingAll;
 //	private var _lights:Array<Light>;
 
 	// members
@@ -68,12 +69,12 @@ class Scene extends Node3D {
 		this._transparentObjects.push(object);
 	}
 
-	public function get_zSortingEnabled():Bool {
-		return this._zSortingEnabled;
+	public function get_zSortingStrategy():Int {
+		return this._zSortingStrategy;
 	}
 
-	public function set_zSortingEnabled(value:Bool) {
-		return this._zSortingEnabled = value;
+	public function set_zSortingStrategy(value:Int) {
+		return this._zSortingStrategy = value;
 	}
 
 

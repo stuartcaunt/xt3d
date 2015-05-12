@@ -128,17 +128,28 @@ class Renderer {
 
 			// Sort objects
 			if (this._sortingEnabled) {
-				// Sort opaque objects by material Id (avoid swapping shaders often)
-				scene.opaqueObjects.sort(this.materialSortStable);
 
-				if (scene.zSortingEnabled) {
+				if (scene.zSortingStrategy & KFGL.ZSortingOpaque > 0) {
+					// Project transparent objects if we want to sort them in z
+					for (renderObject in scene.opaqueObjects) {
+						renderObject.calculateRenderZ(this._viewProjectionMatrix);
+					}
+
+					// Sort opaque objects by z
+					scene.opaqueObjects.sort(this.painterSortStable);
+				} else {
+					// Sort opaque objects by material Id (avoid swapping shaders often)
+					scene.opaqueObjects.sort(this.materialSortStable);
+				}
+
+				if (scene.zSortingStrategy & KFGL.ZSortingTransparent > 0) {
 					// Project transparent objects if we want to sort them in z
 					for (renderObject in scene.transparentObjects) {
 						renderObject.calculateRenderZ(this._viewProjectionMatrix);
 					}
 
 					// Sort transparent objects by z
-					scene.transparentObjects.sort(this.painterSortStable);
+					scene.transparentObjects.sort(this.reversePainterSortStable);
 				} else {
 					// Sort transparent obejcts by material/object id (group by shader)
 					scene.transparentObjects.sort(this.materialSortStable);
@@ -251,14 +262,16 @@ class Renderer {
 	}
 
 
-	private function materialSortStable(a:RenderObject, b:RenderObject):Int {
+	function materialSortStable(a:RenderObject, b:RenderObject):Int {
+
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;
 
 		} else if (a.material.programId != b.material.programId) {
-
 			return a.material.programId - b.material.programId;
+
 		} else {
+			// First added first rendered
 			return a.id - b.id;
 		}
 	}
@@ -268,10 +281,29 @@ class Renderer {
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;
 
+		} else if (a.material.programId != b.material.programId) {
+			return a.material.programId - b.material.programId;
+
 		} else if (a.renderZ != b.renderZ) {
+			// Front to back (improve render perf by not rendering hidden pixels)
+			return (a.renderZ - b.renderZ) < 0.0 ? -1 : 1;
+
+		} else {
+			return b.id - a.id;
+		}
+	}
+
+	function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
+
+		if (a.material.depthWrite != b.material.depthWrite) {
+			return a.material.depthWrite ? 1 : -1;
+
+		} else if (a.renderZ != b.renderZ) {
+			// Back to front
 			return (b.renderZ - a.renderZ) < 0.0 ? -1 : 1;
 
 		} else {
+			// First added first rendered
 			return a.id - b.id;
 		}
 	}
