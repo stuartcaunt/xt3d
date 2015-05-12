@@ -138,7 +138,7 @@ class Renderer {
 					}
 
 					// Sort transparent objects by z
-					scene.transparentObjects.sort(this.reversePainterSortStable);
+					scene.transparentObjects.sort(this.painterSortStable);
 				} else {
 					// Sort transparent obejcts by material/object id (group by shader)
 					scene.transparentObjects.sort(this.materialSortStable);
@@ -252,29 +252,23 @@ class Renderer {
 
 
 	private function materialSortStable(a:RenderObject, b:RenderObject):Int {
-		if (a.material.programId != b.material.programId) {
-			return b.material.programId - a.material.programId;
+		if (a.material.depthWrite != b.material.depthWrite) {
+			return a.material.depthWrite ? 1 : -1;
+
+		} else if (a.material.programId != b.material.programId) {
+
+			return a.material.programId - b.material.programId;
 		} else {
 			return a.id - b.id;
 		}
 	}
 
-	private function painterSortStable(a:RenderObject, b:RenderObject):Int {
+	function painterSortStable(a:RenderObject, b:RenderObject):Int {
 
-		if (a.material.programId != b.material.programId) {
-			return b.material.programId - a.material.programId;
+		if (a.material.depthWrite != b.material.depthWrite) {
+			return a.material.depthWrite ? 1 : -1;
 
 		} else if (a.renderZ != b.renderZ) {
-			return (a.renderZ - b.renderZ) < 0.0 ? -1 : 1;
-
-		} else {
-			return a.id - b.id;
-		}
-	}
-
-	function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
-
-		if (a.renderZ != b.renderZ) {
 			return (b.renderZ - a.renderZ) < 0.0 ? -1 : 1;
 
 		} else {

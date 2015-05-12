@@ -43,7 +43,7 @@ class Test1 extends Sprite {
 		// Create a camera and set it in the view
 		var camera = Camera.create(view);
 		view.camera = camera;
-		camera.position = new Vector3D(0, 10, 10);
+		camera.position = new Vector3D(0, 6, 10);
 
 		// Create scene and add it to the view
 		var scene = Scene.create();
@@ -62,27 +62,14 @@ class Test1 extends Sprite {
 
 		// create geometries
 		var sphere = Sphere.create(2.0, 16, 16);
-		var plane = Plane.create(10.0, 10.0, 4, 4);
 
 		// Create a material
 		var material:Material = Material.create("test_color");
 		//material.opacity = 0.5;
 
-		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
-		planeTexture.retain();
-		var planeMaterial:Material = Material.create("test_texture");
-		planeMaterial.uniform("texture").texture = planeTexture;
-		planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
-//		planeMaterial.depthTest = false;
-//		planeMaterial.depthWrite = false;
-
 //		var material2:Material = Material.create("test_nocolor");
 //		material2.uniform("color").floatArrayValue = [0, 0, 1, 1];
 
-
-		// Create plane mesh node
-		var planeNode = MeshNode.create(plane, planeMaterial);
-		scene.addChild(planeNode);
 
 		// Create sphere mesh node
 		var sphereNode = MeshNode.create(sphere, material);
@@ -124,6 +111,21 @@ class Test1 extends Sprite {
 
 		});
 
+		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
+		planeTexture.retain();
+		var planeMaterial:Material = Material.create("test_texture");
+		planeMaterial.uniform("texture").texture = planeTexture;
+		planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
+		planeMaterial.depthTest = false;
+		planeMaterial.depthWrite = false;
+
+		var height = 10.0 * planeTexture.contentSize.height / planeTexture.contentSize.width;
+		var plane = Plane.create(10.0, height, 4, 4);
+
+
+		// Create plane mesh node
+		var planeNode = MeshNode.create(plane, planeMaterial);
+		scene.addChild(planeNode);
 
 // custom traversal
 //		scene.traverse(function (node) {
@@ -132,6 +134,7 @@ class Test1 extends Sprite {
 
 
 		var rotation:Float = 0.0;
+		var t:Float = 0.0;
 		_director.on("pre_render", function () {
 			rotation += 180.0 / 60.0;
 			sphereNode.rotationX = rotation	;
@@ -142,6 +145,10 @@ class Test1 extends Sprite {
 				sphereNode4.rotationZ = rotation;
 			}
 			parent.rotationY = rotation	;
+
+			t += 1.0 / 60.0;
+			var theta:Float = Math.sin(0.5 * t * 2.0 * Math.PI) * 20.0;
+			planeNode.rotationX = theta;
 		});
 
 	}

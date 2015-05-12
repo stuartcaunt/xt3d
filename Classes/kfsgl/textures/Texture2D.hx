@@ -29,6 +29,7 @@ import kfsgl.utils.CountedObject;
 	public var pixelFormat(get, set):Int;
 
 	public var bitmapData(get, null):BitmapData;
+	public var contentSize(get, null):Size<Int>;
 	public var pixelsWidth(get, null):Int;
 	public var pixelsHeight(get, null):Int;
 
@@ -286,6 +287,10 @@ import kfsgl.utils.CountedObject;
 
 	public function get_bitmapData():BitmapData {
 		return this._bitmapData;
+	}
+
+	public function get_contentSize():Size<Int> {
+		return this._contentSize;
 	}
 
 	public function get_pixelsWidth():Int {
