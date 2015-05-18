@@ -1,13 +1,11 @@
 TODO
 ====
 
-- material depth testing
-  - enable/disable depth test ?
-
 - Performance
-  - reuse Float32Array in Uniform.use
+x   reuse Float32Array in Uniform.use
   - Try fixed size Float32Array for vertex data
   - Determine if array or matrix values are different (uniform.setMatrix)
+  - verify inline getters/setters
 
 - Render texture
 
@@ -86,6 +84,8 @@ x   group by materials?
 x Primitives
 x   plane
 x   sphere
+x material depth testing
+
 
 NAMES
 =====

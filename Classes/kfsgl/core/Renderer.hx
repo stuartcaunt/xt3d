@@ -71,15 +71,15 @@ class Renderer {
 
 	// Properties
 
-	public function get_textureManager():GLTextureManager {
+	public inline function get_textureManager():GLTextureManager {
 		return this._textureManager;
 	}
 
-	public function get_sortingEnabled():Bool {
+	public inline function get_sortingEnabled():Bool {
 		return this._sortingEnabled;
 	}
 
-	public function set_sortingEnabled(value:Bool) {
+	public inline function set_sortingEnabled(value:Bool) {
 		return this._sortingEnabled = value;
 	}
 

@@ -36,6 +36,7 @@ class Uniform  {
 
 	private var _floatValue:Float = 0.0;
 	private var _floatArrayValue:Array<Float> = new Array<Float>();
+	private var _float32ArrayValue:Float32Array;
 	private var _matrixValue:Matrix3D = new Matrix3D();
 	private var _texture:Texture2D = null;
 	private var _textureSlot:Int = -1;
@@ -199,23 +200,46 @@ class Uniform  {
 				GL.uniform1i(this._location, this._textureSlot);
 
 			} else if (type == "vec2") {
-				GL.uniform2f(this._location, this._floatArrayValue[0], this._floatArrayValue[1]);
+#if js
+				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+#else
+				this._float32ArrayValue.set(this._floatArrayValue);
+#end
+				GL.uniform2fv(this._location, this._float32ArrayValue);
 
 			} else if (type == "vec3") {
-				GL.uniform3f(this._location, this._floatArrayValue[0], this._floatArrayValue[1], this._floatArrayValue[2]);
+#if js
+				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+#else
+				this._float32ArrayValue.set(this._floatArrayValue);
+#end
+				GL.uniform3fv(this._location, this._float32ArrayValue);
 
 			} else if (type == "vec4") {
-				GL.uniform4f(this._location, this._floatArrayValue[0], this._floatArrayValue[1], this._floatArrayValue[2], this._floatArrayValue[3]);
+#if js
+				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+#else
+				this._float32ArrayValue.set(this._floatArrayValue);
+#end
+				GL.uniform4fv(this._location, this._float32ArrayValue);
 
 			} else if (type == "mat3") {
-				// TODO reuse Float32Array
-				var float32ArrayValue = new Float32Array(this._floatArrayValue);
-				GL.uniformMatrix3fv(this._location, false, float32ArrayValue);
+#if js
+				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+#else
+				this._float32ArrayValue.set(this._floatArrayValue);
+#end
+				GL.uniformMatrix3fv(this._location, false, this._float32ArrayValue);
 
 			} else if (type == "mat4") {
-				// TODO reuse Float32Array
-				var float32ArrayValue = new Float32Array(this._matrixValue.rawData);
-				GL.uniformMatrix4fv(this._location, false, float32ArrayValue);
+#if js
+				this.copyToTypedArray(this._matrixValue.rawData.toArray(), this._float32ArrayValue);
+#elseif (ios || mac)
+				this._float32ArrayValue.set(this._matrixValue.rawData);
+#else
+				this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
+#end
+				GL.uniformMatrix4fv(this._location, false, this._float32ArrayValue);
 			}
 
 			_isDirty = false;
@@ -224,6 +248,13 @@ class Uniform  {
 		// Bind texture
 		if (type == 'texture') {
 			textureManager.setTexture(this._texture, this._textureSlot);
+		}
+	}
+
+	private inline function copyToTypedArray(input:Array<Float>, out:Float32Array):Void {
+		var length = input.length;
+		for (i in 0 ... length) {
+			out[i] = input[i];
 		}
 	}
 
@@ -345,6 +376,7 @@ class Uniform  {
 
 		} else if (type == "vec2") {
 			this._size = 2;
+			this._float32ArrayValue = new Float32Array(2);
 			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
 			}
@@ -352,6 +384,7 @@ class Uniform  {
 
 		} else if (type == "vec3") {
 			this._size = 3;
+			this._float32ArrayValue = new Float32Array(3);
 			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
 			}
@@ -359,6 +392,7 @@ class Uniform  {
 
 		} else if (type == "vec4") {
 			this._size = 4;
+			this._float32ArrayValue = new Float32Array(4);
 			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
 			}
@@ -366,6 +400,7 @@ class Uniform  {
 
 		} else if (type == "mat3") {
 			this._size = 9;
+			this._float32ArrayValue = new Float32Array(9);
 			if (defaultValue != null) {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 1, 0, 0, 0, 1]";
@@ -376,6 +411,7 @@ class Uniform  {
 
 		} else if (type == "mat4") {
 			this._size = 16;
+			this._float32ArrayValue = new Float32Array(16);
 			if (defaultValue != null) {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]";
