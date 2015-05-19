@@ -78,11 +78,11 @@ class Material {
 
 	/* ----------- Properties ----------- */
 
-	public function get_id():Int {
+	public inline function get_id():Int {
 		return this._id;
 	}
 
-	public function get_programId():Int {
+	public inline function get_programId():Int {
 		return this._programId;
 	}
 
@@ -104,20 +104,20 @@ class Material {
 		return this._program;
 	}
 
-	public function get_opacity():Float {
+	public inline function get_opacity():Float {
 		return this._opacity;
 	}
 
-	public function set_opacity(value:Float) {
+	public inline function set_opacity(value:Float) {
 		this.setOpacity(value);
 		return this._opacity;
 	}
 
-	public function get_transparent():Bool {
+	public inline function get_transparent():Bool {
 		return this._transparent;
 	}
 
-	public function set_transparent(value:Bool) {
+	public inline function set_transparent(value:Bool) {
 		return this._transparent = value;
 	}
 

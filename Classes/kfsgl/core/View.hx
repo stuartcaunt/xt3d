@@ -43,7 +43,7 @@ class View extends EventEmitter {
 		return _displayRect;
 	}
 
-	public function set_displayRect(value:Rectangle) {
+	public inline function set_displayRect(value:Rectangle) {
 		this.setDisplayRect(value);
 		return this._displayRect;
 	}
@@ -52,7 +52,7 @@ class View extends EventEmitter {
 		return _viewport;
 	}
 
-	public function set_viewport(value:Rectangle) {
+	public inline function set_viewport(value:Rectangle) {
 		this.setViewport(value);
 		return this._viewport;
 	}
@@ -61,7 +61,7 @@ class View extends EventEmitter {
 		return _viewportInPixels;
 	}
 
-	public function set_viewportInPixels(value:Rectangle) {
+	public inline function set_viewportInPixels(value:Rectangle) {
 		this.setViewportInPixels(value);
 		return this._viewportInPixels;
 	}
@@ -102,7 +102,7 @@ class View extends EventEmitter {
 	}
 
 
-	public function setDisplayRect(displayRect:Rectangle) {
+	public inline function setDisplayRect(displayRect:Rectangle) {
 		this.setViewport(displayRect);
 	}
 

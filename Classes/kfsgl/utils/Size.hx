@@ -36,19 +36,19 @@ class Size<T> {
 
 	/* ----------- Properties ----------- */
 
-	public function get_width():T {
+	public inline function get_width():T {
 		return this._width;
 	}
 
-	public function set_width(value:T) {
+	public inline function set_width(value:T) {
 		return this._width = value;
 	}
 
-	public function get_height():T {
+	public inline function get_height():T {
 		return this._height;
 	}
 
-	public function set_height(value:T) {
+	public inline function set_height(value:T) {
 		return this._height = value;
 	}
 

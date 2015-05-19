@@ -234,6 +234,8 @@ class Uniform  {
 			} else if (type == "mat4") {
 #if js
 				this.copyToTypedArray(this._matrixValue.rawData.toArray(), this._float32ArrayValue);
+#elseif neko
+				this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
 #elseif (ios || mac)
 				this._float32ArrayValue.set(this._matrixValue.rawData);
 #else
@@ -329,7 +331,7 @@ class Uniform  {
 //		}
 	}
 
-	public function setTexture(value:Texture2D) {
+	public inline function setTexture(value:Texture2D) {
 		if (this._texture != value) {
 			this._texture = value;
 		}
@@ -349,7 +351,7 @@ class Uniform  {
 		}
 	}
 
-	public function setDefaultTextureSlot(value:Int) {
+	public inline function setDefaultTextureSlot(value:Int) {
 		_defaultTextureSlot = value;
 	}
 

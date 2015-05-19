@@ -88,32 +88,32 @@ class ImageLoader {
 	}
 
 
-	private function onOpen(event:Event):Void {
+	private inline function onOpen(event:Event):Void {
 		this._loading = true;
 	}
 
-	private function onProgress(event:ProgressEvent):Void {
+	private inline function onProgress(event:ProgressEvent):Void {
 		// Progress between 0 and 1
 		this._progress = event.bytesLoaded / event.bytesTotal;
 
 		KF.Log("loading " + Math.round(this._progress * 100) + "%");
 	}
 
-	private function onSecurity(event:SecurityErrorEvent):Void {
+	private inline function onSecurity(event:SecurityErrorEvent):Void {
 		handleError("securityErrorHandler: " + event);
 		this._loading = false;
 	}
 
-	private function onHTTPStatus(event:HTTPStatusEvent):Void {
+	private inline function onHTTPStatus(event:HTTPStatusEvent):Void {
 		this._status = event.status;
 	}
 
-	private function onIOError(event:IOErrorEvent):Void {
+	private inline function onIOError(event:IOErrorEvent):Void {
 		handleError("ioErrorHandler: " + event);
 		this._loading = false;
 	}
 
-	private function handleError(error:String) {
+	private inline function handleError(error:String) {
 		var errorString:String = "Error loading \"" + this._url + "\" : " + error;
 		if (this._errorCbk == null) {
 			KF.Error(errorString);

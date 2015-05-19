@@ -30,59 +30,59 @@ class TextureOptions {
 /* ----------- Properties ----------- */
 
 
-	public function get_forcePOT():Bool {
+	public inline function get_forcePOT():Bool {
 		return this._forcePOT;
 	}
 
-	public function set_forcePOT(value:Bool) {
+	public inline function set_forcePOT(value:Bool) {
 		return this._forcePOT = value;
 	}
 
-	public function get_generateMipMaps():Bool {
+	public inline function get_generateMipMaps():Bool {
 		return this._generateMipMaps;
 	}
 
-	public function set_generateMipMaps(value:Bool) {
+	public inline function set_generateMipMaps(value:Bool) {
 		return this._generateMipMaps = value;
 	}
 
-	public function get_minFilter():Int {
+	public inline function get_minFilter():Int {
 		return this._minFilter;
 	}
 
-	public function set_minFilter(value:Int) {
+	public inline function set_minFilter(value:Int) {
 		return this._minFilter = value;
 	}
 
-	public function get_magFilter():Int {
+	public inline function get_magFilter():Int {
 		return this._magFilter;
 	}
 
-	public function set_magFilter(value:Int) {
+	public inline function set_magFilter(value:Int) {
 		return this._magFilter = value;
 	}
 
-	public function get_wrapS():Int {
+	public inline function get_wrapS():Int {
 		return this._wrapS;
 	}
 
-	public function set_wrapS(value:Int) {
+	public inline function set_wrapS(value:Int) {
 		return this._wrapS = value;
 	}
 
-	public function get_wrapT():Int {
+	public inline function get_wrapT():Int {
 		return this._wrapT;
 	}
 
-	public function set_wrapT(value:Int) {
+	public inline function set_wrapT(value:Int) {
 		return this._wrapT = value;
 	}
 
-	public function get_pixelFormat():Int {
+	public inline function get_pixelFormat():Int {
 		return this._pixelFormat;
 	}
 
-	public function set_pixelFormat(value:Int) {
+	public inline function set_pixelFormat(value:Int) {
 		return this._pixelFormat = value;
 	}
 

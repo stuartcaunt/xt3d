@@ -80,22 +80,22 @@ class IndexData {
 
 	/* --------- Implementation --------- */
 
-	public function dispose() {
+	public inline function dispose() {
 		if (this._buffer != null) {
 			GL.deleteBuffer(this._buffer);
 		}
 	}
 
 	// Number of elements
-	public function getLength():Int {
+	public inline function getLength():Int {
 		return this._array.length;
 	}
 
-	public function setIsDirty(isDirty:Bool):Void {
+	public inline function setIsDirty(isDirty:Bool):Void {
 		this._isDirty = isDirty;
 	}
 
-	public function getIndexCount():Int {
+	public inline function getIndexCount():Int {
 		return this.getLength();
 	}
 
@@ -114,7 +114,7 @@ class IndexData {
 		return false;
 	}
 
-	public function bind(bufferManager:GLBufferManager):Void {
+	public inline function bind(bufferManager:GLBufferManager):Void {
 		bufferManager.setElementBuffer(this._buffer);
 	}
 

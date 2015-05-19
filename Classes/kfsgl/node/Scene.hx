@@ -69,11 +69,11 @@ class Scene extends Node3D {
 		this._transparentObjects.push(object);
 	}
 
-	public function get_zSortingStrategy():Int {
+	public inline function get_zSortingStrategy():Int {
 		return this._zSortingStrategy;
 	}
 
-	public function set_zSortingStrategy(value:Int) {
+	public inline function set_zSortingStrategy(value:Int) {
 		return this._zSortingStrategy = value;
 	}
 

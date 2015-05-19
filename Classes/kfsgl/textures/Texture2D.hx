@@ -217,92 +217,92 @@ import kfsgl.utils.CountedObject;
 
 	/* ----------- Properties ----------- */
 
-	public function get_name():String {
+	public inline function get_name():String {
 		return this._name;
 	}
 
-	public function get_isDirty():Bool {
+	public inline function get_isDirty():Bool {
 		return this._isDirty;
 	}
 
-	public function set_isDirty(value:Bool):Bool {
+	public inline function set_isDirty(value:Bool):Bool {
 		return this._isDirty = value;
 	}
 
-	public function get_glTexture():GLTexture {
+	public inline function get_glTexture():GLTexture {
 		return this._glTexture;
 	}
 
-	public function set_glTexture(value:GLTexture) {
+	public inline function set_glTexture(value:GLTexture) {
 		return this._glTexture = value;
 	}
 
-	public function get_generateMipMaps():Bool {
+	public inline function get_generateMipMaps():Bool {
 		return this._generateMipMaps;
 	}
 
-	public function set_generateMipMaps(value:Bool) {
+	public inline function set_generateMipMaps(value:Bool) {
 		return this._generateMipMaps = value;
 	}
 
-	public function get_minFilter():Int {
+	public inline function get_minFilter():Int {
 		return this._minFilter;
 	}
 
-	public function set_minFilter(value:Int) {
+	public inline function set_minFilter(value:Int) {
 		return this._minFilter = value;
 	}
 
-	public function get_magFilter():Int {
+	public inline function get_magFilter():Int {
 		return this._magFilter;
 	}
 
-	public function set_magFilter(value:Int) {
+	public inline function set_magFilter(value:Int) {
 		return this._magFilter = value;
 	}
 
-	public function get_wrapS():Int {
+	public inline function get_wrapS():Int {
 		return this._wrapS;
 	}
 
-	public function set_wrapS(value:Int) {
+	public inline function set_wrapS(value:Int) {
 		return this._wrapS = value;
 	}
 
-	public function get_wrapT():Int {
+	public inline function get_wrapT():Int {
 		return this._wrapT;
 	}
 
-	public function set_wrapT(value:Int) {
+	public inline function set_wrapT(value:Int) {
 		return this._wrapT = value;
 	}
 
-	public function get_pixelFormat():Int {
+	public inline function get_pixelFormat():Int {
 		return this._pixelFormat;
 	}
 
-	public function set_pixelFormat(value:Int) {
+	public inline function set_pixelFormat(value:Int) {
 		return this._pixelFormat = value;
 	}
 
-	public function get_bitmapData():BitmapData {
+	public inline function get_bitmapData():BitmapData {
 		return this._bitmapData;
 	}
 
-	public function get_contentSize():Size<Int> {
+	public inline function get_contentSize():Size<Int> {
 		return this._contentSize;
 	}
 
-	public function get_pixelsWidth():Int {
+	public inline function get_pixelsWidth():Int {
 		return this._pixelsWidth;
 	}
 
-	public function get_pixelsHeight():Int {
+	public inline function get_pixelsHeight():Int {
 		return this._pixelsHeight;
 	}
 
 
-	public function get_uvScaleOffset():Array<Float> {
+	public inline function get_uvScaleOffset():Array<Float> {
 		return [this._uvScaleX, this._uvScaleY, this._uvOffsetX, this._uvOffsetY];
 	}
 

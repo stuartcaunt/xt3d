@@ -15,17 +15,17 @@ class CountedObject {
 
 	/* ----------- Properties ----------- */
 
-	public function get_retainCount():Int {
+	public inline function get_retainCount():Int {
 		return this._retainCount;
 	}
 
 	/* --------- Implementation --------- */
 
-	public function retain():Void {
+	public inline function retain():Void {
 		this._retainCount++;
 	}
 
-	public function release():Void {
+	public inline function release():Void {
 		this._retainCount--;
 	}
 

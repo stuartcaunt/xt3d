@@ -108,7 +108,7 @@ class RenderObject extends Node3D {
 		return this._renderElementsCount = value;
 	}
 
-	public function get_renderZ():Float {
+	public inline function get_renderZ():Float {
 		return this._renderZ;
 	}
 

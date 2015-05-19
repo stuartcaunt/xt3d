@@ -49,7 +49,7 @@ class Director extends EventEmitter {
 
 	/* ----------- Properties ----------- */
 
-	public function get_textureCache():TextureCache {
+	public inline function get_textureCache():TextureCache {
 		return this._textureCache;
 	}
 
@@ -87,7 +87,7 @@ class Director extends EventEmitter {
 		_openGLView.render = renderLoop;
 	}
 
-	public function addView(view:View):Void {
+	public inline function addView(view:View):Void {
 		_views.push(view);
 	}
 
