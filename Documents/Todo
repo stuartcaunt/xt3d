@@ -7,9 +7,14 @@ x   Try fixed size Float32Array for vertex data
   - Determine if array or matrix values are different (uniform.setMatrix)
     - quick checksum?
 x   verify inline getters/setters
-  - remove some matrices sent to gpu
+x  - remove some matrices sent to gpu : rejected since we test which matrices are needed
 
 - Render texture
+  - add .visit() method to Node3D to allow for cocos2d-like render to texture ?
+   - rt.begin()
+     node.visit();
+     rt.end();
+  - may be over-simplified since we have more need of camera in 3D
 
 - schedule callbacks in nodes (update with dt)
 

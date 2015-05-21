@@ -32,6 +32,7 @@ class RenderObject extends Node3D {
 	private var _modelViewMatrix:Matrix3D = new Matrix3D();
 	private var _modelViewProjectionMatrix:Matrix3D = new Matrix3D();
 	private var _normalMatrix:Matrix3D = new Matrix3D();
+	private var _normalMatrixDirty:Bool = false;
 
 	private var _renderElementsOffset = -1;
 	private var _renderElementsCount = -1;
@@ -89,7 +90,7 @@ class RenderObject extends Node3D {
 	}
 
 	public inline function get_normalMatrix():Matrix3D {
-		return this._normalMatrix;
+		return this.getNormalMatrix();
 	}
 
 	public inline function get_renderElementsOffset():Int {
@@ -132,16 +133,25 @@ class RenderObject extends Node3D {
 		this._material = value;
 	}
 
+	public inline function getNormalMatrix():Matrix3D {
+		if (this._normalMatrixDirty) {
+			// normal matrix
+			this._normalMatrix.copyFrom(this._modelViewMatrix);
+			this._normalMatrix.invert();
+			this._normalMatrix.transpose();
+
+			this._normalMatrixDirty = false;
+		}
+		return this._normalMatrix;
+	}
+
 	public function updateRenderMatrices(camera:Camera):Void {
 		// Model view matrix
 		this._modelViewMatrix.copyFrom(camera.viewMatrix);
 		this._modelViewMatrix.prepend(this._worldMatrix);
 
-		// normal matrix
-		// TODO: test if normals are used in material
-		this._normalMatrix.copyFrom(_modelViewMatrix);
-		this._normalMatrix.invert();
-		this._normalMatrix.transpose();
+		// Set normal matrix as dirty but don't calculate it yet
+		this._normalMatrixDirty = true;
 
 		// Model view project matrix
 		this._modelViewProjectionMatrix.copyFrom(this._modelViewMatrix);
