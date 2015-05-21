@@ -3,9 +3,11 @@ TODO
 
 - Performance
 x   reuse Float32Array in Uniform.use
-  - Try fixed size Float32Array for vertex data
+x   Try fixed size Float32Array for vertex data
   - Determine if array or matrix values are different (uniform.setMatrix)
-  - verify inline getters/setters
+    - quick checksum?
+x   verify inline getters/setters
+  - remove some matrices sent to gpu
 
 - Render texture
 

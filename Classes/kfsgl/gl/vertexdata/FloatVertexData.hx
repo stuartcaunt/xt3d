@@ -1,5 +1,6 @@
 package kfsgl.gl.vertexdata;
 
+import kfsgl.utils.errors.KFException;
 import kfsgl.gl.vertexdata.PrimitiveVertexData;
 import openfl.utils.ArrayBufferView;
 import openfl.utils.IMemoryRange;
@@ -11,13 +12,11 @@ class FloatVertexData extends PrimitiveVertexData {
 	// properties
 
 	// members
-#if use_float32array
-	private var _f32Array:Float32Array = new Float32Array(0);
-	private var _capacity:Int = 0;
-	private var _nextIndex:Int = -1;
-#else
+	private var _f32Array:Float32Array = null;
+	private var _fixedCapacity:Int = 0;
+	private var _nextIndex:Int = 0;
+	
 	private var _array:Array<Float> = new Array<Float>();
-#end
 
 	public static function create(attributeName:String, vertexSize:Int):FloatVertexData {
 		var object = new FloatVertexData();
@@ -29,8 +28,6 @@ class FloatVertexData extends PrimitiveVertexData {
 		return object;
 	}
 
-#if use_float32array
-#else
 	public static function createWithArray(attributeName:String, array:Array<Float>, vertexSize:Int):FloatVertexData {
 		var object = new FloatVertexData();
 
@@ -40,7 +37,16 @@ class FloatVertexData extends PrimitiveVertexData {
 
 		return object;
 	}
-#end
+
+	public static function createWithFixedCapacity(fixedCapacity:Int, attributeName:String, vertexSize:Int):FloatVertexData {
+		var object = new FloatVertexData();
+
+		if (object != null && !(object.initWithFixedCapacity(fixedCapacity, attributeName, vertexSize))) {
+			object = null;
+		}
+
+		return object;
+	}
 
 	public function init(attributeName:String, vertexSize:Int):Bool {
 		var retval;
@@ -50,8 +56,6 @@ class FloatVertexData extends PrimitiveVertexData {
 		return retval;
 	}
 
-#if use_float32array
-#else
 	public function initWithArray(attributeName:String, array:Array<Float>, vertexSize:Int):Bool {
 		var retval;
 		if ((retval = super.initPrimitiveVertexData(attributeName, vertexSize))) {
@@ -60,7 +64,16 @@ class FloatVertexData extends PrimitiveVertexData {
 
 		return retval;
 	}
-#end
+
+	public function initWithFixedCapacity(fixedCapacity:Int, attributeName:String, vertexSize:Int):Bool {
+		var retval;
+		if ((retval = super.initPrimitiveVertexData(attributeName, vertexSize))) {
+			this._f32Array = new Float32Array(fixedCapacity);
+			this._fixedCapacity = fixedCapacity;
+		}
+
+		return retval;
+	}
 
 
 	public function new() {
@@ -76,20 +89,20 @@ class FloatVertexData extends PrimitiveVertexData {
 
 	// Number of elements
 	override public function getLength():Int {
-#if use_float32array
-		return this._f32Array.length >> 2;
-#else
-		return this._array.length;
-#end
+		if (this._f32Array != null) {
+			return this._nextIndex;
+		} else {
+			return this._array.length;
+		}
 	}
 
 
 	override public function getBufferData():ArrayBufferView {
-#if use_float32array
-		return this._f32Array;
-#else
-		return new Float32Array(this._array);
-#end
+		if (this._f32Array != null) {
+			return this._f32Array;
+		} else {
+			return new Float32Array(this._array);
+		}
 	}
 
 	override public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
@@ -102,93 +115,62 @@ class FloatVertexData extends PrimitiveVertexData {
 
 
 	public inline function set(index:Int, value:Float):Void {
-#if use_float32array
-		handleArraySize(index + 1);
-		_f32Array.buffer.position = index << 2;
-		_f32Array.writeFloat(value);
-		//_f32Array.setFloat32(index, value);
-		_nextIndex = index + 1;
+		if (this._f32Array != null) {
+			this.handleIndex(index, true);
+			this._f32Array[this._nextIndex++] = value;
+
+		} else {
+			this._array[index] = value;
+		}
 		this._isDirty = true;
-#else
-		_array[index] = value;
-		this._isDirty = true;
-#end
 	}
 
 	public inline function get(index:Int):Float {
-#if use_float32array
-		//return _f32Array.getFloat32(index);
-		return 0;
-#else
-		return _array[index];
-#end
+		if (this._f32Array != null) {
+			this.handleIndex(index, false);
+			return this._f32Array[index];
+
+		} else {
+			return _array[index];
+		}
 	}
 
 	public inline function push(value:Float):Void {
-#if use_float32array
-		handleArraySize(_nextIndex + 1);
-//_f32Array.setFloat32(_nextIndex, value);
-		_nextIndex++;
-#else
-		_array.push(value);
+		if (this._f32Array != null) {
+			this.handleIndex(this._nextIndex, false);
+			this._f32Array[this._nextIndex++] = value;
+
+		} else {
+			_array.push(value);
+		}
 		this._isDirty = true;
-#end
 	}
 
 	public inline function pop():Float {
-#if use_float32array
-		var value = this.get(_nextIndex - 1);
-		handleArraySize(_nextIndex);
-		_nextIndex--;
-
-		return value;
-#else
-		return _array.pop();
-		this._isDirty = true;
-#end
-	}
-
-
-
-#if use_float32array
-	private function handleArraySize(size:Int):Void {
-		if (this._capacity <= size) {
-
-			// Calculate new size
-			var newCapacity = (this._capacity == 0) ? 1 : this._capacity << 1;
-			while (newCapacity <= size) {
-				newCapacity = this._capacity << 1;
+		if (this._f32Array != null) {
+			if (this._nextIndex <= 0) {
+				throw new KFException("IndexOutOfBounds", "Cannot pop from empty array");
 			}
+			this._nextIndex--;
 
-			// create new array of increased size
-			var newFloatArray:Float32Array = new Float32Array(newCapacity);
+			this._isDirty = true;
+			return this._f32Array[this._nextIndex];
 
-			// Copy old data
-			newFloatArray.set(_f32Array);
-
-			// Set new array
-			this._capacity = newCapacity;
-			this._f32Array = newFloatArray;
-
-		} else if (this._capacity >= size << 1) {
-
-			// Calculate new size
-			var newCapacity = this._capacity;
-			while (newCapacity >= size << 1) {
-				newCapacity = this._capacity >> 1;
-			}
-
-			// create new array of decreased size
-			var newFloatArray:Float32Array = new Float32Array(newCapacity);
-
-			// Copy old data
-			newFloatArray.set(_f32Array.subarray(0, size));
-
-			// Set new array
-			this._capacity = newCapacity;
-			this._f32Array = newFloatArray;
+		} else {
+			this._isDirty = true;
+			return _array.pop();
 		}
 	}
-#end
+
+
+
+	private inline function handleIndex(index:Int, updateNextIndex:Bool):Void {
+		if (index >= this._fixedCapacity) {
+			throw new KFException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
+		}
+		if (updateNextIndex && index > this._nextIndex) {
+			this._nextIndex = index;
+		}
+	}
 
 }

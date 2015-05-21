@@ -1,5 +1,6 @@
 package kfsgl.gl.vertexdata;
 
+import kfsgl.utils.errors.KFException;
 import kfsgl.gl.vertexdata.PrimitiveVertexData;
 import openfl.utils.UInt8Array;
 import openfl.utils.ArrayBufferView;
@@ -10,6 +11,10 @@ class UByteVertexData extends PrimitiveVertexData {
 	// properties
 
 	// members
+	private var _ui8Array:UInt8Array = null;
+	private var _fixedCapacity:Int = 0;
+	private var _nextIndex:Int = 0;
+
 	private var _array:Array<UInt> = new Array<UInt>();
 
 	public static function create(attributeName:String, vertexSize:Int):UByteVertexData {
@@ -26,6 +31,16 @@ class UByteVertexData extends PrimitiveVertexData {
 		var object = new UByteVertexData();
 
 		if (object != null && !(object.initWithArray(attributeName, array, vertexSize))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createWithFixedCapacity(fixedCapacity:Int, attributeName:String, vertexSize:Int):UByteVertexData {
+		var object = new UByteVertexData();
+
+		if (object != null && !(object.initWithFixedCapacity(fixedCapacity, attributeName, vertexSize))) {
 			object = null;
 		}
 
@@ -49,6 +64,16 @@ class UByteVertexData extends PrimitiveVertexData {
 		return retval;
 	}
 
+	public function initWithFixedCapacity(fixedCapacity:Int, attributeName:String, vertexSize:Int):Bool {
+		var retval;
+		if ((retval = super.initPrimitiveVertexData(attributeName, vertexSize))) {
+			this._ui8Array = new UInt8Array(fixedCapacity);
+			this._fixedCapacity = fixedCapacity;
+		}
+
+		return retval;
+	}
+
 
 	public function new() {
 		super();
@@ -62,12 +87,20 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	// Number of elements
 	override public function getLength():Int {
-		return this._array.length;
+		if (this._ui8Array != null) {
+			return this._nextIndex;
+		} else {
+			return this._array.length;
+		}
 	}
 
 
 	override public function getBufferData():ArrayBufferView {
-		return new UInt8Array(this._array);
+		if (this._ui8Array != null) {
+			return this._ui8Array;
+		} else {
+			return new UInt8Array(this._array);
+		}
 	}
 
 	override public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
@@ -78,24 +111,62 @@ class UByteVertexData extends PrimitiveVertexData {
 		GL.vertexAttribPointer(attributeLocation, this._vertexSize, GL.UNSIGNED_BYTE, true, 0, 0);
 	}
 
-
 	public inline function set(index:Int, value:UInt):Void {
-		_array[index] = value;
+		if (this._ui8Array != null) {
+			this.handleIndex(index, true);
+			this._ui8Array[this._nextIndex++] = value;
+
+		} else {
+			this._array[index] = value;
+		}
 		this._isDirty = true;
 	}
 
 	public inline function get(index:Int):UInt {
-		return _array[index];
+		if (this._ui8Array != null) {
+			this.handleIndex(index, false);
+			return this._ui8Array[index];
+
+		} else {
+			return _array[index];
+		}
 	}
 
 	public inline function push(value:UInt):Void {
-		_array.push(value);
+		if (this._ui8Array != null) {
+			this.handleIndex(this._nextIndex, false);
+			this._ui8Array[this._nextIndex++] = value;
+
+		} else {
+			_array.push(value);
+		}
 		this._isDirty = true;
 	}
 
 	public inline function pop():UInt {
-		return _array.pop();
-		this._isDirty = true;
+		if (this._ui8Array != null) {
+			if (this._nextIndex <= 0) {
+				throw new KFException("IndexOutOfBounds", "Cannot pop from empty array");
+			}
+			this._nextIndex--;
+
+			this._isDirty = true;
+			return this._ui8Array[this._nextIndex];
+
+		} else {
+			this._isDirty = true;
+			return _array.pop();
+		}
 	}
+
+	private inline function handleIndex(index:Int, updateNextIndex:Bool):Void {
+		if (index >= this._fixedCapacity) {
+			throw new KFException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
+		}
+		if (updateNextIndex && index > this._nextIndex) {
+			this._nextIndex = index;
+		}
+	}
+
 
 }

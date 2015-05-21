@@ -29,11 +29,25 @@ class View extends EventEmitter {
 
 	private var _contentScaleFactor = 1.0;
 
+	public static function create():View {
+		var object = new View();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function init():Bool {
+		// Set default viewport
+		setViewport(new Rectangle(0, 0, 500, 600));
+
+		return true;
+	}
 
 	public function new() {
 		super();
-		// Set default viewport
-		setViewport(new Rectangle(0, 0, 500, 600));
 	}
 
 	/* ----------- Properties ----------- */

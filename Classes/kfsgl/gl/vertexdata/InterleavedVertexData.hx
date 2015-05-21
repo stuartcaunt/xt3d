@@ -1,10 +1,7 @@
 package kfsgl.gl.vertexdata;
 
-/**
- * Used to mask if we immediately use:
- *  - an ArrayBuffer to hold vertex data, avoiding copying data but maybe slower access
- *  - a standard Array object, doubling data usage but maybe easier access
- **/
+import kfsgl.utils.KF;
+import kfsgl.utils.errors.KFException;
 import openfl.utils.ArrayBufferView;
 import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
@@ -31,6 +28,9 @@ class InterleavedVertexData extends VertexData {
 	// members
 	public static var INTERLEAVED_BUFFER_NAME = "interleaved";
 
+	private var _f32Array:Float32Array = null;
+	private var _fixedCapacity:Int = 0;
+	private var _nextIndex:Int = 0;
 
 	private var _array:Array<Float> = new Array<Float>();
 	private var _stride:Int; // # Float
@@ -47,9 +47,31 @@ class InterleavedVertexData extends VertexData {
 		return object;
 	}
 
+	public static function createWithFixedCapacity(fixedCapacity:Int, stride:Int, interleavedDataStructure:Map<String, VertexInfo>):InterleavedVertexData {
+		var object = new InterleavedVertexData();
+
+		if (object != null && !(object.initWithFixedCapacity(fixedCapacity, stride, interleavedDataStructure))) {
+			object = null;
+		}
+
+		return object;
+	}
+
 	public function init(stride:Int, interleavedDataStructure:Map<String, VertexInfo>):Bool {
 		var retval;
 		if ((retval = super.initVertexData())) {
+			this._stride = stride;
+			this._interleavedDataStructure = interleavedDataStructure;
+		}
+
+		return retval;
+	}
+
+	public function initWithFixedCapacity(fixedCapacity:Int, stride:Int, interleavedDataStructure:Map<String, VertexInfo>):Bool {
+		var retval;
+		if ((retval = super.initVertexData())) {
+			this._f32Array = new Float32Array(fixedCapacity);
+			this._fixedCapacity = fixedCapacity;
 			this._stride = stride;
 			this._interleavedDataStructure = interleavedDataStructure;
 		}
@@ -79,11 +101,19 @@ class InterleavedVertexData extends VertexData {
 
 	// Number of elements
 	override public function getLength():Int {
-		return this._array.length;
+		if (this._f32Array != null) {
+			return this._nextIndex;
+		} else {
+			return this._array.length;
+		}
 	}
 
 	override public function getBufferData():ArrayBufferView {
-		return new Float32Array(this._array);
+		if (this._f32Array != null) {
+			return this._f32Array;
+		} else {
+			return new Float32Array(this._array);
+		}
 	}
 
 	public function setAttributeSize(attributeName:String, size:Int):Void {
@@ -130,24 +160,62 @@ class InterleavedVertexData extends VertexData {
 
 
 	public inline function set(index:Int, value:Float):Void {
-		_array[index] = value;
+		if (this._f32Array != null) {
+			this.handleIndex(index, true);
+			this._f32Array[this._nextIndex++] = value;
+
+		} else {
+			this._array[index] = value;
+		}
 		this._isDirty = true;
 	}
 
 	public inline function get(index:Int):Float {
-		return _array[index];
+		if (this._f32Array != null) {
+			this.handleIndex(index, false);
+			return this._f32Array[index];
+
+		} else {
+			return _array[index];
+		}
 	}
 
 	public inline function push(value:Float):Void {
-		_array.push(value);
+		if (this._f32Array != null) {
+			this.handleIndex(this._nextIndex, false);
+			this._f32Array[this._nextIndex++] = value;
+
+		} else {
+			_array.push(value);
+		}
 		this._isDirty = true;
 	}
 
 	public inline function pop():Float {
-		return _array.pop();
-		this._isDirty = true;
+		if (this._f32Array != null) {
+			if (this._nextIndex <= 0) {
+				throw new KFException("IndexOutOfBounds", "Cannot pop from empty array");
+			}
+			this._nextIndex--;
+
+			this._isDirty = true;
+			return this._f32Array[this._nextIndex];
+
+		} else {
+			this._isDirty = true;
+			return _array.pop();
+		}
 	}
 
 
+
+	private inline function handleIndex(index:Int, updateNextIndex:Bool):Void {
+		if (index >= this._fixedCapacity) {
+			throw new KFException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
+		}
+		if (updateNextIndex && index > this._nextIndex) {
+			this._nextIndex = index;
+		}
+	}
 
 }

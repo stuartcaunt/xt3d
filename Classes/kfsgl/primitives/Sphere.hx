@@ -43,8 +43,14 @@ class Sphere extends Geometry {
 	/* ----------- Properties ----------- */
 
 	/* --------- Implementation --------- */
+
 	private function createGeometry():Void {
-		var vertexData = super.createInterleavedVertexData(8);
+		// Calculate number of vertices and indices (fixed)
+		var nVertices = (this._lats + 1) * (this._lons + 1);
+		var nIndices = this._lats * this._lons * 6;
+
+		// Create vertex data
+		var vertexData = super.createInterleavedVertexData(8, null, nVertices * 8);
 		vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
 		vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
 		vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
@@ -52,7 +58,7 @@ class Sphere extends Geometry {
 //		var positions = super.createPositionData();
 //		var normals = super.createNormalData();
 //		var uvs = super.createUVData();
-		var colors = super.createByteColorData();
+		var colors = super.createByteColorData(nVertices * 4);
 		var indices = super.createIndexData();
 
 		var theta:Float;
@@ -137,7 +143,6 @@ class Sphere extends Geometry {
 				second = first + (this._lons + 1);
 				third = first + 1;
 				fourth = second + 1;
-
 
 				indices.push(first);
 				indices.push(third);

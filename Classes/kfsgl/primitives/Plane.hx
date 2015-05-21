@@ -48,12 +48,17 @@ class Plane extends Geometry {
 
 
 	private function createGeometry():Void {
-		var vertexData = super.createInterleavedVertexData(8);
+		// Calculate number of vertices and indices (fixed)
+		var nVertices = (this._nx + 1) * (this._ny + 1) * 8;
+		var nIndices = this._nx * this._ny * 6;
+
+		// Create vertex data
+		var vertexData = super.createInterleavedVertexData(8, null, nVertices);
 		vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
 		vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
 		vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
 
-		var indices = super.createIndexData();
+		var indices = super.createIndexData(nIndices);
 
 		var x:Float;
 		var y:Float;
@@ -95,7 +100,6 @@ class Plane extends Geometry {
 				second = first + (this._nx + 1);
 				third = first + 1;
 				fourth = second + 1;
-
 
 				indices.push(first);
 				indices.push(third);

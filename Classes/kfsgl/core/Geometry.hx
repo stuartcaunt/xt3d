@@ -279,47 +279,89 @@ class Geometry {
 		this._vertexData[bufferNames.color] = data;
 	}
 
-	public inline function createInterleavedVertexData(stride:Int, interleavedDataStructure:Map<String, VertexInfo> = null):InterleavedVertexData {
+	public inline function createInterleavedVertexData(stride:Int, interleavedDataStructure:Map<String, VertexInfo> = null, fixedCapacity:Int = 0):InterleavedVertexData {
 		if (interleavedDataStructure == null) {
 			interleavedDataStructure = this.cloneDefaultInterleavedStructure();
 		}
-		var vertexData = InterleavedVertexData.create(stride, interleavedDataStructure);
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = InterleavedVertexData.createWithFixedCapacity(fixedCapacity, stride, interleavedDataStructure);
+
+		} else {
+			vertexData = InterleavedVertexData.create(stride, interleavedDataStructure);
+		}
 		this.setInterleavedVertexData(vertexData);
 		return vertexData;
 	}
 
-	public inline function createPositionData():FloatVertexData {
-		var vertexData = FloatVertexData.create(bufferNames.position, bufferVertexSizes.position);
+	public inline function createPositionData(fixedCapacity:Int = 0):FloatVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = FloatVertexData.createWithFixedCapacity(fixedCapacity, bufferNames.position, bufferVertexSizes.position);
+
+		} else {
+			vertexData = FloatVertexData.create(bufferNames.position, bufferVertexSizes.position);
+		}
 		this.setPositionData(vertexData);
 		return vertexData;
 	}
 
-	public inline function createNormalData():FloatVertexData {
-		var vertexData = FloatVertexData.create(bufferNames.normal, bufferVertexSizes.normal);
+	public inline function createNormalData(fixedCapacity:Int = 0):FloatVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = FloatVertexData.createWithFixedCapacity(fixedCapacity, bufferNames.normal, bufferVertexSizes.normal);
+
+		} else {
+			vertexData = FloatVertexData.create(bufferNames.normal, bufferVertexSizes.normal);
+		}
 		this.setNormalData(vertexData);
 		return vertexData;
 	}
 
-	public inline function createUVData():FloatVertexData {
-		var vertexData = FloatVertexData.create(bufferNames.uv, bufferVertexSizes.uv);
+	public inline function createUVData(fixedCapacity:Int = 0):FloatVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = FloatVertexData.createWithFixedCapacity(fixedCapacity, bufferNames.uv, bufferVertexSizes.uv);
+
+		} else {
+			vertexData = FloatVertexData.create(bufferNames.uv, bufferVertexSizes.uv);
+		}
 		this.setUVData(vertexData);
 		return vertexData;
 	}
 
-	public inline function createFloatColorData():FloatVertexData {
-		var vertexData = FloatVertexData.create(bufferNames.color, bufferVertexSizes.color);
+	public inline function createFloatColorData(fixedCapacity:Int = 0):FloatVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = FloatVertexData.createWithFixedCapacity(fixedCapacity, bufferNames.color, bufferVertexSizes.color);
+
+		} else {
+			vertexData = FloatVertexData.create(bufferNames.color, bufferVertexSizes.color);
+		}
 		this.setFloatColorData(vertexData);
 		return vertexData;
 	}
 
-	public inline function createByteColorData():UByteVertexData {
-		var vertexData = UByteVertexData.create(bufferNames.color, bufferVertexSizes.color);
+	public inline function createByteColorData(fixedCapacity:Int = 0):UByteVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = UByteVertexData.createWithFixedCapacity(fixedCapacity, bufferNames.color, bufferVertexSizes.color);
+
+		} else {
+			vertexData = UByteVertexData.create(bufferNames.color, bufferVertexSizes.color);
+		}
 		this.setByteColorData(vertexData);
 		return vertexData;
 	}
 
-	public inline function createIndexData():IndexData {
-		var indexData = IndexData.create();
+	public inline function createIndexData(fixedCapacity:Int = 0):IndexData {
+		var indexData = null;
+		if (fixedCapacity > 0) {
+			indexData = IndexData.createWithFixedCapacity(fixedCapacity);
+
+		} else {
+			indexData = IndexData.create();
+		}
 		this.setIndexData(indexData);
 		return indexData;
 	}

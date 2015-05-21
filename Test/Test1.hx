@@ -37,13 +37,14 @@ class Test1 extends Sprite {
 		_director = Director.create(openGLView);
 
 		// Create a new view and add it to the director
-		var view = new View();
+		var view = View.create();
 		view.backgroundColor = new Color(0.8, 0.8, 0.8);
 
 		// Create a camera and set it in the view
+		var cameraDistance:Float = 20.0;
 		var camera = Camera.create(view);
 		view.camera = camera;
-		camera.position = new Vector3D(0, 6, 10);
+		camera.position = new Vector3D(0, 0, cameraDistance);
 
 		// Create scene and add it to the view
 		var scene = Scene.create();
@@ -57,6 +58,7 @@ class Test1 extends Sprite {
 
 
 		var parent = Node3D.create();
+		parent.position = new Vector3D(0, 2.0, 0);
 		scene.addChild(parent);
 		//scene.zSortingEnabled = false;
 
@@ -73,25 +75,24 @@ class Test1 extends Sprite {
 
 		// Create sphere mesh node
 		var sphereNode = MeshNode.create(sphere, material);
-		sphereNode.position = new Vector3D(0.0, -0.7, -1.0);
+		sphereNode.position = new Vector3D(0.0, 0.0, -10.0);
 		parent.addChild(sphereNode);
 
 		// Create mesh node
 		var sphereNode2 = MeshNode.create(sphere, material);
-		sphereNode2.position = new Vector3D(0.7, -0.7, 0.7);
+		sphereNode2.position = new Vector3D(7.0, 0.0, 7.0);
 		parent.addChild(sphereNode2);
 
 		//var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
-		var texture:Texture2D = _director.textureCache.addTextureFromColor(new Color(1, 1, 0, 0.2));
+		var texture:Texture2D = _director.textureCache.addTextureFromColor(new Color(1, 1, 0.5, 0.8));
 		texture.retain();
 		var textureMaterial:Material = Material.create("test_texture");
 		textureMaterial.uniform("texture").texture = texture;
-		//textureMaterial.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
 		textureMaterial.transparent = true;
 
 		// Create mesh node
 		var sphereNode3 = MeshNode.create(sphere, textureMaterial);
-		sphereNode3.position = new Vector3D(-0.7, -0.7, 0.7);
+		sphereNode3.position = new Vector3D(-7.0, 0.0, 7.0);
 		parent.addChild(sphereNode3);
 
 		var sphereNode4 = null;
@@ -106,12 +107,12 @@ class Test1 extends Sprite {
 
 			// Create mesh node
 			sphereNode4 = MeshNode.create(sphere, textureMaterial2);
-			sphereNode4.position = new Vector3D(0.0, 1.0, 0.0);
+			sphereNode4.position = new Vector3D(0.0, 0.0, 0.0);
 			parent.addChild(sphereNode4);
 
 		});
 
-		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
+		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/Ciel-00.jpg");
 		planeTexture.retain();
 		var planeMaterial:Material = Material.create("test_texture");
 		planeMaterial.uniform("texture").texture = planeTexture;
@@ -119,8 +120,9 @@ class Test1 extends Sprite {
 		planeMaterial.depthTest = false;
 		planeMaterial.depthWrite = false;
 
-		var height = 10.0 * planeTexture.contentSize.height / planeTexture.contentSize.width;
-		var plane = Plane.create(10.0, height, 4, 4);
+		var visibleHeightAtOrigin = 2.0 * Math.tan(camera.fov * Math.PI / 360.0) * cameraDistance;
+		var visibleWidthAtOrigin = visibleHeightAtOrigin * planeTexture.contentSize.width / planeTexture.contentSize.height;
+		var plane = Plane.create(visibleWidthAtOrigin, visibleHeightAtOrigin, 4, 4);
 
 
 		// Create plane mesh node
@@ -136,6 +138,9 @@ class Test1 extends Sprite {
 		var rotation:Float = 0.0;
 		var t:Float = 0.0;
 		_director.on("pre_render", function () {
+
+
+
 			rotation += 180.0 / 60.0;
 			sphereNode.rotationX = rotation	;
 			sphereNode2.rotationX = rotation;
@@ -144,11 +149,11 @@ class Test1 extends Sprite {
 			if (sphereNode4 != null) {
 				sphereNode4.rotationZ = rotation;
 			}
-			parent.rotationY = rotation	;
+			parent.rotationY = rotation	* 0.5;
 
-			t += 1.0 / 60.0;
-			var theta:Float = Math.sin(0.5 * t * 2.0 * Math.PI) * 20.0;
-			planeNode.rotationX = theta;
+//			t += 1.0 / 60.0;
+//			var theta:Float = Math.sin(0.5 * t * 2.0 * Math.PI) * 20.0;
+//			planeNode.rotationX = theta;
 		});
 
 	}
