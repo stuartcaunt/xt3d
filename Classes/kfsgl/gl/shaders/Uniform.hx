@@ -308,12 +308,18 @@ class Uniform  {
 			this._hasBeenSet = true;
 
 			// Comparison of both arrays
-			// TODO Find a quick comparison method (the following kills perf on ios)
-//			if (value.toString() != this._floatArrayValue.toString()) {
+			var hasChanged = false;
+			var i = 0;
+			while (!hasChanged && i < value.length) {
+				hasChanged = (value[i] != this._floatArrayValue[i]);
+				i++;
+			}
+
+			if (hasChanged) {
 				// Copy array values
 				this._floatArrayValue = value.copy();
 				this._isDirty = true;
-//			}
+			}
 
 		}
 	}
@@ -322,13 +328,20 @@ class Uniform  {
 		this._hasBeenSet = true;
 
 		// Comparison of both matrices
-		// TODO Find a quick comparison method (the following kills perf on ios)
-//		if (value.rawData.toString() != this._matrixValue.rawData.toString()) {
+		var hasChanged = false;
+		var i = 0;
+		var valueRawData = value.rawData;
+		var matrixRawData = this._matrixValue.rawData;
+		while (!hasChanged && i < 16) {
+			hasChanged = (valueRawData[i] != matrixRawData[i]);
+			i++;
+		}
 
-			// Copy array values
+		if (hasChanged) {
+			// Copy matrix values
 			this._matrixValue.copyFrom(value);
 			this._isDirty = true;
-//		}
+		}
 	}
 
 	public inline function setTexture(value:Texture2D) {
