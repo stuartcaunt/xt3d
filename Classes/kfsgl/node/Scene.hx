@@ -1,5 +1,6 @@
 package kfsgl.node;
 
+import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 import kfsgl.node.Node3D;
 
@@ -14,6 +15,8 @@ class Scene extends Node3D {
 	private var _transparentObjects:Array<RenderObject>;
 	private var _zSortingStrategy:Int = KFGL.ZSortingAll;
 //	private var _lights:Array<Light>;
+
+	private var _borrowedChildren:Map<Node3D, Node3D> = new Map<Node3D, Node3D>();
 
 	// members
 	public static function create():Scene {
@@ -49,6 +52,13 @@ class Scene extends Node3D {
 		return this._transparentObjects;
 	}
 
+	public inline function get_zSortingStrategy():Int {
+		return this._zSortingStrategy;
+	}
+
+	public inline function set_zSortingStrategy(value:Int) {
+		return this._zSortingStrategy = value;
+	}
 
 
 	/* --------- Implementation --------- */
@@ -69,14 +79,6 @@ class Scene extends Node3D {
 		this._transparentObjects.push(object);
 	}
 
-	public inline function get_zSortingStrategy():Int {
-		return this._zSortingStrategy;
-	}
-
-	public inline function set_zSortingStrategy(value:Int) {
-		return this._zSortingStrategy = value;
-	}
-
 
 	/* --------- Scene graph --------- */
 
@@ -84,6 +86,35 @@ class Scene extends Node3D {
 		// Initialise arrays for transparent and opaque objects
 		this._opaqueObjects = new Array<RenderObject>();
 		this._transparentObjects = new Array<RenderObject>();
+	}
+
+	inline public function borrowChild(child:Node3D):Void {
+		// Keep reference to original parent
+		this._borrowedChildren.set(child, child.parent);
+
+		// Nullify parent
+		child.parent = null;
+
+		// Set parent to this
+		this.addChild(child);
+	}
+
+	inline public function returnBorrowedChild(child:Node3D):Void {
+		if (this._borrowedChildren.exists(child)) {
+			var parent = this._borrowedChildren.get(child);
+
+			// Remove child from scene graph
+			this.removeChild(child);
+
+			// Remove child from borrow children
+			this._borrowedChildren.remove(child);
+
+			// Replace original parent
+			child.parent = parent;
+
+		} else {
+			KF.Log("Borrowed child node did not exist in scene");
+		}
 	}
 
 

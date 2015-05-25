@@ -1,14 +1,6 @@
 TODO
 ====
 
-- Performance
-x   reuse Float32Array in Uniform.use
-x   Try fixed size Float32Array for vertex data
-  - Determine if array or matrix values are different (uniform.setMatrix)
-    - quick checksum?
-x   verify inline getters/setters
-x  - remove some matrices sent to gpu : rejected since we test which matrices are needed
-
 - Render texture
   - add .visit() method to Node3D to allow for cocos2d-like render to texture ?
    - rt.begin()
@@ -92,6 +84,13 @@ x Primitives
 x   plane
 x   sphere
 x material depth testing
+x Performance
+x   reuse Float32Array in Uniform.use
+x   Try fixed size Float32Array for vertex data
+x   Determine if array or matrix values are different (uniform.setMatrix)
+x   verify inline getters/setters
+x   remove some matrices sent to gpu : rejected since we test which matrices are needed
+
 
 
 NAMES

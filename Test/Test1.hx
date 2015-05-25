@@ -1,5 +1,7 @@
 package;
 
+import kfsgl.utils.Size;
+import kfsgl.textures.RenderTexture;
 import kfsgl.primitives.Plane;
 import kfsgl.primitives.Plane;
 import kfsgl.gl.KFGL;
@@ -37,29 +39,19 @@ class Test1 extends Sprite {
 		_director = Director.create(openGLView);
 
 		// Create a new view and add it to the director
-		var view = View.create();
+		var view = View.createBasic3D();
 		view.backgroundColor = new Color(0.8, 0.8, 0.8);
 
 		// Create a camera and set it in the view
 		var cameraDistance:Float = 20.0;
-		var camera = Camera.create(view);
-		view.camera = camera;
-		camera.position = new Vector3D(0, 0, cameraDistance);
-
-		// Create scene and add it to the view
-		var scene = Scene.create();
-		view.scene = scene;
-
-		// Add camera to scene
-		scene.addChild(camera);
+		view.camera.position = new Vector3D(0, 0, cameraDistance);
 
 		// Add view to director
 		_director.addView(view);
 
-
 		var parent = Node3D.create();
 		parent.position = new Vector3D(0, 2.0, 0);
-		scene.addChild(parent);
+		view.scene.addChild(parent);
 		//scene.zSortingEnabled = false;
 
 		// create geometries
@@ -120,14 +112,14 @@ class Test1 extends Sprite {
 		planeMaterial.depthTest = false;
 		planeMaterial.depthWrite = false;
 
-		var visibleHeightAtOrigin = 2.0 * Math.tan(camera.fov * Math.PI / 360.0) * cameraDistance;
+		var visibleHeightAtOrigin = 2.0 * Math.tan(view.camera.fov * Math.PI / 360.0) * cameraDistance;
 		var visibleWidthAtOrigin = visibleHeightAtOrigin * planeTexture.contentSize.width / planeTexture.contentSize.height;
 		var plane = Plane.create(visibleWidthAtOrigin, visibleHeightAtOrigin, 4, 4);
 
 
 		// Create plane mesh node
 		var planeNode = MeshNode.create(plane, planeMaterial);
-		scene.addChild(planeNode);
+		view.scene.addChild(planeNode);
 
 // custom traversal
 //		scene.traverse(function (node) {
@@ -154,6 +146,12 @@ class Test1 extends Sprite {
 //			t += 1.0 / 60.0;
 //			var theta:Float = Math.sin(0.5 * t * 2.0 * Math.PI) * 20.0;
 //			planeNode.rotationX = theta;
+
+			// Render to texture
+			var size = Size.createIntSize(1024, 768);
+			var renderTexture = RenderTexture.create(size);
+			var renderTextureView = View.createBasic3D(size);
+			renderTextureView.renderNodeToTexture(sphereNode, renderTexture);
 		});
 
 	}

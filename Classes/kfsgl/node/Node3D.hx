@@ -11,7 +11,7 @@ class Node3D {
 	public var id(get, null):UInt;
 	public var visible(get, set):Bool;
 	public var excluded(get, set):Bool;
-	public var parent(get, null):Node3D;
+	public var parent(get, set):Node3D;
 	public var position(get, set):Vector3D;
 	public var worldPosition(get, null):Vector3D;
 	public var matrix(get, set):Matrix3D;
@@ -101,6 +101,11 @@ class Node3D {
 
 	private inline function get_parent():Node3D {
 		return this._parent;
+	}
+
+	private inline function set_parent(value:Node3D):Node3D {
+		// Should only be used internally
+		return this._parent = value;
 	}
 
 	public inline function get_position():Vector3D {

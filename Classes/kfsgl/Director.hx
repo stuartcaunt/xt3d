@@ -13,11 +13,14 @@ import openfl.geom.Rectangle;
 class Director extends EventEmitter {
 
 	// properties
+	public static var current(get, null):Director;
+	public var renderer(get, null):Renderer;
 	public var openGLView(get_openGLView, set_openGLView):OpenGLView;
 	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
 	public var textureCache(get, null):TextureCache;
 
 	// members
+	private static var _current:Director = null;
 	private var _openGLView:OpenGLView;
 	private var _backgroundColor:Color = new Color(0.2, 0.2, 0.2);
 	private var _renderer:Renderer;
@@ -39,6 +42,8 @@ class Director extends EventEmitter {
 	public function init(openGLView:OpenGLView):Bool {
 		this.setOpenglView(openGLView);
 
+		this.makeCurrent();
+
 		return true;
 	}
 
@@ -51,6 +56,14 @@ class Director extends EventEmitter {
 
 	public inline function get_textureCache():TextureCache {
 		return this._textureCache;
+	}
+
+	public static inline function get_current():Director {
+		return _current;
+	}
+
+	public inline function get_renderer():Renderer {
+		return this._renderer;
 	}
 
 	public inline function get_openGLView():OpenGLView {
@@ -71,6 +84,10 @@ class Director extends EventEmitter {
 	}
 
 	/* --------- Implementation --------- */
+
+	public function makeCurrent():Void {
+		_current = this;
+	}
 
 	public function setOpenglView(openGLView:OpenGLView):Void {
 		this._openGLView = openGLView;

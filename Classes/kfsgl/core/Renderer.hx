@@ -157,9 +157,6 @@ class Renderer {
 
 			}
 
-
-			// Send custom-pre-render-pass event
-
 			// Render opaque objects
 			_stateManager.setBlending(KFGL.NoBlending);
 			this.renderObjects(scene.opaqueObjects, camera/*, scene.lights*/, false/*, overrideMaterial*/);
@@ -169,8 +166,6 @@ class Renderer {
 
 			// Prepare all common uniforms
 			UniformLib.instance().prepareUniforms();
-
-			// Send custom-post-render-pass event
 		}
 	}
 

@@ -1,5 +1,13 @@
 package kfsgl.core;
 
+import openfl.geom.Vector3D;
+import openfl.geom.Vector3D;
+import kfsgl.utils.errors.KFException;
+import kfsgl.node.Node3D;
+import kfsgl.node.Node3D;
+import kfsgl.utils.Color;
+import kfsgl.textures.RenderTexture;
+import kfsgl.utils.Size;
 import kfsgl.node.Scene;
 import openfl.geom.Rectangle;
 import kfsgl.utils.Color;
@@ -39,9 +47,56 @@ class View extends EventEmitter {
 		return object;
 	}
 
+	public static function createWithSize(size:Size<Int>):View {
+		var object = new View();
+
+		if (object != null && !(object.initWithSize(size))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createBasic3D(size:Size<Int> = null):View {
+		var object = new View();
+
+		if (object != null && !(object.initBasic3D(size))) {
+			object = null;
+		}
+
+		return object;
+	}
+
 	public function init():Bool {
 		// Set default viewport
 		setViewport(new Rectangle(0, 0, 500, 600));
+
+		return true;
+	}
+
+	public function initWithSize(size:Size<Int>):Bool {
+		// Set default viewport
+		setViewport(new Rectangle(0, 0, size.width, size.height));
+
+		return true;
+	}
+
+	public function initBasic3D(size:Size<Int> = null):Bool {
+		if (size == null) {
+			size = Size.createIntSize(500, 600);
+		}
+
+		// Set default viewport
+		setViewport(new Rectangle(0, 0, size.width, size.height));
+
+		// Create scene
+		this.scene = Scene.create();
+
+		// Create camera (by default already with perspective projection)
+		this.camera = Camera.create(this);
+
+		// Add camera to scene
+		this.scene.addChild(this.camera);
 
 		return true;
 	}
@@ -107,13 +162,63 @@ class View extends EventEmitter {
 
 	/* --------- Implementation --------- */
 
-	public function render(renderer:Renderer):Void {
+	public function render(renderer:Renderer = null):Void {
+		if (renderer == null) {
+			renderer = Director.current.renderer;
+		}
+
 		// Clear view
 		renderer.clear(viewport, backgroundColor);
 
 		// Render scene with camera
 		renderer.render(this.scene, this.camera);
 	}
+
+	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clearColor:Color = null, renderer:Renderer = null):Void {
+		if (this.scene == null) {
+			throw new KFException("CannotRenderWithNullScene", "Cannot render to texture with a null Scene for the View");
+
+		}
+
+		// Take temporary ownership of the node
+		this.scene.borrowChild(node);
+
+		// Make of copy of original position
+		var originalPosition = node.position;
+
+		// Set node matrix to identity matrix
+		node.position = new Vector3D();
+
+		// Render node and children to texture
+		this.renderToTexture(renderTexture, clearColor, renderer);
+
+		// Replace node in original heirarchy
+		this.scene.returnBorrowedChild(node);
+
+		// Put back origin matrix
+		node.position = originalPosition;
+	}
+
+	public function renderToTexture(renderTexture:RenderTexture, clearColor:Color = null, renderer:Renderer = null):Void {
+
+		if (renderer == null) {
+			renderer = Director.current.renderer;
+		}
+
+		// Clear and initialise render to texture
+		if (clearColor == null) {
+			renderTexture.begin();
+		} else {
+			renderTexture.beginWithClear(clearColor);
+		}
+
+		// Render scene with camera
+		renderer.render(this.scene, this.camera);
+
+		// Terminate rendering to texture
+		renderTexture.end();
+	}
+
 
 
 	public inline function setDisplayRect(displayRect:Rectangle) {

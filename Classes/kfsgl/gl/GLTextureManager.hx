@@ -137,7 +137,9 @@ class GLTextureManager {
 			this.handleTextureParams(texture);
 
 			// Upload image data
-			this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
+			if (texture.bitmapData != null) {
+				this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
+			}
 
 			// Mipmapping
 			if (texture.generateMipMaps) {

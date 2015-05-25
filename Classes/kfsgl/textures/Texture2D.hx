@@ -36,6 +36,8 @@ import kfsgl.utils.CountedObject;
 	public var uvScaleOffset(get, null):Array<Float>;
 
 	// members
+	private static var ID_COUNTER = 0;
+	private var _id:Int = ID_COUNTER++;
 	private var _name:String;
 	private var _contentSize:Size<Int>;
 	private var _pixelsWidth:Int;
@@ -60,6 +62,16 @@ import kfsgl.utils.CountedObject;
 
 	/** helper object */
 	private static var _sOrigin:Point = new Point();
+
+	public static function createEmpty(width:Int, height:Int, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+		var object = new Texture2D();
+
+		if (object != null && !(object.initEmpty(width, height, textureOptions, textureManager))) {
+			object = null;
+		}
+
+		return object;
+	}
 
 	public static function createFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
 		var object = new Texture2D();
@@ -103,6 +115,35 @@ import kfsgl.utils.CountedObject;
 		return object;
 	}
 
+	public function initEmpty(width:Int, height:Int, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+		this._name = "empty-texture-" + this._id;
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
+
+		var size = new Size<Int>();
+		this._contentSize = Size.createIntSize(width, height);
+
+		// Create power-of-two bitmap data
+		if (this._forcePOT) {
+			this._pixelsWidth = this.getNextPOT(this._contentSize.width);
+			this._pixelsHeight = this.getNextPOT(this._contentSize.height);
+			this._uvScaleX = this._contentSize.width / this._pixelsWidth;
+			this._uvScaleY = this._contentSize.height / this._pixelsHeight;
+		}
+
+		// Upload texture immediately if we have a texture manager
+		if (textureManager != null) {
+			textureManager.uploadTexture(this);
+		}
+
+		this._isReady = true;
+		this._isDirty = false;
+
+		return true;
+	}
+
+
 
 	public function initFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
 		this._name = imagePath;
@@ -129,6 +170,7 @@ import kfsgl.utils.CountedObject;
 
 		return true;
 	}
+
 
 #if js
 	public function initFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Bool {
