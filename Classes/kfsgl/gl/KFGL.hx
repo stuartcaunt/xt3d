@@ -47,7 +47,13 @@ class KFGL {
 	public static inline var Texture2DPixelFormat_PVRTC2:Int = 9;
 
 
-	// MATERIAL CONSTANTS
+	public static inline var DepthStencilFormatNone:Int = 0;
+	public static inline var DepthStencilFormatDepth:Int = 1;
+	public static inline var DepthStencilFormatStencil:Int = 2;
+	public static inline var DepthStencilFormatDepthAndStencil:Int = 3;
+
+
+// MATERIAL CONSTANTS
 
 	// Tells a material which side of a geometry is to be rendered
 	public static inline var FrontSide:Int = 0;

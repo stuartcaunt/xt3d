@@ -137,9 +137,7 @@ class GLTextureManager {
 			this.handleTextureParams(texture);
 
 			// Upload image data
-			if (texture.bitmapData != null) {
-				this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
-			}
+			this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
 
 			// Mipmapping
 			if (texture.generateMipMaps) {
@@ -161,38 +159,33 @@ class GLTextureManager {
 
 	private function uploadImageData(bitmapData:BitmapData, textureWidth:Int, textureHeight:Int, pixelFormat:Int):Void {
 
-//#if js
-//		var byteArray = ByteArray.__ofBuffer (@:privateAccess (bitmapData.__image).data.buffer);
-//		var source = new UInt8Array(byteArray.length);
-//		byteArray.position = 0;
-//
-//		var i:Int = 0;
-//		while (byteArray.position < byteArray.length) {
-//			source[i] = byteArray.readUnsignedByte ();
-//			i++;
-//		}
-//#else
-		var byteArray = @:privateAccess (bitmapData.__image).data.buffer;
-		var source = new UInt8Array(byteArray);
-//#end
-
-
-		var formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
-
-		var bitsPerPixel:Int = this.getBitsPerPixelForFormat(pixelFormat);
-		var bytesPerRow:Int = Std.int(textureWidth * bitsPerPixel / 8);
-
-		if(bytesPerRow % 8 == 0) {
-			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 8);
-
-		} else if(bytesPerRow % 4 == 0) {
-			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4);
-
-		} else if(bytesPerRow % 2 == 0) {
-			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 2);
+		var formattedDataSource;
+		if (bitmapData == null) {
+			formattedDataSource = null;
 
 		} else {
-			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
+
+			var byteArray = @:privateAccess (bitmapData.__image).data.buffer;
+			var source = new UInt8Array(byteArray);
+
+
+			formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
+
+			var bitsPerPixel:Int = this.getBitsPerPixelForFormat(pixelFormat);
+			var bytesPerRow:Int = Std.int(textureWidth * bitsPerPixel / 8);
+
+			if(bytesPerRow % 8 == 0) {
+				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 8);
+
+			} else if(bytesPerRow % 4 == 0) {
+				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4);
+
+			} else if(bytesPerRow % 2 == 0) {
+				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 2);
+
+			} else {
+				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
+			}
 		}
 
 		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {

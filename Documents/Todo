@@ -2,11 +2,19 @@ TODO
 ====
 
 - Render texture
-  - add .visit() method to Node3D to allow for cocos2d-like render to texture ?
-   - rt.begin()
-     node.visit();
-     rt.end();
-  - may be over-simplified since we have more need of camera in 3D
+  - profile in iOS
+  - improve demo
+  - handle gl.clear better (states)
+  - handle depth/stencil/color clear better and change resetFrameBuffer in renderer
+  - figure out ios problem with stencil buffer
+  - remove renderTexture.end
+
+- Architecture
+  - remove passing textureManager/bufferManager etc : get from current director/renderer
+
+- Optimisations
+  - FrameBuffer/RenderBuffer Manager to avoid calling when no change occurs
+    - could be difficult with OpenglView
 
 - schedule callbacks in nodes (update with dt)
 

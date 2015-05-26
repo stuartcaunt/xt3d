@@ -125,6 +125,10 @@ class Director extends EventEmitter {
 		// send pre-render event (custom updates before rendering)
 		this.emit("pre_render");
 
+		// Reset frame buffer
+		// TODO : clean this and the clear function up
+		_renderer.resetFrameBuffer();
+
 		// Clear context wil full rectangle
 		_renderer.clear(displayRect, backgroundColor);
 

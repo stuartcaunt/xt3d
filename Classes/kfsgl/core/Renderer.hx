@@ -1,5 +1,8 @@
 package kfsgl.core;
 
+import openfl.gl.GLRenderbuffer;
+import openfl.gl.GLFramebuffer;
+import kfsgl.gl.GLFrameBufferManager;
 import kfsgl.utils.KF;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.gl.GLBufferManager;
@@ -24,6 +27,7 @@ class Renderer {
 
 	// properties
 	public var textureManager(get, null):GLTextureManager;
+	public var frameBufferManager(get, null):GLFrameBufferManager;
 	public var sortingEnabled(get, set):Bool;
 
 
@@ -32,6 +36,7 @@ class Renderer {
 	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
 	private var _textureManager:GLTextureManager;
+	private var _frameBufferManager:GLFrameBufferManager;
 	private var _needsStateInit:Bool = true;
 
 	private var _viewport:Rectangle;
@@ -40,6 +45,9 @@ class Renderer {
 	private var _currentProgram:ShaderProgram = null;
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;
 	private var _sortingEnabled:Bool = true;
+
+	var _screenFrameBuffer:GLFramebuffer = null;
+	var _screenRenderBuffer:GLRenderbuffer = null;
 
 	public static function create():Renderer {
 		var object = new Renderer();
@@ -57,10 +65,16 @@ class Renderer {
 		this._bufferManager = GLBufferManager.create();
 		this._attributeManager = GLAttributeManager.create();
 		this._textureManager = GLTextureManager.create();
+		this._frameBufferManager = GLFrameBufferManager.create();
 
 		// Build all shaders
 		ShaderManager.instance().loadDefaultShaders(this._textureManager);
 
+#if ios
+		// Keep reference to screen frame and render buffers - these are not null for iOS
+		this._screenFrameBuffer = new GLFramebuffer(GL.version, GL.getParameter(GL.FRAMEBUFFER_BINDING));
+		this._screenRenderBuffer = new GLRenderbuffer(GL.version, GL.getParameter(GL.RENDERBUFFER_BINDING));
+#end
 		return true;
 	}
 
@@ -75,6 +89,10 @@ class Renderer {
 		return this._textureManager;
 	}
 
+	public inline function get_frameBufferManager():GLFrameBufferManager {
+		return this._frameBufferManager;
+	}
+
 	public inline function get_sortingEnabled():Bool {
 		return this._sortingEnabled;
 	}
@@ -85,6 +103,13 @@ class Renderer {
 
 
 	// Implementation
+
+	public function resetFrameBuffer():Void {
+
+		// Reset frame and render buffer
+		this._frameBufferManager.setFrameBuffer(this._screenFrameBuffer);
+		this._frameBufferManager.setRenderBuffer(this._screenRenderBuffer);
+	}
 
 	public function clear(viewport:Rectangle, color:Color) {
 		// Set the viewport
@@ -98,7 +123,8 @@ class Renderer {
 		GL.clearColor(color.red, color.green, color.blue, 1.0);
 
 		// clear buffer bits
-		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+		// TODO : use state management on colors/depth values : see cocos2d
+		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT | GL.STENCIL_BUFFER_BIT);
 	}
 
 

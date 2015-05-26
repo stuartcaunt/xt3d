@@ -104,8 +104,19 @@ class Test1 extends Sprite {
 
 		});
 
-		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/Ciel-00.jpg");
-		planeTexture.retain();
+		// Create rendertexture and view
+		var size = Size.createIntSize(1024, 768);
+		var renderTexture = RenderTexture.create(size);
+		var renderTextureView = View.createBasic3D(size);
+
+
+
+		var skyTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/Ciel-00.jpg");
+		skyTexture.retain();
+
+
+		var planeTexture = renderTexture;
+
 		var planeMaterial:Material = Material.create("test_texture");
 		planeMaterial.uniform("texture").texture = planeTexture;
 		planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
@@ -148,9 +159,6 @@ class Test1 extends Sprite {
 //			planeNode.rotationX = theta;
 
 			// Render to texture
-			var size = Size.createIntSize(1024, 768);
-			var renderTexture = RenderTexture.create(size);
-			var renderTextureView = View.createBasic3D(size);
 			renderTextureView.renderNodeToTexture(sphereNode, renderTexture);
 		});
 

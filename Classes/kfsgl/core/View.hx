@@ -190,7 +190,7 @@ class View extends EventEmitter {
 		node.position = new Vector3D();
 
 		// Render node and children to texture
-		this.renderToTexture(renderTexture, clearColor, renderer);
+		this.renderToTexture(renderTexture, 0, renderer);
 
 		// Replace node in original heirarchy
 		this.scene.returnBorrowedChild(node);
@@ -199,18 +199,19 @@ class View extends EventEmitter {
 		node.position = originalPosition;
 	}
 
-	public function renderToTexture(renderTexture:RenderTexture, clearColor:Color = null, renderer:Renderer = null):Void {
+	public function renderToTexture(renderTexture:RenderTexture, clearFlags:Int = 0, renderer:Renderer = null):Void {
 
 		if (renderer == null) {
 			renderer = Director.current.renderer;
 		}
 
+		// Bind to render texture frame buffer
+		renderTexture.begin();
+
 		// Clear and initialise render to texture
-		if (clearColor == null) {
-			renderTexture.begin();
-		} else {
-			renderTexture.beginWithClear(clearColor);
-		}
+		//if (clearFlags == 0) {
+			renderer.clear(viewport, backgroundColor);
+		//}
 
 		// Render scene with camera
 		renderer.render(this.scene, this.camera);

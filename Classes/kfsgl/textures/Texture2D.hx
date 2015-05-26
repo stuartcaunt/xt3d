@@ -58,7 +58,7 @@ import kfsgl.utils.CountedObject;
 	private var _glTexture:GLTexture = null;
 	private var _bitmapData:BitmapData = null;
 	private var _isReady:Bool = false;
-	private var _isDirty:Bool = false;
+	private var _isDirty:Bool = true;
 
 	/** helper object */
 	private static var _sOrigin:Point = new Point();
@@ -132,13 +132,15 @@ import kfsgl.utils.CountedObject;
 			this._uvScaleY = this._contentSize.height / this._pixelsHeight;
 		}
 
-		// Upload texture immediately if we have a texture manager
+		// Create texture immediately if we have a texture manager
 		if (textureManager != null) {
 			textureManager.uploadTexture(this);
+			this._isDirty = false;
+		} else {
+			this._isDirty = true;
 		}
 
 		this._isReady = true;
-		this._isDirty = false;
 
 		return true;
 	}
