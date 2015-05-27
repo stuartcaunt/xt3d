@@ -3,11 +3,12 @@ TODO
 
 - Render texture
   - profile in iOS
-  - improve demo
+x   improve demo
   - handle gl.clear better (states)
   - handle depth/stencil/color clear better and change resetFrameBuffer in renderer
   - figure out ios problem with stencil buffer
   - remove renderTexture.end
+  - transparent bg clear color / general problem with opacity
 
 - Architecture
   - remove passing textureManager/bufferManager etc : get from current director/renderer

@@ -15,7 +15,8 @@ class RenderTexture extends Texture2D {
 	// members
 	private var _frameBuffer:GLFramebuffer = null;
 	private var _depthStencilRenderBuffer:GLRenderbuffer = null;
-	private var _depthStencilFormat:Int = KFGL.DepthStencilFormatDepthAndStencil;
+//	private var _depthStencilFormat:Int = KFGL.DepthStencilFormatDepthAndStencil;
+	private var _depthStencilFormat:Int = KFGL.DepthStencilFormatDepth;
 
 	public static function create(size:Size<Int>, textureOptions:TextureOptions = null):RenderTexture {
 		var object = new RenderTexture();
@@ -44,6 +45,11 @@ class RenderTexture extends Texture2D {
 		if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
 			this.createFrameAndRenderBuffer();
 			this._isDirty = false;
+
+			// Modify uvScaling to invert the image in y
+			this._uvOffsetY = (1.0 - this._uvOffsetY) * this._uvScaleY;
+			this._uvScaleY *= -1.0;
+
 		}
 
 		return retval;
@@ -89,12 +95,6 @@ class RenderTexture extends Texture2D {
 			// Generate render buffer for depth and stencil
 			this._depthStencilRenderBuffer = frameBufferManager.createRenderBuffer();
 
-//#if ios
-//			GL.renderbufferStorage(GL.RENDERBUFFER, 0x88F0, this._pixelsWidth, this._pixelsHeight);
-//#else
-//			GL.renderbufferStorage(GL.RENDERBUFFER, GL.RGBA, this._pixelsWidth, this._pixelsHeight);
-//#end
-
 			if (this._depthStencilFormat == KFGL.DepthStencilFormatDepth) {
 				GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, this._pixelsWidth, this._pixelsHeight);
 				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
@@ -104,23 +104,22 @@ class RenderTexture extends Texture2D {
 				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 
 			} else {
-				GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_STENCIL, this._pixelsWidth, this._pixelsHeight);
 #if ios
+				GL.renderbufferStorage(GL.RENDERBUFFER, 0x88F0, this._pixelsWidth, this._pixelsHeight);
 				// TODO : not working in ios with stencil
 				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
-//				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
+				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 #else
+				GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_STENCIL, this._pixelsWidth, this._pixelsHeight);
 				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 #end
 			}
 		}
 
-
 		var frameBufferStatus = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
 		if (frameBufferStatus != GL.FRAMEBUFFER_COMPLETE) {
 			KF.Error("Could not create complete framebuffer object with render texture");
 		}
-
 	}
 
 	public function begin() {

@@ -211,6 +211,7 @@ class Node3D {
 
 	public inline function removeChild(child:Node3D):Void {
 		this._children.remove(child);
+		child._parent = null;
 	}
 
 

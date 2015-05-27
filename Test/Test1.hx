@@ -104,19 +104,10 @@ class Test1 extends Sprite {
 
 		});
 
-		// Create rendertexture and view
-		var size = Size.createIntSize(1024, 768);
-		var renderTexture = RenderTexture.create(size);
-		var renderTextureView = View.createBasic3D(size);
 
 
-
-		var skyTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/Ciel-00.jpg");
-		skyTexture.retain();
-
-
-		var planeTexture = renderTexture;
-
+		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/Ciel-00.jpg");
+		planeTexture.retain();
 		var planeMaterial:Material = Material.create("test_texture");
 		planeMaterial.uniform("texture").texture = planeTexture;
 		planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
@@ -131,6 +122,26 @@ class Test1 extends Sprite {
 		// Create plane mesh node
 		var planeNode = MeshNode.create(plane, planeMaterial);
 		view.scene.addChild(planeNode);
+
+
+		// Create rendertexture and view
+		var size = Size.createIntSize(640, 480);
+		var renderTexture = RenderTexture.create(size);
+		var renderTextureView = View.createBasic3D(size);
+		//renderTextureView.scene = view.scene;
+		renderTextureView.backgroundColor = new Color(0.5, 0.5, 0.5, 0.8);
+		renderTextureView.camera.position = new Vector3D(0.0, 20.0, 20.0);
+		var renderMaterial:Material = Material.create("test_texture");
+		renderMaterial.uniform("texture").texture = renderTexture;
+		renderMaterial.uniform("uvScaleOffset").floatArrayValue = renderTexture.uvScaleOffset;
+		//renderMaterial.opacity = 0.7;
+		//renderMaterial.transparent = true;
+		var renderPlane = Plane.create(8, 6, 4, 4);
+		var renderNode = MeshNode.create(renderPlane, renderMaterial);
+		renderNode.position = new Vector3D(0.0, -5.0, 0.0);
+		renderNode.rotationX = -70.0;
+		view.scene.addChild(renderNode);
+
 
 // custom traversal
 //		scene.traverse(function (node) {
@@ -159,7 +170,8 @@ class Test1 extends Sprite {
 //			planeNode.rotationX = theta;
 
 			// Render to texture
-			renderTextureView.renderNodeToTexture(sphereNode, renderTexture);
+			renderTextureView.renderNodeToTexture(parent, renderTexture);
+			//renderTextureView.renderToTexture(renderTexture);
 		});
 
 	}

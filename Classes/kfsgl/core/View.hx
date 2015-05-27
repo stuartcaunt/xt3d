@@ -90,13 +90,13 @@ class View extends EventEmitter {
 		setViewport(new Rectangle(0, 0, size.width, size.height));
 
 		// Create scene
-		this.scene = Scene.create();
+		this._scene = Scene.create();
 
 		// Create camera (by default already with perspective projection)
-		this.camera = Camera.create(this);
+		this._camera = Camera.create(this);
 
 		// Add camera to scene
-		this.scene.addChild(this.camera);
+		this._scene.addChild(this._camera);
 
 		return true;
 	}
@@ -148,7 +148,8 @@ class View extends EventEmitter {
 	}
 
 	public inline function set_scene(value:Scene) {
-		return this._scene = value;
+		this.setScene(value);
+		return this._scene;
 	}
 
 	public inline function get_camera():Camera {
@@ -161,6 +162,15 @@ class View extends EventEmitter {
 
 
 	/* --------- Implementation --------- */
+
+	public function setScene(scene:Scene):Void {
+		if (this._camera != null && this._camera.parent == this._scene) {
+			this._scene.removeChild(this._camera);
+
+			this._scene = scene;
+		}
+
+	}
 
 	public function render(renderer:Renderer = null):Void {
 		if (renderer == null) {

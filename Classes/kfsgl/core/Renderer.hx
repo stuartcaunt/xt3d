@@ -120,7 +120,7 @@ class Renderer {
 		}
 
 		// Clear color
-		GL.clearColor(color.red, color.green, color.blue, 1.0);
+		GL.clearColor(color.red, color.green, color.blue, color.alpha);
 
 		// clear buffer bits
 		// TODO : use state management on colors/depth values : see cocos2d
