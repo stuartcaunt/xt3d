@@ -115,6 +115,16 @@ import kfsgl.utils.CountedObject;
 		return object;
 	}
 
+	public static function createFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+		var object = new Texture2D();
+
+		if (object != null && !(object.initFromBitmapData(bitmapData, textureOptions, textureManager))) {
+			object = null;
+		}
+
+		return object;
+	}
+
 	public function initEmpty(width:Int, height:Int, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
 		this._name = "empty-texture-" + this._id;
 
@@ -252,6 +262,26 @@ import kfsgl.utils.CountedObject;
 
 		return true;
 	}
+
+	public function initFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+		this._name = "ditmap-data-texture-" + this._id;
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
+
+		// Handle the bitmap data
+		this.handleBitmapData(bitmapData);
+
+		// Upload texture immediately if we have a texture manager
+		if (textureManager != null) {
+			textureManager.uploadTexture(this);
+		}
+
+		this._isReady = true;
+
+		return true;
+	}
+
 
 	public function new() {
 		super();

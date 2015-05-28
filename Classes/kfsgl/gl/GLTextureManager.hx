@@ -170,22 +170,22 @@ class GLTextureManager {
 
 
 			formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
+		}
 
-			var bitsPerPixel:Int = this.getBitsPerPixelForFormat(pixelFormat);
-			var bytesPerRow:Int = Std.int(textureWidth * bitsPerPixel / 8);
+		var bitsPerPixel:Int = this.getBitsPerPixelForFormat(pixelFormat);
+		var bytesPerRow:Int = Std.int(textureWidth * bitsPerPixel / 8);
 
-			if(bytesPerRow % 8 == 0) {
-				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 8);
+		if(bytesPerRow % 8 == 0) {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 8);
 
-			} else if(bytesPerRow % 4 == 0) {
-				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4);
+		} else if(bytesPerRow % 4 == 0) {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 4);
 
-			} else if(bytesPerRow % 2 == 0) {
-				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 2);
+		} else if(bytesPerRow % 2 == 0) {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 2);
 
-			} else {
-				GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
-			}
+		} else {
+			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
 		}
 
 		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {

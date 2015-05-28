@@ -129,17 +129,17 @@ class Test1 extends Sprite {
 		var renderTexture = RenderTexture.create(size);
 		var renderTextureView = View.createBasic3D(size);
 		//renderTextureView.scene = view.scene;
-		renderTextureView.backgroundColor = new Color(0.5, 0.5, 0.5, 0.8);
-		renderTextureView.camera.position = new Vector3D(0.0, 20.0, 20.0);
+		renderTextureView.backgroundColor = new Color(0.5, 0.5, 0.5, 0.1);
+		renderTextureView.camera.position = new Vector3D(0.0, 4.0, 20.0);
 		var renderMaterial:Material = Material.create("test_texture");
 		renderMaterial.uniform("texture").texture = renderTexture;
 		renderMaterial.uniform("uvScaleOffset").floatArrayValue = renderTexture.uvScaleOffset;
 		//renderMaterial.opacity = 0.7;
-		//renderMaterial.transparent = true;
+		renderMaterial.transparent = true;
 		var renderPlane = Plane.create(8, 6, 4, 4);
 		var renderNode = MeshNode.create(renderPlane, renderMaterial);
-		renderNode.position = new Vector3D(0.0, -5.0, 0.0);
-		renderNode.rotationX = -70.0;
+		renderNode.position = new Vector3D(0.0, -5.0, 2.0);
+		//renderNode.rotationX = -70.0;
 		view.scene.addChild(renderNode);
 
 

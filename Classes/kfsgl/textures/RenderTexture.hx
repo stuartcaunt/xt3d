@@ -1,5 +1,6 @@
 package kfsgl.textures;
 
+import openfl.display.BitmapData;
 import kfsgl.gl.KFGL;
 import openfl.gl.GL;
 import openfl.gl.GLFramebuffer;
@@ -39,10 +40,13 @@ class RenderTexture extends Texture2D {
 			textureOptions.wrapS = KFGL.GL_REPEAT;
 			textureOptions.wrapT = KFGL.GL_REPEAT;
 			textureOptions.generateMipMaps = false;
+			//textureOptions.pixelFormat = KFGL.Texture2DPixelFormat_RGB888;
 		}
 
+		var bitmapData = new BitmapData(size.width, size.height, true, 0xFFFFFFFF);
 
-		if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
+		if ((retval = super.initFromBitmapData(bitmapData, textureOptions, null))) {
+		//if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
 			this.createFrameAndRenderBuffer();
 			this._isDirty = false;
 
@@ -127,19 +131,7 @@ class RenderTexture extends Texture2D {
 		var frameBufferManager = renderer.frameBufferManager;
 
 		frameBufferManager.setFrameBuffer(this._frameBuffer);
-
-// State manager?
-//		if (enableDepthAndStencil) {
-//			GL.enable (GL.DEPTH_TEST);
-//			GL.enable (GL.STENCIL_TEST);
-//		}
 	}
 
-	public function end() {
-//		var renderer = Director.current.renderer;
-//		var frameBufferManager = renderer.frameBufferManager;
-//
-//		frameBufferManager.setFrameBuffer(this._frameBuffer);
-	}
 
 }

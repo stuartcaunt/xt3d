@@ -7,6 +7,8 @@ void main() {
 
 #ifdef USE_TEXTURE
 	color *= texture2D(u_texture, v_uv);
+	//color.a += 0.3;
+
 #endif
 
 	gl_FragColor = color;

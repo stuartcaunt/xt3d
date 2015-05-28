@@ -225,9 +225,6 @@ class View extends EventEmitter {
 
 		// Render scene with camera
 		renderer.render(this.scene, this.camera);
-
-		// Terminate rendering to texture
-		renderTexture.end();
 	}
 
 
