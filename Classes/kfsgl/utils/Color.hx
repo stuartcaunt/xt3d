@@ -22,4 +22,12 @@ class Color  {
 		return "#" + StringTools.hex(Std.int(this.red * 255)) + StringTools.hex(Std.int(this.green * 255)) + StringTools.hex(Std.int(this.blue * 255)) + StringTools.hex(Std.int(this.alpha * 255));
 	}
 
+	public function equals(color:Color):Bool {
+		if (color == null) {
+			return false;
+		}
+
+		return color.red == this.red && color.green == this.green && color.blue == this.blue && color.alpha == this.alpha;
+	}
+
 }

@@ -104,27 +104,37 @@ class Renderer {
 
 	// Implementation
 
-	public function resetFrameBuffer():Void {
+	public function setFrameBuffer(frameBuffer:GLFramebuffer):Void {
 
-		// Reset frame and render buffer
-		this._frameBufferManager.setFrameBuffer(this._screenFrameBuffer);
-		this._frameBufferManager.setRenderBuffer(this._screenRenderBuffer);
+		if (frameBuffer == null) {
+			// Reset frame and render buffer
+			this._frameBufferManager.setFrameBuffer(this._screenFrameBuffer);
+			//this._frameBufferManager.setRenderBuffer(this._screenRenderBuffer);
+		} else {
+			this._frameBufferManager.setFrameBuffer(frameBuffer);
+		}
 	}
 
-	public function clear(viewport:Rectangle, color:Color) {
+	public function setViewport(viewport:Rectangle) {
 		// Set the viewport
 		if (_viewport == null || !_viewport.equals(viewport)) {
 			_viewport = viewport;
 			GL.viewport(Std.int (_viewport.x), Std.int (_viewport.y), Std.int (_viewport.width), Std.int (_viewport.height));
 			//KF.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
 		}
+	}
 
-		// Clear color
-		GL.clearColor(color.red, color.green, color.blue, color.alpha);
+	public function clear(color:Color, clearFlags:Int = 0) {
+		// Set clear flags
+		if (clearFlags == 0) {
+			clearFlags = GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT;
+		}
+
+		// Set clear color
+		this._stateManager.setClearColor(color);
 
 		// clear buffer bits
-		// TODO : use state management on colors/depth values : see cocos2d
-		GL.clear(GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT | GL.STENCIL_BUFFER_BIT);
+		GL.clear(clearFlags);
 	}
 
 

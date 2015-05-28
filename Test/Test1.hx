@@ -1,5 +1,6 @@
 package;
 
+import openfl.gl.GL;
 import kfsgl.utils.Size;
 import kfsgl.textures.RenderTexture;
 import kfsgl.primitives.Plane;
@@ -31,16 +32,19 @@ class Test1 extends Sprite {
 	public function new () {
 		super ();
 
+		var backgroundColor = new Color(0.8, 0.8, 0.8, 0.5);
+
 		// Create opengl view and as it as a child
 		var openGLView = new OpenGLView();
 		this.addChild(openGLView);
 
 		// Initialise director - one per application delegate
 		_director = Director.create(openGLView);
+		_director.backgroundColor = backgroundColor;
 
 		// Create a new view and add it to the director
 		var view = View.createBasic3D();
-		view.backgroundColor = new Color(0.8, 0.8, 0.8);
+		view.backgroundColor = backgroundColor;
 
 		// Create a camera and set it in the view
 		var cameraDistance:Float = 20.0;

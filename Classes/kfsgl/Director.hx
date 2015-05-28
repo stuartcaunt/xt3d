@@ -22,7 +22,7 @@ class Director extends EventEmitter {
 	// members
 	private static var _current:Director = null;
 	private var _openGLView:OpenGLView;
-	private var _backgroundColor:Color = new Color(0.2, 0.2, 0.2);
+	private var _backgroundColor:Color = new Color();
 	private var _renderer:Renderer;
 	private var _textureCache:TextureCache;
 	private var _views:Array<View> = new Array<View>();
@@ -126,11 +126,13 @@ class Director extends EventEmitter {
 		this.emit("pre_render");
 
 		// Reset frame buffer
-		// TODO : clean this and the clear function up
-		_renderer.resetFrameBuffer();
+		_renderer.setFrameBuffer(null);
 
-		// Clear context wil full rectangle
-		_renderer.clear(displayRect, backgroundColor);
+		// Set viewport with full rectangle
+		_renderer.setViewport(displayRect);
+
+		// Clear context
+		_renderer.clear(backgroundColor);
 
 		// Iterate over all views
 		for (view in _views) {

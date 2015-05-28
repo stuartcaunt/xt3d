@@ -12,6 +12,9 @@ import kfsgl.gl.GLTextureManager;
 class RenderTexture extends Texture2D {
 
 	// properties
+	public var frameBuffer(get, null):GLFramebuffer;
+	public var clearFlags(get, null):Int;
+
 
 	// members
 	private var _frameBuffer:GLFramebuffer = null;
@@ -43,10 +46,10 @@ class RenderTexture extends Texture2D {
 			//textureOptions.pixelFormat = KFGL.Texture2DPixelFormat_RGB888;
 		}
 
-		var bitmapData = new BitmapData(size.width, size.height, true, 0xFFFFFFFF);
+		//var bitmapData = new BitmapData(size.width, size.height, true, 0xFFFFFFFF);
 
-		if ((retval = super.initFromBitmapData(bitmapData, textureOptions, null))) {
-		//if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
+		//if ((retval = super.initFromBitmapData(bitmapData, textureOptions, null))) {
+		if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
 			this.createFrameAndRenderBuffer();
 			this._isDirty = false;
 
@@ -65,8 +68,28 @@ class RenderTexture extends Texture2D {
 	}
 
 
-
 	/* ----------- Properties ----------- */
+
+	public function get_frameBuffer():GLFramebuffer {
+		return this._frameBuffer;
+	}
+
+	public function get_clearFlags():Int {
+		var clearFlags = GL.COLOR_BUFFER_BIT;
+		if (this._depthStencilFormat == KFGL.DepthStencilFormatDepth) {
+			clearFlags |= GL.DEPTH_BUFFER_BIT;
+
+		} else if (this._depthStencilFormat == KFGL.DepthStencilFormatStencil) {
+			clearFlags |= GL.STENCIL_BUFFER_BIT;
+
+		} else if (this._depthStencilFormat == KFGL.DepthStencilFormatDepthAndStencil) {
+			clearFlags |= (GL.DEPTH_BUFFER_BIT | GL.STENCIL_BUFFER_BIT);
+		}
+
+		return clearFlags;
+	}
+
+
 
 	/* --------- Implementation --------- */
 
@@ -125,13 +148,5 @@ class RenderTexture extends Texture2D {
 			KF.Error("Could not create complete framebuffer object with render texture");
 		}
 	}
-
-	public function begin() {
-		var renderer = Director.current.renderer;
-		var frameBufferManager = renderer.frameBufferManager;
-
-		frameBufferManager.setFrameBuffer(this._frameBuffer);
-	}
-
 
 }

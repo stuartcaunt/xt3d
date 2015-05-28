@@ -177,14 +177,17 @@ class View extends EventEmitter {
 			renderer = Director.current.renderer;
 		}
 
+		// Set viewport with full rectangle
+		renderer.setViewport(viewport);
+
 		// Clear view
-		renderer.clear(viewport, backgroundColor);
+		renderer.clear(backgroundColor);
 
 		// Render scene with camera
 		renderer.render(this.scene, this.camera);
 	}
 
-	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clearColor:Color = null, renderer:Renderer = null):Void {
+	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clear:Bool = true, renderer:Renderer = null):Void {
 		if (this.scene == null) {
 			throw new KFException("CannotRenderWithNullScene", "Cannot render to texture with a null Scene for the View");
 
@@ -200,7 +203,7 @@ class View extends EventEmitter {
 		node.position = new Vector3D();
 
 		// Render node and children to texture
-		this.renderToTexture(renderTexture, 0, renderer);
+		this.renderToTexture(renderTexture, clear, renderer);
 
 		// Replace node in original heirarchy
 		this.scene.returnBorrowedChild(node);
@@ -209,19 +212,22 @@ class View extends EventEmitter {
 		node.position = originalPosition;
 	}
 
-	public function renderToTexture(renderTexture:RenderTexture, clearFlags:Int = 0, renderer:Renderer = null):Void {
+	public function renderToTexture(renderTexture:RenderTexture, clear:Bool = true, renderer:Renderer = null):Void {
 
 		if (renderer == null) {
 			renderer = Director.current.renderer;
 		}
 
 		// Bind to render texture frame buffer
-		renderTexture.begin();
+		renderer.setFrameBuffer(renderTexture.frameBuffer);
+
+		// Set viewport for render texture
+		renderer.setViewport(viewport);
 
 		// Clear and initialise render to texture
-		//if (clearFlags == 0) {
-			renderer.clear(viewport, backgroundColor);
-		//}
+		if (clear) {
+			renderer.clear(backgroundColor, renderTexture.clearFlags);
+		}
 
 		// Render scene with camera
 		renderer.render(this.scene, this.camera);

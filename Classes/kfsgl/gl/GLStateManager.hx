@@ -1,5 +1,6 @@
 package kfsgl.gl;
 
+import kfsgl.utils.Color;
 import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 import openfl.gl.GL;
@@ -14,6 +15,8 @@ class GLStateManager {
 	private var _oldBlendSrc:Int = -1;
 	private var _oldBlendDst:Int = -1;
 	private var _oldBlendingEnabled:Int = -1;
+
+	private var _clearColor:Color = null;
 
 	// Depth test
 	private var _oldDepthTest = false;
@@ -55,6 +58,8 @@ class GLStateManager {
 
 
 	public function setDefaultGLState() {
+		this.setClearColor(new Color());
+
 		// Depth test
 		this._oldDepthTest = false;
 		this.setDepthTest(true);
@@ -174,6 +179,13 @@ class GLStateManager {
 			this.setFrontFaceDirection(flipSided ? KFGL.GL_CW : KFGL.GL_CCW);
 
 			this._oldFlipSided = flipSided;
+		}
+	}
+
+	public inline function setClearColor(color:Color) {
+		if (!color.equals(this._clearColor)) {
+			GL.clearColor(color.red, color.green, color.blue, color.alpha);
+			this._clearColor = color;
 		}
 	}
 
