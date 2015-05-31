@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.textures.RenderTexture;
 import openfl.gl.GLRenderbuffer;
 import openfl.gl.GLFramebuffer;
 import kfsgl.gl.GLFrameBufferManager;
@@ -47,7 +48,7 @@ class Renderer {
 	private var _sortingEnabled:Bool = true;
 
 	var _screenFrameBuffer:GLFramebuffer = null;
-	var _screenRenderBuffer:GLRenderbuffer = null;
+//	var _screenRenderBuffer:GLRenderbuffer = null;
 
 	public static function create():Renderer {
 		var object = new Renderer();
@@ -73,7 +74,7 @@ class Renderer {
 #if ios
 		// Keep reference to screen frame and render buffers - these are not null for iOS
 		this._screenFrameBuffer = new GLFramebuffer(GL.version, GL.getParameter(GL.FRAMEBUFFER_BINDING));
-		this._screenRenderBuffer = new GLRenderbuffer(GL.version, GL.getParameter(GL.RENDERBUFFER_BINDING));
+//		this._screenRenderBuffer = new GLRenderbuffer(GL.version, GL.getParameter(GL.RENDERBUFFER_BINDING));
 #end
 		return true;
 	}
@@ -104,14 +105,20 @@ class Renderer {
 
 	// Implementation
 
-	public function setFrameBuffer(frameBuffer:GLFramebuffer):Void {
+	public function setRenderTarget(renderTarget:RenderTexture = null):Void {
 
-		if (frameBuffer == null) {
+		if (renderTarget == null) {
+			// Reset the color mask, by default alpha not renderered to screen
+			this._stateManager.setColorMask(true, true, true, false);
+
 			// Reset frame and render buffer
 			this._frameBufferManager.setFrameBuffer(this._screenFrameBuffer);
 			//this._frameBufferManager.setRenderBuffer(this._screenRenderBuffer);
+
 		} else {
-			this._frameBufferManager.setFrameBuffer(frameBuffer);
+			// Set the color mask to correctly render alpha
+			this._stateManager.setColorMask(true, true, true, true);
+			this._frameBufferManager.setFrameBuffer(renderTarget.frameBuffer);
 		}
 	}
 

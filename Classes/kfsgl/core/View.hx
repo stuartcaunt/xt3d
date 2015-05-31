@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import openfl.gl.GL;
 import openfl.geom.Vector3D;
 import openfl.geom.Vector3D;
 import kfsgl.utils.errors.KFException;
@@ -219,7 +220,7 @@ class View extends EventEmitter {
 		}
 
 		// Bind to render texture frame buffer
-		renderer.setFrameBuffer(renderTexture.frameBuffer);
+		renderer.setRenderTarget(renderTexture);
 
 		// Set viewport for render texture
 		renderer.setViewport(viewport);

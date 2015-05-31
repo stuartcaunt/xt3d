@@ -23,8 +23,6 @@ class GLFrameBufferManager {
 	}
 
 	public function init():Bool {
-// If we want to use unsigned int index arrays (in webgl):
-//var uintExtension = GL.getExtension('OES_element_index_uint');
 
 		return true;
 	}

@@ -43,12 +43,8 @@ class RenderTexture extends Texture2D {
 			textureOptions.wrapS = KFGL.GL_REPEAT;
 			textureOptions.wrapT = KFGL.GL_REPEAT;
 			textureOptions.generateMipMaps = false;
-			//textureOptions.pixelFormat = KFGL.Texture2DPixelFormat_RGB888;
 		}
 
-		//var bitmapData = new BitmapData(size.width, size.height, true, 0xFFFFFFFF);
-
-		//if ((retval = super.initFromBitmapData(bitmapData, textureOptions, null))) {
 		if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
 			this.createFrameAndRenderBuffer();
 			this._isDirty = false;

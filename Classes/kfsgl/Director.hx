@@ -112,21 +112,16 @@ class Director extends EventEmitter {
 
 		//KF.Log("render");
 
-		// Calculate time step
+		// TODO Calculate time step
 		var dt = 1.0 / 60.0;
 		_globalTime += dt;
 		UniformLib.instance().uniform("time").value = _globalTime;
 
-//		// TODO : remove this, just used to help debugging in chrome
-//		if (_globalTime < 2.0) {
-//			return;
-//		}
-
 		// send pre-render event (custom updates before rendering)
 		this.emit("pre_render");
 
-		// Reset frame buffer
-		_renderer.setFrameBuffer(null);
+		// Reset render target
+		_renderer.setRenderTarget(null);
 
 		// Set viewport with full rectangle
 		_renderer.setViewport(displayRect);

@@ -10,6 +10,12 @@ class KFGL {
 
 // GL STATE CONSTANTS
 
+
+	public static inline var RedBit:Int = 1 << 0;
+	public static inline var GreenBit:Int = 1 << 1;
+	public static inline var BlueBit:Int = 1 << 2;
+	public static inline var AlphaBit:Int = 1 << 3;
+
 	public static inline var CullFaceNone:Int = 0;
 	public static inline var CullFaceBack:Int = 1;
 	public static inline var CullFaceFront:Int = 2;

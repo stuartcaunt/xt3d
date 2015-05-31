@@ -32,7 +32,7 @@ class Test1 extends Sprite {
 	public function new () {
 		super ();
 
-		var backgroundColor = new Color(0.8, 0.8, 0.8, 0.5);
+		var backgroundColor = new Color(0.5, 0.8, 0.8, 0.5);
 
 		// Create opengl view and as it as a child
 		var openGLView = new OpenGLView();
@@ -118,6 +118,13 @@ class Test1 extends Sprite {
 		planeMaterial.depthTest = false;
 		planeMaterial.depthWrite = false;
 
+//		var planeTexture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/bunny.png");
+//		planeTexture.retain();
+//		var planeMaterial:Material = Material.create("test_texture");
+//		planeMaterial.uniform("texture").texture = planeTexture;
+//		planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
+//		planeMaterial.transparent = true;
+
 		var visibleHeightAtOrigin = 2.0 * Math.tan(view.camera.fov * Math.PI / 360.0) * cameraDistance;
 		var visibleWidthAtOrigin = visibleHeightAtOrigin * planeTexture.contentSize.width / planeTexture.contentSize.height;
 		var plane = Plane.create(visibleWidthAtOrigin, visibleHeightAtOrigin, 4, 4);
@@ -133,7 +140,7 @@ class Test1 extends Sprite {
 		var renderTexture = RenderTexture.create(size);
 		var renderTextureView = View.createBasic3D(size);
 		//renderTextureView.scene = view.scene;
-		renderTextureView.backgroundColor = new Color(0.5, 0.5, 0.5, 0.1);
+		renderTextureView.backgroundColor = new Color(0.0, 0.0, 0.0, 0.0);
 		renderTextureView.camera.position = new Vector3D(0.0, 4.0, 20.0);
 		var renderMaterial:Material = Material.create("test_texture");
 		renderMaterial.uniform("texture").texture = renderTexture;
@@ -142,7 +149,7 @@ class Test1 extends Sprite {
 		renderMaterial.transparent = true;
 		var renderPlane = Plane.create(8, 6, 4, 4);
 		var renderNode = MeshNode.create(renderPlane, renderMaterial);
-		renderNode.position = new Vector3D(0.0, -5.0, 2.0);
+		renderNode.position = new Vector3D(0.0, -5.0, 3.0);
 		//renderNode.rotationX = -70.0;
 		view.scene.addChild(renderNode);
 
@@ -175,7 +182,6 @@ class Test1 extends Sprite {
 
 			// Render to texture
 			renderTextureView.renderNodeToTexture(parent, renderTexture);
-			//renderTextureView.renderToTexture(renderTexture);
 		});
 
 	}

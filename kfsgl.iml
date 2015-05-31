@@ -29,5 +29,6 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="library" name="Lime 2,3,3" level="project" />
   </component>
 </module>

@@ -4,20 +4,17 @@ TODO
 - Render texture
 x   profile in iOS
 x   improve demo
-  - handle gl.clear better (states)
-  - handle depth/stencil/color clear better and change resetFrameBuffer in renderer
+x   handle gl.clear better (states)
+x   handle depth/stencil/color clear better and change resetFrameBuffer in renderer
   - figure out ios problem with stencil buffer
-  - remove renderTexture.end
-  - transparent bg clear color / general problem with opacity
-    - Problem is that texture alpha = 0.0 (or value of alpha if we use bitmap data to create texture)
+x   remove renderTexture.end
+x  - transparent bg clear color / general problem with opacity
+x    - Problem is that texture alpha = 0.0 (or value of alpha if we use bitmap data to create texture)
+x   FrameBuffer/RenderBuffer Manager to avoid calling when no change occurs
 
 
 - Architecture
   - remove passing textureManager/bufferManager etc : get from current director/renderer
-
-- Optimisations
-  - FrameBuffer/RenderBuffer Manager to avoid calling when no change occurs
-    - could be difficult with OpenglView
 
 - schedule callbacks in nodes (update with dt)
 
@@ -25,7 +22,10 @@ x   improve demo
 
 - remove all singletons?
   - use "current" director
+
 - modify opengl context
+  - remove openfl OpenGL view: use lime directly
+    - openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
   - control over depth/stencil
 
 

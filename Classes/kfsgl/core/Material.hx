@@ -44,7 +44,7 @@ class Material {
 	private var _transparent:Bool = false;
 
 	private var _blending:Int = KFGL.NormalBlending;
-	private var _blendSrc:Int = KFGL.GL_SRC_ALPHA;
+	private var _blendSrc:Int = KFGL.GL_ONE;
 	private var _blendDst:Int = KFGL.GL_ONE_MINUS_SRC_ALPHA;
 	private var _blendEquation:Int = KFGL.GL_FUNC_ADD;
 

@@ -17,6 +17,7 @@ class GLStateManager {
 	private var _oldBlendingEnabled:Int = -1;
 
 	private var _clearColor:Color = null;
+	private var _colorMask:UInt = 0;
 
 	// Depth test
 	private var _oldDepthTest = false;
@@ -58,7 +59,6 @@ class GLStateManager {
 
 
 	public function setDefaultGLState() {
-		this.setClearColor(new Color());
 
 		// Depth test
 		this._oldDepthTest = false;
@@ -69,6 +69,8 @@ class GLStateManager {
 		this._oldDepthWrite = false;
 		this.setDepthWrite(true);
 		GL.clearDepth(1.0);
+
+		this.setColorMask(true, true, true, false);
 
 		// Culling
 		this._oldCullFaceEnabled = false;
@@ -131,7 +133,7 @@ class GLStateManager {
 
 				} else /* KFGL.NormalBlending */ {
 					blendEquation = KFGL.GL_FUNC_ADD;
-					blendSrc = KFGL.GL_SRC_ALPHA;
+					blendSrc = KFGL.GL_ONE;
 					blendDst = KFGL.GL_ONE_MINUS_SRC_ALPHA;
 				}
 
@@ -183,10 +185,12 @@ class GLStateManager {
 	}
 
 	public inline function setClearColor(color:Color) {
-		if (!color.equals(this._clearColor)) {
+		// Note: HAVE to set clearColor every frame because opengfl GLRenderer sets this to another value
+		// TODO: remove openfl OpenglView
+		//if (!color.equals(this._clearColor)) {
 			GL.clearColor(color.red, color.green, color.blue, color.alpha);
 			this._clearColor = color;
-		}
+		//}
 	}
 
 	public inline function setDepthTest(depthTest) {
@@ -206,6 +210,19 @@ class GLStateManager {
 			GL.depthMask(depthWrite);
 
 			this._oldDepthWrite = depthWrite;
+		}
+	}
+
+	public inline function setColorMask(red:Bool, green:Bool, blue:Bool, alpha:Bool) {
+		var colorMask = 0;
+		colorMask |= red ? KFGL.RedBit : 0;
+		colorMask |= green ? KFGL.GreenBit : 0;
+		colorMask |= blue ? KFGL.BlueBit : 0;
+		colorMask |= alpha ? KFGL.AlphaBit : 0;
+		if (this._colorMask != colorMask) {
+			GL.colorMask(red, green, blue, alpha);
+
+			this._colorMask = colorMask;
 		}
 	}
 
