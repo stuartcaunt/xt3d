@@ -15,12 +15,10 @@ class RenderTexture extends Texture2D {
 	public var frameBuffer(get, null):GLFramebuffer;
 	public var clearFlags(get, null):Int;
 
-
 	// members
 	private var _frameBuffer:GLFramebuffer = null;
 	private var _depthStencilRenderBuffer:GLRenderbuffer = null;
-//	private var _depthStencilFormat:Int = KFGL.DepthStencilFormatDepthAndStencil;
-	private var _depthStencilFormat:Int = KFGL.DepthStencilFormatDepth;
+	private var _depthStencilFormat:Int;
 
 	public static function create(size:Size<Int>, textureOptions:TextureOptions = null):RenderTexture {
 		var object = new RenderTexture();
@@ -32,7 +30,7 @@ class RenderTexture extends Texture2D {
 		return object;
 	}
 
-	public function init(size:Size<Int>, textureOptions:TextureOptions = null):Bool {
+	public function init(size:Size<Int>, textureOptions:TextureOptions = null, depthStencilFormat:Int = KFGL.DepthStencilFormatDepth):Bool {
 		var retval;
 
 		if (textureOptions  == null) {
@@ -46,6 +44,8 @@ class RenderTexture extends Texture2D {
 		}
 
 		if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
+			this._depthStencilFormat = depthStencilFormat;
+
 			this.createFrameAndRenderBuffer();
 			this._isDirty = false;
 
@@ -128,14 +128,12 @@ class RenderTexture extends Texture2D {
 
 			} else {
 #if ios
+				// GL_DEPTH24_STENCIL8_OES = 0x88F0
 				GL.renderbufferStorage(GL.RENDERBUFFER, 0x88F0, this._pixelsWidth, this._pixelsHeight);
-				// TODO : not working in ios with stencil
-				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
-				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 #else
 				GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_STENCIL, this._pixelsWidth, this._pixelsHeight);
-				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 #end
+				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 			}
 		}
 

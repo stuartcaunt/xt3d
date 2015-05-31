@@ -1,17 +1,6 @@
 TODO
 ====
 
-- Render texture
-x   profile in iOS
-x   improve demo
-x   handle gl.clear better (states)
-x   handle depth/stencil/color clear better and change resetFrameBuffer in renderer
-  - figure out ios problem with stencil buffer
-x   remove renderTexture.end
-x  - transparent bg clear color / general problem with opacity
-x    - Problem is that texture alpha = 0.0 (or value of alpha if we use bitmap data to create texture)
-x   FrameBuffer/RenderBuffer Manager to avoid calling when no change occurs
-
 
 - Architecture
   - remove passing textureManager/bufferManager etc : get from current director/renderer
@@ -100,6 +89,16 @@ x   Try fixed size Float32Array for vertex data
 x   Determine if array or matrix values are different (uniform.setMatrix)
 x   verify inline getters/setters
 x   remove some matrices sent to gpu : rejected since we test which matrices are needed
+x Render texture
+x   profile in iOS
+x   improve demo
+x   handle gl.clear better (states)
+x   handle depth/stencil/color clear better and change resetFrameBuffer in renderer
+x   figure out ios problem with stencil buffer
+x   remove renderTexture.end
+x   transparent bg clear color / general problem with opacity
+x     Problem is that texture alpha = 0.0 (or value of alpha if we use bitmap data to create texture)
+x   FrameBuffer/RenderBuffer Manager to avoid calling when no change occurs
 
 
 
