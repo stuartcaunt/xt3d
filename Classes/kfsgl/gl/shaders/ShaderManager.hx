@@ -15,27 +15,23 @@ class ShaderManager {
 
 	private var _programs:Map<String,  ShaderProgram>;
 
-	private static var _instance:ShaderManager = null;
-
 	private var _desiredPrecision:String = KFGL.MEDIUM_PRECISION;
 	private var _precision:String;
 	private var _highPrecisionAvailable:Bool = true;
 	private var _mediumPrecisionAvailable:Bool = true;
 	private var _precisionAvailable:Bool = true;
 
-	public static function instance():ShaderManager {
-		if (_instance == null) {
-			_instance = new ShaderManager();
-			_instance.init();
+	public static function create():ShaderManager {
+		var object = new ShaderManager();
+
+		if (object != null && !(object.init())) {
+			object = null;
 		}
 
-		return _instance;
+		return object;
 	}
 
-	private function new() {
-	}
-
-	private function init():Void {
+	private function init():Bool {
 		_programs = new Map<String, ShaderProgram>();
 
 		// Get available precisions
@@ -54,6 +50,12 @@ class ShaderManager {
 
 		// Set max precision (compared to desired precision) in shader lib
 		this.setShaderPrecision(this._desiredPrecision);
+
+		return true;
+	}
+
+
+	private function new() {
 	}
 
 	public function setShaderPrecision(precision:String):Void {
@@ -93,7 +95,7 @@ class ShaderManager {
 		}
 	}
 
-	public function loadDefaultShaders(textureManager:GLTextureManager):Void {
+	public function loadDefaultShaders(uniformLib:UniformLib, textureManager:GLTextureManager):Void {
 		// Get all shader configs
 		var shaderConfigs = ShaderLib.instance().shaderConfigs;
 
@@ -104,7 +106,7 @@ class ShaderManager {
 			var shaderInfo = shaderConfigs.get(shaderName);
 
 			// Create program for each shader
-			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, textureManager.maxTextureSlots);
+			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, uniformLib, textureManager.maxTextureSlots);
 
 			// Verify program
 			if (program != null) {

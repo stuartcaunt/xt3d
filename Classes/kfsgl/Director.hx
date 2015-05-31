@@ -2,7 +2,6 @@ package kfsgl;
 
 import kfsgl.textures.TextureCache;
 import kfsgl.core.EventEmitter;
-import kfsgl.gl.shaders.UniformLib;
 import kfsgl.core.View;
 import kfsgl.core.Renderer;
 import kfsgl.utils.Color;
@@ -118,7 +117,7 @@ class Director extends EventEmitter {
 		// TODO Calculate time step
 		var dt = 1.0 / 60.0;
 		_globalTime += dt;
-		UniformLib.instance().uniform("time").value = _globalTime;
+		this._renderer.updateGlobalTime(_globalTime);
 
 		// send pre-render event (custom updates before rendering)
 		this.emit("pre_render");

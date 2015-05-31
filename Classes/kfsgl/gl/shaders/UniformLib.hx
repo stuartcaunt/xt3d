@@ -6,23 +6,21 @@ import kfsgl.utils.errors.KFException;
 class UniformLib {
 
 	// Members
-	private static var _instance:UniformLib = null;
 	private var _uniformGroups:Map<String, Map<String, Uniform> > = new Map<String, Map<String, Uniform> >();
 	private var _allUniforms:Map<String, Uniform > = new Map<String, Uniform>();
 
-	private function new() {
-	}
-	
-	public static function instance():UniformLib {
-		if (_instance == null) {
-			_instance = new UniformLib();
-			_instance.init();
+	public static function create():UniformLib {
+		var object = new UniformLib();
+
+		if (object != null && !(object.init())) {
+			object = null;
 		}
 
-		return _instance;
+		return object;
 	}
 
-	public function init():Void {
+
+	public function init():Bool {
 		// Not no uniform should have the same name even if in different groups
 		var uniformsJson = {
 			matrixCommon: {
@@ -88,7 +86,12 @@ class UniformLib {
 			}
 		}
 
+		return true;
 	}
+
+	private function new() {
+	}
+
 
 	/*
 	 * Get all uniforms from a group

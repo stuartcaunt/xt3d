@@ -72,19 +72,19 @@ class ShaderProgram {
 	}
 
 
-/* --------- Implementation --------- */
+	/* --------- Implementation --------- */
 
-	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String, maxTextureSlots:Int):ShaderProgram {
+	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String, uniformLib:UniformLib, maxTextureSlots:Int):ShaderProgram {
 		var program = new ShaderProgram();
 		
-		if (program != null && !(program.init(shaderName, shaderInfo, precision, maxTextureSlots))) {
+		if (program != null && !(program.init(shaderName, shaderInfo, precision, uniformLib, maxTextureSlots))) {
 			program = null;
 		}
 
 		return program;
 	}
 
-	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String, maxTextureSlots:Int):Bool {
+	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String, uniformLib:UniformLib, maxTextureSlots:Int):Bool {
 		this._name = shaderName;
 
 		this._maxTextureSlots = maxTextureSlots;
@@ -97,7 +97,7 @@ class ShaderProgram {
 		var vertexDefines= shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.join('\n') : "";
 		var fragmentDefines= shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.join('\n') : "";
 		var uniforms = shaderInfo.uniforms;
-		var commonUniforms = shaderInfo.commonUniforms;
+		var commonUniformGroups = shaderInfo.commonUniformGroups;
 		var attributes = shaderInfo.attributes;
 
 		// Load prefixes
@@ -117,6 +117,10 @@ class ShaderProgram {
 			var attributeInfo = attributes.get(attributeName);
 			vertexAttributes += "attribute " + attributeInfo.type + " " + attributeInfo.name + ";\n";
 		}
+
+		// Convert common uniform groups into uniforms
+		var commonUniforms = uniformLib.uniformsFromGroups(commonUniformGroups);
+
 
 		// Regroup common and program-specific uniforms
 		var allVertexUniforms = new Map<String, UniformInfo>();
@@ -374,9 +378,9 @@ class ShaderProgram {
 	/**
 	 * Update global uniforms from UniformLib
 	 */
-	public function updateGlobalUniforms():Void {
+	public function updateGlobalUniforms(uniformLib:UniformLib):Void {
 		for (uniform in this._globalUniforms) {
-			var globalUniform = UniformLib.instance().uniform(uniform.name);
+			var globalUniform = uniformLib.uniform(uniform.name);
 
 			// Copy value to program
 			uniform.copyFrom(globalUniform);

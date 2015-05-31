@@ -32,6 +32,7 @@ class Renderer {
 	public var attributeManager(get, null):GLAttributeManager;
 	public var textureManager(get, null):GLTextureManager;
 	public var frameBufferManager(get, null):GLFrameBufferManager;
+	public var shaderManager(get, null):ShaderManager;
 
 	public var sortingEnabled(get, set):Bool;
 
@@ -43,6 +44,9 @@ class Renderer {
 	private var _textureManager:GLTextureManager;
 	private var _frameBufferManager:GLFrameBufferManager;
 	private var _needsStateInit:Bool = true;
+
+	private var _uniformLib:UniformLib;
+	private var _shaderManager:ShaderManager;
 
 	private var _viewport:Rectangle;
 	private var _viewProjectionMatrix = new Matrix3D();
@@ -71,8 +75,12 @@ class Renderer {
 		this._textureManager = GLTextureManager.create();
 		this._frameBufferManager = GLFrameBufferManager.create();
 
+		// Initialise uniform lib
+		this._uniformLib = UniformLib.create();
+
 		// Build all shaders
-		ShaderManager.instance().loadDefaultShaders(this._textureManager);
+		this._shaderManager = ShaderManager.create();
+		this._shaderManager.loadDefaultShaders(this._uniformLib, this._textureManager);
 
 #if ios
 		// Keep reference to screen frame and render buffers - these are not null for iOS
@@ -110,6 +118,10 @@ class Renderer {
 		return this._frameBufferManager;
 	}
 
+	public inline function get_shaderManager():ShaderManager {
+		return this._shaderManager;
+	}
+
 	public inline function get_sortingEnabled():Bool {
 		return this._sortingEnabled;
 	}
@@ -120,6 +132,10 @@ class Renderer {
 
 
 	// Implementation
+
+	public function updateGlobalTime(time:Float):Void {
+		this._uniformLib.uniform("time").value = time;
+	}
 
 	public function setRenderTarget(renderTarget:RenderTexture = null):Void {
 
@@ -223,7 +239,7 @@ class Renderer {
 			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
 
 			// Prepare all common uniforms
-			UniformLib.instance().prepareUniforms();
+			this._uniformLib.prepareUniforms();
 		}
 	}
 
@@ -233,11 +249,11 @@ class Renderer {
 	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera/*, lights:Array<Light>*/, useBlending:Bool/*, overrideMaterial:Material*/) {
 
 		// Set global uniforms
-		UniformLib.instance().uniform("viewMatrix").matrixValue = camera.viewMatrix;
-		UniformLib.instance().uniform("projectionMatrix").matrixValue = camera.projectionMatrix;
+		this._uniformLib.uniform("viewMatrix").matrixValue = camera.viewMatrix;
+		this._uniformLib.uniform("projectionMatrix").matrixValue = camera.projectionMatrix;
 
 		// lights
-		//UniformLib.instance().uniform("lights", "...").matrixValue = ...;
+		//_uniformLib.uniform("lights", "...").matrixValue = ...;
 
 		// Initialise states of shader programs
 		this._renderPassShaders = new Map<String, ShaderProgram>();
@@ -250,10 +266,10 @@ class Renderer {
 			renderObject.updateRenderMatrices(camera);
 
 			// Set matrices in uniform lib
-			UniformLib.instance().uniform("modelMatrix").matrixValue = renderObject.modelMatrix;
-			UniformLib.instance().uniform("modelViewMatrix").matrixValue = renderObject.modelViewMatrix;
-			UniformLib.instance().uniform("modelViewProjectionMatrix").matrixValue = renderObject.modelViewProjectionMatrix;
-			UniformLib.instance().uniform("normalMatrix").matrixValue = renderObject.normalMatrix;
+			this._uniformLib.uniform("modelMatrix").matrixValue = renderObject.modelMatrix;
+			this._uniformLib.uniform("modelViewMatrix").matrixValue = renderObject.modelViewMatrix;
+			this._uniformLib.uniform("modelViewProjectionMatrix").matrixValue = renderObject.modelViewProjectionMatrix;
+			this._uniformLib.uniform("normalMatrix").matrixValue = renderObject.normalMatrix;
 
 			// Update shader program
 			var material = renderObject.material;
@@ -303,7 +319,7 @@ class Renderer {
 			// NB: this just stops the values been updated locally - all uniforms check for changed values before sending to the GPU
 			if (!this._renderPassShaders.exists(program.name)) {
 				// Update global uniforms in the shader
-				program.updateGlobalUniforms();
+				program.updateGlobalUniforms(this._uniformLib);
 
 				this._renderPassShaders.set(program.name, program);
 			}
@@ -311,7 +327,7 @@ class Renderer {
 
 		// Always update material - may be shared between different objects and require new uniform values (eg mvp matrices)
 		// Send material uniform values to program
-		material.updateProgramUniforms();
+		material.updateProgramUniforms(this._uniformLib);
 	}
 
 

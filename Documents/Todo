@@ -2,13 +2,9 @@ TODO
 ====
 
 
-
 - schedule callbacks in nodes (update with dt)
 
 - lighting
-
-- remove all singletons?
-  - use "current" director
 
 - modify opengl context
   - remove openfl OpenGL view: use lime directly
@@ -99,6 +95,9 @@ x     Problem is that texture alpha = 0.0 (or value of alpha if we use bitmap da
 x   FrameBuffer/RenderBuffer Manager to avoid calling when no change occurs
 x Architecture
 x   remove passing textureManager/bufferManager etc : get from current director/renderer
+x remove all singletons?
+x   use "current" director
+
 
 
 

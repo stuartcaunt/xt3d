@@ -212,7 +212,10 @@ class Material {
 	public inline function setProgramName(programName:String):Void {
 		if (programName != this._programName) {
 			// get program for shader manager
-			var program = ShaderManager.instance().programWithName(programName);
+			var renderer = Director.current.renderer;
+			var shaderManager = renderer.shaderManager;
+
+			var program = shaderManager.programWithName(programName);
 			this.setProgram(program);
 		}
 	}
@@ -278,7 +281,7 @@ class Material {
 		return uniform;
 	}
 
-	public function updateProgramUniforms():Void {
+	public function updateProgramUniforms(uniformLib:UniformLib):Void {
 		// Update uniforms
 		for (uniform in this._uniforms) {
 			this._program.updateUniform(uniform);
@@ -286,7 +289,7 @@ class Material {
 
 		// Update common uniforms
 		for (uniform in this._commonUniforms) {
-			var commonUniform = UniformLib.instance().uniform(uniform.name);
+			var commonUniform = uniformLib.uniform(uniform.name);
 
 			// If not been set locally in the material, copy from uniform lib location
 			if (!uniform.hasBeenSet && commonUniform.hasBeenSet) {
