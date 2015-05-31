@@ -63,20 +63,20 @@ import kfsgl.utils.CountedObject;
 	/** helper object */
 	private static var _sOrigin:Point = new Point();
 
-	public static function createEmpty(width:Int, height:Int, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+	public static function createEmpty(width:Int, height:Int, textureOptions:TextureOptions = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initEmpty(width, height, textureOptions, textureManager))) {
+		if (object != null && !(object.initEmpty(width, height, textureOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+	public static function createFromImageAsset(imagePath:String, textureOptions:TextureOptions = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initFromImageAsset(imagePath, textureOptions, textureManager))) {
+		if (object != null && !(object.initFromImageAsset(imagePath, textureOptions))) {
 			object = null;
 		}
 
@@ -105,27 +105,27 @@ import kfsgl.utils.CountedObject;
 		return object;
 	}
 
-	public static function createFromColor(color:Color, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+	public static function createFromColor(color:Color, textureOptions:TextureOptions = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initFromColor(color, textureOptions, textureManager))) {
+		if (object != null && !(object.initFromColor(color, textureOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Texture2D {
+	public static function createFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initFromBitmapData(bitmapData, textureOptions, textureManager))) {
+		if (object != null && !(object.initFromBitmapData(bitmapData, textureOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initEmpty(width:Int, height:Int, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+	public function initEmpty(width:Int, height:Int, textureOptions:TextureOptions = null):Bool {
 		this._name = "empty-texture-" + this._id;
 
 		// Set texture options
@@ -142,13 +142,8 @@ import kfsgl.utils.CountedObject;
 			this._uvScaleY = this._contentSize.height / this._pixelsHeight;
 		}
 
-		// Create texture immediately if we have a texture manager
-		if (textureManager != null) {
-			textureManager.uploadTexture(this);
-			this._isDirty = false;
-		} else {
-			this._isDirty = true;
-		}
+		// Create texture immediately
+		this.uploadTexture();
 
 		this._isReady = true;
 
@@ -157,7 +152,7 @@ import kfsgl.utils.CountedObject;
 
 
 
-	public function initFromImageAsset(imagePath:String, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+	public function initFromImageAsset(imagePath:String, textureOptions:TextureOptions = null):Bool {
 		this._name = imagePath;
 
 		// Set texture options
@@ -173,10 +168,8 @@ import kfsgl.utils.CountedObject;
 		// Handle the bitmap data
 		this.handleBitmapData(bitmapData);
 
-		// Upload texture immediately if we have a texture manager
-		if (textureManager != null) {
-			textureManager.uploadTexture(this);
-		}
+		// Create texture immediately
+		this.uploadTexture();
 
 		this._isReady = true;
 
@@ -237,7 +230,7 @@ import kfsgl.utils.CountedObject;
 	}
 
 
-	public function initFromColor(color:Color, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+	public function initFromColor(color:Color, textureOptions:TextureOptions = null):Bool {
 		this._name = color.toString();
 
 		// Set texture options
@@ -253,17 +246,15 @@ import kfsgl.utils.CountedObject;
 		// Handle the bitmap data
 		this.handleBitmapData(bitmapData);
 
-		// Upload texture immediately if we have a texture manager
-		if (textureManager != null) {
-			textureManager.uploadTexture(this);
-		}
+		// Create texture immediately
+		this.uploadTexture();
 
 		this._isReady = true;
 
 		return true;
 	}
 
-	public function initFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null, textureManager:GLTextureManager = null):Bool {
+	public function initFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null):Bool {
 		this._name = "ditmap-data-texture-" + this._id;
 
 		// Set texture options
@@ -272,10 +263,8 @@ import kfsgl.utils.CountedObject;
 		// Handle the bitmap data
 		this.handleBitmapData(bitmapData);
 
-		// Upload texture immediately if we have a texture manager
-		if (textureManager != null) {
-			textureManager.uploadTexture(this);
-		}
+		// Create texture immediately
+		this.uploadTexture();
 
 		this._isReady = true;
 
@@ -383,12 +372,18 @@ import kfsgl.utils.CountedObject;
 
 	/* --------- Implementation --------- */
 
-	public function dispose(textureManager:GLTextureManager):Void {
-		textureManager.deleteTexture(this);
+	public function dispose():Void {
+		var renderer = Director.current.renderer;
+		renderer.textureManager.deleteTexture(this);
 		this._glTexture = null;
 
 		// Dispose of data
 		this._bitmapData.dispose();
+	}
+
+	private function uploadTexture():Void {
+		var renderer = Director.current.renderer;
+		renderer.textureManager.uploadTexture(this);
 	}
 
 	private function setTextureOptions(textureOptions:TextureOptions):Void {

@@ -1,6 +1,5 @@
 package kfsgl.gl.shaders;
 
-import kfsgl.gl.GLTextureManager;
 import openfl.gl.GL;
 import openfl.gl.GLProgram;
 import openfl.gl.GLShader;
@@ -375,7 +374,7 @@ class ShaderProgram {
 	/**
 	 * Update global uniforms from UniformLib
 	 */
-	public function updateGlobalUniforms(textureManager:GLTextureManager):Void {
+	public function updateGlobalUniforms():Void {
 		for (uniform in this._globalUniforms) {
 			var globalUniform = UniformLib.instance().uniform(uniform.name);
 
@@ -383,14 +382,14 @@ class ShaderProgram {
 			uniform.copyFrom(globalUniform);
 
 			// Write to GPU
-			uniform.use(textureManager);
+			uniform.use();
 		}
 	}
 
 	/**
 	 * Set/update a uniform value
 	 */
-	public function updateUniform(uniform:Uniform, textureManager:GLTextureManager):Void {
+	public function updateUniform(uniform:Uniform):Void {
 		if (this._uniforms.exists(uniform.name)) {
 			var uniformToUpdate = this._uniforms.get(uniform.name);
 
@@ -398,7 +397,7 @@ class ShaderProgram {
 			uniformToUpdate.copyFrom(uniform);
 
 			// Write to GPU
-			uniformToUpdate.use(textureManager);
+			uniformToUpdate.use();
 
 			// Prepare uniform for next render so we know if it has changed
 			uniform.prepareForUse();
@@ -412,7 +411,7 @@ class ShaderProgram {
 	/**
 	 * Set/update a common uniform value
 	 */
-	public function updateCommonUniform(uniform:Uniform, textureManager:GLTextureManager):Void {
+	public function updateCommonUniform(uniform:Uniform):Void {
 		if (this._commonUniforms.exists(uniform.name)) {
 			var uniformToUpdate = this._commonUniforms.get(uniform.name);
 
@@ -420,7 +419,7 @@ class ShaderProgram {
 			uniformToUpdate.copyFrom(uniform);
 
 			// Write to GPU
-			uniformToUpdate.use(textureManager);
+			uniformToUpdate.use();
 
 			// Prepare uniform for next render so we know if it has changed
 			uniform.prepareForUse();

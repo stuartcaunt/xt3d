@@ -8,7 +8,6 @@ class TextureCache {
 	// properties
 
 	// members
-	private var _textureManager:GLTextureManager;
 	private var _textures:Map<String, Texture2D>;
 
 
@@ -16,19 +15,18 @@ class TextureCache {
 	}
 
 
-	public static function create(textureManager:GLTextureManager):TextureCache {
+	public static function create():TextureCache {
 		var object = new TextureCache();
 
-		if (object != null && !(object.init(textureManager))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	private function init(textureManager:GLTextureManager):Bool {
+	private function init():Bool {
 		this._textures = new Map<String, Texture2D>();
-		this._textureManager = textureManager;
 
 		return true;
 	}
@@ -47,7 +45,7 @@ class TextureCache {
 			return this._textures.get(imagePath);
 		}
 
-		var texture = Texture2D.createFromImageAsset(imagePath, textureOptions, this._textureManager);
+		var texture = Texture2D.createFromImageAsset(imagePath, textureOptions);
 		this._textures.set(imagePath, texture);
 
 		return texture;
@@ -82,7 +80,7 @@ class TextureCache {
 			return this._textures.get(color.toString());
 		}
 
-		var texture = Texture2D.createFromColor(color, textureOptions, this._textureManager);
+		var texture = Texture2D.createFromColor(color, textureOptions);
 		this._textures.set(color.toString(), texture);
 
 		return texture;
@@ -104,7 +102,7 @@ class TextureCache {
 			var texture = this._textures.get(textureKey);
 
 			// Dispose of the gl object
-			texture.dispose(this._textureManager);
+			texture.dispose();
 
 			this._textures.remove(textureKey);
 		}

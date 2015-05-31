@@ -8,7 +8,6 @@ import openfl.gl.GLRenderbuffer;
 import kfsgl.utils.Size;
 import kfsgl.utils.Color;
 import kfsgl.utils.KF;
-import kfsgl.gl.GLTextureManager;
 class RenderTexture extends Texture2D {
 
 	// properties
@@ -43,7 +42,7 @@ class RenderTexture extends Texture2D {
 			textureOptions.generateMipMaps = false;
 		}
 
-		if ((retval = super.initEmpty(size.width, size.height, textureOptions, null))) {
+		if ((retval = super.initEmpty(size.width, size.height, textureOptions))) {
 			this._depthStencilFormat = depthStencilFormat;
 
 			this.createFrameAndRenderBuffer();
@@ -90,8 +89,8 @@ class RenderTexture extends Texture2D {
 	/* --------- Implementation --------- */
 
 
-	override public function dispose(textureManager:GLTextureManager):Void {
-		super.dispose(textureManager);
+	override public function dispose():Void {
+		super.dispose();
 
 		var renderer = Director.current.renderer;
 		var frameBufferManager = renderer.frameBufferManager;
@@ -104,11 +103,10 @@ class RenderTexture extends Texture2D {
 
 	private function createFrameAndRenderBuffer():Void {
 		var renderer = Director.current.renderer;
-		var textureManager = renderer.textureManager;
 		var frameBufferManager = renderer.frameBufferManager;
 
 		// Create gl texture
-		textureManager.uploadTexture(this);
+		this.uploadTexture();
 
 		this._frameBuffer = frameBufferManager.createFrameBuffer();
 

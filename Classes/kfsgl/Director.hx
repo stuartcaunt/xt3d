@@ -85,7 +85,7 @@ class Director extends EventEmitter {
 
 	/* --------- Implementation --------- */
 
-	public function makeCurrent():Void {
+	public inline function makeCurrent():Void {
 		_current = this;
 	}
 
@@ -99,7 +99,7 @@ class Director extends EventEmitter {
 		if (this._textureCache != null) {
 			this._textureCache.removeAllTextures();
 		}
-		this._textureCache = TextureCache.create(this._renderer.textureManager);
+		this._textureCache = TextureCache.create();
 
 		_openGLView.render = renderLoop;
 	}
@@ -109,6 +109,9 @@ class Director extends EventEmitter {
 	}
 
 	private function renderLoop(displayRect:Rectangle):Void {
+
+		// Make current
+		this.makeCurrent();
 
 		//KF.Log("render");
 

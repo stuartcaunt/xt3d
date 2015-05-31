@@ -27,8 +27,12 @@ import openfl.geom.Rectangle;
 class Renderer {
 
 	// properties
+	public var stateManager(get, null):GLStateManager;
+	public var bufferManager(get, null):GLBufferManager;
+	public var attributeManager(get, null):GLAttributeManager;
 	public var textureManager(get, null):GLTextureManager;
 	public var frameBufferManager(get, null):GLFrameBufferManager;
+
 	public var sortingEnabled(get, set):Bool;
 
 
@@ -48,7 +52,6 @@ class Renderer {
 	private var _sortingEnabled:Bool = true;
 
 	var _screenFrameBuffer:GLFramebuffer = null;
-//	var _screenRenderBuffer:GLRenderbuffer = null;
 
 	public static function create():Renderer {
 		var object = new Renderer();
@@ -74,7 +77,6 @@ class Renderer {
 #if ios
 		// Keep reference to screen frame and render buffers - these are not null for iOS
 		this._screenFrameBuffer = new GLFramebuffer(GL.version, GL.getParameter(GL.FRAMEBUFFER_BINDING));
-//		this._screenRenderBuffer = new GLRenderbuffer(GL.version, GL.getParameter(GL.RENDERBUFFER_BINDING));
 #end
 		return true;
 	}
@@ -84,7 +86,21 @@ class Renderer {
 	}
 
 
+
 	// Properties
+
+
+	public inline function get_stateManager():GLStateManager {
+		return this._stateManager;
+	}
+
+	public inline function get_bufferManager():GLBufferManager {
+		return this._bufferManager;
+	}
+
+	public inline function get_attributeManager():GLAttributeManager {
+		return this._attributeManager;
+	}
 
 	public inline function get_textureManager():GLTextureManager {
 		return this._textureManager;
@@ -113,7 +129,6 @@ class Renderer {
 
 			// Reset frame and render buffer
 			this._frameBufferManager.setFrameBuffer(this._screenFrameBuffer);
-			//this._frameBufferManager.setRenderBuffer(this._screenRenderBuffer);
 
 		} else {
 			// Set the color mask to correctly render alpha
@@ -269,7 +284,7 @@ class Renderer {
 		this.setProgram(material, renderObject, camera/*, lights*/);
 
 		// Render the buffers
-		renderObject.renderBuffer(material.program, this._attributeManager, this._bufferManager);
+		renderObject.renderBuffer(material.program);
 	}
 
 	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
@@ -288,7 +303,7 @@ class Renderer {
 			// NB: this just stops the values been updated locally - all uniforms check for changed values before sending to the GPU
 			if (!this._renderPassShaders.exists(program.name)) {
 				// Update global uniforms in the shader
-				program.updateGlobalUniforms(this._textureManager);
+				program.updateGlobalUniforms();
 
 				this._renderPassShaders.set(program.name, program);
 			}
@@ -296,7 +311,7 @@ class Renderer {
 
 		// Always update material - may be shared between different objects and require new uniform values (eg mvp matrices)
 		// Send material uniform values to program
-		material.updateProgramUniforms(this._textureManager);
+		material.updateProgramUniforms();
 	}
 
 

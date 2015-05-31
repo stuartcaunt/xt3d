@@ -278,10 +278,10 @@ class Material {
 		return uniform;
 	}
 
-	public function updateProgramUniforms(textureManager:GLTextureManager):Void {
+	public function updateProgramUniforms():Void {
 		// Update uniforms
 		for (uniform in this._uniforms) {
-			this._program.updateUniform(uniform, textureManager);
+			this._program.updateUniform(uniform);
 		}
 
 		// Update common uniforms
@@ -293,7 +293,7 @@ class Material {
 				uniform.copyFrom(commonUniform);
 			}
 
-			this._program.updateCommonUniform(uniform, textureManager);
+			this._program.updateCommonUniform(uniform);
 		}
 	}
 

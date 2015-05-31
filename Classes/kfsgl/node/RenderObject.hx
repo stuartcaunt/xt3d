@@ -159,7 +159,11 @@ class RenderObject extends Node3D {
 
 	}
 
-	public function renderBuffer(program:ShaderProgram, attributeManager:GLAttributeManager, bufferManager:GLBufferManager):Void {
+	public function renderBuffer(program:ShaderProgram):Void {
+		var renderer = Director.current.renderer;
+		var attributeManager = renderer.attributeManager;
+		var bufferManager = renderer.bufferManager;
+
 		var programAttributes = program.attributes;
 		var isIndexed = this._geometry.isIndexed;
 

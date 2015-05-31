@@ -187,7 +187,7 @@ class Uniform  {
 		_hasBeenSet = false;
 	}
 
-	public function use(textureManager:GLTextureManager) {
+	public function use() {
 		var type = this._type;
 
 		// Send value to the GPU if it is dirty
@@ -249,6 +249,8 @@ class Uniform  {
 
 		// Bind texture
 		if (type == 'texture') {
+			var renderer = Director.current.renderer;
+			var textureManager = renderer.textureManager;
 			textureManager.setTexture(this._texture, this._textureSlot);
 		}
 	}
