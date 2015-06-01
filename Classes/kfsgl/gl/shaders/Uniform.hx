@@ -236,7 +236,7 @@ class Uniform  {
 				this.copyToTypedArray(this._matrixValue.rawData.toArray(), this._float32ArrayValue);
 #elseif neko
 				this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
-#elseif (ios || mac)
+#elseif (ios || mac || android)
 				this._float32ArrayValue.set(this._matrixValue.rawData);
 #else
 				this._float32ArrayValue.set(this._matrixValue.rawData.toArray());

@@ -1,7 +1,6 @@
 TODO
 ====
 
-
 - schedule callbacks in nodes (update with dt)
 
 - lighting
@@ -10,6 +9,9 @@ TODO
   - remove openfl OpenGL view: use lime directly
     - openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
   - control over depth/stencil
+
+- android
+ - problem returning to application
 
 
 - Check handling of global uniforms at F4
