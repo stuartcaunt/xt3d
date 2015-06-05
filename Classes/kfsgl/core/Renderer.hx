@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.KFObject;
 import kfsgl.textures.RenderTexture;
 import openfl.gl.GLRenderbuffer;
 import openfl.gl.GLFramebuffer;
@@ -24,7 +25,7 @@ import openfl.geom.Rectangle;
 
 
 
-class Renderer {
+class Renderer extends KFObject {
 
 	// properties
 	public var stateManager(get, null):GLStateManager;
@@ -57,6 +58,8 @@ class Renderer {
 
 	var _screenFrameBuffer:GLFramebuffer = null;
 
+	var _globalTime:Float = 0.0;
+
 	public static function create():Renderer {
 		var object = new Renderer();
 
@@ -86,11 +89,16 @@ class Renderer {
 		// Keep reference to screen frame and render buffers - these are not null for iOS
 		this._screenFrameBuffer = new GLFramebuffer(GL.version, GL.getParameter(GL.FRAMEBUFFER_BINDING));
 #end
+		// Register with scheduler for time updates
+		Director.current.scheduler.schedule(this, this.updateTime);
+
+
 		return true;
 	}
 
 
 	public function new() {
+		super();
 	}
 
 
@@ -133,8 +141,9 @@ class Renderer {
 
 	// Implementation
 
-	public function updateGlobalTime(time:Float):Void {
-		this._uniformLib.uniform("time").value = time;
+	public function updateTime(deltaTime:Float):Void {
+		this._globalTime += deltaTime;
+		this._uniformLib.uniform("time").value = this._globalTime;
 	}
 
 	public function setRenderTarget(renderTarget:RenderTexture = null):Void {

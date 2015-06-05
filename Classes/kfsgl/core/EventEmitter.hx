@@ -1,10 +1,13 @@
 package kfsgl.core;
 
-class EventEmitter {
+import kfsgl.utils.KFObject;
+
+class EventEmitter extends KFObject {
 
 	private var _listeners:Map<String, Array<Void->Void> > = new Map<String, Array<Void->Void> >();
 
 	public function new() {
+		super();
 	}
 
 	public function on(event:String, callback:Void->Void) {

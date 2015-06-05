@@ -45,5 +45,7 @@ class KF  {
 		return result;
 	}
 
+	public static var RepeatForever:UInt = 0xFFFFFFFF;
+
 }
 

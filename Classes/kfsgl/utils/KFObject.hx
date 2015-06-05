@@ -1,11 +1,13 @@
 package kfsgl.utils;
 
-class CountedObject {
+class KFObject {
 
 	// properties
 	public var retainCount(get, null):Int;
+	public var uid(get, null):Int;
 
-	// members
+	private static var UID_COUNTER = 0;
+	private var _uid = UID_COUNTER++;
 	private var _retainCount:Int = 0;
 
 	public function new() {
@@ -14,6 +16,11 @@ class CountedObject {
 
 
 	/* ----------- Properties ----------- */
+
+	public function get_uid():Int {
+		return this._uid;
+	}
+
 
 	public inline function get_retainCount():Int {
 		return this._retainCount;
@@ -27,6 +34,10 @@ class CountedObject {
 
 	public inline function release():Void {
 		this._retainCount--;
+	}
+
+	public function update(dt:Float):Void {
+		// Method to be overridden to get automatic updates every frame if scheduleUpdate has been called
 	}
 
 }

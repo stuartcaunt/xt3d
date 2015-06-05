@@ -1,5 +1,6 @@
 package kfsgl;
 
+import kfsgl.core.Scheduler;
 import kfsgl.textures.TextureCache;
 import kfsgl.core.EventEmitter;
 import kfsgl.core.View;
@@ -14,9 +15,11 @@ class Director extends EventEmitter {
 	// properties
 	public static var current(get, null):Director;
 	public var renderer(get, null):Renderer;
+	public var scheduler(get, null):Scheduler;
 	public var openGLView(get_openGLView, set_openGLView):OpenGLView;
 	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
 	public var textureCache(get, null):TextureCache;
+	public var paused(get, null):Bool;
 
 	// members
 	private static var _current:Director = null;
@@ -25,8 +28,17 @@ class Director extends EventEmitter {
 	private var _renderer:Renderer;
 	private var _textureCache:TextureCache;
 	private var _views:Array<View> = new Array<View>();
+	private var _scheduler:Scheduler;
 
+	private var _lastUpdateTime:Float = 0.0;
+	private var _deltaTime:Float = 0.0;
 	private var _globalTime = 0.0;
+	private var _paused:Bool = false;
+	private var _nextDeltaTimeZero = true;
+
+	// TODO handle animation interval programatically
+	private var _animationInterval:Float = 1.0 / 60.0;
+	private var _oldAnimationInterval:Float;
 
 	public static function create(openGLView:OpenGLView):Director {
 		var object = new Director();
@@ -39,9 +51,15 @@ class Director extends EventEmitter {
 	}
 
 	public function init(openGLView:OpenGLView):Bool {
-		this.setOpenglView(openGLView);
 
+		// Make director current
 		this.makeCurrent();
+
+		// Create scheduler
+		this._scheduler = Scheduler.create();
+
+		// Set openglview
+		this.setOpenglView(openGLView);
 
 		return true;
 	}
@@ -65,6 +83,10 @@ class Director extends EventEmitter {
 		return this._renderer;
 	}
 
+	public inline function get_scheduler():Scheduler {
+		return this._scheduler;
+	}
+
 	public inline function get_openGLView():OpenGLView {
 		return this._openGLView;
 	}
@@ -81,6 +103,11 @@ class Director extends EventEmitter {
 	public inline function set_backgroundColor(backgroundColor) {
 		return this._backgroundColor = backgroundColor;
 	}
+
+	public function get_paused():Bool {
+		return this._paused;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -107,17 +134,39 @@ class Director extends EventEmitter {
 		_views.push(view);
 	}
 
+	public inline function pause():Void {
+		if (!this._paused) {
+			this._paused = true;
+
+			// Use slower animation interval to conserve energy on mobile devices
+			this._oldAnimationInterval = this._animationInterval;
+			this.setAnimationInterval(1.0 / 4.0);
+		}
+	}
+
+	public inline function resume():Void {
+		if (this._paused) {
+			this._paused = false;
+
+			// Set the animation interval
+			this.setAnimationInterval(this._oldAnimationInterval);
+		}
+	}
+
 	private function renderLoop(displayRect:Rectangle):Void {
 
 		// Make current
 		this.makeCurrent();
 
-		//KF.Log("render");
+		// Calculate dt
+		this.calculateDeltaTime();
 
-		// TODO Calculate time step
-		var dt = 1.0 / 60.0;
-		_globalTime += dt;
-		this._renderer.updateGlobalTime(_globalTime);
+		// If not paused then update animations
+		if (!this._paused) {
+			this._scheduler.update(this._deltaTime);
+		}
+
+		// Render (always needed even if paused to perform screen refreshes
 
 		// send pre-render event (custom updates before rendering)
 		this.emit("pre_render");
@@ -143,6 +192,32 @@ class Director extends EventEmitter {
 		// send pre-render event (custom updates before rendering)
 		this.emit("post_render");
 
+	}
+
+	private function calculateDeltaTime():Void {
+		var now:Float = Date.now().getTime();
+
+		if (this._nextDeltaTimeZero) {
+			this._deltaTime = 0.0;
+
+		} else {
+			this._deltaTime = now - this._lastUpdateTime;
+		}
+
+		// Handle jumps
+		if (this._deltaTime > 0.2) {
+			this._deltaTime = this._animationInterval;
+		}
+
+		this._globalTime += this._deltaTime;
+
+		this._lastUpdateTime = now;
+	}
+
+	private function setAnimationInterval(animationInterval:Float):Void {
+		this._animationInterval = animationInterval;
+
+		// TODO handle animation interval
 	}
 
 }

@@ -273,4 +273,10 @@ class View extends EventEmitter {
 			this.emit("viewport_changed");
 		}
 	}
+
+
+	public override function update(dt:Float):Void {
+		// Method to be overridden to get automatic updates every frame if scheduleUpdate has been called
+	}
+
 }

@@ -1,5 +1,6 @@
 package kfsgl.textures;
 
+import kfsgl.utils.KFObject;
 import kfsgl.utils.Color;
 import kfsgl.utils.ImageLoader;
 import kfsgl.gl.GLTextureManager;
@@ -13,9 +14,8 @@ import openfl.display.BitmapData;
 import openfl.geom.Point;
 import kfsgl.utils.Size;
 import openfl.Assets;
-import kfsgl.utils.CountedObject;
 
-	class Texture2D extends CountedObject {
+	class Texture2D extends KFObject {
 
 	// properties
 	public var name(get, null):String;

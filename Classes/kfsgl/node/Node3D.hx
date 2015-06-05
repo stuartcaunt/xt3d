@@ -1,11 +1,13 @@
 package kfsgl.node;
 
+import kfsgl.utils.KFObject;
+import kfsgl.utils.KF;
 import kfsgl.utils.errors.KFException;
 import kfsgl.utils.math.MatrixHelper;
 import openfl.geom.Matrix3D;
 import openfl.geom.Vector3D;
 
-class Node3D {
+class Node3D extends KFObject {
 
 	// properties
 	public var id(get, null):UInt;
@@ -72,6 +74,7 @@ class Node3D {
 	}
 
 	public function new() {
+		super();
 	}
 
 
@@ -418,5 +421,27 @@ class Node3D {
 			child.updateWorldMatrix();
 		}
 	}
+
+	// --------- Scheduling ---------
+
+	public function scheduleUpdate():Void {
+		Director.current.scheduler.scheduleUpdate(this);
+	}
+
+	public function unscheduleUpdate():Void {
+		Director.current.scheduler.unscheduleUpdate(this);
+	}
+
+	public function pauseScheduler():Void {
+		Director.current.scheduler.pauseTarget(this);
+	}
+
+	public function resumeScheduler():Void {
+		Director.current.scheduler.resumeTarget(this);
+	}
+
+//	public function schedule(callback:Float->Void, interval:Float = 0.0, delay:Float = 0.0, repeat:Uint = KF.RepeatForever):Void {
+//		Director.current.scheduler.schedule(callback);
+//	}
 
 }
