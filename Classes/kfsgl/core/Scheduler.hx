@@ -102,7 +102,7 @@ class Scheduler {
 
 		// Check if timer exists
 		for (scheduledTimer in timerElement.timers) {
-			if (scheduledTimer.callback == callback) {
+			if (Reflect.compareMethods(scheduledTimer.callback, callback)) {
 				KF.Log("Scheduler.schedule : Callback already scheduled. Updating interval from " + scheduledTimer.interval + " to " + interval);
 				scheduledTimer.interval = interval;
 				return;
@@ -139,7 +139,7 @@ class Scheduler {
 				var timer:ScheduledTimer = timerElement.timers[i];
 
 				// Check if callback matched
-				if (timer.callback == callback) {
+				if (Reflect.compareMethods(timer.callback, callback)) {
 
 					// Remove time
 					timerElement.timers.remove(timer);

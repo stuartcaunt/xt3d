@@ -142,7 +142,6 @@ class Renderer extends KFObject {
 	// Implementation
 
 	public function updateGlobalTime(deltaTime:Float):Void {
-		KF.Log("updateGlobalTime " + deltaTime);
 		this._globalTime += deltaTime;
 		this._uniformLib.uniform("time").value = this._globalTime;
 		this.unschedule(this.updateGlobalTime);
