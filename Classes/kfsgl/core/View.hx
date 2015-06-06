@@ -41,7 +41,7 @@ class View extends EventEmitter {
 	public static function create():View {
 		var object = new View();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.initView())) {
 			object = null;
 		}
 
@@ -68,7 +68,7 @@ class View extends EventEmitter {
 		return object;
 	}
 
-	public function init():Bool {
+	public function initView():Bool {
 		// Set default viewport
 		setViewport(new Rectangle(0, 0, 500, 600));
 

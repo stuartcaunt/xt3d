@@ -1,10 +1,11 @@
 TODO
 ====
 
-- schedule callbacks in nodes (update with dt)
-  - Improve test with overloaded View
-
 - lighting
+  - Light class
+  - Gather lights at beginning of render cycle and set global uniforms
+  - Material colors/shininess
+  - PhongShader (per pixel), GouraudShader (per vertex), Flat
 
 - modify opengl context
   - remove openfl OpenGL view: use lime directly
@@ -19,9 +20,11 @@ TODO
 - Render loop
 - Scene and Node
   - scene graph
+  - onAddedToScene
+  - onRemoveFromScene
+
 - handle multiple contexts
   - all objects created with a contextId ?
-  - render targets
 
 - Material implementation
   - texture material
@@ -100,6 +103,9 @@ x Architecture
 x   remove passing textureManager/bufferManager etc : get from current director/renderer
 x remove all singletons?
 x   use "current" director
+x schedule callbacks in nodes (update with dt)
+x   Improve test with overloaded View
+
 
 
 
