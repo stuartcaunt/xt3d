@@ -1,5 +1,6 @@
 package kfsgl.gl.shaders;
 
+import kfsgl.utils.KFObject;
 import openfl.gl.GL;
 import openfl.gl.GLProgram;
 import openfl.gl.GLShader;
@@ -18,7 +19,7 @@ typedef ProgramAttributeState = {
 }
 
 
-class ShaderProgram {
+class ShaderProgram extends KFObject {
 
 	// properties
 	public var id(get, null):Int;
@@ -28,7 +29,6 @@ class ShaderProgram {
 	// members
 	private static var ID_COUNTER:Int = 0;
 	private var _id:Int = ID_COUNTER++;
-	private var _retainCount = 0;
 	private var _name:String;
 	private var _vertexProgram:String;
 	private var _fragmentProgram:String;
@@ -53,7 +53,7 @@ class ShaderProgram {
 	});
 
 	public function new() {
-
+		super();
 	}
 
 
@@ -265,14 +265,6 @@ class ShaderProgram {
 			GL.deleteProgram(_program);
 			_program = null;
 		}
-	}
-
-	public function retain():Void {
-		this._retainCount++;
-	}
-
-	public function release():Void {
-		this._retainCount--;
 	}
 
 	private function createShader(source:String, type:Int):GLShader {

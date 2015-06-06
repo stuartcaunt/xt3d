@@ -90,7 +90,7 @@ class Renderer extends KFObject {
 		this._screenFrameBuffer = new GLFramebuffer(GL.version, GL.getParameter(GL.FRAMEBUFFER_BINDING));
 #end
 		// Register with scheduler for time updates
-		Director.current.scheduler.schedule(this, this.updateTime);
+		this.schedule(this.updateGlobalTime);
 
 
 		return true;
@@ -141,9 +141,11 @@ class Renderer extends KFObject {
 
 	// Implementation
 
-	public function updateTime(deltaTime:Float):Void {
+	public function updateGlobalTime(deltaTime:Float):Void {
+		KF.Log("updateGlobalTime " + deltaTime);
 		this._globalTime += deltaTime;
 		this._uniformLib.uniform("time").value = this._globalTime;
+		this.unschedule(this.updateGlobalTime);
 	}
 
 	public function setRenderTarget(renderTarget:RenderTexture = null):Void {

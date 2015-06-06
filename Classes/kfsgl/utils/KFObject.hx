@@ -39,5 +39,28 @@ class KFObject {
 	public function update(dt:Float):Void {
 		// Method to be overridden to get automatic updates every frame if scheduleUpdate has been called
 	}
+	public function scheduleUpdate():Void {
+		Director.current.scheduler.scheduleUpdate(this);
+	}
+
+	public function unscheduleUpdate():Void {
+		Director.current.scheduler.unscheduleUpdate(this);
+	}
+
+	public function pauseScheduler():Void {
+		Director.current.scheduler.pauseTarget(this);
+	}
+
+	public function resumeScheduler():Void {
+		Director.current.scheduler.resumeTarget(this);
+	}
+
+	public function schedule(callback:Float->Void, interval:Float = 0.0, delay:Float = 0.0, repeat:UInt = KF.RepeatForever, paused:Bool = false):Void {
+		Director.current.scheduler.schedule(this, callback, interval, delay, repeat, paused);
+	}
+
+	public function unschedule(callback:Float->Void):Void {
+		Director.current.scheduler.unschedule(this, callback);
+	}
 
 }

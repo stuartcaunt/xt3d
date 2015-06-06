@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.KFObject;
 import kfsgl.utils.KF;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.gl.shaders.UniformLib;
@@ -9,7 +10,7 @@ import kfsgl.gl.shaders.Uniform;
 import kfsgl.gl.shaders.ShaderProgram;
 import kfsgl.gl.KFGL;
 
-class Material {
+class Material extends KFObject {
 
 	// properties
 	public var id(get, null):Int;
@@ -74,6 +75,7 @@ class Material {
 
 
 	public function new() {
+		super();
 	}
 
 	/* ----------- Properties ----------- */

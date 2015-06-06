@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.KFObject;
 import kfsgl.gl.vertexdata.UByteVertexData;
 import kfsgl.gl.vertexdata.PrimitiveVertexData;
 import kfsgl.gl.GLBufferManager;
@@ -10,7 +11,7 @@ import kfsgl.gl.vertexdata.IndexData;
 import kfsgl.utils.errors.KFException;
 
 
-class Geometry {
+class Geometry extends KFObject {
 
 	// Default buffer names - !! NOTE !! identical to attribute names
 	public static var bufferNames = {
@@ -74,6 +75,7 @@ class Geometry {
 	}
 
 	public function new() {
+		super();
 	}
 
 

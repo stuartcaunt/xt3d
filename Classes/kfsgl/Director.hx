@@ -1,5 +1,7 @@
 package kfsgl;
 
+import openfl.Lib;
+import kfsgl.utils.KF;
 import kfsgl.core.Scheduler;
 import kfsgl.textures.TextureCache;
 import kfsgl.core.EventEmitter;
@@ -30,7 +32,7 @@ class Director extends EventEmitter {
 	private var _views:Array<View> = new Array<View>();
 	private var _scheduler:Scheduler;
 
-	private var _lastUpdateTime:Float = 0.0;
+	private var _lastUpdateTime:Int = 0;
 	private var _deltaTime:Float = 0.0;
 	private var _globalTime = 0.0;
 	private var _paused:Bool = false;
@@ -195,13 +197,15 @@ class Director extends EventEmitter {
 	}
 
 	private function calculateDeltaTime():Void {
-		var now:Float = Date.now().getTime();
+		var now = Lib.getTimer();
 
 		if (this._nextDeltaTimeZero) {
 			this._deltaTime = 0.0;
+			this._nextDeltaTimeZero = false;
 
 		} else {
-			this._deltaTime = now - this._lastUpdateTime;
+			this._deltaTime = 0.001 * (now - this._lastUpdateTime);
+			this._deltaTime = Math.max(0.0, this._deltaTime);
 		}
 
 		// Handle jumps
