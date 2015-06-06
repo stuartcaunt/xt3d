@@ -59,8 +59,16 @@ class KFObject {
 		Director.current.scheduler.schedule(this, callback, interval, delay, repeat, paused);
 	}
 
+	public function scheduleOnce(callback:Float->Void, delay:Float = 0.):Void {
+		Director.current.scheduler.schedule(this, callback, 0.0, delay, 0);
+	}
+
 	public function unschedule(callback:Float->Void):Void {
 		Director.current.scheduler.unschedule(this, callback);
+	}
+
+	public function unscheduleAll():Void {
+		Director.current.scheduler.unscheduleAllForTarget(this);
 	}
 
 }

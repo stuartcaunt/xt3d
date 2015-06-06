@@ -2,6 +2,7 @@ TODO
 ====
 
 - schedule callbacks in nodes (update with dt)
+  - Improve test with overloaded View
 
 - lighting
 

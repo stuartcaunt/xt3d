@@ -166,6 +166,32 @@ class Scheduler {
 		}
 	}
 
+	public function unscheduleAllForTarget(target:KFObject):Void {
+		if (target == null) {
+			return;
+		}
+
+		// Find TimerElement corresponding to target
+		if (this._scheduledTimersMap.exists(target)) {
+			var timerElement:TimerElement = this._scheduledTimersMap.get(target);
+
+			// Clear array in case we are currently iterating over it
+			timerElement.timers.splice(0, timerElement.timers.length);
+
+			// Remove the target now or later
+			if (this._currentTimerTarget == target) {
+				this._currentTimerTargetMarkedForDeletion = true;
+
+			} else {
+				this._scheduledTimersMap.remove(target);
+			}
+		}
+
+		// Remove scheduled updates
+		this.unscheduleUpdate(target);
+	}
+
+
 	public function scheduleUpdate(target:KFObject):Void {
 		if (target == null) {
 			return;

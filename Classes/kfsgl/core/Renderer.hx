@@ -144,7 +144,6 @@ class Renderer extends KFObject {
 	public function updateGlobalTime(deltaTime:Float):Void {
 		this._globalTime += deltaTime;
 		this._uniformLib.uniform("time").value = this._globalTime;
-		this.unschedule(this.updateGlobalTime);
 	}
 
 	public function setRenderTarget(renderTarget:RenderTexture = null):Void {
