@@ -242,10 +242,10 @@ class Renderer extends KFObject {
 
 			// Render opaque objects
 			_stateManager.setBlending(KFGL.NoBlending);
-			this.renderObjects(scene.opaqueObjects, camera/*, scene.lights*/, false/*, overrideMaterial*/);
+			this.renderObjects(scene.opaqueObjects, camera, scene.lights, false/*, overrideMaterial*/);
 
 			// Render transparent objects
-			this.renderObjects(scene.transparentObjects, camera/*, scene.lights*/, true/*, overrideMaterial*/);
+			this.renderObjects(scene.transparentObjects, camera, scene.lights, true/*, overrideMaterial*/);
 
 			// Prepare all common uniforms
 			this._uniformLib.prepareUniforms();
@@ -255,7 +255,7 @@ class Renderer extends KFObject {
 	/**
 	 * Render list of objects
 	 **/
-	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera/*, lights:Array<Light>*/, useBlending:Bool/*, overrideMaterial:Material*/) {
+	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera, lights:Array<Light>, useBlending:Bool/*, overrideMaterial:Material*/) {
 
 		// Set global uniforms
 		this._uniformLib.uniform("viewMatrix").matrixValue = camera.viewMatrix;

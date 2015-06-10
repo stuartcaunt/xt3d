@@ -1,5 +1,6 @@
 package kfsgl.node;
 
+import kfsgl.core.Light;
 import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 import kfsgl.node.Node3D;
@@ -9,12 +10,13 @@ class Scene extends Node3D {
 	// properties
 	public var opaqueObjects(get, null):Array<RenderObject>;
 	public var transparentObjects(get, null):Array<RenderObject>;
+	public var lights(get, null):Array<Light>;
 	public var zSortingStrategy(get, set):Int;
 
 	private var _opaqueObjects:Array<RenderObject>;
 	private var _transparentObjects:Array<RenderObject>;
 	private var _zSortingStrategy:Int = KFGL.ZSortingAll;
-//	private var _lights:Array<Light>;
+	private var _lights:Array<Light> = new Array<Light>();
 
 	private var _borrowedChildren:Map<Node3D, Node3D> = new Map<Node3D, Node3D>();
 
@@ -52,6 +54,10 @@ class Scene extends Node3D {
 		return this._transparentObjects;
 	}
 
+	public inline function get_lights():Array<Light> {
+		return this._lights;
+	}
+
 	public inline function get_zSortingStrategy():Int {
 		return this._zSortingStrategy;
 	}
@@ -79,13 +85,18 @@ class Scene extends Node3D {
 		this._transparentObjects.push(object);
 	}
 
+	inline public function addLight(light:Light):Void {
+		this._lights.push(light);
+	}
+
 
 	/* --------- Scene graph --------- */
 
 	override public function updateObject(scene:Scene):Void {
 		// Initialise arrays for transparent and opaque objects
-		this._opaqueObjects = new Array<RenderObject>();
-		this._transparentObjects = new Array<RenderObject>();
+		this._opaqueObjects.splice(0, this._opaqueObjects.length);
+		this._transparentObjects.splice(0, this._transparentObjects.length);
+		this._lights.splice(0, this._lights.length);
 	}
 
 	inline public function borrowChild(child:Node3D):Void {

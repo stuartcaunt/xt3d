@@ -1,6 +1,7 @@
 package kfsgl.core;
 
 
+import kfsgl.node.Scene;
 import kfsgl.node.Node3D;
 import openfl.geom.Vector3D;
 import kfsgl.utils.Color;
@@ -22,6 +23,7 @@ class Light extends Node3D {
 
 	public var spotCutoffAngle(get, set):Float;
 	public var spotFalloffExponent(get, set):Float;
+	public var enabled(get, set):Bool;
 
 
 	// members
@@ -38,6 +40,8 @@ class Light extends Node3D {
 
 	private var _spotCutoffAngle:Float = 15.0;
 	private var _spotFalloffExponent:Float = 0.0;
+
+	private var _enabled:Bool = true;
 
 	public static function createPointLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
 		var object = new Light();
@@ -214,6 +218,13 @@ class Light extends Node3D {
 		return this._spotFalloffExponent = value;
 	}
 
+	public function get_enabled():Bool {
+		return this._enabled;
+	}
+
+	public function set_enabled(value:Bool) {
+		return this._enabled = value;
+	}
 
 
 	/* --------- Implementation --------- */
@@ -223,6 +234,12 @@ class Light extends Node3D {
 		this._direction.x = value.x / len;
 		this._direction.y = value.y / len;
 		this._direction.z = value.z / len;
+	}
+
+	override public function updateObject(scene:Scene):Void {
+		if (this._enabled) {
+			scene.addLight(this);
+		}
 	}
 
 }

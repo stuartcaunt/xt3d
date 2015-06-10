@@ -2,8 +2,8 @@ TODO
 ====
 
 - lighting
-  - Light class
-  - Gather lights at beginning of render cycle and set global uniforms
+x   Light class
+x   Gather lights at beginning of render cycle and set global uniforms
   - Material colors/shininess
   - shader extensions based on names
     - _gouraud, _phong
