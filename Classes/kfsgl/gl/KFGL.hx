@@ -58,6 +58,10 @@ class KFGL {
 	public static inline var DepthStencilFormatStencil:Int = 2;
 	public static inline var DepthStencilFormatDepthAndStencil:Int = 3;
 
+	public static inline var PointLight:Int = 1;
+	public static inline var DirectionalLight:Int = 2;
+	public static inline var SpotLight:Int = 3;
+
 
 // MATERIAL CONSTANTS
 

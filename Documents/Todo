@@ -5,6 +5,8 @@ TODO
   - Light class
   - Gather lights at beginning of render cycle and set global uniforms
   - Material colors/shininess
+  - shader extensions based on names
+    - _gouraud, _phong
   - PhongShader (per pixel), GouraudShader (per vertex), Flat
 
 - modify opengl context
@@ -15,6 +17,10 @@ TODO
 - android
  - problem returning to application
 
+- director configuration options
+ - shader precision
+ - number of lights
+ - frame rate
 
 - Check handling of global uniforms at F4
 - Render loop

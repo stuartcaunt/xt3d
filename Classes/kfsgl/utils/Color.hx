@@ -1,18 +1,128 @@
 package kfsgl.utils;
 
+import openfl.utils.Float32Array;
 class Color  {
 
-	public var red(default, default):Float = 0.0;
-	public var green(default, default):Float = 0.0;
-	public var blue(default, default):Float = 0.0;
-	public var alpha(default, default):Float = 1.0;
+	// properties
+	public var red(get, set):Float;
+	public var green(get, set):Float;
+	public var blue(get, set):Float;
+	public var alpha(get, set):Float;
+	public var colorArray(get, null):Float32Array;
 
-	public function new(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0):Void {
+	// members
+	private var _colorArray = new Float32Array(4);
+
+	public static function create():Color {
+		var object = new Color();
+
+		if (object != null && !(object.initWithComponents(0.0, 0.0, 0.0, 1.0))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0):Color {
+		var object = new Color();
+
+		if (object != null && !(object.initWithComponents(red, green, blue, alpha))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createWithRGBHex(hex:UInt):Color {
+		var object = new Color();
+
+		if (object != null && !(object.initWithRGBHex(hex))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createWithRGBAHex(hex:UInt):Color {
+		var object = new Color();
+
+		if (object != null && !(object.initWithRGBAHex(hex))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function initWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0):Bool {
 		this.red = red;
 		this.green = green;
 		this.blue = blue;
 		this.alpha = alpha;
+
+		return true;
 	}
+
+	public function initWithRGBHex(hex:UInt):Bool {
+		this.red   = ((hex >> 16) & 0xFF) / 255.0;
+		this.green = ((hex >>  8) & 0xFF) / 255.0;
+		this.blue  = ((hex >>  0) & 0xFF) / 255.0;
+		this.alpha = 1.0;
+
+		return true;
+	}
+
+	public function initWithRGBAHex(hex:UInt):Bool {
+		this.red   = ((hex >> 24) & 0xFF) / 255.0;
+		this.green = ((hex >> 16) & 0xFF) / 255.0;
+		this.blue  = ((hex >>  8) & 0xFF) / 255.0;
+		this.alpha = ((hex >>  0) & 0xFF) / 255.0;
+
+		return true;
+	}
+
+	public function new():Void {
+	}
+
+	/* ----------- Properties ----------- */
+
+	public inline function get_red():Float {
+		return this._colorArray[0];
+	}
+
+	public inline function set_red(value:Float) {
+		return this._colorArray[0] = value;
+	}
+
+	public inline function get_green():Float {
+		return this._colorArray[1];
+	}
+
+	public inline function set_green(value:Float) {
+		return this._colorArray[1] = value;
+	}
+
+	public inline function get_blue():Float {
+		return this._colorArray[2];
+	}
+
+	public inline function set_blue(value:Float) {
+		return this._colorArray[2] = value;
+	}
+
+	public inline function get_alpha():Float {
+		return this._colorArray[3];
+	}
+
+	public inline function set_alpha(value:Float) {
+		return this._colorArray[3] = value;
+	}
+
+	public inline function get_colorArray():Float32Array {
+		return this._colorArray;
+	}
+
+
+	/* --------- Implementation --------- */
 
 	public function intValue():UInt {
 		return Std.int(this.red * 255) << 16 | Std.int(this.green * 255) << 8 | Std.int(this.blue * 255) << 0 | Std.int(this.alpha * 255) << 24;

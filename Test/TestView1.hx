@@ -1,5 +1,6 @@
 package ;
 
+import kfsgl.core.Light;
 import kfsgl.utils.KF;
 import kfsgl.Director;
 import openfl.geom.Vector3D;
@@ -80,7 +81,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			this._containerNode.addChild(this._sphereNode2);
 
 			//var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
-			var texture:Texture2D = director.textureCache.addTextureFromColor(new Color(1, 1, 0.5, 0.8));
+			var texture:Texture2D = director.textureCache.addTextureFromColor(Color.createWithComponents(1, 1, 0.5, 0.8));
 			texture.retain();
 			var textureMaterial:Material = Material.create("test_texture");
 			textureMaterial.uniform("texture").texture = texture;
@@ -140,7 +141,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			this._renderTexture = RenderTexture.create(size);
 			this._renderTextureView = View.createBasic3D(size);
 			//this._renderTextureView.scene = view.scene;
-			this._renderTextureView.backgroundColor = new Color(0.0, 0.0, 0.0, 0.1);
+			this._renderTextureView.backgroundColor = Color.createWithRGBAHex(0x00000033);
 			this._renderTextureView.camera.position = new Vector3D(0.0, 4.0, 20.0);
 			var renderMaterial:Material = Material.create("test_texture");
 			renderMaterial.uniform("texture").texture = this._renderTexture;
@@ -153,6 +154,9 @@ public static function create(backgroundColor:Color):TestView1 {
 			//renderNode.rotationX = -70.0;
 			this.scene.addChild(this._renderNode);
 
+
+			var light = Light.createPointLight();
+			light.position = new Vector3D(10.0, 0.0, 0.0);
 
 			// Schedule update
 			this.scheduleUpdate();
