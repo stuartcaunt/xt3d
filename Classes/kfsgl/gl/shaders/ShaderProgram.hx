@@ -7,7 +7,7 @@ import openfl.gl.GLShader;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
-import kfsgl.gl.shaders.ShaderInfo;
+import kfsgl.gl.shaders.ShaderTypedefs;
 import kfsgl.gl.shaders.ShaderReader;
 import kfsgl.gl.shaders.Uniform;
 import kfsgl.gl.shaders.UniformLib;
@@ -92,8 +92,10 @@ class ShaderProgram extends KFObject {
 			this._availableTextureSlots[i] = true;
 		}
 
-		var vertexProgram = shaderInfo.vertexProgram;
-		var fragmentProgram = shaderInfo.fragmentProgram;
+		// Get the source code for the shaders
+		var vertexProgram = ShaderReader.instance().shaderWithKey(shaderInfo.vertexProgram);
+		var fragmentProgram = ShaderReader.instance().shaderWithKey(shaderInfo.fragmentProgram);
+
 		var vertexDefines= shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.join('\n') : "";
 		var fragmentDefines= shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.join('\n') : "";
 		var uniforms = shaderInfo.uniforms;
@@ -113,9 +115,11 @@ class ShaderProgram extends KFObject {
 
 		// generate attribute declarations
 		var vertexAttributes:String = "";
-		for (attributeName in attributes.keys()) {
-			var attributeInfo = attributes.get(attributeName);
-			vertexAttributes += "attribute " + attributeInfo.type + " " + attributeInfo.name + ";\n";
+		if (attributes != null) {
+			for (attributeName in attributes.keys()) {
+				var attributeInfo = attributes.get(attributeName);
+				vertexAttributes += "attribute " + attributeInfo.type + " " + attributeInfo.name + ";\n";
+			}
 		}
 
 		// Convert common uniform groups into uniforms
@@ -125,23 +129,24 @@ class ShaderProgram extends KFObject {
 		// Regroup common and program-specific uniforms
 		var allVertexUniforms = new Map<String, UniformInfo>();
 		var allFragmentUniforms = new Map<String, UniformInfo>();
-		for (uniformName in uniforms.keys()) {
-			var uniformInfo = uniforms.get(uniformName);
-			if (uniformInfo.shader.indexOf("v") != -1) {
-				allVertexUniforms.set(uniformName, uniformInfo);
-			} else if (uniformInfo.shader.indexOf("v") != -1) {
-				allFragmentUniforms.set(uniformName, uniformInfo);
+		if (uniforms != null) {
+			for (uniformName in uniforms.keys()) {
+				var uniformInfo = uniforms.get(uniformName);
+				if (uniformInfo.shader.indexOf("v") != -1) {
+					allVertexUniforms.set(uniformName, uniformInfo);
+				} else if (uniformInfo.shader.indexOf("v") != -1) {
+					allFragmentUniforms.set(uniformName, uniformInfo);
+				}
 			}
 		}
 		for (uniformName in commonUniforms.keys()) {
-			var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
+			var uniformInfo = commonUniforms.get(uniformName).uniformInfo;
 			if (uniformInfo.shader.indexOf("v") != -1 && !allVertexUniforms.exists(uniformName)) {
 				allVertexUniforms.set(uniformName, uniformInfo);
 			} else if (uniformInfo.shader.indexOf("f") != -1 && !allFragmentUniforms.exists(uniformName)) {
 				allFragmentUniforms.set(uniformName, uniformInfo);
 			}
 		}
-
 
 		// generate uniform declarations
 		var vertexUniforms:String = "";
@@ -170,7 +175,7 @@ class ShaderProgram extends KFObject {
 		// Create shaders
 		var vertexShader = createShader(_vertexProgram, GL.VERTEX_SHADER);
 		var fragmentShader = createShader(_fragmentProgram, GL.FRAGMENT_SHADER);
-		
+
 		// Verify that both vertex and fragment shaders were created successfully
 		if (vertexShader == null || fragmentShader == null) {
 			return false;
@@ -180,20 +185,20 @@ class ShaderProgram extends KFObject {
 		GL.attachShader(_program, vertexShader);
 		GL.attachShader(_program, fragmentShader);
 
-		// Link program		
+		// Link program
 		GL.linkProgram(_program);
-		
+
 		// Delete shaders
 		GL.deleteShader(vertexShader);
 		GL.deleteShader(fragmentShader);
-		
+
 		// Check for errors
 		if (GL.getProgramParameter(_program, GL.LINK_STATUS) == 0) {
 			KF.Log("ERROR: unable to link program:");
 			KF.Log(GL.getProgramInfoLog(_program));
 			KF.Log("VALIDATE_STATUS: " + GL.getProgramParameter(_program, GL.VALIDATE_STATUS));
 			KF.Log("ERROR: " + GL.getError());
-			
+
 			return false;
 
 		} else {
@@ -210,10 +215,12 @@ class ShaderProgram extends KFObject {
 		}
 
 		// Get attribute locations from user-defined attributes
-		for (attributeIdentifier in attributes.keys()) {
-			var attribute = attributes.get(attributeIdentifier);
-			var location = GL.getAttribLocation(_program, attribute.name);
-			_attributes.set(attributeIdentifier, { name:attributeIdentifier, location:location, used:false });
+		if (attributes != null) {
+			for (attributeIdentifier in attributes.keys()) {
+				var attribute = attributes.get(attributeIdentifier);
+				var location = GL.getAttribLocation(_program, attribute.name);
+				_attributes.set(attributeIdentifier, { name:attributeIdentifier, location:location, used:false });
+			}
 		}
 
 		// Handle uniforms
@@ -234,7 +241,7 @@ class ShaderProgram extends KFObject {
 		// Handle common uniforms
 		for (uniformName in commonUniforms.keys()) {
 			if (!_uniforms.exists(uniformName)) {
-				var uniformInfo = commonUniforms.get(uniformName).uniformInfo();
+				var uniformInfo = commonUniforms.get(uniformName).uniformInfo;
 
 				// Create uniform
 				var uniform = this.createUniform(uniformName, uniformInfo);
@@ -252,8 +259,6 @@ class ShaderProgram extends KFObject {
 			} else {
 				//KF.Log("Ignoring common uniform " + uniformName + " : overridden by shader uniform");
 			}
-
-
 		}
 
 		return true;

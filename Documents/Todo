@@ -4,10 +4,10 @@ TODO
 - lighting
 x   Light class
 x   Gather lights at beginning of render cycle and set global uniforms
-  - Material colors/shininess
   - shader extensions based on names
     - _gouraud, _phong
   - PhongShader (per pixel), GouraudShader (per vertex), Flat
+  - Material colors/shininess
 
 - modify opengl context
   - remove openfl OpenGL view: use lime directly

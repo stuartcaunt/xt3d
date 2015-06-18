@@ -8,9 +8,9 @@ import openfl.gl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 
-import kfsgl.gl.shaders.UniformInfo;
 import kfsgl.utils.KF;
 import kfsgl.utils.errors.KFException;
+import kfsgl.gl.shaders.ShaderTypedefs;
 
 class Uniform  {
 
@@ -24,7 +24,7 @@ class Uniform  {
 	public var textureSlot(get_textureSlot, set_textureSlot):Int;
 	public var isGlobal(get, null):Bool;
 	public var hasBeenSet(get, null):Bool;
-
+	public var uniformInfo(get, null):UniformInfo;
 
 	// members
 	private var _name:String;
@@ -162,6 +162,11 @@ class Uniform  {
 		return this._hasBeenSet;
 	}
 
+	public inline function get_uniformInfo():UniformInfo {
+		return this._uniformInfo;
+	}
+
+
 
 /* --------- Implementation --------- */
 
@@ -176,10 +181,6 @@ class Uniform  {
 
 	public function clone():Uniform {
 		return Uniform.create(this._name, this._uniformInfo, this._location);
-	}
-
-	public function uniformInfo():UniformInfo {
-		return this._uniformInfo;
 	}
 
 
@@ -373,8 +374,7 @@ class Uniform  {
 	public function handleDefaultValue():Void {
 		var defaultValue = this._uniformInfo.defaultValue;
 		if (this._type == "texture") {
-			// Convert to string... not great
-			defaultValue = "" + this._uniformInfo.slot;
+			defaultValue = this._uniformInfo.slot;
 		}
 		var type = this._uniformInfo.type;
 

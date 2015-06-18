@@ -1,7 +1,7 @@
 package kfsgl.gl.shaders;
 
-import kfsgl.gl.shaders.ShaderInfo;
-import kfsgl.gl.shaders.UniformInfo;
+import kfsgl.utils.KF;
+import kfsgl.gl.shaders.ShaderTypedefs;
 
 class ShaderLib  {
 
@@ -10,7 +10,7 @@ class ShaderLib  {
 
 	// Members
 	private static var _instance:ShaderLib = null;
-	private var _shaderConfigs:Map<String, ShaderInfo> = new Map<String, ShaderInfo>();
+	private var _shaderConfigs:Map<String, ShaderInfo>;
 
 	private function new() {
 	}
@@ -37,97 +37,37 @@ class ShaderLib  {
 	}
 
 	public function init():Void {
-		var shaderConfigsJson = {
-			test_color: {
-				vertexShader: "test_vertex",
-				fragmentShader: "test_fragment",
+		this._shaderConfigs = [
+			"test_color" => {
+				vertexProgram: "test_vertex",
+				fragmentProgram: "test_fragment",
 				vertexDefines: ["#define USE_COLOR"],
-				commonUniforms: ["matrixCommon", "time", "opacity"],
-				uniforms: {
-					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
-				}
-//				attributes: {
-//					userData: { name: "a_userData", type: "vec2" }
-//				}
+				commonUniformGroups: ["matrixCommon", "time", "opacity"],
+				uniforms: [
+					"color" => { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
+				]
 			},
-			test_nocolor: {
-				vertexShader: "test_vertex",
-				fragmentShader: "test_fragment",
-				commonUniforms: ["matrixCommon", "time", "opacity"],
-				uniforms: {
-					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
-				}
+			"test_nocolor" => {
+				vertexProgram: "test_vertex",
+				fragmentProgram: "test_fragment",
+				commonUniformGroups: ["matrixCommon", "time", "opacity"],
+				uniforms: [
+					"color" => { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
+				]
 			},
-			test_texture: {
-				vertexShader: "test_vertex",
-				fragmentShader: "test_fragment",
+			"test_texture" => {
+				vertexProgram: "test_vertex",
+				fragmentProgram: "test_fragment",
 				vertexDefines: ["#define USE_TEXTURE"],
 				fragmentDefines: ["#define USE_TEXTURE"],
-				commonUniforms: ["matrixCommon", "time", "texture", "opacity"],
-				uniforms: {
-					color: { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" },
+				commonUniformGroups: ["matrixCommon", "time", "texture", "opacity"],
+				uniforms: [
+					"color" => { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" },
 					// Example of overriding common uniform
-					texture: { name: "u_texture", type: "texture", shader: "f", slot: 5 }
-				}
+					"texture" => { name: "u_texture", type: "texture", shader: "f", slot: "5" }
+				]
 			}
-		}
-
-		// Put all shader files into a more optimised structure
-		for (shaderName in Reflect.fields(shaderConfigsJson)) {
-			var config = Reflect.getProperty(shaderConfigsJson, shaderName);
-			var vertexShaderKey:String = Reflect.getProperty(config, 'vertexShader');
-			var fragmentShaderKey:String = Reflect.getProperty(config, 'fragmentShader');
-			var vertexDefines:Array<String> = Reflect.getProperty(config, 'vertexDefines');
-			var fragmentDefines:Array<String> = Reflect.getProperty(config, 'fragmentDefines');
-			var commonUniforms:Array<String> = Reflect.getProperty(config, 'commonUniforms');
-
-			var uniformMap = new Map<String, UniformInfo>();
-			var allUniformInfoJson = Reflect.getProperty(config, 'uniforms');
-			for (uniformName in Reflect.fields(allUniformInfoJson)) {
-				// Convert uniform json into type
-				var uniformInfoJson = Reflect.getProperty(allUniformInfoJson, uniformName);
-				var uniformInfo:UniformInfo = {
-					name: uniformInfoJson.name,
-					type: uniformInfoJson.type,
-					shader: uniformInfoJson.shader,
-					defaultValue: uniformInfoJson.defaultValue,
-					global: uniformInfoJson.global == true ? true : false,
-					slot: -1
-				};
-
-				if (Reflect.hasField(uniformInfoJson, "slot")) {
-					uniformInfo.slot = uniformInfoJson.slot;
-				}
-
-				// Add uniform info to map
-				uniformMap.set(uniformName, uniformInfo);
-			}
-
-			var attributeMap = new Map<String, AttributeInfo>();
-			var allAttributeInfoJson = Reflect.getProperty(config, 'attributes');
-			for (attributeName in Reflect.fields(allAttributeInfoJson)) {
-				// Convert attribute json into type
-				var attributeInfoJson = Reflect.getProperty(allAttributeInfoJson, attributeName);
-				var attributeInfo:AttributeInfo = {
-					name: attributeInfoJson.name,
-					type: attributeInfoJson.type
-				};
-
-				// Add uniform info to map
-				attributeMap.set(attributeName, attributeInfo);
-			}
-
-
-			this._shaderConfigs.set(shaderName, new ShaderInfo(
-				vertexShaderKey,
-				fragmentShaderKey,
-				vertexDefines,
-				fragmentDefines,
-				uniformMap,
-				commonUniforms,
-				attributeMap
-			));
-		}
+		];
 	}
 
 

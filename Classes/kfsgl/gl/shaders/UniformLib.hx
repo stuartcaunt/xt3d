@@ -2,6 +2,7 @@ package kfsgl.gl.shaders;
 
 import openfl.gl.GLUniformLocation;
 import kfsgl.utils.errors.KFException;
+import kfsgl.gl.shaders.ShaderTypedefs;
 
 class UniformLib {
 
@@ -21,56 +22,42 @@ class UniformLib {
 
 
 	public function init():Bool {
-		// Not no uniform should have the same name even if in different groups
-		var uniformsJson = {
-			matrixCommon: {
-				modelViewProjectionMatrix: { name: "u_modelViewProjectionMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
-				modelViewMatrix: { name: "u_modelViewMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
-				modelMatrix: { name: "u_modelMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
-				viewMatrix: { name: "u_viewMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
-				projectionMatrix: { name: "u_projectionMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
-				normalMatrix: { name: "u_normalMatrix", type: "mat3", shader: "v", defaultValue: "identity" }
-			},
-			time: {
-				time: { name: "u_time", type: "float", shader: "fv", defaultValue: "0.0", global: true}
-			},
-			texture: {
-				texture: { name: "u_texture", type: "texture", shader: "f" },
-				uvScaleOffset: { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
-			},
-			opacity: {
-				opacity: { name: "u_opacity", type: "float", shader: "f", defaultValue: "1.0" }
-			}
-		};
+		// Note no uniform should have the same name even if in different groups
+		var uniformGroups:Map<String, Map<String, UniformInfo> > = [
+			"matrixCommon" => [
+				"modelViewProjectionMatrix" => { name: "u_modelViewProjectionMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
+				"modelViewMatrix" => { name: "u_modelViewMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
+				"modelMatrix" => { name: "u_modelMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
+				"viewMatrix" => { name: "u_viewMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
+				"projectionMatrix" => { name: "u_projectionMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
+				"normalMatrix" => { name: "u_normalMatrix", type: "mat3", shader: "v", defaultValue: "identity" }
+			],
+			"time" => [
+				"time" => { name: "u_time", type: "float", shader: "fv", defaultValue: "0.0", global: true}
+			],
+			"texture" => [
+				"texture" => { name: "u_texture", type: "texture", shader: "f" },
+				"uvScaleOffset" => { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
+			],
+			"opacity" => [
+				"opacity" => { name: "u_opacity", type: "float", shader: "f", defaultValue: "1.0" }
+			]
+		];
 
-		// Put all shader files into a more optimised structure
-		for (groupName in Reflect.fields(uniformsJson)) {
+		for (groupName in uniformGroups.keys()) {
 
 			// Create new map for uniforms values
 			var uniformValuesMap = new Map<String, Uniform>();
 			this._uniformGroups.set(groupName, uniformValuesMap);
 
 			// Iterate over uniforms for the group
-			var allUniformInfoJson = Reflect.getProperty(uniformsJson, groupName);
-			for (uniformName in Reflect.fields(allUniformInfoJson)) {
-
-				// Convert uniform json into type
-				var uniformInfoJson = Reflect.getProperty(allUniformInfoJson, uniformName);
-				var uniformInfo:UniformInfo = {
-					name: uniformInfoJson.name, 
-					type: uniformInfoJson.type, 
-					shader: uniformInfoJson.shader,
-					defaultValue: uniformInfoJson.defaultValue,
-					global: uniformInfoJson.global == true ? true : false,
-					slot: -1
-				};
-
-				if (Reflect.hasField(uniformInfoJson, "slot")) {
-					uniformInfo.slot = uniformInfoJson.slot;
-				}
+			var uniformsInfos = uniformGroups.get(groupName);
+			for (uniformName in uniformsInfos.keys()) {
+				var uniformInfo = uniformsInfos.get(uniformName);
 
 				// Add uniform value to map
 				uniformValuesMap.set(uniformName, Uniform.createEmpty(uniformName, uniformInfo));
+
 			}
 		}
 

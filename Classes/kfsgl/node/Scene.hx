@@ -13,8 +13,8 @@ class Scene extends Node3D {
 	public var lights(get, null):Array<Light>;
 	public var zSortingStrategy(get, set):Int;
 
-	private var _opaqueObjects:Array<RenderObject>;
-	private var _transparentObjects:Array<RenderObject>;
+	private var _opaqueObjects:Array<RenderObject> = new Array<RenderObject>();
+	private var _transparentObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _zSortingStrategy:Int = KFGL.ZSortingAll;
 	private var _lights:Array<Light> = new Array<Light>();
 
