@@ -20,18 +20,23 @@ class ShaderManager {
 	private var _highPrecisionAvailable:Bool = true;
 	private var _mediumPrecisionAvailable:Bool = true;
 	private var _precisionAvailable:Bool = true;
+	private var _uniformLib:UniformLib;
+	private var _maxTextureSlots:Int;
 
-	public static function create():ShaderManager {
+	public static function create(uniformLib:UniformLib, maxTextureSlots:Int):ShaderManager {
 		var object = new ShaderManager();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(uniformLib, maxTextureSlots))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	private function init():Bool {
+	private function init(uniformLib:UniformLib, maxTextureSlots:Int):Bool {
+		this._uniformLib = uniformLib;
+		this._maxTextureSlots = maxTextureSlots;
+
 		_programs = new Map<String, ShaderProgram>();
 
 		// Get available precisions
@@ -95,30 +100,43 @@ class ShaderManager {
 		}
 	}
 
-	public function loadDefaultShaders(uniformLib:UniformLib, textureManager:GLTextureManager):Void {
-		// Get all shader configs
-		var shaderConfigs = ShaderLib.instance().shaderConfigs;
+	public function loadDefaultShaders():Void {
 
-		// Iterate over all shaders
-		var shaderNames = shaderConfigs.keys();
-		while (shaderNames.hasNext()) {
-			var shaderName = shaderNames.next();
-			var shaderInfo = shaderConfigs.get(shaderName);
+		var defaultShaders = [
+			"generic",
+			"generic_vertexColors",
+			"generic_texture",
+			"generic_texture_vertexColors"
+		];
 
+		for (defaultShader in defaultShaders) {
+			this.createShaderProgram(defaultShader);
+		}
+	}
+
+	public function createShaderProgram(shaderName:String):ShaderProgram {
+		var shaderInfo = ShaderLib.instance().getShaderInfo(shaderName);
+
+		if (shaderInfo != null) {
 			// Create program for each shader
-			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, uniformLib, textureManager.maxTextureSlots);
+			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, this._uniformLib, this._maxTextureSlots);
 
 			// Verify program
 			if (program != null) {
 				// Add program to map
 				this.addProgramWithName(shaderName, program);
 
+				return program;
+
 			} else {
 				throw new KFException("UnableToCreateProgram", "The shader program \"" + shaderName + "\" did not compile");
 			}
+
+		} else {
+			throw new KFException("NoShaderProgramConfig", "The shader program \"" + shaderName + "\" does not exist in library configs");
 		}
 	}
-	
+
 	public function addProgramWithName(name:String, program:ShaderProgram):Void {
 		// Verify that a program doesn't already exist for the given name
 		if (_programs.exists(name)) {
@@ -139,7 +157,15 @@ class ShaderManager {
 	public function programWithName(name:String):ShaderProgram {
 		var program = _programs.get(name);
 		if (program == null) {
-			throw new KFException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
+
+			// If it doesn't exist create the shader (if possible)
+			try {
+				program = this.createShaderProgram(name);
+
+			} catch (error:KFException) {
+				throw new KFException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
+			}
+
 		}
 
 		return program;

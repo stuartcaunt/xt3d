@@ -81,9 +81,9 @@ class Renderer extends KFObject {
 		// Initialise uniform lib
 		this._uniformLib = UniformLib.create();
 
-		// Build all shaders
-		this._shaderManager = ShaderManager.create();
-		this._shaderManager.loadDefaultShaders(this._uniformLib, this._textureManager);
+		// Initialise shader manager and build default shaders
+		this._shaderManager = ShaderManager.create(this._uniformLib, this._textureManager.maxTextureSlots);
+		this._shaderManager.loadDefaultShaders();
 
 #if ios
 		// Keep reference to screen frame and render buffers - these are not null for iOS

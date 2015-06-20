@@ -25,16 +25,15 @@ class ShaderReader  {
 
 
 	public function init():Void {
-		var shaderFilesJson = {
-			prefix_vertex: 'prefix_vertex.glsl',
-			prefix_fragment: 'prefix_fragment.glsl',
-			test_vertex: 'test_vertex.glsl',
-			test_fragment: 'test_fragment.glsl'
-		};
+		var shaderFiles = [
+			"prefix_vertex" => "prefix_vertex.glsl",
+			"prefix_fragment" => "prefix_fragment.glsl",
+			"generic_vertex" => "generic_vertex.glsl",
+			"generic_fragment" => "generic_fragment.glsl"
+		];
 
-		// Put all shader files into a more optimised structure
-		for (key in Reflect.fields(shaderFilesJson)) {
-			var shaderFile = Reflect.getProperty(shaderFilesJson, key);
+		for (key in shaderFiles.keys()) {
+			var shaderFile = shaderFiles.get(key);
 
 			// Read shader file
 			//KF.Log("Reading shader file " + shaderFile);
