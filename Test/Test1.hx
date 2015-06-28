@@ -32,7 +32,8 @@ class Test1 extends Sprite {
 	public function new () {
 		super ();
 
-		var backgroundColor = Color.createWithComponents(0.5, 0.8, 0.8, 0.5);
+		//var backgroundColor = Color.createWithComponents(0.5, 0.8, 0.8, 0.5);
+		var backgroundColor = Color.createWithComponents(0.3, 0.3, 0.3);
 
 		// Create opengl view and as it as a child
 		var openGLView = new OpenGLView();
@@ -43,7 +44,8 @@ class Test1 extends Sprite {
 		_director.backgroundColor = backgroundColor;
 
 		// Create test view
-		var view = TestView1.create(backgroundColor);
+		//var view = TestView1.create(backgroundColor);
+		var view = TestGouraud.create(backgroundColor);
 
 		// Add view to director
 		_director.addView(view);

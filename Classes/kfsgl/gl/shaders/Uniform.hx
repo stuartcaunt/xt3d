@@ -49,6 +49,8 @@ class Uniform  {
 
 	private var _hasBeenSet:Bool = false;
 	private var _isDirty:Bool = true;
+	private var _uniformArray:Array<Uniform> = null;
+	private var _uniformStruct:Map<String, Uniform> = null;
 
 	public static function create(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Uniform {
 		var object = new Uniform();
@@ -178,6 +180,23 @@ class Uniform  {
 		}
 	}
 
+	public function at(index:Int):Uniform {
+		if (this._uniformArray != null) {
+			return this._uniformArray[index];
+
+		} else {
+			throw new KFException("UniformNotArray", "Uniform " + this._uniformInfo.name + " is not an array");
+		}
+	}
+
+	public function get(typeElementName:String):Uniform {
+		if (this._uniformStruct != null) {
+			return this._uniformStruct.get(typeElementName);
+
+		} else {
+			throw new KFException("UniformNotStruct", "Uniform " + this._uniformInfo.name + " is not a struct");
+		}
+	}
 
 	public function clone():Uniform {
 		return Uniform.create(this._name, this._uniformInfo, this._location);

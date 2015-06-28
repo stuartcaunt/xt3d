@@ -6,8 +6,16 @@ x   Light class
 x   Gather lights at beginning of render cycle and set global uniforms
 x  - shader extensions based on names
 x    - _texture, _phong, _etc
+  - declare uniform types in shaderlib
+  - uniform array types
   - PhongShader (per pixel), GouraudShader (per vertex), Flat
   - Material colors/shininess
+  - common shader header file between vertex and fragment
+
+- director configuration options
+ - shader precision
+ - number of lights
+ - frame rate
 
 - perfs
   - checking if uniforms change: optional?
@@ -20,10 +28,6 @@ x    - _texture, _phong, _etc
 - android
  - problem returning to application
 
-- director configuration options
- - shader precision
- - number of lights
- - frame rate
 
 - Check handling of global uniforms at F4
 - Render loop

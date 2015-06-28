@@ -2,6 +2,7 @@ package kfsgl.gl.shaders;
 
 import kfsgl.utils.KF;
 import kfsgl.gl.shaders.ShaderTypedefs;
+import kfsgl.gl.shaders.ShaderTypedefUtils;
 
 class ShaderLib  {
 
@@ -62,6 +63,29 @@ class ShaderLib  {
 					// Example of overriding common uniform
 					"texture" => { name: "u_texture", type: "texture", shader: "f", slot: "5" }
 				]
+			},
+
+			"gouraud" => {
+				types: [
+					"Light" => [
+						"position" => "vec4",
+						"ambientColor" => "vec4",
+						"diffuseColor" => "vec4",
+						"specularColor" => "vec4",
+						"attenuation" => "vec3",
+						"spotCutoffAngle" => "float",
+						"spotDirection" => "vec3",
+						"spotFalloffExponent" => "float"
+					]
+				],
+				variables: [
+					{ name: "MAX_LIGHTS", value: "4" } // TODO Specify max from director config
+				],
+				vertexDefines: ["#define GOURAUD_LIGHTING", "#define MAX_LIGHTS $MAX_LIGHTS"],
+				uniforms: [
+//					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v" },
+					"light" => { name: "u_light", type: "Light", shader: "v" }
+				]
 			}
 
 		];
@@ -77,6 +101,9 @@ class ShaderLib  {
 				// Simple shader without extensions
 				if (this._baseShaderConfigs.exists(shaderName)) {
 					shaderConfig = ShaderTypedefUtils.cloneShaderInfo(this._baseShaderConfigs.get(shaderName));
+
+					// Preprocess variables
+					this.preprocessShaderConfig(shaderConfig);
 
 					// Store configuration
 					this._shaderConfigs.set(shaderName, shaderConfig);
@@ -114,6 +141,9 @@ class ShaderLib  {
 							ShaderTypedefUtils.extendShaderInfo(shaderConfig, extensionConfig, shaderName, extensionName);
 						}
 
+						// Preprocess variables
+						this.preprocessShaderConfig(shaderConfig);
+
 						// Store new configuration
 						this._shaderConfigs.set(shaderName, shaderConfig);
 					}
@@ -124,5 +154,13 @@ class ShaderLib  {
 		return shaderConfig;
 	}
 
+
+	private function preprocessShaderConfig(shaderConfig:ShaderInfo):Void {
+		if (shaderConfig.variables != null) {
+			for (variable in shaderConfig.variables) {
+				ShaderTypedefUtils.processVarable(shaderConfig, variable);
+			}
+		}
+	}
 
 }
