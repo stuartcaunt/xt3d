@@ -181,11 +181,11 @@ class ShaderProgram extends KFObject {
 		var fragmentUniforms:String = "";
 		for (uniformName in allVertexUniforms.keys()) {
 			var uniformInfo = allVertexUniforms.get(uniformName);
-			vertexUniforms += "uniform " + Uniform.codeType(uniformInfo.type) + " " + uniformInfo.name + ";\n";
+			vertexUniforms += ShaderUtils.buildUniformDeclaration(uniformInfo);
 		}
 		for (uniformName in allFragmentUniforms.keys()) {
 			var uniformInfo = allFragmentUniforms.get(uniformName);
-			fragmentUniforms += "uniform " + Uniform.codeType(uniformInfo.type) + " " + uniformInfo.name + ";\n";
+			fragmentUniforms += ShaderUtils.buildUniformDeclaration(uniformInfo);
 		}
 
 		// Add prefixes

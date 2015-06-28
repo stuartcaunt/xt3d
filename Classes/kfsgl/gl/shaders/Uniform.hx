@@ -172,14 +172,6 @@ class Uniform  {
 
 /* --------- Implementation --------- */
 
-	public static function codeType(uniformType:String):String {
-		if (uniformType == "texture") {
-			return "sampler2D";
-		} else {
-			return uniformType;
-		}
-	}
-
 	public function at(index:Int):Uniform {
 		if (this._uniformArray != null) {
 			return this._uniformArray[index];

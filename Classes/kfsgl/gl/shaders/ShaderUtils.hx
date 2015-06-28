@@ -1,5 +1,6 @@
 package kfsgl.gl.shaders;
 
+import kfsgl.utils.errors.KFException;
 import kfsgl.gl.shaders.ShaderTypedefs;
 import kfsgl.utils.StringFunctions;
 import kfsgl.utils.KF;
@@ -260,6 +261,30 @@ class ShaderUtils {
 		return shaderTypeTexts;
 	}
 
+	public static function buildUniformDeclaration(uniformInfo:UniformInfo):String {
+		if (uniformIsArray(uniformInfo)) {
+			var uniformType = uniformType(uniformInfo);
+			var type = uniformCodeTypeFromBaseType(uniformType);
+			var arraySize = uniformArraySize(uniformInfo);
+
+			return "uniform " + type + " " + uniformInfo.name + "[" +arraySize + "];\n";
+
+		} else {
+			var type = uniformCodeTypeFromBaseType(uniformInfo.type);
+
+			return "uniform " + type + " " + uniformInfo.name + ";\n";
+		}
+	}
+
+	public static function uniformCodeTypeFromBaseType(uniformType:String):String {
+		if (uniformType == "texture") {
+			return "sampler2D";
+		} else {
+			return uniformType;
+		}
+	}
+
+
 	public static function uniformType(uniformInfo:UniformInfo):String {
 		var rawType = uniformInfo.type;
 		if (!uniformIsArray(uniformInfo)) {
@@ -268,6 +293,18 @@ class ShaderUtils {
 			var bracketIndex = rawType.indexOf("[");
 			return rawType.substr(0, bracketIndex);
 		}
+	}
+
+	public static function uniformArraySize(uniformInfo:UniformInfo):String {
+		var rawType = uniformInfo.type;
+		var leftBracketIndex = rawType.indexOf("[");
+		var rightBracketIndex = rawType.indexOf("]");
+
+		if (leftBracketIndex == -1 || leftBracketIndex == -1) {
+			throw new KFException("IncoherentUniformArrayDeclaration", "The uniform \"" + uniformInfo.name + "\" has incoherent array declaration: " + uniformInfo.type);
+		}
+
+		return uniformInfo.type.substring(leftBracketIndex + 1, rightBracketIndex);
 	}
 
 	public static function uniformIsArray(uniformInfo:UniformInfo):Bool {
