@@ -2,7 +2,7 @@ package kfsgl.gl.shaders;
 
 import kfsgl.utils.KF;
 import kfsgl.gl.shaders.ShaderTypedefs;
-import kfsgl.gl.shaders.ShaderTypedefUtils;
+import kfsgl.gl.shaders.ShaderUtils;
 
 class ShaderLib  {
 
@@ -68,14 +68,14 @@ class ShaderLib  {
 			"gouraud" => {
 				types: [
 					"Light" => [
-						"position" => "vec4",
-						"ambientColor" => "vec4",
-						"diffuseColor" => "vec4",
-						"specularColor" => "vec4",
-						"attenuation" => "vec3",
-						"spotCutoffAngle" => "float",
-						"spotDirection" => "vec3",
-						"spotFalloffExponent" => "float"
+						{ type: "vec4", name: "position"},
+						{ type: "vec4", name: "ambientColor"},
+						{ type: "vec4", name: "diffuseColor"},
+						{ type: "vec4", name: "specularColor"},
+						{ type: "vec3", name: "attenuation"},
+						{ type: "float", name: "spotCutoffAngle"},
+						{ type: "vec3", name: "spotDirection"},
+						{ type: "float", name: "spotFalloffExponent"}
 					]
 				],
 				variables: [
@@ -100,7 +100,7 @@ class ShaderLib  {
 			if (shaderName.indexOf("_") == -1) {
 				// Simple shader without extensions
 				if (this._baseShaderConfigs.exists(shaderName)) {
-					shaderConfig = ShaderTypedefUtils.cloneShaderInfo(this._baseShaderConfigs.get(shaderName));
+					shaderConfig = ShaderUtils.cloneShaderInfo(this._baseShaderConfigs.get(shaderName));
 
 					// Preprocess variables
 					this.preprocessShaderConfig(shaderConfig);
@@ -133,12 +133,12 @@ class ShaderLib  {
 
 					// Continue to create full config if all ok
 					if (baseShaderConfig != null && allExtensionsExist) {
-						shaderConfig = ShaderTypedefUtils.cloneShaderInfo(baseShaderConfig);
+						shaderConfig = ShaderUtils.cloneShaderInfo(baseShaderConfig);
 
 						// Add extension configurations to base configuration
 						for (extensionName in shaderComponents) {
 							var extensionConfig = this._shaderExtensions.get(extensionName);
-							ShaderTypedefUtils.extendShaderInfo(shaderConfig, extensionConfig, shaderName, extensionName);
+							ShaderUtils.extendShaderInfo(shaderConfig, extensionConfig, shaderName, extensionName);
 						}
 
 						// Preprocess variables
@@ -158,7 +158,7 @@ class ShaderLib  {
 	private function preprocessShaderConfig(shaderConfig:ShaderInfo):Void {
 		if (shaderConfig.variables != null) {
 			for (variable in shaderConfig.variables) {
-				ShaderTypedefUtils.processVarable(shaderConfig, variable);
+				ShaderUtils.processVarable(shaderConfig, variable);
 			}
 		}
 	}

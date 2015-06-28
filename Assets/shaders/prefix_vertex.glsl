@@ -2,16 +2,7 @@
 
 #if (defined (GOURAUD_LIGHTING) && defined (MAX_LIGHTS))
 
-struct Light {
-	vec4 position;
-	vec4 ambientColor;
-	vec4 diffuseColor;
-	vec4 specularColor;
-	vec3 attenuation;
-	float spotCutoffAngle;
-	vec3 spotDirection;
-	float spotFalloffExponent;
-};
+// Function to calculate gouraud lighting...
 
 #endif // GOURAUD_LIGHTING
 

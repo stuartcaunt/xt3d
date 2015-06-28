@@ -4,7 +4,7 @@ import kfsgl.gl.shaders.ShaderTypedefs;
 import kfsgl.utils.StringFunctions;
 import kfsgl.utils.KF;
 
-class ShaderTypedefUtils {
+class ShaderUtils {
 
 	public static function cloneShaderInfo(shaderInfo:ShaderInfo):ShaderInfo {
 		var clone:ShaderInfo = {
@@ -60,6 +60,14 @@ class ShaderTypedefUtils {
 		return clone;
 	}
 
+	public static function cloneBaseTypeInfo(baseTypeInfo:BaseTypeInfo):BaseTypeInfo {
+		var clone:BaseTypeInfo = {
+			name: baseTypeInfo.name,
+			type: baseTypeInfo.type
+		};
+		return clone;
+	}
+
 	public static function cloneShaderVariable(shaderVariable:ShaderVariable):ShaderVariable {
 		var clone:ShaderVariable = {
 			name: shaderVariable.name,
@@ -95,18 +103,18 @@ class ShaderTypedefUtils {
 
 		if (shaderExtensionInfo.types != null) {
 			if (shaderInfo.types == null) {
-				shaderInfo.types = new Map<String, Map<String, String>>();
+				shaderInfo.types = new Map<String, Array<BaseTypeInfo>>();
 			}
 
-			for (typeName in shaderInfo.types.keys()) {
-				if (shaderInfo.types.exists(typeName)) {
-					var typeDefinition = shaderInfo.types.get(typeName);
+			for (typeName in shaderExtensionInfo.types.keys()) {
+				if (!shaderInfo.types.exists(typeName)) {
+					var typeDefinition = shaderExtensionInfo.types.get(typeName);
 
-					var clonedTypeDef = new Map<String, String>();
+					var clonedTypeDef = new Array<BaseTypeInfo>();
 					shaderInfo.types.set(typeName, clonedTypeDef);
 
-					for (elementName in typeDefinition.keys()) {
-						clonedTypeDef.set(elementName, typeDefinition.get(elementName));
+					for (baseType in typeDefinition) {
+						clonedTypeDef.push(cloneBaseTypeInfo(baseType));
 					}
 				} else {
 					KF.Warn("Duplicate shader type \"" + typeName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
@@ -229,4 +237,43 @@ class ShaderTypedefUtils {
 			}
 		}
 	}
+
+
+	public static function buildShaderTypesText(types:Map<String, Array<BaseTypeInfo>>):Map<String, String> {
+		var shaderTypeTexts = new Map<String, String>();
+		if (types != null) {
+			for (typeName in types.keys()) {
+				var typeDefinition = types.get(typeName);
+
+				var shaderTypeText = "struct " + typeName + " {\n";
+
+				for (baseType in typeDefinition) {
+					shaderTypeText += "\t" + baseType.type + " " + baseType.name + ";\n";
+				}
+
+				shaderTypeText += "};\n\n";
+
+				shaderTypeTexts.set(typeName, shaderTypeText);
+			}
+		}
+
+		return shaderTypeTexts;
+	}
+
+	public static function uniformType(uniformInfo:UniformInfo):String {
+		var rawType = uniformInfo.type;
+		if (!uniformIsArray(uniformInfo)) {
+			return rawType;
+		} else {
+			var bracketIndex = rawType.indexOf("[");
+			return rawType.substr(0, bracketIndex);
+		}
+	}
+
+	public static function uniformIsArray(uniformInfo:UniformInfo):Bool {
+		var rawType = uniformInfo.type;
+		var bracketIndex = rawType.indexOf("[");
+		return (bracketIndex != -1);
+	}
+
 }

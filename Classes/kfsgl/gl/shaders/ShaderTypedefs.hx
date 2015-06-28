@@ -6,11 +6,16 @@ typedef ShaderVariable = {
 	value: String
 }
 
+typedef BaseTypeInfo = {
+	name: String,
+	type: String,
+}
+
 typedef ShaderInfo = {
 	vertexProgram:String,
 	fragmentProgram:String,
 	?variables:Array<ShaderVariable>,
-	?types:Map<String, Map<String, String>>,
+	?types:Map<String, Array<BaseTypeInfo>>,
 	?vertexDefines:Array<String>,
 	?fragmentDefines:Array<String>,
 	?commonUniformGroups:Array<String>,
@@ -20,7 +25,7 @@ typedef ShaderInfo = {
 
 typedef ShaderExtensionInfo = {
 	?variables:Array<ShaderVariable>,
-	?types:Map<String, Map<String, String>>,
+	?types:Map<String, Array<BaseTypeInfo>>,
 	?vertexDefines:Array<String>,
 	?fragmentDefines:Array<String>,
 	?commonUniformGroups:Array<String>,

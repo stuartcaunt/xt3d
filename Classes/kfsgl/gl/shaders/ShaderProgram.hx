@@ -96,6 +96,12 @@ class ShaderProgram extends KFObject {
 		var vertexProgram = ShaderReader.instance().shaderWithKey(shaderInfo.vertexProgram);
 		var fragmentProgram = ShaderReader.instance().shaderWithKey(shaderInfo.fragmentProgram);
 
+		// precision
+		var precisionText = (precision == null) ? "" : "\n\nprecision " + precision + " float;";
+
+		// build types map
+		var shaderTypes:Map<String, String> = ShaderUtils.buildShaderTypesText(shaderInfo.types);
+
 		var vertexDefines= shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.join('\n') : "";
 		var fragmentDefines= shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.join('\n') : "";
 		var uniforms = shaderInfo.uniforms;
@@ -109,9 +115,6 @@ class ShaderProgram extends KFObject {
 		if (_prefixFragment == null) {
 			_prefixFragment = ShaderReader.instance().shaderWithKey("prefix_fragment");
 		}
-
-		// precision
-		var precisionText = (precision == null) ? "" : "\n\nprecision " + precision + " float;";
 
 		// generate attribute declarations
 		var vertexAttributes:String = "";
@@ -148,6 +151,31 @@ class ShaderProgram extends KFObject {
 			}
 		}
 
+		// Determine types that need to be inserted into vertex and fragment shaders
+		var vertexTypes = new Map<String, String>();
+		for (uniformInfo in allVertexUniforms) {
+			var type = ShaderUtils.uniformType(uniformInfo);
+			if (shaderTypes.exists(type) && !vertexTypes.exists(type)) {
+				vertexTypes.set(type, shaderTypes.get(type));
+			}
+		}
+		var vertexTypesString:String = "";
+		for (typeDefinition in vertexTypes) {
+			vertexTypesString += typeDefinition + "\n\n";
+		}
+
+		var fragmentTypes = new Map<String, String>();
+		for (uniformInfo in allFragmentUniforms) {
+			var type = ShaderUtils.uniformType(uniformInfo);
+			if (shaderTypes.exists(type) && !fragmentTypes.exists(type)) {
+				fragmentTypes.set(type, shaderTypes.get(type));
+			}
+		}
+		var fragmentTypesString:String = "";
+		for (typeDefinition in fragmentTypes) {
+			fragmentTypesString += typeDefinition + "\n\n";
+		}
+
 		// generate uniform declarations
 		var vertexUniforms:String = "";
 		var fragmentUniforms:String = "";
@@ -161,8 +189,21 @@ class ShaderProgram extends KFObject {
 		}
 
 		// Add prefixes
-		_vertexProgram = "// vertex shader: " + shaderName + precisionText + "\n\n// vertexDefines:\n" + vertexDefines + "\n" + _prefixVertex + "\n\n// extra vertex attributes:\n" + vertexAttributes + "\n// vertexUniforms:\n" + vertexUniforms + "\n// VertexProgram:\n" + vertexProgram;
-		_fragmentProgram = "// fragment shader: " + shaderName + precisionText + "\n\n// fragmentDefines:\n" + fragmentDefines + "\n" + _prefixFragment + "\n\n// fragmentUniforms:\n" + fragmentUniforms + "\n// fragmentProgram:\n" + fragmentProgram;
+		_vertexProgram = "// vertex shader: " + shaderName +
+			precisionText +
+			"\n\n// vertexDefines:\n" + vertexDefines +
+			"\n\n// vertexTypes:\n" + vertexTypesString +
+			_prefixVertex +
+			"\n// extra vertex attributes:\n" + vertexAttributes +
+			"\n// vertexUniforms:\n" + vertexUniforms +
+			"\n// VertexProgram:\n" + vertexProgram;
+		_fragmentProgram = "// fragment shader: " + shaderName +
+			precisionText +
+			"\n\n// fragmentDefines:\n" + fragmentDefines +
+			"\n\n// fragmentTypes:\n" + fragmentTypesString +
+			_prefixFragment +
+			"\n\n// fragmentUniforms:\n" + fragmentUniforms +
+			"\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
 		_program = GL.createProgram();
