@@ -90,7 +90,8 @@ class Color  {
 	}
 
 	public inline function set_red(value:Float) {
-		return this._colorArray[0] = value;
+		this._colorArray[0] = value;
+		return value;
 	}
 
 	public inline function get_green():Float {
@@ -98,7 +99,8 @@ class Color  {
 	}
 
 	public inline function set_green(value:Float) {
-		return this._colorArray[1] = value;
+		this._colorArray[1] = value;
+		return value;
 	}
 
 	public inline function get_blue():Float {
@@ -106,7 +108,8 @@ class Color  {
 	}
 
 	public inline function set_blue(value:Float) {
-		return this._colorArray[2] = value;
+		this._colorArray[2] = value;
+		return value;
 	}
 
 	public inline function get_alpha():Float {
@@ -114,7 +117,8 @@ class Color  {
 	}
 
 	public inline function set_alpha(value:Float) {
-		return this._colorArray[3] = value;
+		this._colorArray[3] = value;
+		return value;
 	}
 
 	public inline function get_colorArray():Float32Array {
