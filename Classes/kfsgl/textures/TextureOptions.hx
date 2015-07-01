@@ -15,8 +15,8 @@ class TextureOptions {
 	// members
 	private var _forcePOT:Bool = true;
 	private var _generateMipMaps:Bool = true;
-	private var _minFilter:Int = KFGL.GL_NEAREST;
-	private var _magFilter:Int = KFGL.GL_NEAREST;
+	private var _minFilter:Int = KFGL.GL_LINEAR_MIPMAP_NEAREST;
+	private var _magFilter:Int = KFGL.GL_LINEAR;
 	private var _wrapS:Int = KFGL.GL_REPEAT;
 	private var _wrapT:Int = KFGL.GL_REPEAT;
 

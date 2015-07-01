@@ -33,7 +33,7 @@ class Test1 extends Sprite {
 		super ();
 
 		//var backgroundColor = Color.createWithComponents(0.5, 0.8, 0.8, 0.5);
-		var backgroundColor = Color.createWithComponents(0.3, 0.3, 0.3);
+		var backgroundColor = Color.createWithComponents(0.2, 0.2, 0.2);
 
 		// Create opengl view and as it as a child
 		var openGLView = new OpenGLView();

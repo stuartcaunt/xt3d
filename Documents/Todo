@@ -4,10 +4,11 @@ TODO
 - lighting
 x   Light class
 x   Gather lights at beginning of render cycle and set global uniforms
-x  - shader extensions based on names
-x    - _texture, _phong, _etc
-  - declare uniform types in shaderlib
+x   shader extensions based on names
+x     _texture, _phong, _etc
+x   declare uniform types in shaderlib
   - uniform array types
+  - uniform struct types
   - PhongShader (per pixel), GouraudShader (per vertex), Flat
   - Material colors/shininess
   - common shader header file between vertex and fragment
@@ -16,6 +17,11 @@ x    - _texture, _phong, _etc
  - shader precision
  - number of lights
  - frame rate
+
+- bump mapping / normal mapping
+ - bump to normal convertor
+
+- Camera controller
 
 - perfs
   - checking if uniforms change: optional?

@@ -46,7 +46,7 @@ public static function create(backgroundColor:Color):TestGouraud {
 			this.backgroundColor = backgroundColor;
 
 			// Create a camera and set it in the view
-			var cameraDistance:Float = 10.0;
+			var cameraDistance:Float = 90.0;
 			this.camera.position = new Vector3D(0, 0, cameraDistance);
 
 			this._containerNode = Node3D.create();
@@ -54,10 +54,10 @@ public static function create(backgroundColor:Color):TestGouraud {
 			//scene.zSortingEnabled = false;
 
 			// create geometries
-			var sphere = Sphere.create(5.0, 16, 16);
+			var sphere = Sphere.create(33.0, 64, 64);
 
 			// Create a material
-			var texture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/mars.jpg");
+			var texture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/marsmap2k.jpg");
 			texture.retain();
 			var material:Material = Material.create("generic_texture_gouraud");
 			material.uniform("texture").texture = texture;
@@ -65,7 +65,6 @@ public static function create(backgroundColor:Color):TestGouraud {
 
 			// Create sphere mesh node
 			this._sphereNode = MeshNode.create(sphere, material);
-			this._sphereNode.position = new Vector3D(0.0, 0.0, -10.0);
 			this._containerNode.addChild(this._sphereNode);
 
 
@@ -94,7 +93,7 @@ public static function create(backgroundColor:Color):TestGouraud {
 
 		this._t += 1.0 / 60.0;
 
-		this._rotation += dt * (360.0 / 8.0);
+		this._rotation += dt * (360.0 / 16.0);
 		this._sphereNode.rotationY = this._rotation;
 	}
 
