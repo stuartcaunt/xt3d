@@ -139,8 +139,6 @@ class Uniform  {
 			}
 		} else {
 			// Standard uniform
-			KF.Log("Creating uniform \"" + this._name + "\"");
-
 			this._location = GL.getUniformLocation(program, uniformInfo.name);
 
 			handleDefaultValue();
@@ -237,7 +235,7 @@ class Uniform  {
 
 /* --------- Implementation --------- */
 
-	public function at(index:Int):Uniform {
+	public inline function at(index:Int):Uniform {
 		if (this._uniformArray != null) {
 			return this._uniformArray[index];
 
@@ -246,7 +244,7 @@ class Uniform  {
 		}
 	}
 
-	public function get(typeElementName:String):Uniform {
+	public inline function get(typeElementName:String):Uniform {
 		if (this._uniformStruct != null) {
 			return this._uniformStruct.get(typeElementName);
 
@@ -280,75 +278,88 @@ class Uniform  {
 	}
 
 
-	public function prepareForUse() {
+	public inline function prepareForUse() {
 		_hasBeenSet = false;
 	}
 
 	public function use() {
-		var type = this._type;
-
-		// Send value to the GPU if it is dirty
-		if (_isDirty) {
-			//KF.Log("Setting uniform " + this._name);
-			if (type == "float") {
-				GL.uniform1f(this._location, this._floatValue);
-
-			} else if (type == "texture") {
-				GL.uniform1i(this._location, this._textureSlot);
-
-			} else if (type == "vec2") {
-#if js
-				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
-#else
-				this._float32ArrayValue.set(this._floatArrayValue);
-#end
-				GL.uniform2fv(this._location, this._float32ArrayValue);
-
-			} else if (type == "vec3") {
-#if js
-				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
-#else
-				this._float32ArrayValue.set(this._floatArrayValue);
-#end
-				GL.uniform3fv(this._location, this._float32ArrayValue);
-
-			} else if (type == "vec4") {
-#if js
-				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
-#else
-				this._float32ArrayValue.set(this._floatArrayValue);
-#end
-				GL.uniform4fv(this._location, this._float32ArrayValue);
-
-			} else if (type == "mat3") {
-#if js
-				this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
-#else
-				this._float32ArrayValue.set(this._floatArrayValue);
-#end
-				GL.uniformMatrix3fv(this._location, false, this._float32ArrayValue);
-
-			} else if (type == "mat4") {
-#if js
-				this.copyToTypedArray(this._matrixValue.rawData.toArray(), this._float32ArrayValue);
-#elseif neko
-				this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
-#elseif (ios || mac || android)
-				this._float32ArrayValue.set(this._matrixValue.rawData);
-#else
-				this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
-#end
-				GL.uniformMatrix4fv(this._location, false, this._float32ArrayValue);
+		if (this._uniformArray != null) {
+			for (uniform in this._uniformArray) {
+				uniform.use();
 			}
 
-			_isDirty = false;
-		}
+		} else if (this._uniformStruct != null) {
+			for (uniform in this._uniformStruct) {
+				uniform.use();
+			}
 
-		// Bind texture
-		if (type == 'texture') {
-			var renderer = Director.current.renderer;
-			var textureManager = renderer.textureManager;
-			textureManager.setTexture(this._texture, this._textureSlot);
+		} else {
+			var type = this._type;
+
+			// Send value to the GPU if it is dirty
+			if (_isDirty) {
+				//KF.Log("Setting uniform " + this._name);
+				if (type == "float") {
+					GL.uniform1f(this._location, this._floatValue);
+
+				} else if (type == "texture") {
+					GL.uniform1i(this._location, this._textureSlot);
+
+				} else if (type == "vec2") {
+					#if js
+					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					#else
+					this._float32ArrayValue.set(this._floatArrayValue);
+					#end
+					GL.uniform2fv(this._location, this._float32ArrayValue);
+
+				} else if (type == "vec3") {
+					#if js
+					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					#else
+					this._float32ArrayValue.set(this._floatArrayValue);
+					#end
+					GL.uniform3fv(this._location, this._float32ArrayValue);
+
+				} else if (type == "vec4") {
+					#if js
+					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					#else
+					this._float32ArrayValue.set(this._floatArrayValue);
+					#end
+					GL.uniform4fv(this._location, this._float32ArrayValue);
+
+				} else if (type == "mat3") {
+					#if js
+					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					#else
+					this._float32ArrayValue.set(this._floatArrayValue);
+					#end
+					GL.uniformMatrix3fv(this._location, false, this._float32ArrayValue);
+
+				} else if (type == "mat4") {
+					#if js
+					this.copyToTypedArray(this._matrixValue.rawData.toArray(), this._float32ArrayValue);
+					#elseif neko
+					this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
+					#elseif (ios || mac || android)
+					this._float32ArrayValue.set(this._matrixValue.rawData);
+						#else
+					this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
+						#end
+					GL.uniformMatrix4fv(this._location, false, this._float32ArrayValue);
+				}
+
+				_isDirty = false;
+			}
+
+			// Bind texture
+			if (type == 'texture') {
+				var renderer = Director.current.renderer;
+				var textureManager = renderer.textureManager;
+				textureManager.setTexture(this._texture, this._textureSlot);
+			}
+
 		}
 	}
 
@@ -360,27 +371,40 @@ class Uniform  {
 	}
 
 	public function copyFrom(uniform:Uniform):Void {
-		if (uniform.type != this._type) {
-			throw new KFException("IncompatibleUniforms", "Cannot copy uniform values from different unfiform type");
-		}
-		if (this._type == "float") {
-			this.setValue(uniform.value);
-
-		} else if (this._type == "vec2" || this.type == "vec3" || this.type == "vec4") {
-			if (uniform.floatArrayValue != null && uniform.floatArrayValue.length > 0) {
-				this.setArrayValue(uniform.floatArrayValue);
+		if (this._uniformArray != null) {
+			for (i in 0 ... this._uniformArray.length) {
+				this._uniformArray[i].copyFrom(uniform.at(i));
 			}
 
-		} else if (this._type == "mat3" || this._type == "mat4") {
-			this.setMatrixValue(uniform.matrixValue);
+		} else if (this._uniformStruct != null) {
+			for (memberName in this._uniformStruct.keys()) {
+				this._uniformStruct.get(memberName).copyFrom(uniform.get(memberName));
+			}
 
-		} else if (this._type == "texture") {
-			this.setTexture(uniform.texture);
+		} else {
 
-			// Override program-specified texture slot _only_ if set by the user (default value changed)
-			var textureSlot = (uniform.textureSlot != -1) ? uniform.textureSlot :this._defaultTextureSlot;
-			this.setTextureSlot(textureSlot);
-			//KF.Log(this._textureSlot);
+			if (uniform.type != this._type) {
+				throw new KFException("IncompatibleUniforms", "Cannot copy uniform values from different unfiform type");
+			}
+			if (this._type == "float") {
+				this.setValue(uniform.value);
+
+			} else if (this._type == "vec2" || this.type == "vec3" || this.type == "vec4") {
+				if (uniform.floatArrayValue != null && uniform.floatArrayValue.length > 0) {
+					this.setArrayValue(uniform.floatArrayValue);
+				}
+
+			} else if (this._type == "mat3" || this._type == "mat4") {
+				this.setMatrixValue(uniform.matrixValue);
+
+			} else if (this._type == "texture") {
+				this.setTexture(uniform.texture);
+
+				// Override program-specified texture slot _only_ if set by the user (default value changed)
+				var textureSlot = (uniform.textureSlot != -1) ? uniform.textureSlot :this._defaultTextureSlot;
+				this.setTextureSlot(textureSlot);
+				//KF.Log(this._textureSlot);
+			}
 		}
 	}
 
