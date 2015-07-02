@@ -259,7 +259,7 @@ class Material extends KFObject {
 		// Check if shader supports opacity
 		try {
 			var uniform = this.uniform("opacity");
-			uniform.value = opacity;
+			uniform.floatValue = opacity;
 			this._opacity = opacity;
 
 		} catch (e:KFException) {

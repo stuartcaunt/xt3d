@@ -9,6 +9,8 @@ x     _texture, _phong, _etc
 x   declare uniform types in shaderlib
 x   uniform array types
 x   uniform struct types
+x   bool shader data type
+  - common shader data types
   - PhongShader (per pixel), GouraudShader (per vertex), Flat
   - Material colors/shininess
   - common shader header file between vertex and fragment

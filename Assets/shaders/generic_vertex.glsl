@@ -1,8 +1,4 @@
-//#ifdef GL_ES
-//varying lowp vec4 v_color;
-//#else
 varying vec4 v_color;
-//#endif
 
 #ifdef USE_TEXTURE
 varying vec2 v_uv;

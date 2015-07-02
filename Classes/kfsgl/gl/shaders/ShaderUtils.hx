@@ -348,6 +348,9 @@ class ShaderUtils {
 
 	}
 
+	public static function uniformNameForArrayIndex(name:String, index:Int):String {
+		return name + "[" + index + "]";
+	}
 
 	public static function uniformInfoForTypeMember(uniformInfo:UniformInfo, basetypeInfo:BaseTypeInfo):UniformInfo {
 		if (uniformIsCustomType(uniformInfo)) {
@@ -360,5 +363,9 @@ class ShaderUtils {
 			KF.Warn("trying to create a custom uniform info from base type : " + uniformInfo.type);
 			return null;
 		}
+	}
+
+	public static function uniformNameForTypeMember(name:String, basetypeInfo:BaseTypeInfo):String {
+		return name + "." + basetypeInfo.name;
 	}
 }

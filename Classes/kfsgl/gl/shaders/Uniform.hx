@@ -17,8 +17,9 @@ class Uniform  {
 
 	// properties
 	public var name(get_name, null):String;
-	public var value(get_value, set_value):Float;
 	public var type(get, null):String;
+	public var boolValue(get, set):Bool;
+	public var floatValue(get, set):Float;
 	public var floatArrayValue(get_floatArrayValue, set_floatArrayValue):Array<Float>;
 	public var matrixValue(get_matrixValue, set_matrixValue):Matrix3D;
 	public var texture(get_texture, set_texture):Texture2D;
@@ -35,6 +36,7 @@ class Uniform  {
 	private var _isGlobal:Bool = false;
 	private var _size:Int;
 
+	private var _boolValue:Bool = false;
 	private var _floatValue:Float = 0.0;
 	private var _floatArrayValue:Array<Float> = new Array<Float>();
 	private var _float32ArrayValue:Float32Array;
@@ -42,6 +44,7 @@ class Uniform  {
 	private var _texture:Texture2D = null;
 	private var _textureSlot:Int = -1;
 
+	private var _defaultBoolValue:Bool = false;
 	private var _defaultFloatValue:Float = 0.0;
 	private var _defaultFloatArrayValue:Array<Float> = null;
 	private var _defaultMatrixValue:Matrix3D = new Matrix3D();
@@ -113,8 +116,9 @@ class Uniform  {
 			for (i in 0 ... uniformArraySize) {
 				// New uniform info for each element
 				var arrayElementUniformInfo = ShaderUtils.uniformInfoForArrayIndex(uniformInfo, i);
+				var arrayElementUniformName = ShaderUtils.uniformNameForArrayIndex(this._name, i);
 
-				var uniform = Uniform.createForProgram(arrayElementUniformInfo.name, arrayElementUniformInfo, program, shaderTypes);
+				var uniform = Uniform.createForProgram(arrayElementUniformName, arrayElementUniformInfo, program, shaderTypes);
 				this._uniformArray.push(uniform);
 			}
 
@@ -128,8 +132,9 @@ class Uniform  {
 				for (member in typeDefinition) {
 					// New uniform info for each member
 					var structUniformInfo = ShaderUtils.uniformInfoForTypeMember(uniformInfo, member);
+					var structUniformName = ShaderUtils.uniformNameForTypeMember(this._name, member);
 
-					var uniform = Uniform.createForProgram(structUniformInfo.name, structUniformInfo, program, shaderTypes);
+					var uniform = Uniform.createForProgram(structUniformName, structUniformInfo, program, shaderTypes);
 					this._uniformStruct.set(member.name, uniform);
 				}
 
@@ -139,6 +144,7 @@ class Uniform  {
 			}
 		} else {
 			// Standard uniform
+			KF.Log("name = " + this._name);
 			this._location = GL.getUniformLocation(program, uniformInfo.name);
 
 			handleDefaultValue();
@@ -174,12 +180,21 @@ class Uniform  {
 		return this._type;
 	}
 
-	public inline function get_value():Float {
+	public inline function get_boolValue():Bool {
+		return this._boolValue;
+	}
+
+	public function set_boolValue(value:Bool) {
+		this.setBoolValue(value);
+		return this._boolValue;
+	}
+
+	public inline function get_floatValue():Float {
 		return this._floatValue;
 	}
 
-	public function set_value(value:Float) {
-		this.setValue(value);
+	public function set_floatValue(value:Float) {
+		this.setFloatValue(value);
 		return this._floatValue;
 	}
 
@@ -302,6 +317,9 @@ class Uniform  {
 				if (type == "float") {
 					GL.uniform1f(this._location, this._floatValue);
 
+				} else if (type == "bool") {
+					GL.uniform1i(this._location, this._boolValue ? 1 : 0);
+
 				} else if (type == "texture") {
 					GL.uniform1i(this._location, this._textureSlot);
 
@@ -387,7 +405,10 @@ class Uniform  {
 				throw new KFException("IncompatibleUniforms", "Cannot copy uniform values from different unfiform type");
 			}
 			if (this._type == "float") {
-				this.setValue(uniform.value);
+				this.setFloatValue(uniform.floatValue);
+
+			} else if (this._type == "bool") {
+				this.setBoolValue(uniform.boolValue);
 
 			} else if (this._type == "vec2" || this.type == "vec3" || this.type == "vec4") {
 				if (uniform.floatArrayValue != null && uniform.floatArrayValue.length > 0) {
@@ -409,7 +430,7 @@ class Uniform  {
 	}
 
 
-	public function setValue(value:Float) {
+	public function setFloatValue(value:Float) {
 		if (this._size != 1) {
 			throw new KFException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
 		} else {
@@ -417,6 +438,19 @@ class Uniform  {
 
 			if (_floatValue != value) {
 				_floatValue = value;
+				_isDirty = true;
+			}
+		}
+	}
+
+	public function setBoolValue(value:Bool) {
+		if (this._size != 1) {
+			throw new KFException("IncoherentUniformValue", "A bool value is being set for the uniform array " + _uniformInfo.name);
+		} else {
+			_hasBeenSet = true;
+
+			if (_boolValue != value) {
+				_boolValue = value;
 				_isDirty = true;
 			}
 		}
@@ -515,7 +549,14 @@ class Uniform  {
 					this._defaultFloatValue = floatValue;
 				}
 			}
-			setValue(this._defaultFloatValue);
+			setFloatValue(this._defaultFloatValue);
+
+		} else if (type == "bool") {
+			this._size = 1;
+			if (defaultValue != null) {
+				this._defaultBoolValue = defaultValue == "true" ? true : false;
+			}
+			setBoolValue(this._defaultBoolValue);
 
 		} else if (type == "vec2") {
 			this._size = 2;
@@ -587,6 +628,9 @@ class Uniform  {
 		var text:String = "unifom " + _name + " (";
 
 		if (type == "float") {
+			text += _floatValue;
+
+		} else if (type == "bool") {
 			text += _floatValue;
 
 		} else if (type == "vec2") {
