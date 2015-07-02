@@ -83,8 +83,7 @@ class ShaderLib  {
 				],
 				vertexDefines: ["#define GOURAUD_LIGHTING", "#define MAX_LIGHTS $MAX_LIGHTS"],
 				uniforms: [
-					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v" },
-					"light" => { name: "u_light", type: "Light", shader: "v" }
+					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v" }
 				]
 			}
 

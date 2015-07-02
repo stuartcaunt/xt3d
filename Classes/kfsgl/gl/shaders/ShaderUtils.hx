@@ -295,7 +295,7 @@ class ShaderUtils {
 		}
 	}
 
-	public static function uniformArraySize(uniformInfo:UniformInfo):String {
+	public static function uniformArraySize(uniformInfo:UniformInfo):Int {
 		var rawType = uniformInfo.type;
 		var leftBracketIndex = rawType.indexOf("[");
 		var rightBracketIndex = rawType.indexOf("]");
@@ -304,7 +304,9 @@ class ShaderUtils {
 			throw new KFException("IncoherentUniformArrayDeclaration", "The uniform \"" + uniformInfo.name + "\" has incoherent array declaration: " + uniformInfo.type);
 		}
 
-		return uniformInfo.type.substring(leftBracketIndex + 1, rightBracketIndex);
+		var stringValue = uniformInfo.type.substring(leftBracketIndex + 1, rightBracketIndex);
+
+		return Std.parseInt(stringValue);
 	}
 
 	public static function uniformIsArray(uniformInfo:UniformInfo):Bool {
@@ -313,4 +315,50 @@ class ShaderUtils {
 		return (bracketIndex != -1);
 	}
 
+	public static function uniformIsCustomType(uniformInfo:UniformInfo):Bool {
+		var uniformType = uniformType(uniformInfo);
+
+		if (uniformType == "float" ||
+			uniformType == "int" ||
+			uniformType == "bool" ||
+			uniformType == "vec2" ||
+			uniformType == "vec3" ||
+			uniformType == "vec4" ||
+			uniformType == "mat2" ||
+			uniformType == "mat3" ||
+			uniformType == "mat4" ||
+			uniformType == "texture") {
+
+			return false;
+		}
+		return true;
+	}
+
+	public static function uniformInfoForArrayIndex(uniformInfo:UniformInfo, index:Int):UniformInfo {
+		if (uniformIsArray(uniformInfo)) {
+			var clone = cloneUniformInfo(uniformInfo);
+			clone.type = uniformType(uniformInfo);
+			clone.name = clone.name + "[" + index + "]";
+			return clone;
+
+		} else {
+			KF.Warn("trying to create an array uniform info from non-array type");
+			return null;
+		}
+
+	}
+
+
+	public static function uniformInfoForTypeMember(uniformInfo:UniformInfo, basetypeInfo:BaseTypeInfo):UniformInfo {
+		if (uniformIsCustomType(uniformInfo)) {
+			var clone = cloneUniformInfo(uniformInfo);
+			clone.type = basetypeInfo.type;
+			clone.name = clone.name + "." + basetypeInfo.name;
+			return clone;
+
+		} else {
+			KF.Warn("trying to create a custom uniform info from base type : " + uniformInfo.type);
+			return null;
+		}
+	}
 }

@@ -1,5 +1,6 @@
 package kfsgl.gl.shaders;
 
+import openfl.gl.GLProgram;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.textures.Texture2D;
 import openfl.gl.GLUniformLocation;
@@ -42,7 +43,7 @@ class Uniform  {
 	private var _textureSlot:Int = -1;
 
 	private var _defaultFloatValue:Float = 0.0;
-	private var _defaultFloatArrayValue:Array<Float> = new Array<Float>();
+	private var _defaultFloatArrayValue:Array<Float> = null;
 	private var _defaultMatrixValue:Matrix3D = new Matrix3D();
 	private var _defaultTexture:Texture2D = null;
 	private var _defaultTextureSlot:Int = -1;
@@ -52,15 +53,26 @@ class Uniform  {
 	private var _uniformArray:Array<Uniform> = null;
 	private var _uniformStruct:Map<String, Uniform> = null;
 
-	public static function create(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Uniform {
+	public static function createWithLocation(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Uniform {
 		var object = new Uniform();
 
-		if (object != null && !(object.init(name, uniformInfo, location))) {
+		if (object != null && !(object.initWithLocation(name, uniformInfo, location))) {
 			object = null;
 		}
 
 		return object;
 	}
+
+	public static function createForProgram(name:String, uniformInfo:UniformInfo, program:GLProgram, shaderTypes:Map<String, Array<BaseTypeInfo>>):Uniform {
+		var object = new Uniform();
+
+		if (object != null && !(object.initForProgram(name, uniformInfo, program, shaderTypes))) {
+			object = null;
+		}
+
+		return object;
+	}
+
 
 	public static function createEmpty(name:String, uniformInfo:UniformInfo):Uniform {
 		var object = new Uniform();
@@ -73,7 +85,7 @@ class Uniform  {
 
 	}
 
-	public function init(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Bool {
+	public function initWithLocation(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Bool {
 		this._name = name;
 		this._type = uniformInfo.type;
 		this._uniformInfo = uniformInfo;
@@ -81,6 +93,59 @@ class Uniform  {
 		this._isGlobal = uniformInfo.global;
 
 		handleDefaultValue();
+
+		return true;
+	}
+
+	public function initForProgram(name:String, uniformInfo:UniformInfo, program:GLProgram, shaderTypes:Map<String, Array<BaseTypeInfo>>):Bool {
+		this._name = name;
+		this._type = uniformInfo.type;
+		this._uniformInfo = uniformInfo;
+		this._isGlobal = uniformInfo.global;
+
+		var uniformType = ShaderUtils.uniformType(uniformInfo);
+		if (ShaderUtils.uniformIsArray(uniformInfo)) {
+			// Uniform array
+			this._uniformArray = new Array<Uniform>();
+
+			// Create uniform for each array element
+			var uniformArraySize = ShaderUtils.uniformArraySize(uniformInfo);
+			for (i in 0 ... uniformArraySize) {
+				// New uniform info for each element
+				var arrayElementUniformInfo = ShaderUtils.uniformInfoForArrayIndex(uniformInfo, i);
+
+				var uniform = Uniform.createForProgram(arrayElementUniformInfo.name, arrayElementUniformInfo, program, shaderTypes);
+				this._uniformArray.push(uniform);
+			}
+
+		} else if (ShaderUtils.uniformIsCustomType(uniformInfo)) {
+			if (shaderTypes.exists(uniformType)) {
+				// Uniform struct
+				this._uniformStruct = new Map<String, Uniform>();
+
+				// Create uniform for each struct member
+				var typeDefinition = shaderTypes.get(uniformType);
+				for (member in typeDefinition) {
+					// New uniform info for each member
+					var structUniformInfo = ShaderUtils.uniformInfoForTypeMember(uniformInfo, member);
+
+					var uniform = Uniform.createForProgram(structUniformInfo.name, structUniformInfo, program, shaderTypes);
+					this._uniformStruct.set(member.name, uniform);
+				}
+
+			} else {
+				KF.Warn("Unknown data type \"" + uniformType + "\" for uniform \"" + this._name + "\"");
+				return false;
+			}
+		} else {
+			// Standard uniform
+			KF.Log("Creating uniform \"" + this._name + "\"");
+
+			this._location = GL.getUniformLocation(program, uniformInfo.name);
+
+			handleDefaultValue();
+		}
+
 
 		return true;
 	}
@@ -191,7 +256,27 @@ class Uniform  {
 	}
 
 	public function clone():Uniform {
-		return Uniform.create(this._name, this._uniformInfo, this._location);
+		if (this._uniformArray != null) {
+			var clone:Uniform = Uniform.createEmpty(this._name, this._uniformInfo);
+			clone._uniformArray = new Array<Uniform>();
+			for (uniform in this._uniformArray) {
+				clone._uniformArray.push(uniform.clone());
+			}
+			return clone;
+
+		} else if (this._uniformStruct != null) {
+			var clone:Uniform = Uniform.createEmpty(this._name, this._uniformInfo);
+			clone._uniformStruct = new Map<String, Uniform>();
+			for (memberName in this._uniformStruct.keys()) {
+				var uniform = this._uniformStruct.get(memberName);
+				clone._uniformStruct.set(memberName, uniform.clone());
+			}
+			return clone;
+
+		} else {
+
+			return Uniform.createWithLocation(this._name, this._uniformInfo, this._location);
+		}
 	}
 
 
@@ -282,7 +367,9 @@ class Uniform  {
 			this.setValue(uniform.value);
 
 		} else if (this._type == "vec2" || this.type == "vec3" || this.type == "vec4") {
-			this.setArrayValue(uniform.floatArrayValue);
+			if (uniform.floatArrayValue != null && uniform.floatArrayValue.length > 0) {
+				this.setArrayValue(uniform.floatArrayValue);
+			}
 
 		} else if (this._type == "mat3" || this._type == "mat4") {
 			this.setMatrixValue(uniform.matrixValue);
@@ -312,49 +399,53 @@ class Uniform  {
 	}
 
 	public function setArrayValue(value:Array<Float>) {
-		if (_size == 1 || _size == 16) {
-			throw new KFException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
-		
-		} else if (_size != value.length) {
-			throw new KFException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
-		
-		} else {
-			this._hasBeenSet = true;
+		if (value != null) {
+			if (_size == 1 || _size == 16) {
+				throw new KFException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
 
-			// Comparison of both arrays
-			var hasChanged = false;
-			var i = 0;
-			while (!hasChanged && i < value.length) {
-				hasChanged = (value[i] != this._floatArrayValue[i]);
-				i++;
+			} else if (_size != value.length) {
+				throw new KFException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
+
+			} else {
+				this._hasBeenSet = true;
+
+				// Comparison of both arrays
+				var hasChanged = false;
+				var i = 0;
+				while (!hasChanged && i < value.length) {
+					hasChanged = (value[i] != this._floatArrayValue[i]);
+					i++;
+				}
+
+				if (hasChanged) {
+					// Copy array values
+					this._floatArrayValue = value.copy();
+					this._isDirty = true;
+				}
+
 			}
-
-			if (hasChanged) {
-				// Copy array values
-				this._floatArrayValue = value.copy();
-				this._isDirty = true;
-			}
-
 		}
 	}
 
 	public function setMatrixValue(value:Matrix3D) {
-		this._hasBeenSet = true;
+		if (value != null) {
+			this._hasBeenSet = true;
 
-		// Comparison of both matrices
-		var hasChanged = false;
-		var i = 0;
-		var valueRawData = value.rawData;
-		var matrixRawData = this._matrixValue.rawData;
-		while (!hasChanged && i < 16) {
-			hasChanged = (valueRawData[i] != matrixRawData[i]);
-			i++;
-		}
+			// Comparison of both matrices
+			var hasChanged = false;
+			var i = 0;
+			var valueRawData = value.rawData;
+			var matrixRawData = this._matrixValue.rawData;
+			while (!hasChanged && i < 16) {
+				hasChanged = (valueRawData[i] != matrixRawData[i]);
+				i++;
+			}
 
-		if (hasChanged) {
-			// Copy matrix values
-			this._matrixValue.copyFrom(value);
-			this._isDirty = true;
+			if (hasChanged) {
+				// Copy matrix values
+				this._matrixValue.copyFrom(value);
+				this._isDirty = true;
+			}
 		}
 	}
 

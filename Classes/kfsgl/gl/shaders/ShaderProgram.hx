@@ -267,10 +267,9 @@ class ShaderProgram extends KFObject {
 		// Handle uniforms
 		for (uniformName in uniforms.keys()) {
 			var uniformInfo = uniforms.get(uniformName);
-			var uniformLocation = GL.getUniformLocation(_program, uniformInfo.name);
 
 			// Create uniform
-			var uniform = this.createUniform(uniformName, uniformInfo);
+			var uniform = this.createUniform(uniformName, uniformInfo, shaderInfo.types);
 			if (uniform == null) {
 				return false;
 			}
@@ -285,7 +284,7 @@ class ShaderProgram extends KFObject {
 				var uniformInfo = commonUniforms.get(uniformName).uniformInfo;
 
 				// Create uniform
-				var uniform = this.createUniform(uniformName, uniformInfo);
+				var uniform = this.createUniform(uniformName, uniformInfo, shaderInfo.types);
 
 				// Add to all uniforms
 				_commonUniforms.set(uniformName, uniform);
@@ -340,35 +339,41 @@ class ShaderProgram extends KFObject {
 		return shader;
 	}
 
-	private function createUniform(uniformName:String, uniformInfo:UniformInfo):Uniform {
-		var uniformLocation = GL.getUniformLocation(this._program, uniformInfo.name);
+	private function createUniform(uniformName:String, uniformInfo:UniformInfo, shaderTypes:Map<String, Array<BaseTypeInfo>>):Uniform {
 
-		// Create a uniform object
-		var uniform:Uniform = Uniform.create(uniformName, uniformInfo, uniformLocation);
+		var uniform:Uniform = null;
+		var isArray = ShaderUtils.uniformIsArray(uniformInfo);
+		if (isArray && uniformInfo.type == "texture") {
+			// TODO handle array of textures
 
-		// Handle texture slots
-		if (uniform.type == "texture") {
-			var textureSlot = uniform.textureSlot;
-			if (textureSlot > 0) {
-				if (!this._availableTextureSlots[textureSlot]) {
-					KF.Error("ERROR: Uniform " + uniformName + " attempting to use unavailable texture slot " + textureSlot);
+		} else {
+			// Create a uniform object
+			uniform = Uniform.createForProgram(uniformName, uniformInfo, this._program, shaderTypes);
+
+			// Handle texture slots
+			if (uniform.type == "texture") {
+				var textureSlot = uniform.textureSlot;
+				if (textureSlot >= 0) {
+					if (!this._availableTextureSlots[textureSlot]) {
+						KF.Error("ERROR: Uniform " + uniformName + " attempting to use unavailable texture slot " + textureSlot);
+						return null;
+					}
+				} else {
+					textureSlot = this.getNextAvailableTextureSlot();
+					uniform.textureSlot = textureSlot;
+				}
+
+				// Set the default slot for the texture in case slot is overriden by user value
+				uniform.setDefaultTextureSlot(textureSlot);
+
+				if (textureSlot > this._maxTextureSlots) {
+					KF.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
 					return null;
 				}
-			} else {
-				textureSlot = this.getNextAvailableTextureSlot();
-				uniform.textureSlot = textureSlot;
+
+				// Mark slot as unavailable
+				this._availableTextureSlots[textureSlot] = false;
 			}
-
-			// Set the default slot for the texture in case slot is overriden by user value
-			uniform.setDefaultTextureSlot(textureSlot);
-
-			if (textureSlot > this._maxTextureSlots) {
-				KF.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
-				return null;
-			}
-
-			// Mark slot as unavailable
-			this._availableTextureSlots[textureSlot] = false;
 		}
 
 		return uniform;

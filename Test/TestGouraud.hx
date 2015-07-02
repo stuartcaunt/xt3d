@@ -63,6 +63,8 @@ public static function create(backgroundColor:Color):TestGouraud {
 			material.uniform("texture").texture = texture;
 			material.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
 
+//			material.uniform("lights").at(1).get("position").floatArrayValue = [0.1, 0.2, 0.3, 0.4];
+
 			// Create sphere mesh node
 			this._sphereNode = MeshNode.create(sphere, material);
 			this._containerNode.addChild(this._sphereNode);
