@@ -82,10 +82,12 @@ class ShaderLib  {
 					{ name: "MAX_LIGHTS", value: "4" } // TODO Specify max from director config
 				],
 				vertexDefines: ["#define GOURAUD_LIGHTING", "#define MAX_LIGHTS $MAX_LIGHTS"],
+				fragmentDefines: ["#define GOURAUD_LIGHTING"],
 				uniforms: [
+					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "v", defaultValue: "[0.3, 0.3, 0.3]"},
 					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v" },
 					"lightEnabled" => { name: "u_lightEnabled", type: "bool[$MAX_LIGHTS]", shader: "v" },
-					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v" }
+					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v", defaultValue: "true" }
 				]
 			}
 

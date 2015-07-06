@@ -10,10 +10,12 @@ x   declare uniform types in shaderlib
 x   uniform array types
 x   uniform struct types
 x   bool shader data type
-  - common shader data types
-  - PhongShader (per pixel), GouraudShader (per vertex), Flat
+x   GouraudShader (per vertex
+  - Lights as global uniforms
+  - PhongShader (per pixel), Flat
   - Material colors/shininess
-  - common shader header file between vertex and fragment
+  - shared "includes" for vertex and fragment shaders
+  - common shader data types
 
 - director configuration options
  - shader precision

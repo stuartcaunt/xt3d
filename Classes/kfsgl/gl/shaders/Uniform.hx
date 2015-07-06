@@ -144,7 +144,6 @@ class Uniform  {
 			}
 		} else {
 			// Standard uniform
-			KF.Log("name = " + this._name);
 			this._location = GL.getUniformLocation(program, uniformInfo.name);
 
 			handleDefaultValue();
