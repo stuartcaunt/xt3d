@@ -11,19 +11,21 @@ x   uniform array types
 x   uniform struct types
 x   bool shader data type
 x   GouraudShader (per vertex
-  - Lights as global uniforms
-    - Add variables (including MAX_LIGHTS) to uniform lib (combine these with those in shader lib)
-    - Add data types to uniform lib (combine these to those in shaderlib)
-    - allow for uniform lib (common uniforms) to have array/struct types
-    - Use common lighting uniforms in gouraud shader
-  - PhongShader (per pixel), Flat
+x   Lights as global uniforms
+x     Add variables (including MAX_LIGHTS) to uniform lib (combine these with those in shader lib)
+x     Add data types to uniform lib (combine these to those in shaderlib)
+x     allow for uniform lib (common uniforms) to have array/struct types
+x     Use common lighting uniforms in gouraud shader
+  - Set lighting uniforms from scene lights
+  - PhongShader (per pixel)
   - Material colors/shininess
   - shared "includes" for vertex and fragment shaders
   - common shader data types
 
 - director configuration options
  - shader precision
- - number of lights
+ - number of lights (MAX_LIGHTS)
+   - verify number of lights doesn't exceed config value each frame
  - frame rate
 
 - bump mapping / normal mapping
