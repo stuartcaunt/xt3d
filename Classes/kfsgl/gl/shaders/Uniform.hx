@@ -53,8 +53,10 @@ class Uniform  {
 
 	private var _hasBeenSet:Bool = false;
 	private var _isDirty:Bool = true;
+
 	private var _uniformArray:Array<Uniform> = null;
 	private var _uniformStruct:Map<String, Uniform> = null;
+	private var _dataTypes:Map<String, Array<BaseTypeInfo>> = null;
 
 	public static function createWithLocation(name:String, uniformInfo:UniformInfo, location:GLUniformLocation):Uniform {
 		var object = new Uniform();
@@ -66,10 +68,10 @@ class Uniform  {
 		return object;
 	}
 
-	public static function createForProgram(name:String, uniformInfo:UniformInfo, program:GLProgram, shaderTypes:Map<String, Array<BaseTypeInfo>>):Uniform {
+	public static function createForProgram(name:String, uniformInfo:UniformInfo, program:GLProgram, dataTypes:Map<String, Array<BaseTypeInfo>>):Uniform {
 		var object = new Uniform();
 
-		if (object != null && !(object.initForProgram(name, uniformInfo, program, shaderTypes))) {
+		if (object != null && !(object.initForProgram(name, uniformInfo, program, dataTypes))) {
 			object = null;
 		}
 
@@ -77,10 +79,10 @@ class Uniform  {
 	}
 
 
-	public static function createEmpty(name:String, uniformInfo:UniformInfo):Uniform {
+	public static function createEmpty(name:String, uniformInfo:UniformInfo, dataTypes:Map<String, Array<BaseTypeInfo>>):Uniform {
 		var object = new Uniform();
 
-		if (object != null && !(object.initEmpty(name, uniformInfo))) {
+		if (object != null && !(object.initEmpty(name, uniformInfo, dataTypes))) {
 			object = null;
 		}
 
@@ -100,13 +102,12 @@ class Uniform  {
 		return true;
 	}
 
-	public function initForProgram(name:String, uniformInfo:UniformInfo, program:GLProgram, shaderTypes:Map<String, Array<BaseTypeInfo>>):Bool {
+	public function initForProgram(name:String, uniformInfo:UniformInfo, program:GLProgram, dataTypes:Map<String, Array<BaseTypeInfo>>):Bool {
 		this._name = name;
 		this._type = uniformInfo.type;
 		this._uniformInfo = uniformInfo;
 		this._isGlobal = uniformInfo.global;
 
-		var uniformType = ShaderUtils.uniformType(uniformInfo);
 		if (ShaderUtils.uniformIsArray(uniformInfo)) {
 			// Uniform array
 			this._uniformArray = new Array<Uniform>();
@@ -118,23 +119,24 @@ class Uniform  {
 				var arrayElementUniformInfo = ShaderUtils.uniformInfoForArrayIndex(uniformInfo, i);
 				var arrayElementUniformName = ShaderUtils.uniformNameForArrayIndex(this._name, i);
 
-				var uniform = Uniform.createForProgram(arrayElementUniformName, arrayElementUniformInfo, program, shaderTypes);
+				var uniform = Uniform.createForProgram(arrayElementUniformName, arrayElementUniformInfo, program, dataTypes);
 				this._uniformArray.push(uniform);
 			}
 
 		} else if (ShaderUtils.uniformIsCustomType(uniformInfo)) {
-			if (shaderTypes.exists(uniformType)) {
+			var uniformType = ShaderUtils.uniformType(uniformInfo);
+			if (dataTypes.exists(uniformType)) {
 				// Uniform struct
 				this._uniformStruct = new Map<String, Uniform>();
 
 				// Create uniform for each struct member
-				var typeDefinition = shaderTypes.get(uniformType);
+				var typeDefinition = dataTypes.get(uniformType);
 				for (member in typeDefinition) {
 					// New uniform info for each member
 					var structUniformInfo = ShaderUtils.uniformInfoForTypeMember(uniformInfo, member);
 					var structUniformName = ShaderUtils.uniformNameForTypeMember(this._name, member);
 
-					var uniform = Uniform.createForProgram(structUniformName, structUniformInfo, program, shaderTypes);
+					var uniform = Uniform.createForProgram(structUniformName, structUniformInfo, program, dataTypes);
 					this._uniformStruct.set(member.name, uniform);
 				}
 
@@ -154,13 +156,54 @@ class Uniform  {
 	}
 
 
-	public function initEmpty(name:String, uniformInfo:UniformInfo):Bool {
+	public function initEmpty(name:String, uniformInfo:UniformInfo, dataTypes:Map<String, Array<BaseTypeInfo>>):Bool {
 		this._name = name;
 		this._type = uniformInfo.type;
 		this._uniformInfo = uniformInfo;
 		this._isGlobal = uniformInfo.global;
+		this._dataTypes = dataTypes;
 
-		handleDefaultValue();
+
+		var uniformType = ShaderUtils.uniformType(uniformInfo);
+		if (ShaderUtils.uniformIsArray(uniformInfo)) {
+			// Uniform array
+			this._uniformArray = new Array<Uniform>();
+
+			// Create uniform for each array element
+			var uniformArraySize = ShaderUtils.uniformArraySize(uniformInfo);
+			for (i in 0 ... uniformArraySize) {
+				// New uniform info for each element
+				var arrayElementUniformInfo = ShaderUtils.uniformInfoForArrayIndex(uniformInfo, i);
+				var arrayElementUniformName = ShaderUtils.uniformNameForArrayIndex(this._name, i);
+
+				var uniform = Uniform.createEmpty(arrayElementUniformName, arrayElementUniformInfo, dataTypes);
+				this._uniformArray.push(uniform);
+			}
+
+		} else if (ShaderUtils.uniformIsCustomType(uniformInfo)) {
+			if (dataTypes.exists(uniformType)) {
+				// Uniform struct
+				this._uniformStruct = new Map<String, Uniform>();
+
+				// Create uniform for each struct member
+				var typeDefinition = dataTypes.get(uniformType);
+				for (member in typeDefinition) {
+					// New uniform info for each member
+					var structUniformInfo = ShaderUtils.uniformInfoForTypeMember(uniformInfo, member);
+					var structUniformName = ShaderUtils.uniformNameForTypeMember(this._name, member);
+
+					var uniform = Uniform.createEmpty(structUniformName, structUniformInfo, dataTypes);
+					this._uniformStruct.set(member.name, uniform);
+				}
+
+			} else {
+				KF.Warn("Unknown data type \"" + uniformType + "\" for uniform \"" + this._name + "\"");
+				return false;
+			}
+
+		} else {
+			handleDefaultValue();
+		}
 
 		return true;
 	}
@@ -269,7 +312,7 @@ class Uniform  {
 
 	public function clone():Uniform {
 		if (this._uniformArray != null) {
-			var clone:Uniform = Uniform.createEmpty(this._name, this._uniformInfo);
+			var clone:Uniform = Uniform.createEmpty(this._name, this._uniformInfo, this._dataTypes);
 			clone._uniformArray = new Array<Uniform>();
 			for (uniform in this._uniformArray) {
 				clone._uniformArray.push(uniform.clone());
@@ -277,7 +320,7 @@ class Uniform  {
 			return clone;
 
 		} else if (this._uniformStruct != null) {
-			var clone:Uniform = Uniform.createEmpty(this._name, this._uniformInfo);
+			var clone:Uniform = Uniform.createEmpty(this._name, this._uniformInfo, this._dataTypes);
 			clone._uniformStruct = new Map<String, Uniform>();
 			for (memberName in this._uniformStruct.keys()) {
 				var uniform = this._uniformStruct.get(memberName);
@@ -293,7 +336,19 @@ class Uniform  {
 
 
 	public inline function prepareForUse() {
-		_hasBeenSet = false;
+		if (this._uniformArray != null) {
+			for (uniform in this._uniformArray) {
+				uniform.prepareForUse();
+			}
+
+		} else if (this._uniformStruct != null) {
+			for (uniform in this._uniformStruct) {
+				uniform.prepareForUse();
+			}
+
+		} else {
+			_hasBeenSet = false;
+		}
 	}
 
 	public function use() {
@@ -620,45 +675,6 @@ class Uniform  {
 
 		// Reset has been set indicating that it hasn't been set by a user value
 		this._hasBeenSet = false;
-	}
-
-	public function toString() {
-		var type = _uniformInfo.type;
-		var text:String = "unifom " + _name + " (";
-
-		if (type == "float") {
-			text += _floatValue;
-
-		} else if (type == "bool") {
-			text += _floatValue;
-
-		} else if (type == "vec2") {
-			text += _floatArrayValue.toString();
-
-		} else if (type == "vec3") {
-			text += _floatArrayValue.toString();
-
-		} else if (type == "ve4") {
-			text += _floatArrayValue.toString();
-
-		} else if (type == "mat3") {
-			text += _floatArrayValue.toString();
-
-		} else if (type == "mat4") {
-			text += _matrixValue.rawData.toString();
-
-		} else if (type == "texture") {
-			if (this._texture != null) {
-				text += this._texture.name;
-			} else {
-				text += "NULL texture";
-			}
-
-		}
-
-		text += ")" + " : " + _uniformInfo.name + " = " + _location;
-
-		return text;
 	}
 
 }

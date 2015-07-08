@@ -33,6 +33,14 @@ typedef ShaderExtensionInfo = {
 	?attributes:Map<String, AttributeInfo>,
 }
 
+typedef UniformGroupInfo = {
+	?variables:Array<ShaderVariable>,
+	?types:Map<String, Array<BaseTypeInfo>>,
+	?vertexDefines:Array<String>,
+	?fragmentDefines:Array<String>,
+	uniforms:Map<String, UniformInfo>
+}
+
 typedef UniformInfo = {
 	name:String,
 	type:String,

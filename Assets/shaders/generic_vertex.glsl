@@ -91,8 +91,7 @@ void doGouraudLighting(const in vec4 vertexPosition,
 		normal = u_normalMatrix * vertexNormal;
 		normal = normalize(normal);
 
-		int i = 0;
-		for (i = 0; i < MAX_LIGHTS; i++) {
+		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (u_lightEnabled[i]) {
 				pointLight(u_lights[i], amb, diff, spec);
 			}

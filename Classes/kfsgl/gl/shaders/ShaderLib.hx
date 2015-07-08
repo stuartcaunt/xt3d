@@ -66,29 +66,9 @@ class ShaderLib  {
 			},
 
 			"gouraud" => {
-				types: [
-					"Light" => [
-						{ type: "vec4", name: "position"},
-						{ type: "vec4", name: "ambientColor"},
-						{ type: "vec4", name: "diffuseColor"},
-						{ type: "vec4", name: "specularColor"},
-						{ type: "vec3", name: "attenuation"},
-						{ type: "float", name: "spotCutoffAngle"},
-						{ type: "vec3", name: "spotDirection"},
-						{ type: "float", name: "spotFalloffExponent"}
-					]
-				],
-				variables: [
-					{ name: "MAX_LIGHTS", value: "4" } // TODO Specify max from director config
-				],
-				vertexDefines: ["#define GOURAUD_LIGHTING", "#define MAX_LIGHTS $MAX_LIGHTS"],
+				vertexDefines: ["#define GOURAUD_LIGHTING"],
 				fragmentDefines: ["#define GOURAUD_LIGHTING"],
-				uniforms: [
-					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "v", defaultValue: "[0.3, 0.3, 0.3]"},
-					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v" },
-					"lightEnabled" => { name: "u_lightEnabled", type: "bool[$MAX_LIGHTS]", shader: "v" },
-					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v", defaultValue: "true" }
-				]
+				commonUniformGroups: ["lighting"]
 			}
 
 		];
@@ -161,7 +141,7 @@ class ShaderLib  {
 	private function preprocessShaderConfig(shaderConfig:ShaderInfo):Void {
 		if (shaderConfig.variables != null) {
 			for (variable in shaderConfig.variables) {
-				ShaderUtils.processVarable(shaderConfig, variable);
+				ShaderUtils.processVariableForShaderConfig(shaderConfig, variable);
 			}
 		}
 	}

@@ -23,10 +23,16 @@ class ShaderUtils {
 			}
 		}
 
-		if (shaderInfo.uniforms != null) {
-			clone.uniforms = new Map<String, UniformInfo>();
-			for (uniformName in shaderInfo.uniforms.keys()) {
-				clone.uniforms.set(uniformName, cloneUniformInfo(shaderInfo.uniforms.get(uniformName)));
+		if (shaderInfo.types != null) {
+			clone.types = new Map<String, Array<BaseTypeInfo>>();
+			for (typeName in shaderInfo.types.keys()) {
+				var clonedTypeDefinition = new Array<BaseTypeInfo>();
+				clone.types.set(typeName, clonedTypeDefinition);
+
+				var typeDefinition = shaderInfo.types.get(typeName);
+				for (baseType in typeDefinition) {
+					clonedTypeDefinition.push(cloneBaseTypeInfo(baseType));
+				}
 			}
 		}
 
@@ -34,6 +40,14 @@ class ShaderUtils {
 			clone.variables = new Array<ShaderVariable>();
 			for (shaderVariable in shaderInfo.variables) {
 				clone.variables.push(cloneShaderVariable(shaderVariable));
+			}
+		}
+
+		if (shaderInfo.attributes != null) {
+			clone.attributes = new Map<String, AttributeInfo>();
+
+			for (attributeName in shaderInfo.attributes.keys()) {
+				clone.attributes.set(attributeName, cloneAttributeInfo(shaderInfo.attributes.get(attributeName)));
 			}
 		}
 
@@ -196,7 +210,7 @@ class ShaderUtils {
 		}
 	}
 
-	public static function processVarable(shaderConfig:ShaderInfo, shaderVariable:ShaderVariable):Void {
+	public static function processVariableForShaderConfig(shaderConfig:ShaderInfo, shaderVariable:ShaderVariable):Void {
 		var variableName = "$" + shaderVariable.name;
 		var value = shaderVariable.value;
 
@@ -210,8 +224,8 @@ class ShaderUtils {
 			for (vertexDefine in shaderConfig.vertexDefines) {
 				preProcessed = StringFunctions.replace_all(vertexDefine, variableName, value);
 				processedDefined.push(preProcessed);
-				shaderConfig.vertexDefines = processedDefined;
 			}
+			shaderConfig.vertexDefines = processedDefined;
 		}
 
 		if (shaderConfig.fragmentDefines != null) {
@@ -219,12 +233,51 @@ class ShaderUtils {
 			for (fragmentDefine in shaderConfig.fragmentDefines) {
 				preProcessed = StringFunctions.replace_all(fragmentDefine, variableName, value);
 				processedDefined.push(preProcessed);
-				shaderConfig.fragmentDefines = processedDefined;
 			}
+			shaderConfig.fragmentDefines = processedDefined;
 		}
 
 		if (shaderConfig.uniforms != null) {
 			for (uniform in shaderConfig.uniforms) {
+				preProcessed = StringFunctions.replace_all(uniform.type, variableName, value);
+				uniform.type = preProcessed;
+				if (uniform.defaultValue != null) {
+					preProcessed = StringFunctions.replace_all(uniform.defaultValue, variableName, value);
+					uniform.defaultValue = preProcessed;
+				}
+				if (uniform.slot != null) {
+					preProcessed = StringFunctions.replace_all(uniform.slot, variableName, value);
+					uniform.slot = preProcessed;
+				}
+			}
+		}
+	}
+
+	public static function processVariableForUniformGroupInfo(uniformGroupInfo:UniformGroupInfo, shaderVariable:ShaderVariable):Void {
+		var variableName = "$" + shaderVariable.name;
+		var value = shaderVariable.value;
+
+		var preProcessed:String;
+		if (uniformGroupInfo.vertexDefines != null) {
+			var processedDefined = new Array<String>();
+			for (vertexDefine in uniformGroupInfo.vertexDefines) {
+				preProcessed = StringFunctions.replace_all(vertexDefine, variableName, value);
+				processedDefined.push(preProcessed);
+			}
+			uniformGroupInfo.vertexDefines = processedDefined;
+		}
+
+		if (uniformGroupInfo.fragmentDefines != null) {
+			var processedDefined = new Array<String>();
+			for (fragmentDefine in uniformGroupInfo.fragmentDefines) {
+				preProcessed = StringFunctions.replace_all(fragmentDefine, variableName, value);
+				processedDefined.push(preProcessed);
+			}
+			uniformGroupInfo.fragmentDefines = processedDefined;
+		}
+
+		if (uniformGroupInfo.uniforms != null) {
+			for (uniform in uniformGroupInfo.uniforms) {
 				preProcessed = StringFunctions.replace_all(uniform.type, variableName, value);
 				uniform.type = preProcessed;
 				if (uniform.defaultValue != null) {

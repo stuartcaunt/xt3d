@@ -99,11 +99,21 @@ class ShaderProgram extends KFObject {
 		// precision
 		var precisionText = (precision == null) ? "" : "\n\nprecision " + precision + " float;";
 
-		// build types map
-		var shaderTypes:Map<String, String> = ShaderUtils.buildShaderTypesText(shaderInfo.types);
+		var vertexDefines = shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.copy() : new Array<String>();
+		var fragmentDefines = shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.copy() : new Array<String>();
+		var dataTypes = new Map<String, Array<BaseTypeInfo>>();
+		if (shaderInfo.types != null) {
+			for (typeName in shaderInfo.types.keys()) {
+				var clonedTypeDef = new Array<BaseTypeInfo>();
+				dataTypes.set(typeName, clonedTypeDef);
 
-		var vertexDefines= shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.join('\n') : "";
-		var fragmentDefines= shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.join('\n') : "";
+				var typeDefinition = shaderInfo.types.get(typeName);
+				for (baseType in typeDefinition) {
+					clonedTypeDef.push(ShaderUtils.cloneBaseTypeInfo(baseType));
+				}
+			}
+		}
+
 		var uniforms = shaderInfo.uniforms;
 		var commonUniformGroups = shaderInfo.commonUniformGroups;
 		var attributes = shaderInfo.attributes;
@@ -126,10 +136,9 @@ class ShaderProgram extends KFObject {
 		}
 
 		// Convert common uniform groups into uniforms
-		var commonUniforms = uniformLib.uniformsFromGroups(commonUniformGroups);
+		var commonUniformGroupInfo = uniformLib.uniformGroupInfoForGroups(commonUniformGroups);
 
-
-		// Regroup common and program-specific uniforms
+		// Separate vertex from fragment uniforms
 		var allVertexUniforms = new Map<String, UniformInfo>();
 		var allFragmentUniforms = new Map<String, UniformInfo>();
 		if (uniforms != null) {
@@ -137,26 +146,54 @@ class ShaderProgram extends KFObject {
 				var uniformInfo = uniforms.get(uniformName);
 				if (uniformInfo.shader.indexOf("v") != -1) {
 					allVertexUniforms.set(uniformName, uniformInfo);
-				} else if (uniformInfo.shader.indexOf("v") != -1) {
+
+				} else if (uniformInfo.shader.indexOf("f") != -1) {
 					allFragmentUniforms.set(uniformName, uniformInfo);
 				}
 			}
 		}
-		for (uniformName in commonUniforms.keys()) {
-			var uniformInfo = commonUniforms.get(uniformName).uniformInfo;
+
+		// Add information from common (and sometimes global) uniform infos into shader strucutre
+
+		// Defines
+		vertexDefines = vertexDefines.concat(commonUniformGroupInfo.vertexDefines);
+		fragmentDefines = fragmentDefines.concat(commonUniformGroupInfo.fragmentDefines);
+
+		// Types
+		for (typeName in commonUniformGroupInfo.types.keys()) {
+			var clonedTypeDef = new Array<BaseTypeInfo>();
+			dataTypes.set(typeName, clonedTypeDef);
+
+			var typeDefinition = commonUniformGroupInfo.types.get(typeName);
+
+			for (baseType in typeDefinition) {
+				clonedTypeDef.push(ShaderUtils.cloneBaseTypeInfo(baseType));
+			}
+		}
+
+		// Uniforms: add uniform infos to vertex/fragment groups
+		for (uniformName in commonUniformGroupInfo.uniforms.keys()) {
+			var uniformInfo = commonUniformGroupInfo.uniforms.get(uniformName);
+
 			if (uniformInfo.shader.indexOf("v") != -1 && !allVertexUniforms.exists(uniformName)) {
 				allVertexUniforms.set(uniformName, uniformInfo);
+
 			} else if (uniformInfo.shader.indexOf("f") != -1 && !allFragmentUniforms.exists(uniformName)) {
 				allFragmentUniforms.set(uniformName, uniformInfo);
 			}
 		}
 
+
+		// build types map
+		var formattedDataTypes:Map<String, String> = ShaderUtils.buildShaderTypesText(dataTypes);
+
+
 		// Determine types that need to be inserted into vertex and fragment shaders
 		var vertexTypes = new Map<String, String>();
 		for (uniformInfo in allVertexUniforms) {
 			var type = ShaderUtils.uniformType(uniformInfo);
-			if (shaderTypes.exists(type) && !vertexTypes.exists(type)) {
-				vertexTypes.set(type, shaderTypes.get(type));
+			if (formattedDataTypes.exists(type) && !vertexTypes.exists(type)) {
+				vertexTypes.set(type, formattedDataTypes.get(type));
 			}
 		}
 		var vertexTypesString:String = "";
@@ -167,8 +204,8 @@ class ShaderProgram extends KFObject {
 		var fragmentTypes = new Map<String, String>();
 		for (uniformInfo in allFragmentUniforms) {
 			var type = ShaderUtils.uniformType(uniformInfo);
-			if (shaderTypes.exists(type) && !fragmentTypes.exists(type)) {
-				fragmentTypes.set(type, shaderTypes.get(type));
+			if (formattedDataTypes.exists(type) && !fragmentTypes.exists(type)) {
+				fragmentTypes.set(type, formattedDataTypes.get(type));
 			}
 		}
 		var fragmentTypesString:String = "";
@@ -177,32 +214,35 @@ class ShaderProgram extends KFObject {
 		}
 
 		// generate uniform declarations
-		var vertexUniforms:String = "";
-		var fragmentUniforms:String = "";
+		var vertexUniformsString:String = "";
+		var fragmentUniformsString:String = "";
 		for (uniformName in allVertexUniforms.keys()) {
 			var uniformInfo = allVertexUniforms.get(uniformName);
-			vertexUniforms += ShaderUtils.buildUniformDeclaration(uniformInfo);
+			vertexUniformsString += ShaderUtils.buildUniformDeclaration(uniformInfo);
 		}
 		for (uniformName in allFragmentUniforms.keys()) {
 			var uniformInfo = allFragmentUniforms.get(uniformName);
-			fragmentUniforms += ShaderUtils.buildUniformDeclaration(uniformInfo);
+			fragmentUniformsString += ShaderUtils.buildUniformDeclaration(uniformInfo);
 		}
+
+		var vertexDefinesString = vertexDefines.join("\n");
+		var fragmentDefinesString = fragmentDefines.join("\n");
 
 		// Add prefixes
 		_vertexProgram = "// vertex shader: " + shaderName +
 			precisionText +
-			"\n\n// vertexDefines:\n" + vertexDefines +
+			"\n\n// vertexDefines:\n" + vertexDefinesString +
 			"\n\n// vertexTypes:\n" + vertexTypesString +
 			_prefixVertex +
 			"\n// extra vertex attributes:\n" + vertexAttributes +
-			"\n// vertexUniforms:\n" + vertexUniforms +
+			"\n// vertexUniforms:\n" + vertexUniformsString +
 			"\n// VertexProgram:\n" + vertexProgram;
 		_fragmentProgram = "// fragment shader: " + shaderName +
 			precisionText +
-			"\n\n// fragmentDefines:\n" + fragmentDefines +
+			"\n\n// fragmentDefines:\n" + fragmentDefinesString +
 			"\n\n// fragmentTypes:\n" + fragmentTypesString +
 			_prefixFragment +
-			"\n\n// fragmentUniforms:\n" + fragmentUniforms +
+			"\n\n// fragmentUniforms:\n" + fragmentUniformsString +
 			"\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
@@ -243,9 +283,9 @@ class ShaderProgram extends KFObject {
 			return false;
 
 		} else {
-			//KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
-			//KF.Log("Vertex program:\n" + _vertexProgram);
-			//KF.Log("Fragment program:\n" + _fragmentProgram);
+//			KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
+//			KF.Log("Vertex program:\n" + _vertexProgram);
+//			KF.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
 		// Get attribute locations from common attributes
@@ -269,7 +309,7 @@ class ShaderProgram extends KFObject {
 			var uniformInfo = uniforms.get(uniformName);
 
 			// Create uniform
-			var uniform = this.createUniform(uniformName, uniformInfo, shaderInfo.types);
+			var uniform = this.createUniform(uniformName, uniformInfo, dataTypes);
 			if (uniform == null) {
 				return false;
 			}
@@ -279,12 +319,12 @@ class ShaderProgram extends KFObject {
 		}
 
 		// Handle common uniforms
-		for (uniformName in commonUniforms.keys()) {
+		for (uniformName in commonUniformGroupInfo.uniforms.keys()) {
 			if (!_uniforms.exists(uniformName)) {
-				var uniformInfo = commonUniforms.get(uniformName).uniformInfo;
+				var uniformInfo = commonUniformGroupInfo.uniforms.get(uniformName);
 
 				// Create uniform
-				var uniform = this.createUniform(uniformName, uniformInfo, shaderInfo.types);
+				var uniform = this.createUniform(uniformName, uniformInfo, dataTypes);
 
 				// Add to all uniforms
 				_commonUniforms.set(uniformName, uniform);
