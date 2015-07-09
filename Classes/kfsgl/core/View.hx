@@ -2,16 +2,14 @@ package kfsgl.core;
 
 import openfl.gl.GL;
 import openfl.geom.Vector3D;
-import openfl.geom.Vector3D;
 import kfsgl.utils.errors.KFException;
 import kfsgl.node.Node3D;
-import kfsgl.node.Node3D;
+import kfsgl.node.Camera;
 import kfsgl.utils.Color;
 import kfsgl.textures.RenderTexture;
 import kfsgl.utils.Size;
 import kfsgl.node.Scene;
 import openfl.geom.Rectangle;
-import kfsgl.utils.Color;
 
 class View extends EventEmitter {
 

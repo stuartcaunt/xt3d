@@ -8,7 +8,6 @@ import kfsgl.utils.errors.KFException;
 import kfsgl.gl.GLAttributeManager;
 import openfl.gl.GL;
 import kfsgl.core.Geometry;
-import kfsgl.core.Camera;
 import openfl.geom.Matrix3D;
 import kfsgl.core.Material;
 

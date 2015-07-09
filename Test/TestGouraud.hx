@@ -1,6 +1,6 @@
 package ;
 
-import kfsgl.core.Light;
+import kfsgl.node.Light;
 import kfsgl.utils.KF;
 import kfsgl.Director;
 import openfl.geom.Vector3D;

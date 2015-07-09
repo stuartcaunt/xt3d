@@ -1,6 +1,5 @@
 package kfsgl.node;
 
-import kfsgl.core.Light;
 import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 import kfsgl.node.Node3D;

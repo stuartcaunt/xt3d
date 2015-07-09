@@ -15,7 +15,7 @@ import openfl.geom.Vector3D;
 import kfsgl.node.Scene;
 import kfsgl.primitives.Sphere;
 import kfsgl.core.Geometry;
-import kfsgl.core.Camera;
+import kfsgl.node.Camera;
 import kfsgl.core.Material;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;

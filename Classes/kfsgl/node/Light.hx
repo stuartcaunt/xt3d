@@ -1,4 +1,4 @@
-package kfsgl.core;
+package kfsgl.node;
 
 
 import kfsgl.node.Scene;
