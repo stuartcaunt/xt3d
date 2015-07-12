@@ -11,7 +11,8 @@ vec3 eye;
 void pointLight(const in Light light,
 				inout vec3 ambient,
 				inout vec3 diffuse,
-				inout vec3 specular) {
+				inout vec3 specular,
+				const in float shininess) {
 
 	float nDotVP;
 	float eDotRV;
@@ -20,7 +21,6 @@ void pointLight(const in Light light,
 	float d;
 	vec3 VP;
 	vec3 reflectVector;
-
 
 	// Check if light source is directional
 	if (light.position.w != 0.0) {
@@ -56,9 +56,9 @@ void pointLight(const in Light light,
 	// angle between normal and light-vertex vector
 	nDotVP = max(0.0, dot(VP, normal));
 
- 	ambient += light.ambientColor.rgb * attenuation;
+ 	ambient += light.ambientColor * attenuation;
 	if (nDotVP > 0.0) {
-		diffuse += light.diffuseColor.rgb * (nDotVP * attenuation);
+		diffuse += light.diffuseColor * (nDotVP * attenuation);
 
 		// reflected vector
 		reflectVector = normalize(reflect(-VP, normal));
@@ -67,9 +67,8 @@ void pointLight(const in Light light,
 		eDotRV = max(0.0, dot(eye, reflectVector));
 		eDotRV = pow(eDotRV, 16.0);
 
-		//pf = pow(eDotRV, u_material.shininess);
-		pf = pow(eDotRV, 1.0);
-		specular += light.specularColor.rgb * (pf * attenuation);
+		pf = pow(eDotRV, shininess);
+		specular += light.specularColor * (pf * attenuation);
 	}
 }
 
@@ -77,7 +76,8 @@ void doGouraudLighting(const in vec4 vertexPosition,
 						const in vec3 vertexNormal,
 						out vec3 ambient,
 						out vec3 diffuse,
-						out vec3 specular) {
+						out vec3 specular,
+						const in float shininess) {
 	vec3 amb = vec3(0.0);
 	vec3 diff = vec3(0.0);
 	vec3 spec = vec3(0.0);
@@ -92,13 +92,13 @@ void doGouraudLighting(const in vec4 vertexPosition,
 		normal = normalize(normal);
 
 		for (int i = 0; i < MAX_LIGHTS; i++) {
-			if (u_lightEnabled[i]) {
-				pointLight(u_lights[i], amb, diff, spec);
+			if (u_lights[i].enabled) {
+				pointLight(u_lights[i], amb, diff, spec, shininess);
 			}
 		}
 
-		ambient = (u_sceneAmbientColor + amb),
-		diffuse =  diff;
+		ambient = u_sceneAmbientColor + amb,
+		diffuse = diff;
 		specular = spec;
 
 	} else {
@@ -125,13 +125,17 @@ void main(void) {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+#ifdef USE_MATERIAL_COLOR
+	float shininess = u_material.shininess;
+#else
+	float shininess = u_defaultShininess;
+#endif
 
-	doGouraudLighting(a_position, a_normal, ambient, diffuse, specular);
+	doGouraudLighting(position, a_normal, ambient, diffuse, specular, shininess);
 
 #ifdef USE_MATERIAL_COLOR
 	v_color.rgb = ambient * u_material.ambient + diffuse * u_material.diffuse;
 	v_color.a = u_material.diffuse.a;
-	v_color = clamp(v_color, 0.0, 1.0);
 	v_specular = specular * u_material.specular;
 
 #elseif USE_VERTEX_COLOR
@@ -146,6 +150,7 @@ void main(void) {
 
 #endif /* USE_MATERIAL_COLOR */
 
+	v_color = clamp(v_color, 0.0, 1.0);
 
 #else /* GOURAUD_LIGHTING */
 

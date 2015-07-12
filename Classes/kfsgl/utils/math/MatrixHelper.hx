@@ -482,4 +482,16 @@ class MatrixHelper {
 
 	}
 
+	static public function copy3x3ToArray(m:Matrix3D, a:Array<Float>):Void {
+		var raw = m.rawData;
+		a[0] = raw[0];
+		a[1] = raw[1];
+		a[2] = raw[2];
+		a[3] = raw[4];
+		a[4] = raw[5];
+		a[5] = raw[6];
+		a[6] = raw[8];
+		a[7] = raw[9];
+		a[8] = raw[10];
+	}
 }

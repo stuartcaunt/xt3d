@@ -1,6 +1,8 @@
 package kfsgl.node;
 
 
+import kfsgl.utils.math.VectorHelper;
+import kfsgl.gl.shaders.UniformLib;
 import kfsgl.node.Scene;
 import kfsgl.node.Node3D;
 import openfl.geom.Vector3D;
@@ -32,9 +34,7 @@ class Light extends Node3D {
 	private var _diffuseColor:Color;
 	private var _specularColor:Color;
 
-	private var _constantAttenuation:Float = 1.0;
-	private var _linearAttenuation:Float = 0.0;
-	private var _quadraticAttenuation:Float = 0.0;
+	private var _attenuation = [1.0, 0.0, 0.0];
 
 	private var _direction:Vector3D = new Vector3D();
 
@@ -42,6 +42,8 @@ class Light extends Node3D {
 	private var _spotFalloffExponent:Float = 0.0;
 
 	private var _enabled:Bool = true;
+
+	private var _positionArray = new Array<Float>();
 
 	public static function createPointLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
 		var object = new Light();
@@ -56,7 +58,7 @@ class Light extends Node3D {
 	public static function createDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null):Light {
 		var object = new Light();
 
-		if (object != null && !(object.initDirectionalLight(ambient, diffuse, specular, attenuation, direction))) {
+		if (object != null && !(object.initDirectionalLight(ambient, diffuse, specular, direction))) {
 			object = null;
 		}
 
@@ -81,21 +83,20 @@ class Light extends Node3D {
 			this._diffuseColor = Color.createWithRGBHex(diffuse);
 			this._specularColor = Color.createWithRGBHex(specular);
 
-			this._quadraticAttenuation = attenuation;
+			// Quadratic attenuation
+			this._attenuation[2] = attenuation;
 		}
 
 		return retval;
 	}
 
-	public function initDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null):Bool {
+	public function initDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, direction:Vector3D = null):Bool {
 		var retval;
 		if ((retval = super.init())) {
 			this._lightType = KFGL.DirectionalLight;
 			this._ambientColor = Color.createWithRGBHex(ambient);
 			this._diffuseColor = Color.createWithRGBHex(diffuse);
 			this._specularColor = Color.createWithRGBHex(specular);
-
-			this._quadraticAttenuation = attenuation;
 
 			if (direction == null) {
 				direction = new Vector3D();
@@ -114,7 +115,8 @@ class Light extends Node3D {
 			this._diffuseColor = Color.createWithRGBHex(diffuse);
 			this._specularColor = Color.createWithRGBHex(specular);
 
-			this._quadraticAttenuation = attenuation;
+			// Quadratic attenuation
+			this._attenuation[2] = attenuation;
 
 			if (direction == null) {
 				direction = new Vector3D();
@@ -170,27 +172,27 @@ class Light extends Node3D {
 	}
 
 	public inline function get_constantAttenuation():Float {
-		return this._constantAttenuation;
+		return this._attenuation[0];
 	}
 
 	public inline function set_constantAttenuation(value:Float) {
-		return this._constantAttenuation = value;
+		return this._attenuation[0] = value;
 	}
 
 	public inline function get_linearAttenuation():Float {
-		return this._linearAttenuation;
+		return this._attenuation[1];
 	}
 
 	public inline function set_linearAttenuation(value:Float) {
-		return this._linearAttenuation = value;
+		return this._attenuation[1] = value;
 	}
 
 	public inline function get_quadraticAttenuation():Float {
-		return this._quadraticAttenuation;
+		return this._attenuation[2];
 	}
 
 	public inline function set_quadraticAttenuation(value:Float) {
-		return this._quadraticAttenuation = value;
+		return this._attenuation[2] = value;
 	}
 
 	public inline function get_direction():Vector3D {
@@ -240,6 +242,43 @@ class Light extends Node3D {
 		if (this._enabled) {
 			scene.addLight(this);
 		}
+	}
+
+	public function prepareRender(uniformLib:UniformLib, index:Int):Void {
+		//uniformLib.uniform("lightEnabled").at(index).boolValue = this._enabled;
+		uniformLib.uniform("lights").at(index).get("enabled").boolValue = this._enabled;
+
+		// Position (depending on point, directional and spot lights
+		if (this._lightType == KFGL.PointLight || this._lightType == KFGL.SpotLight) {
+			VectorHelper.toArray(this.worldPosition, this._positionArray);
+			this._positionArray[3] = 1.0;
+
+			// Attenuation
+			uniformLib.uniform("lights").at(index).get("attenuation").floatArrayValue = this._attenuation;
+
+		} else {
+			VectorHelper.toArray(this._direction, this._positionArray);
+			this._positionArray[3] = 0.0;
+		}
+		uniformLib.uniform("lights").at(index).get("position").floatArrayValue = this._positionArray;
+
+		// Colors
+		uniformLib.uniform("lights").at(index).get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
+		uniformLib.uniform("lights").at(index).get("diffuseColor").floatArrayValue = this._diffuseColor.rgbArray;
+		uniformLib.uniform("lights").at(index).get("specularColor").floatArrayValue = this._specularColor.rgbArray;
+
+		// Spot lights
+		if (this._lightType == KFGL.SpotLight) {
+			uniformLib.uniform("lights").at(index).get("spotCutoffAngle").floatValue = this._spotCutoffAngle;
+			VectorHelper.toArray(this._direction, this._positionArray);
+			uniformLib.uniform("lights").at(index).get("spotDirection").floatArrayValue = this._positionArray;
+			uniformLib.uniform("lights").at(index).get("spotFalloffExponent").floatValue = this._spotFalloffExponent;
+
+		} else {
+			uniformLib.uniform("lights").at(index).get("spotCutoffAngle").floatValue = -1.0;
+		}
+
+
 	}
 
 }

@@ -8,10 +8,11 @@ class Color  {
 	public var green(get, set):Float;
 	public var blue(get, set):Float;
 	public var alpha(get, set):Float;
-	public var colorArray(get, null):Float32Array;
+	public var rgbaArray(get, null):Array<Float>;
+	public var rgbArray(get, null):Array<Float>;
 
 	// members
-	private var _colorArray = new Float32Array(4);
+	private var _colorArray = [0.0, 0.0, 0.0, 1.0];
 
 	public static function create():Color {
 		var object = new Color();
@@ -121,8 +122,12 @@ class Color  {
 		return value;
 	}
 
-	public inline function get_colorArray():Float32Array {
+	public inline function get_rgbaArray():Array<Float> {
 		return this._colorArray;
+	}
+
+	public inline function get_rgbArray():Array<Float> {
+		return this._colorArray.slice(0, 3);
 	}
 
 

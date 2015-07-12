@@ -210,6 +210,12 @@ class Renderer extends KFObject {
 			// Update objects - anything that needs to be done before rendering
 			scene.updateObjects(scene);
 
+			// Set global uniforms for camera
+			camera.prepareRender(this._uniformLib);
+
+			// Set global uniforms for scene
+			scene.prepareRender(this._uniformLib);
+
 			// Sort objects
 			if (this._sortingEnabled) {
 
@@ -243,10 +249,10 @@ class Renderer extends KFObject {
 
 			// Render opaque objects
 			_stateManager.setBlending(KFGL.NoBlending);
-			this.renderObjects(scene.opaqueObjects, camera, scene.lights, false/*, overrideMaterial*/);
+			this.renderObjects(scene.opaqueObjects, camera, false/*, overrideMaterial*/);
 
 			// Render transparent objects
-			this.renderObjects(scene.transparentObjects, camera, scene.lights, true/*, overrideMaterial*/);
+			this.renderObjects(scene.transparentObjects, camera, true/*, overrideMaterial*/);
 
 			// Prepare all common uniforms
 			this._uniformLib.prepareUniforms();
@@ -256,14 +262,7 @@ class Renderer extends KFObject {
 	/**
 	 * Render list of objects
 	 **/
-	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera, lights:Array<Light>, useBlending:Bool/*, overrideMaterial:Material*/) {
-
-		// Set global uniforms
-		this._uniformLib.uniform("viewMatrix").matrixValue = camera.viewMatrix;
-		this._uniformLib.uniform("projectionMatrix").matrixValue = camera.projectionMatrix;
-
-		// lights
-		//_uniformLib.uniform("lights", "...").matrixValue = ...;
+	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera, useBlending:Bool/*, overrideMaterial:Material*/) {
 
 		// Initialise states of shader programs
 		this._renderPassShaders = new Map<String, ShaderProgram>();
@@ -300,20 +299,20 @@ class Renderer extends KFObject {
 			_stateManager.setMaterialSides(material.side);
 
 			// Render the object buffers
-			this.renderBuffer(material, renderObject, camera/*, lights*/);
+			this.renderBuffer(material, renderObject, camera);
 		}
 	}
 
-	private function renderBuffer(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
+	private function renderBuffer(material:Material, renderObject:RenderObject, camera:Camera):Void {
 
 		// Set program and uniforms
-		this.setProgram(material, renderObject, camera/*, lights*/);
+		this.setProgram(material, renderObject, camera);
 
 		// Render the buffers
 		renderObject.renderBuffer(material.program);
 	}
 
-	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera/*, lights:Array<Light>*/):Void {
+	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera):Void {
 
 		var program = material.program;
 

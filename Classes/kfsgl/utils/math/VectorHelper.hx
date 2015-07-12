@@ -133,4 +133,12 @@ class VectorHelper {
 		v.z = (x * rawData[2] + y * rawData[6] + z * rawData[10] + rawData[14]) * d;
 	}
 
+
+	public static function toArray(v:Vector3D, a:Array<Float>):Void {
+		a[0] = v.x;
+		a[1] = v.y;
+		a[2] = v.z;
+		a[3] = v.w;
+	}
+
 }

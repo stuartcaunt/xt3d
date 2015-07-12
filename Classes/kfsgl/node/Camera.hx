@@ -1,5 +1,6 @@
 package kfsgl.node;
 
+import kfsgl.gl.shaders.UniformLib;
 import kfsgl.utils.errors.KFException;
 import kfsgl.utils.KF;
 import kfsgl.utils.math.MatrixHelper;
@@ -811,5 +812,9 @@ class Camera extends Node3D {
 		return this._viewProjectionMatrix;
 	}
 
+	public function prepareRender(uniformLib:UniformLib):Void {
+		uniformLib.uniform("viewMatrix").matrixValue = this._viewMatrix;
+		uniformLib.uniform("projectionMatrix").matrixValue = this._projectionMatrix;
+	}
 
 }

@@ -1,21 +1,31 @@
 package kfsgl.node;
 
+import kfsgl.gl.shaders.UniformLib;
+import kfsgl.utils.Color;
 import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 import kfsgl.node.Node3D;
 
 class Scene extends Node3D {
 
+	// TODO: set in configuration
+	public static var MAX_LIGHTS = 4;
+
 	// properties
 	public var opaqueObjects(get, null):Array<RenderObject>;
 	public var transparentObjects(get, null):Array<RenderObject>;
 	public var lights(get, null):Array<Light>;
 	public var zSortingStrategy(get, set):Int;
+	public var lightingEnabled(get, set):Bool;
+	public var ambientLight(get, set):Color;
 
 	private var _opaqueObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _transparentObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _zSortingStrategy:Int = KFGL.ZSortingAll;
+
 	private var _lights:Array<Light> = new Array<Light>();
+	private var _lightingEnabled:Bool = true;
+	private var _ambientLight:Color = Color.createWithComponents(0.5, 0.5, 0.5);
 
 	private var _borrowedChildren:Map<Node3D, Node3D> = new Map<Node3D, Node3D>();
 
@@ -63,6 +73,22 @@ class Scene extends Node3D {
 
 	public inline function set_zSortingStrategy(value:Int) {
 		return this._zSortingStrategy = value;
+	}
+
+	public function get_lightingEnabled():Bool {
+		return this._lightingEnabled;
+	}
+
+	public function set_lightingEnabled(value:Bool) {
+		return this._lightingEnabled = value;
+	}
+
+	public function get_ambientLight():Color {
+		return _ambientLight;
+	}
+
+	public function set_ambientLight(value:Color) {
+		return this._ambientLight = value;
 	}
 
 
@@ -127,5 +153,33 @@ class Scene extends Node3D {
 		}
 	}
 
+	public function prepareRender(uniformLib:UniformLib):Void {
+
+		var numberOfLights = Math.min(this._lights.length, MAX_LIGHTS);
+		if (numberOfLights < this._lights.length) {
+			KF.Log("Number of lights in the scene exceeds maximum");
+		}
+
+		// Enable/disable lighting
+		uniformLib.uniform("lightingEnabled").boolValue = this._lightingEnabled;
+
+		if (this._lightingEnabled) {
+			// Set ambient light
+			uniformLib.uniform("sceneAmbientColor").floatArrayValue = this._ambientLight.rgbArray;
+
+			// Disable unused lights
+			if (this._lights.length < MAX_LIGHTS) {
+				for (i in this._lights.length ... MAX_LIGHTS) {
+					uniformLib.uniform("lights").at(i).get("enabled").boolValue = false;
+				}
+			}
+
+			// Set parameters for used lights
+			for (i in 0 ... lights.length) {
+				lights[i].prepareRender(uniformLib, i);
+			}
+		}
+
+	}
 
 }

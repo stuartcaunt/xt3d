@@ -54,9 +54,10 @@ class UniformLib {
 				types: [
 					"Light" => [
 						{ type: "vec4", name: "position"},
-						{ type: "vec4", name: "ambientColor"},
-						{ type: "vec4", name: "diffuseColor"},
-						{ type: "vec4", name: "specularColor"},
+						{ type: "bool", name: "enabled"},
+						{ type: "vec3", name: "ambientColor"},
+						{ type: "vec3", name: "diffuseColor"},
+						{ type: "vec3", name: "specularColor"},
 						{ type: "vec3", name: "attenuation"},
 						{ type: "float", name: "spotCutoffAngle"},
 						{ type: "vec3", name: "spotDirection"},
@@ -70,8 +71,9 @@ class UniformLib {
 				uniforms: [
 					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "v", defaultValue: "[0.3, 0.3, 0.3]", global: true},
 					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v", global: true },
-					"lightEnabled" => { name: "u_lightEnabled", type: "bool[$MAX_LIGHTS]", shader: "v", global: true },
-					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v", defaultValue: "true", global: true }
+					//"lightEnabled" => { name: "u_lightEnabled", type: "bool[$MAX_LIGHTS]", shader: "v", global: true },
+					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v", defaultValue: "true", global: true },
+					"defaultShininess" => { name: "u_defaultShininess", type: "float", shader: "v", defaultValue: "1.0" }
 				]
 			}
 		];

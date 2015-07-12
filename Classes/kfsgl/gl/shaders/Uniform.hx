@@ -1,5 +1,6 @@
 package kfsgl.gl.shaders;
 
+import kfsgl.utils.math.MatrixHelper;
 import openfl.gl.GLProgram;
 import kfsgl.gl.GLTextureManager;
 import kfsgl.textures.Texture2D;
@@ -402,6 +403,7 @@ class Uniform  {
 					GL.uniform4fv(this._location, this._float32ArrayValue);
 
 				} else if (type == "mat3") {
+					MatrixHelper.copy3x3ToArray(this._matrixValue, this._floatArrayValue);
 					#if js
 					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
 					#else
@@ -512,7 +514,7 @@ class Uniform  {
 
 	public function setArrayValue(value:Array<Float>) {
 		if (value != null) {
-			if (_size == 1 || _size == 16) {
+			if (this._size == 1 || this._size == 16 || this._size == 16) {
 				throw new KFException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
 
 			} else if (_size != value.length) {
@@ -636,19 +638,12 @@ class Uniform  {
 			}
 			setArrayValue(this._defaultFloatArrayValue);
 
-		} else if (type == "mat3") {
-			this._size = 9;
-			this._float32ArrayValue = new Float32Array(9);
-			if (defaultValue != null) {
-				if (defaultValue == "identity") {
-					defaultValue = "[1, 0, 0, 0, 1, 0, 0, 0, 1]";
-				}
-				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
+		} else if (type == "mat3" || type == "mat4") {
+			if (type == "mat3") {
+				this._size = 9;
+			} else {
+				this._size = 16;
 			}
-			setArrayValue(this._defaultFloatArrayValue);
-
-		} else if (type == "mat4") {
-			this._size = 16;
 			this._float32ArrayValue = new Float32Array(16);
 			if (defaultValue != null) {
 				if (defaultValue == "identity") {
