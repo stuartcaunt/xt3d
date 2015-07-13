@@ -4,7 +4,6 @@ import openfl.gl.GL;
 import kfsgl.utils.Size;
 import kfsgl.textures.RenderTexture;
 import kfsgl.primitives.Plane;
-import kfsgl.primitives.Plane;
 import kfsgl.gl.KFGL;
 import kfsgl.utils.KF;
 import kfsgl.textures.TextureCache;
@@ -45,7 +44,8 @@ class Test1 extends Sprite {
 
 		// Create test view
 		//var view = TestView1.create(backgroundColor);
-		var view = TestGouraud.create(backgroundColor);
+		var view = TestGouraud1.create(backgroundColor);
+		//var view = TestGouraud2.create(backgroundColor);
 
 		// Add view to director
 		_director.addView(view);

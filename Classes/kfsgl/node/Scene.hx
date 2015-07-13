@@ -25,7 +25,7 @@ class Scene extends Node3D {
 
 	private var _lights:Array<Light> = new Array<Light>();
 	private var _lightingEnabled:Bool = true;
-	private var _ambientLight:Color = Color.createWithComponents(0.5, 0.5, 0.5);
+	private var _ambientLight:Color = Color.createWithRGBHex(0x222222);
 
 	private var _borrowedChildren:Map<Node3D, Node3D> = new Map<Node3D, Node3D>();
 
@@ -153,7 +153,7 @@ class Scene extends Node3D {
 		}
 	}
 
-	public function prepareRender(uniformLib:UniformLib):Void {
+	public function prepareRender(camera:Camera, uniformLib:UniformLib):Void {
 
 		var numberOfLights = Math.min(this._lights.length, MAX_LIGHTS);
 		if (numberOfLights < this._lights.length) {
@@ -176,7 +176,7 @@ class Scene extends Node3D {
 
 			// Set parameters for used lights
 			for (i in 0 ... lights.length) {
-				lights[i].prepareRender(uniformLib, i);
+				lights[i].prepareRender(camera, uniformLib, i);
 			}
 		}
 

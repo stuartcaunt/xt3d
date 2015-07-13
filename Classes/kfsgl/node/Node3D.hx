@@ -112,7 +112,10 @@ class Node3D extends KFObject {
 	}
 
 	public inline function get_position():Vector3D {
-		return this._matrix.position;
+		var raw = this._matrix.rawData;
+		return new Vector3D(raw[12], raw[13], raw[14], raw[15]);
+
+//		return this._matrix.position;
 	}
 
 	public inline function set_position(position:Vector3D):Vector3D {
@@ -258,7 +261,10 @@ class Node3D extends KFObject {
 
 
 	inline public function getPosition():Vector3D {
-		return this._matrix.position;
+		var raw = this._matrix.rawData;
+		return new Vector3D(raw[12], raw[13], raw[14], raw[15]);
+
+//		return this._matrix.position;
 	}
 
 	inline public function setPosition(position:Vector3D):Void {
@@ -321,7 +327,10 @@ class Node3D extends KFObject {
 /* --------- Matrix Transformations --------- */
 
 	inline public function getWorldPosition() {
-		return this._worldMatrix.position;
+		var raw = this._worldMatrix.rawData;
+		return new Vector3D(raw[12], raw[13], raw[14], raw[15]);
+
+//		return this._worldMatrix.position;
 	}
 
 	public inline function getWorldMatrix():Matrix3D {

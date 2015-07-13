@@ -214,7 +214,7 @@ class Renderer extends KFObject {
 			camera.prepareRender(this._uniformLib);
 
 			// Set global uniforms for scene
-			scene.prepareRender(this._uniformLib);
+			scene.prepareRender(camera, this._uniformLib);
 
 			// Sort objects
 			if (this._sortingEnabled) {

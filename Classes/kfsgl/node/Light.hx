@@ -38,14 +38,14 @@ class Light extends Node3D {
 
 	private var _direction:Vector3D = new Vector3D();
 
-	private var _spotCutoffAngle:Float = 15.0;
-	private var _spotFalloffExponent:Float = 0.0;
+	private var _spotCutoffAngle:Float = -1.0;
+	private var _spotFalloffExponent:Float = 1.0;
 
 	private var _enabled:Bool = true;
 
 	private var _positionArray = new Array<Float>();
 
-	public static function createPointLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
+	public static function createPointLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
 		var object = new Light();
 
 		if (object != null && !(object.initPointLight(ambient, diffuse, specular, attenuation))) {
@@ -55,7 +55,7 @@ class Light extends Node3D {
 		return object;
 	}
 
-	public static function createDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null):Light {
+	public static function createDirectionalLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null):Light {
 		var object = new Light();
 
 		if (object != null && !(object.initDirectionalLight(ambient, diffuse, specular, direction))) {
@@ -65,7 +65,7 @@ class Light extends Node3D {
 		return object;
 	}
 
-	public static function createSpotLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null, cutoffAngle:Float = 15.0, falloffExponent:Float = 0.0):Light {
+	public static function createSpotLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null, cutoffAngle:Float = 30.0, falloffExponent:Float = 1.0):Light {
 		var object = new Light();
 
 		if (object != null && !(object.initSpotLight(ambient, diffuse, specular, attenuation, direction, cutoffAngle, falloffExponent))) {
@@ -244,20 +244,21 @@ class Light extends Node3D {
 		}
 	}
 
-	public function prepareRender(uniformLib:UniformLib, index:Int):Void {
-		//uniformLib.uniform("lightEnabled").at(index).boolValue = this._enabled;
+	public function prepareRender(camera:Camera, uniformLib:UniformLib, index:Int):Void {
 		uniformLib.uniform("lights").at(index).get("enabled").boolValue = this._enabled;
 
 		// Position (depending on point, directional and spot lights
 		if (this._lightType == KFGL.PointLight || this._lightType == KFGL.SpotLight) {
-			VectorHelper.toArray(this.worldPosition, this._positionArray);
-			this._positionArray[3] = 1.0;
+			var transformedPosition = camera.viewMatrix.transformVector(this.worldPosition);
+			VectorHelper.toArray(transformedPosition, this._positionArray);
 
 			// Attenuation
 			uniformLib.uniform("lights").at(index).get("attenuation").floatArrayValue = this._attenuation;
 
 		} else {
-			VectorHelper.toArray(this._direction, this._positionArray);
+			this._positionArray[0] = -this._direction.x;
+			this._positionArray[1] = -this._direction.y;
+			this._positionArray[2] = -this._direction.z;
 			this._positionArray[3] = 0.0;
 		}
 		uniformLib.uniform("lights").at(index).get("position").floatArrayValue = this._positionArray;
@@ -269,9 +270,12 @@ class Light extends Node3D {
 
 		// Spot lights
 		if (this._lightType == KFGL.SpotLight) {
-			uniformLib.uniform("lights").at(index).get("spotCutoffAngle").floatValue = this._spotCutoffAngle;
+			var transformedDirection = camera.viewMatrix.transformVector(this._direction);
 			VectorHelper.toArray(this._direction, this._positionArray);
+			this._positionArray.splice(3, 1);
+
 			uniformLib.uniform("lights").at(index).get("spotDirection").floatArrayValue = this._positionArray;
+			uniformLib.uniform("lights").at(index).get("spotCutoffAngle").floatValue = this._spotCutoffAngle;
 			uniformLib.uniform("lights").at(index).get("spotFalloffExponent").floatValue = this._spotFalloffExponent;
 
 		} else {

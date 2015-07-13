@@ -40,7 +40,9 @@ void pointLight(const in Light light,
 		// Calculate spot lighting effects
 		if (light.spotCutoffAngle > 0.0) {
 			float spotFactor = dot(-VP, light.spotDirection);
-			if (spotFactor >= cos(radians(light.spotCutoffAngle))) {
+			float spotCutoff = cos(radians(light.spotCutoffAngle));
+			if (spotFactor >= spotCutoff) {
+				spotFactor = (1.0 - (1.0 - spotFactor) * 1.0/(1.0 - spotCutoff));
 				spotFactor = pow(spotFactor, light.spotFalloffExponent);
 
 			} else {
@@ -145,7 +147,7 @@ void main(void) {
 
 #else
 	v_color.rgb = (ambient + diffuse) * u_color.rgb;
-	v_color.a = a_color.a * u_color.a;
+	v_color.a = u_color.a;
 	v_specular = specular;
 
 #endif /* USE_MATERIAL_COLOR */
