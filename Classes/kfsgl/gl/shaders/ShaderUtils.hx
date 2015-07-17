@@ -78,7 +78,8 @@ class ShaderUtils {
 	public static function cloneBaseTypeInfo(baseTypeInfo:BaseTypeInfo):BaseTypeInfo {
 		var clone:BaseTypeInfo = {
 			name: baseTypeInfo.name,
-			type: baseTypeInfo.type
+			type: baseTypeInfo.type,
+			defaultValue: baseTypeInfo.defaultValue
 		};
 		return clone;
 	}
@@ -405,11 +406,12 @@ class ShaderUtils {
 		return name + "[" + index + "]";
 	}
 
-	public static function uniformInfoForTypeMember(uniformInfo:UniformInfo, basetypeInfo:BaseTypeInfo):UniformInfo {
+	public static function uniformInfoForTypeMember(uniformInfo:UniformInfo, baseTypeInfo:BaseTypeInfo):UniformInfo {
 		if (uniformIsCustomType(uniformInfo)) {
 			var clone = cloneUniformInfo(uniformInfo);
-			clone.type = basetypeInfo.type;
-			clone.name = clone.name + "." + basetypeInfo.name;
+			clone.type = baseTypeInfo.type;
+			clone.name = clone.name + "." + baseTypeInfo.name;
+			clone.defaultValue = baseTypeInfo.defaultValue;
 			return clone;
 
 		} else {
@@ -418,7 +420,7 @@ class ShaderUtils {
 		}
 	}
 
-	public static function uniformNameForTypeMember(name:String, basetypeInfo:BaseTypeInfo):String {
-		return name + "." + basetypeInfo.name;
+	public static function uniformNameForTypeMember(name:String, baseTypeInfo:BaseTypeInfo):String {
+		return name + "." + baseTypeInfo.name;
 	}
 }

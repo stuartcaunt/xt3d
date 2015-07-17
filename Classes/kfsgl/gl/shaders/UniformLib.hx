@@ -54,14 +54,14 @@ class UniformLib {
 				types: [
 					"Light" => [
 						{ type: "vec4", name: "position"},
-						{ type: "bool", name: "enabled"},
-						{ type: "vec3", name: "ambientColor"},
-						{ type: "vec3", name: "diffuseColor"},
-						{ type: "vec3", name: "specularColor"},
-						{ type: "vec3", name: "attenuation"},
-						{ type: "float", name: "spotCutoffAngle"},
-						{ type: "vec3", name: "spotDirection"},
-						{ type: "float", name: "spotFalloffExponent"}
+						{ type: "bool", name: "enabled", defaultValue: "false" },
+						{ type: "vec3", name: "ambientColor", defaultValue: "[0.0, 0.0, 0.0]" },
+						{ type: "vec3", name: "diffuseColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "vec3", name: "specularColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "vec3", name: "attenuation", defaultValue: "[1.0, 0.0, 0.0]" },
+						{ type: "float", name: "spotCutoffAngle", defaultValue: "45.0" },
+						{ type: "vec3", name: "spotDirection", defaultValue: "[0.0, 0.0, -1.0]" },
+						{ type: "float", name: "spotFalloffExponent", defaultValue: "1.0" }
 					]
 				],
 				variables: [

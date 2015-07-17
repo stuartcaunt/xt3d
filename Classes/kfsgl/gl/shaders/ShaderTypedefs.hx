@@ -3,12 +3,13 @@ package kfsgl.gl.shaders;
 
 typedef ShaderVariable = {
 	name: String,
-	value: String
+	value: String,
 }
 
 typedef BaseTypeInfo = {
 	name: String,
 	type: String,
+	?defaultValue: String,
 }
 
 typedef ShaderInfo = {
@@ -38,7 +39,7 @@ typedef UniformGroupInfo = {
 	?types:Map<String, Array<BaseTypeInfo>>,
 	?vertexDefines:Array<String>,
 	?fragmentDefines:Array<String>,
-	uniforms:Map<String, UniformInfo>
+	uniforms:Map<String, UniformInfo>,
 }
 
 typedef UniformInfo = {
@@ -47,7 +48,7 @@ typedef UniformInfo = {
 	shader:String,
 	?defaultValue:String,
 	?global:Bool,
-	?slot:String
+	?slot:String,
 }
 
 typedef AttributeInfo = {
