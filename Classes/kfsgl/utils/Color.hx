@@ -3,6 +3,9 @@ package kfsgl.utils;
 import openfl.utils.Float32Array;
 class Color  {
 
+	public static var black:Color = Color.createWithRGBHex(0x000000);
+	public static var white:Color = Color.createWithRGBHex(0xffffff);
+
 	// properties
 	public var red(get, set):Float;
 	public var green(get, set):Float;
