@@ -482,7 +482,7 @@ class MatrixHelper {
 
 	}
 
-	static public function copy3x3ToArray(m:Matrix3D, a:Array<Float>):Void {
+	static public inline function copy3x3ToArray(m:Matrix3D, a:Array<Float>):Void {
 		var raw = m.rawData;
 		a[0] = raw[0];
 		a[1] = raw[1];
@@ -494,4 +494,26 @@ class MatrixHelper {
 		a[7] = raw[9];
 		a[8] = raw[10];
 	}
+
+	public static inline function transform4x4VectorToArray(m:Matrix3D, v:Vector3D, a:Array<Float>):Void {
+
+		var x:Float = v.x, y:Float = v.y, z:Float = v.z, w:Float = v.w;
+		var rawData = m.rawData;
+
+		a[0] = x * rawData[0] + y * rawData[4] + z * rawData[8] + w * rawData[12];
+		a[1] = x * rawData[1] + y * rawData[5] + z * rawData[9] + w * rawData[13];
+		a[2] = x * rawData[2] + y * rawData[6] + z * rawData[10] + w * rawData[14];
+		a[3] = x * rawData[3] + y * rawData[7] + z * rawData[11] + w * rawData[15];
+	}
+
+	public static inline function transform3x3VectorToArray(m:Matrix3D, v:Vector3D, a:Array<Float>):Void {
+
+		var x:Float = v.x, y:Float = v.y, z:Float = v.z;
+		var rawData = m.rawData;
+
+		a[0] = x * rawData[0] + y * rawData[4] + z * rawData[8];
+		a[1] = x * rawData[1] + y * rawData[5] + z * rawData[9];
+		a[2] = x * rawData[2] + y * rawData[6] + z * rawData[10];
+	}
+
 }

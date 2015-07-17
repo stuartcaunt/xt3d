@@ -641,10 +641,11 @@ class Uniform  {
 		} else if (type == "mat3" || type == "mat4") {
 			if (type == "mat3") {
 				this._size = 9;
+				this._float32ArrayValue = new Float32Array(9);
 			} else {
 				this._size = 16;
+				this._float32ArrayValue = new Float32Array(16);
 			}
-			this._float32ArrayValue = new Float32Array(16);
 			if (defaultValue != null) {
 				if (defaultValue == "identity") {
 					defaultValue = "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]";

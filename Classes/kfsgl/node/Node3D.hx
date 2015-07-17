@@ -1,5 +1,6 @@
 package kfsgl.node;
 
+import kfsgl.utils.math.VectorHelper;
 import kfsgl.utils.KFObject;
 import kfsgl.utils.KF;
 import kfsgl.utils.errors.KFException;
@@ -35,8 +36,10 @@ class Node3D extends KFObject {
 
 	// transformations
 	private var _matrix:Matrix3D = new Matrix3D();
+	private var _position:Vector3D = new Vector3D();
 	private var _matrixDirty:Bool = false;
 	private var _worldMatrix:Matrix3D = new Matrix3D();
+	private var _worldPosition:Vector3D = new Vector3D();
 	private var _worldMatrixDirty:Bool = false;
 	private var _rotationMatrixDirty:Bool = false;
 	private var _eulerAnglesDirty:Bool = false;
@@ -112,10 +115,7 @@ class Node3D extends KFObject {
 	}
 
 	public inline function get_position():Vector3D {
-		var raw = this._matrix.rawData;
-		return new Vector3D(raw[12], raw[13], raw[14], raw[15]);
-
-//		return this._matrix.position;
+		return this.getPosition();
 	}
 
 	public inline function set_position(position:Vector3D):Vector3D {
@@ -262,9 +262,8 @@ class Node3D extends KFObject {
 
 	inline public function getPosition():Vector3D {
 		var raw = this._matrix.rawData;
-		return new Vector3D(raw[12], raw[13], raw[14], raw[15]);
-
-//		return this._matrix.position;
+		VectorHelper.set(this._position, raw[12], raw[13], raw[14], raw[15]);
+		return this._position;
 	}
 
 	inline public function setPosition(position:Vector3D):Void {
@@ -328,9 +327,8 @@ class Node3D extends KFObject {
 
 	inline public function getWorldPosition() {
 		var raw = this._worldMatrix.rawData;
-		return new Vector3D(raw[12], raw[13], raw[14], raw[15]);
-
-//		return this._worldMatrix.position;
+		VectorHelper.set(this._worldPosition, raw[12], raw[13], raw[14], raw[15]);
+		return this._worldPosition;
 	}
 
 	public inline function getWorldMatrix():Matrix3D {

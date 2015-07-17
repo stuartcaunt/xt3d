@@ -1,6 +1,8 @@
 package kfsgl.node;
 
 
+import kfsgl.utils.KF;
+import kfsgl.utils.math.MatrixHelper;
 import kfsgl.utils.math.VectorHelper;
 import kfsgl.gl.shaders.UniformLib;
 import kfsgl.node.Scene;
@@ -44,6 +46,7 @@ class Light extends Node3D {
 	private var _enabled:Bool = true;
 
 	private var _positionArray = new Array<Float>();
+	private var _directionArray = new Array<Float>();
 
 	public static function createPointLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
 		var object = new Light();
@@ -249,19 +252,20 @@ class Light extends Node3D {
 
 		// Position (depending on point, directional and spot lights
 		if (this._lightType == KFGL.PointLight || this._lightType == KFGL.SpotLight) {
-			var transformedPosition = camera.viewMatrix.transformVector(this.worldPosition);
-			VectorHelper.toArray(transformedPosition, this._positionArray);
+			MatrixHelper.transform4x4VectorToArray(camera.viewMatrix, this.worldPosition, this._positionArray);
+			uniformLib.uniform("lights").at(index).get("position").floatArrayValue = this._positionArray;
 
 			// Attenuation
 			uniformLib.uniform("lights").at(index).get("attenuation").floatArrayValue = this._attenuation;
 
 		} else {
-			this._positionArray[0] = -this._direction.x;
-			this._positionArray[1] = -this._direction.y;
-			this._positionArray[2] = -this._direction.z;
-			this._positionArray[3] = 0.0;
+			MatrixHelper.transform3x3VectorToArray(camera.viewMatrix, this._direction, this._directionArray);
+			this._directionArray[0] = -this._directionArray[0];
+			this._directionArray[1] = -this._directionArray[1];
+			this._directionArray[2] = -this._directionArray[2];
+			this._directionArray[3] = 0.0;
+			uniformLib.uniform("lights").at(index).get("position").floatArrayValue = this._directionArray;
 		}
-		uniformLib.uniform("lights").at(index).get("position").floatArrayValue = this._positionArray;
 
 		// Colors
 		uniformLib.uniform("lights").at(index).get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
@@ -270,11 +274,9 @@ class Light extends Node3D {
 
 		// Spot lights
 		if (this._lightType == KFGL.SpotLight) {
-			var transformedDirection = camera.viewMatrix.transformVector(this._direction);
-			VectorHelper.toArray(this._direction, this._positionArray);
-			this._positionArray.splice(3, 1);
+			MatrixHelper.transform3x3VectorToArray(camera.viewMatrix, this._direction, this._directionArray);
 
-			uniformLib.uniform("lights").at(index).get("spotDirection").floatArrayValue = this._positionArray;
+			uniformLib.uniform("lights").at(index).get("spotDirection").floatArrayValue = this._directionArray;
 			uniformLib.uniform("lights").at(index).get("spotCutoffAngle").floatValue = this._spotCutoffAngle;
 			uniformLib.uniform("lights").at(index).get("spotFalloffExponent").floatValue = this._spotFalloffExponent;
 

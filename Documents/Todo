@@ -17,11 +17,11 @@ x     Add data types to uniform lib (combine these to those in shaderlib)
 x     allow for uniform lib (common uniforms) to have array/struct types
 x     Use common lighting uniforms in gouraud shader
 x   Set lighting uniforms from scene lights
+x   optimisation to setting lighting uniforms in Light
   - default values for uniform typedefs
   - Material colors/shininess
   - PhongShader (per pixel)
   - shared "includes" for vertex and fragment shaders
-  - optimisation to setting lighting uniforms in Light
 
 - director configuration options
  - shader precision

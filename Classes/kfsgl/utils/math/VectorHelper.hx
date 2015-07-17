@@ -134,11 +134,17 @@ class VectorHelper {
 	}
 
 
-	public static function toArray(v:Vector3D, a:Array<Float>):Void {
+	public inline static function toArray(v:Vector3D, a:Array<Float>):Void {
 		a[0] = v.x;
 		a[1] = v.y;
 		a[2] = v.z;
 		a[3] = v.w;
 	}
 
+	public inline static function set(v:Vector3D, x:Float, y:Float, z:Float, w:Float):Void {
+		v.x = x;
+		v.y = y;
+		v.z = z;
+		v.w = w;
+	}
 }

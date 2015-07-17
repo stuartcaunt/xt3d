@@ -16,7 +16,7 @@ import kfsgl.node.Node3D;
 import kfsgl.core.View;
 import kfsgl.utils.Color;
 
-class TestGouraud2 extends View {
+class TestGouraud4 extends View {
 
 	// properties
 
@@ -27,8 +27,8 @@ class TestGouraud2 extends View {
 
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestGouraud2 {
-		var object = new TestGouraud2();
+	public static function create(backgroundColor:Color):TestGouraud4 {
+		var object = new TestGouraud4();
 
 		if (object != null && !(object.init(backgroundColor))) {
 			object = null;
@@ -63,11 +63,9 @@ class TestGouraud2 extends View {
 			this._meshNode = MeshNode.create(geometry, material);
 			this._containerNode.addChild(this._meshNode);
 
-			this._light = Light.createSpotLight();
-			this._light.position = new Vector3D(0.0, 0.0, 40.0);
+			this._light = Light.createDirectionalLight();
 			this._light.direction = new Vector3D(0.0, 0.0, -1.0);
-			this._light.spotCutoffAngle = 30.0;
-			this._light.spotFalloffExponent = 1.0;
+			this._light.specularColor = Color.black;
 			this._containerNode.addChild(this._light);
 
 			// Schedule update
