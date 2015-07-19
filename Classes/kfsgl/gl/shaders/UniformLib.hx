@@ -68,11 +68,12 @@ class UniformLib {
 					{ name: "MAX_LIGHTS", value: "4" } // TODO Specify max from director config
 				],
 				vertexDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],
+				fragmentDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],
 				uniforms: [
-					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "v", defaultValue: "[0.3, 0.3, 0.3]", global: true},
-					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v", global: true },
-					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v", defaultValue: "true", global: true },
-					"defaultShininess" => { name: "u_defaultShininess", type: "float", shader: "v", defaultValue: "1.0" }
+					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "fv", defaultValue: "[0.3, 0.3, 0.3]", global: true},
+					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "fv", global: true },
+					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "fv", defaultValue: "true", global: true },
+					"defaultShininess" => { name: "u_defaultShininess", type: "float", shader: "fv", defaultValue: "1.0" }
 				]
 			},
 			"material" => {
@@ -85,7 +86,7 @@ class UniformLib {
 					]
 				],
 				uniforms: [
-					"material" => { name: "u_material", type: "Material", shader: "v" }
+					"material" => { name: "u_material", type: "Material", shader: "fv" }
 				]
 
 			}

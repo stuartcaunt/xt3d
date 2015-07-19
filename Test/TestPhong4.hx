@@ -16,7 +16,7 @@ import kfsgl.node.Node3D;
 import kfsgl.core.View;
 import kfsgl.utils.Color;
 
-class TestGouraud4 extends View {
+class TestPhong4 extends View {
 
 	// properties
 
@@ -27,8 +27,8 @@ class TestGouraud4 extends View {
 
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestGouraud4 {
-		var object = new TestGouraud4();
+	public static function create(backgroundColor:Color):TestPhong4 {
+		var object = new TestPhong4();
 
 		if (object != null && !(object.init(backgroundColor))) {
 			object = null;
@@ -53,10 +53,10 @@ class TestGouraud4 extends View {
 			this.scene.addChild(this._containerNode);
 
 			// create geometries
-			var geometry = Plane.create(100.0, 100.0, 4, 4);
+			var geometry = Plane.create(100.0, 100.0, 64, 64);
 
 			// Create a material
-			var material:Material = Material.create("generic+gouraud");
+			var material:Material = Material.create("generic+phong");
 			material.uniform("color").floatArrayValue = Color.createWithRGBHex(0x555599).rgbaArray;
 
 			// Create sphere mesh node

@@ -146,8 +146,8 @@ class ShaderProgram extends KFObject {
 				var uniformInfo = uniforms.get(uniformName);
 				if (uniformInfo.shader.indexOf("v") != -1) {
 					allVertexUniforms.set(uniformName, uniformInfo);
-
-				} else if (uniformInfo.shader.indexOf("f") != -1) {
+				}
+				if (uniformInfo.shader.indexOf("f") != -1) {
 					allFragmentUniforms.set(uniformName, uniformInfo);
 				}
 			}
@@ -177,8 +177,8 @@ class ShaderProgram extends KFObject {
 
 			if (uniformInfo.shader.indexOf("v") != -1 && !allVertexUniforms.exists(uniformName)) {
 				allVertexUniforms.set(uniformName, uniformInfo);
-
-			} else if (uniformInfo.shader.indexOf("f") != -1 && !allFragmentUniforms.exists(uniformName)) {
+			}
+			if (uniformInfo.shader.indexOf("f") != -1 && !allFragmentUniforms.exists(uniformName)) {
 				allFragmentUniforms.set(uniformName, uniformInfo);
 			}
 		}

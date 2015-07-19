@@ -44,10 +44,15 @@ class Test1 extends Sprite {
 
 		// Create test view
 		//var view = TestView1.create(backgroundColor);
-		var view = TestGouraud1.create(backgroundColor);
+		//var view = TestGouraud1.create(backgroundColor);
 		//var view = TestGouraud2.create(backgroundColor);
 		//var view = TestGouraud3.create(backgroundColor);
 		//var view = TestGouraud4.create(backgroundColor);
+
+		var view = TestPhong1.create(backgroundColor);
+		//var view = TestPhong2.create(backgroundColor);
+		//var view = TestPhong3.create(backgroundColor);
+		//var view = TestPhong4.create(backgroundColor);
 
 		// Add view to director
 		_director.addView(view);

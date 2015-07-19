@@ -48,7 +48,7 @@ class ShaderLib  {
 				fragmentProgram: "generic_fragment",
 				commonUniformGroups: ["matrixCommon", "time", "opacity"],
 				uniforms: [
-					"color" => { name: "u_color", type: "vec4", shader: "v", defaultValue: "[1, 1, 1, 1]" }
+					"color" => { name: "u_color", type: "vec4", shader: "vf", defaultValue: "[1, 1, 1, 1]" }
 				]
 			}
 		];
@@ -71,6 +71,12 @@ class ShaderLib  {
 			"gouraud" => {
 				vertexDefines: ["#define GOURAUD_LIGHTING"],
 				fragmentDefines: ["#define GOURAUD_LIGHTING"],
+				commonUniformGroups: ["lighting"]
+			},
+
+			"phong" => {
+				vertexDefines: ["#define PHONG_LIGHTING"],
+				fragmentDefines: ["#define PHONG_LIGHTING"],
 				commonUniformGroups: ["lighting"]
 			},
 

@@ -1,6 +1,5 @@
 package ;
 
-import kfsgl.primitives.Plane;
 import kfsgl.node.Light;
 import kfsgl.utils.KF;
 import kfsgl.Director;
@@ -16,19 +15,20 @@ import kfsgl.node.Node3D;
 import kfsgl.core.View;
 import kfsgl.utils.Color;
 
-class TestGouraud4 extends View {
+class TestPhong1 extends View {
 
 	// properties
 
 	// members
 	private var _containerNode:Node3D;
-	private var _meshNode:Node3D;
+	private var _sphereNode:Node3D;
 	private var _light:Light;
 
+	private var _rotation:Float = 0.0;
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestGouraud4 {
-		var object = new TestGouraud4();
+	public static function create(backgroundColor:Color):TestPhong1 {
+		var object = new TestPhong1();
 
 		if (object != null && !(object.init(backgroundColor))) {
 			object = null;
@@ -47,25 +47,31 @@ class TestGouraud4 extends View {
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
-			this.camera.position = new Vector3D(cameraDistance, 0, cameraDistance);
+			this.camera.position = new Vector3D(0, 0, cameraDistance);
 
 			this._containerNode = Node3D.create();
 			this.scene.addChild(this._containerNode);
+			//scene.zSortingEnabled = false;
 
 			// create geometries
-			var geometry = Plane.create(100.0, 100.0, 4, 4);
+			var sphere = Sphere.create(33.0, 16, 16);
 
 			// Create a material
-			var material:Material = Material.create("generic+gouraud");
-			material.uniform("color").floatArrayValue = Color.createWithRGBHex(0x555599).rgbaArray;
+			var texture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/marsmap2k.jpg");
+			texture.retain();
+			var material:Material = Material.create("generic+texture+phong");
+			material.uniform("texture").texture = texture;
+			material.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
+			material.uniform("defaultShininess").floatValue = 10.0;
+			material.transparent = true;
 
 			// Create sphere mesh node
-			this._meshNode = MeshNode.create(geometry, material);
-			this._containerNode.addChild(this._meshNode);
+			this._sphereNode = MeshNode.create(sphere, material);
+			this._containerNode.addChild(this._sphereNode);
 
-			this._light = Light.createDirectionalLight();
-			this._light.direction = new Vector3D(0.0, 0.0, -1.0);
-			this._light.specularColor = Color.black;
+			this._light = Light.createPointLight();
+			this._light.position = new Vector3D(80.0, 0.0, 40.0);
+
 			this._containerNode.addChild(this._light);
 
 			// Schedule update
@@ -87,13 +93,10 @@ class TestGouraud4 extends View {
 
 	override public function update(dt:Float):Void {
 
-		this._t += dt;
+		this._t += 1.0 / 60.0;
 
-		var maxAngle:Float = 45.0;
-		var angle:Float = Math.sin(_t * 2.0 * Math.PI / 4.0) * maxAngle;
-		var x = Math.sin(angle * Math.PI / 180.0);
-
-		this._light.direction = new Vector3D(x, 0.0, -1.0);
+		this._rotation += dt * (360.0 / 16.0);
+		this._sphereNode.rotationY = this._rotation;
 	}
 
 }
