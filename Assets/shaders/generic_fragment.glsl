@@ -10,13 +10,8 @@ varying vec3 v_specular;
 varying vec3 v_ecPosition3;
 varying vec3 v_normal;
 varying vec3 v_eye;
-varying vec3 v_VP[MAX_LIGHTS];
-varying float v_attenuation[MAX_LIGHTS];
 
-
-void phongLight(const in vec3 VP,
-				const in float att,
-				const in Light light,
+void phongLight(const in Light light,
 				inout vec3 ambient,
 				inout vec3 diffuse,
 				inout vec3 specular,
@@ -25,21 +20,60 @@ void phongLight(const in vec3 VP,
 	float nDotVP;
 	float eDotRV;
 	float pf;
+	float d;
+	vec3 VP;
 	vec3 reflectVector;
-	float attenuation = att;
+	float attenuation;
 
-	// Calculate spot lighting effects
-	if (light.spotCutoffAngle > 0.0) {
-		float spotFactor = dot(-VP, light.spotDirection);
-		float spotCutoff = cos(radians(light.spotCutoffAngle));
-		if (spotFactor >= spotCutoff) {
-			spotFactor = (1.0 - (1.0 - spotFactor) * 1.0/(1.0 - spotCutoff));
-			spotFactor = pow(spotFactor, light.spotFalloffExponent);
+	// Check if light source is directional
+	if (light.position.w != 0.0) {
+		// Vector between light position and vertex
+		VP = vec3(light.position.xyz - v_ecPosition3);
 
-		} else {
-			spotFactor = 0.0;
+		// Distance between the two
+		d = length(VP);
+
+		// Normalise
+		VP = normalize(VP);
+
+		// Calculate attenuation
+		vec3 attDist = vec3(1.0, d, d * d);
+		attenuation = 1.0 / dot(light.attenuation, attDist);
+
+		// Calculate spot lighting effects
+		if (light.spotCutoffAngle > 0.0) {
+			float spotFactor = dot(-VP, light.spotDirection);
+			float spotCutoff = cos(radians(light.spotCutoffAngle));
+			if (spotFactor >= spotCutoff) {
+				spotFactor = (1.0 - (1.0 - spotFactor) * 1.0/(1.0 - spotCutoff));
+				spotFactor = pow(spotFactor, light.spotFalloffExponent);
+
+			} else {
+				spotFactor = 0.0;
+			}
+			attenuation *= spotFactor;
 		}
-		attenuation *= spotFactor;
+	} else {
+		attenuation = 1.0;
+		VP = light.position.xyz;
+	}
+
+
+	// Check if light source is directional
+	if (light.position.w != 0.0) {
+		// Calculate spot lighting effects
+		if (light.spotCutoffAngle > 0.0) {
+			float spotFactor = dot(-VP, light.spotDirection);
+			float spotCutoff = cos(radians(light.spotCutoffAngle));
+			if (spotFactor >= spotCutoff) {
+				spotFactor = (1.0 - (1.0 - spotFactor) * 1.0/(1.0 - spotCutoff));
+				spotFactor = pow(spotFactor, light.spotFalloffExponent);
+
+			} else {
+				spotFactor = 0.0;
+			}
+			attenuation *= spotFactor;
+		}
 	}
 
 	// angle between normal and light-vertex vector
@@ -73,7 +107,7 @@ void doPhongLighting(out vec3 ambient,
 
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (u_lights[i].enabled) {
-				phongLight(v_VP[i], v_attenuation[i], u_lights[i], amb, diff, spec, shininess);
+				phongLight(u_lights[i], amb, diff, spec, shininess);
 			}
 		}
 

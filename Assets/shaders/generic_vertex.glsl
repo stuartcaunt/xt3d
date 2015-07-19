@@ -118,69 +118,13 @@ void doGouraudLighting(const in vec4 vertexPosition,
 varying vec3 v_ecPosition3;
 varying vec3 v_normal;
 varying vec3 v_eye;
-varying vec3 v_VP[MAX_LIGHTS];
-varying float v_attenuation[MAX_LIGHTS];
-
-vec3 ecPosition3;
-vec3 normal;
-vec3 eye;
-
-
-void phongLightPrepare(const in int index,
-						const in Light light,
-						out vec3 VP,
-						out float attenuation) {
-
-	float d;
-
-	// Check if light source is directional
-	if (light.position.w != 0.0) {
-		// Vector between light position and vertex
-		VP = vec3(light.position.xyz - ecPosition3);
-
-		// Distance between the two
-		d = length(VP);
-
-		// Normalise
-		VP = normalize(VP);
-
-		// Calculate attenuation
-		vec3 attDist = vec3(1.0, d, d * d);
-		attenuation = 1.0 / dot(light.attenuation, attDist);
-
-	} else {
-		attenuation = 1.0;
-		VP = light.position.xyz;
-	}
-
-}
 
 void doPhongLightingPrepare(const in vec4 vertexPosition,
 						const in vec3 vertexNormal) {
 
-	if (u_lightingEnabled) {
-
-		ecPosition3 = vec3(u_modelViewMatrix * vertexPosition);
-		eye = -normalize(ecPosition3);
-
-		normal = u_normalMatrix * vertexNormal;
-		normal = normalize(normal);
-
-		v_eye = eye;
-		v_ecPosition3 = ecPosition3;
-		v_normal = normal;
-
-		vec3 VP;
-		float attenuation;
-
-		for (int i = 0; i < MAX_LIGHTS; i++) {
-			if (u_lights[i].enabled) {
-				phongLightPrepare(i, u_lights[i], VP, attenuation);
-				v_VP[i] = VP;
-				v_attenuation[i] = attenuation;
-			}
-		}
-	}
+	v_ecPosition3 = vec3(u_modelViewMatrix * vertexPosition);
+	v_eye = -normalize(v_ecPosition3);
+	v_normal = normalize(u_normalMatrix * vertexNormal);
 }
 
 #endif // PHONG_LIGHTING

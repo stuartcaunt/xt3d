@@ -53,7 +53,7 @@ class TestPhong2 extends View {
 			this.scene.addChild(this._containerNode);
 
 			// create geometries
-			var geometry = Plane.create(100.0, 100.0, 16, 16);
+			var geometry = Plane.create(100.0, 100.0, 4, 4);
 
 			// Create a material
 			var material:Material = Material.create("generic+phong");
