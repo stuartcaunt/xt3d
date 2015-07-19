@@ -59,9 +59,13 @@ class TestGouraud1 extends View {
 			// Create a material
 			var texture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/marsmap2k.jpg");
 			texture.retain();
-			var material:Material = Material.create("generic_texture_gouraud");
+			var material:Material = Material.create("generic+texture+gouraud+material");
 			material.uniform("texture").texture = texture;
 			material.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
+			material.uniform("material").get("diffuseColor").floatArrayValue = Color.createWithRGBAHex(0xff000099).rgbaArray;
+			material.uniform("material").get("shininess").floatValue = 10.0;
+			//material.uniform("material").get("specularColor").floatArrayValue = Color.createWithRGBHex(0x000000).rgbArray;
+			material.transparent = true;
 
 			// Create sphere mesh node
 			this._sphereNode = MeshNode.create(sphere, material);

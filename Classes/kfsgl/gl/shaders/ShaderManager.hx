@@ -104,9 +104,11 @@ class ShaderManager {
 
 		var defaultShaders = [
 			"generic",
-			"generic_vertexColors",
-			"generic_texture",
-			"generic_texture_vertexColors"
+			"generic+vertexColors",
+			"generic+texture",
+			"generic+texture+gouraud",
+			"generic+texture+gouraud+material",
+			"generic+texture+vertexColors"
 		];
 
 		for (defaultShader in defaultShaders) {

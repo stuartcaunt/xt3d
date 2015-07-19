@@ -6,6 +6,8 @@ import kfsgl.gl.shaders.ShaderUtils;
 
 class ShaderLib  {
 
+	public static var EXTENSION_SEPARATOR:String = "+";
+
 	// Properties
 
 	// Members
@@ -13,6 +15,7 @@ class ShaderLib  {
 	private var _shaderConfigs:Map<String, ShaderInfo> = new Map<String, ShaderInfo>();
 	private var _baseShaderConfigs:Map<String, ShaderInfo>;
 	private var _shaderExtensions:Map<String, ShaderExtensionInfo>;
+
 
 	private function new() {
 	}
@@ -69,6 +72,11 @@ class ShaderLib  {
 				vertexDefines: ["#define GOURAUD_LIGHTING"],
 				fragmentDefines: ["#define GOURAUD_LIGHTING"],
 				commonUniformGroups: ["lighting"]
+			},
+
+			"material" => {
+				vertexDefines: ["#define USE_MATERIAL_COLOR"],
+				commonUniformGroups: ["material"]
 			}
 
 		];
@@ -80,7 +88,7 @@ class ShaderLib  {
 			shaderConfig = this._shaderConfigs.get(shaderName);
 
 		} else {
-			if (shaderName.indexOf("_") == -1) {
+			if (shaderName.indexOf(EXTENSION_SEPARATOR) == -1) {
 				// Simple shader without extensions
 				if (this._baseShaderConfigs.exists(shaderName)) {
 					shaderConfig = ShaderUtils.cloneShaderInfo(this._baseShaderConfigs.get(shaderName));
@@ -94,7 +102,7 @@ class ShaderLib  {
 
 			} else {
 				// Convert name into base and extensions
-				var shaderComponents = shaderName.split("_");
+				var shaderComponents = shaderName.split(EXTENSION_SEPARATOR);
 				if (shaderComponents.length > 0) {
 
 					// Get base shader config

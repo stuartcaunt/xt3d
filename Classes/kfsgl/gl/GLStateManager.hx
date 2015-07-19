@@ -133,7 +133,7 @@ class GLStateManager {
 
 				} else /* KFGL.NormalBlending */ {
 					blendEquation = KFGL.GL_FUNC_ADD;
-					blendSrc = KFGL.GL_ONE;
+					blendSrc = KFGL.GL_SRC_ALPHA;
 					blendDst = KFGL.GL_ONE_MINUS_SRC_ALPHA;
 				}
 

@@ -108,6 +108,7 @@ class Uniform  {
 		this._type = uniformInfo.type;
 		this._uniformInfo = uniformInfo;
 		this._isGlobal = uniformInfo.global;
+		this._dataTypes = dataTypes;
 
 		if (ShaderUtils.uniformIsArray(uniformInfo)) {
 			// Uniform array

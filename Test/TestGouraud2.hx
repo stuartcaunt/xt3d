@@ -56,7 +56,7 @@ class TestGouraud2 extends View {
 			var geometry = Plane.create(100.0, 100.0, 64, 64);
 
 			// Create a material
-			var material:Material = Material.create("generic_gouraud");
+			var material:Material = Material.create("generic+gouraud");
 			material.uniform("color").floatArrayValue = Color.createWithRGBHex(0x555599).rgbaArray;
 
 			// Create sphere mesh node

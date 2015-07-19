@@ -19,7 +19,7 @@ x     Use common lighting uniforms in gouraud shader
 x   Set lighting uniforms from scene lights
 x   optimisation to setting lighting uniforms in Light
 x   default values for uniform typedefs
-  - Material colors/shininess
+x   Material colors/shininess
   - PhongShader (per pixel)
   - shared "includes" for vertex and fragment shaders
 

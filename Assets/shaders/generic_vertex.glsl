@@ -127,6 +127,8 @@ void main(void) {
 	vec3 ambient;
 	vec3 diffuse;
 	vec3 specular;
+	float alpha = 1.0;
+
 #ifdef USE_MATERIAL_COLOR
 	float shininess = u_material.shininess;
 #else
@@ -136,21 +138,25 @@ void main(void) {
 	doGouraudLighting(position, a_normal, ambient, diffuse, specular, shininess);
 
 #ifdef USE_MATERIAL_COLOR
-	v_color.rgb = ambient * u_material.ambient + diffuse * u_material.diffuse;
-	v_color.a = u_material.diffuse.a;
-	v_specular = specular * u_material.specular;
-
-#elseif USE_VERTEX_COLOR
-	v_color.rgb = (ambient + diffuse) * a_color.rgb * u_color.rgb;
-	v_color.a = a_color.a * u_color.a;
-	v_specular = specular;
-
-#else
-	v_color.rgb = (ambient + diffuse) * u_color.rgb;
-	v_color.a = u_color.a;
-	v_specular = specular;
-
+	ambient *= u_material.ambientColor;
+	diffuse *= u_material.diffuseColor.rgb;
+	specular *= u_material.specularColor;
+	alpha *= u_material.diffuseColor.a;
 #endif /* USE_MATERIAL_COLOR */
+
+#ifdef USE_VERTEX_COLOR
+	ambient *= a_color.rgb;
+	diffuse *= a_color.rgb;
+	alpha *= a_color.a;
+#endif /* USE_VERTEX_COLOR */
+
+	ambient *= u_color.rgb;
+	diffuse *= u_color.rgb;
+	alpha *= u_color.a;
+
+	v_color.rgb = ambient + diffuse;
+	v_color.a = alpha;
+	v_specular = specular;
 
 	v_color = clamp(v_color, 0.0, 1.0);
 

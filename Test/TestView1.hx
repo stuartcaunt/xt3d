@@ -1,6 +1,5 @@
 package ;
 
-import kfsgl.core.Light;
 import kfsgl.utils.KF;
 import kfsgl.Director;
 import openfl.geom.Vector3D;
@@ -63,7 +62,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			var sphere = Sphere.create(2.0, 16, 16);
 
 			// Create a material
-			var material:Material = Material.create("generic_vertexColors");
+			var material:Material = Material.create("generic+vertexColors");
 			//material.opacity = 0.5;
 
 			//		var material2:Material = Material.create("test_nocolor");
@@ -83,7 +82,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			//var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
 			var texture:Texture2D = director.textureCache.addTextureFromColor(Color.createWithComponents(1, 1, 0.5, 0.8));
 			texture.retain();
-			var textureMaterial:Material = Material.create("generic_texture");
+			var textureMaterial:Material = Material.create("generic+texture");
 			textureMaterial.uniform("texture").texture = texture;
 			textureMaterial.transparent = true;
 
@@ -97,7 +96,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			director.textureCache.addTextureFromImageAssetAsync("assets/images/checker.jpg", null, function (texture2:Texture2D) {
 
 				texture2.retain();
-				var textureMaterial2:Material = Material.create("generic_texture");
+				var textureMaterial2:Material = Material.create("generic+texture");
 				textureMaterial2.uniform("texture").textureSlot = 1;
 				textureMaterial2.uniform("texture").texture = texture2;
 				textureMaterial2.opacity = 0.5;
@@ -113,7 +112,7 @@ public static function create(backgroundColor:Color):TestView1 {
 
 			var planeTexture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/Ciel-00.jpg");
 			planeTexture.retain();
-			var planeMaterial:Material = Material.create("generic_texture");
+			var planeMaterial:Material = Material.create("generic+texture");
 			planeMaterial.uniform("texture").texture = planeTexture;
 			planeMaterial.uniform("uvScaleOffset").floatArrayValue = planeTexture.uvScaleOffset;
 			planeMaterial.depthTest = false;
@@ -143,7 +142,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			//this._renderTextureView.scene = view.scene;
 			this._renderTextureView.backgroundColor = Color.createWithRGBAHex(0x00000033);
 			this._renderTextureView.camera.position = new Vector3D(0.0, 4.0, 20.0);
-			var renderMaterial:Material = Material.create("generic_texture");
+			var renderMaterial:Material = Material.create("generic+texture");
 			renderMaterial.uniform("texture").texture = this._renderTexture;
 			renderMaterial.uniform("uvScaleOffset").floatArrayValue = this._renderTexture.uvScaleOffset;
 			//renderMaterial.opacity = 0.7;
@@ -153,10 +152,6 @@ public static function create(backgroundColor:Color):TestView1 {
 			this._renderNode.position = new Vector3D(0.0, -5.0, 3.0);
 			//renderNode.rotationX = -70.0;
 			this.scene.addChild(this._renderNode);
-
-
-			var light = Light.createPointLight();
-			light.position = new Vector3D(10.0, 0.0, 0.0);
 
 			// Schedule update
 			this.scheduleUpdate();

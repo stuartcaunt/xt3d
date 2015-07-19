@@ -71,10 +71,23 @@ class UniformLib {
 				uniforms: [
 					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "v", defaultValue: "[0.3, 0.3, 0.3]", global: true},
 					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "v", global: true },
-					//"lightEnabled" => { name: "u_lightEnabled", type: "bool[$MAX_LIGHTS]", shader: "v", global: true },
 					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "v", defaultValue: "true", global: true },
 					"defaultShininess" => { name: "u_defaultShininess", type: "float", shader: "v", defaultValue: "1.0" }
 				]
+			},
+			"material" => {
+				types: [
+					"Material" => [
+						{ type: "vec3", name: "ambientColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "vec4", name: "diffuseColor", defaultValue: "[1.0, 1.0, 1.0, 1.0]" },
+						{ type: "vec3", name: "specularColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "float", name: "shininess", defaultValue: "1.0" }
+					]
+				],
+				uniforms: [
+					"material" => { name: "u_material", type: "Material", shader: "v" }
+				]
+
 			}
 		];
 
