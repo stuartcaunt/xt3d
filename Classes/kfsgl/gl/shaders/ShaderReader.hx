@@ -29,7 +29,9 @@ class ShaderReader  {
 			"prefix_vertex" => "prefix_vertex.glsl",
 			"prefix_fragment" => "prefix_fragment.glsl",
 			"generic_vertex" => "generic_vertex.glsl",
-			"generic_fragment" => "generic_fragment.glsl"
+			"generic_fragment" => "generic_fragment.glsl",
+			"gouraud_vertex_part" => "gouraud_vertex_part.glsl",
+			"phong_fragment_part" => "phong_fragment_part.glsl"
 		];
 
 		for (key in shaderFiles.keys()) {

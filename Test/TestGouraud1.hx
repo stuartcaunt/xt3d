@@ -62,7 +62,7 @@ class TestGouraud1 extends View {
 			var material:Material = Material.create("generic+texture+gouraud+material");
 			material.uniform("texture").texture = texture;
 			material.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
-			material.uniform("material").get("diffuseColor").floatArrayValue = Color.createWithRGBAHex(0xff000099).rgbaArray;
+//			material.uniform("material").get("diffuseColor").floatArrayValue = Color.createWithRGBAHex(0xff000099).rgbaArray;
 			material.uniform("material").get("shininess").floatValue = 10.0;
 			//material.uniform("material").get("specularColor").floatArrayValue = Color.createWithRGBHex(0x000000).rgbArray;
 			material.transparent = true;

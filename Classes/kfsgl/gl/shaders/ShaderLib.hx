@@ -71,14 +71,14 @@ class ShaderLib  {
 			"gouraud" => {
 				vertexDefines: ["#define GOURAUD_LIGHTING"],
 				fragmentDefines: ["#define GOURAUD_LIGHTING"],
-//				vertexIncludes: ["gouraud_vertex.glsl"],
+				vertexIncludes: ["gouraud_vertex_part"],
 				commonUniformGroups: ["lighting"]
 			},
 
 			"phong" => {
 				vertexDefines: ["#define PHONG_LIGHTING"],
 				fragmentDefines: ["#define PHONG_LIGHTING"],
-//				fragmentIncludes: ["phong_fragment.glsl"],
+				fragmentIncludes: ["phong_fragment_part"],
 				commonUniformGroups: ["lighting"]
 			},
 

@@ -13,6 +13,8 @@ class ShaderUtils {
 			fragmentProgram: shaderInfo.fragmentProgram,
 			vertexDefines: shaderInfo.vertexDefines != null ? shaderInfo.vertexDefines.slice(0) : [],
 			fragmentDefines: shaderInfo.fragmentDefines != null ? shaderInfo.fragmentDefines.slice(0) : [],
+			vertexIncludes: shaderInfo.vertexIncludes != null ? shaderInfo.vertexIncludes.slice(0) : [],
+			fragmentIncludes: shaderInfo.fragmentIncludes != null ? shaderInfo.fragmentIncludes.slice(0) : [],
 			commonUniformGroups: shaderInfo.commonUniformGroups != null ? shaderInfo.commonUniformGroups.slice(0) : []
 		};
 
@@ -162,6 +164,34 @@ class ShaderUtils {
 					shaderInfo.fragmentDefines.push(fragmentDefine);
 				} else {
 					KF.Warn("Duplicate fragment define \"" + fragmentDefine + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+				}
+			}
+		}
+
+		if (shaderExtensionInfo.vertexIncludes != null) {
+			if (shaderInfo.vertexIncludes == null) {
+				shaderInfo.vertexIncludes = new Array<String>();
+			}
+
+			for (vertexInclude in shaderExtensionInfo.vertexIncludes) {
+				if (shaderInfo.vertexIncludes.indexOf(vertexInclude) == -1) {
+					shaderInfo.vertexIncludes.push(vertexInclude);
+				} else {
+					KF.Warn("Duplicate vertex include \"" + vertexInclude + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+				}
+			}
+		}
+
+		if (shaderExtensionInfo.fragmentIncludes != null) {
+			if (shaderInfo.fragmentIncludes == null) {
+				shaderInfo.fragmentIncludes = new Array<String>();
+			}
+
+			for (fragmentInclude in shaderExtensionInfo.fragmentIncludes) {
+				if (shaderInfo.fragmentIncludes.indexOf(fragmentInclude) == -1) {
+					shaderInfo.fragmentIncludes.push(fragmentInclude);
+				} else {
+					KF.Warn("Duplicate fragment include \"" + fragmentInclude + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}

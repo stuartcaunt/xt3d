@@ -96,6 +96,20 @@ class ShaderProgram extends KFObject {
 		var vertexProgram = ShaderReader.instance().shaderWithKey(shaderInfo.vertexProgram);
 		var fragmentProgram = ShaderReader.instance().shaderWithKey(shaderInfo.fragmentProgram);
 
+		// Combine all includes
+		var vertexProgramFragments = "";
+		var fragmentProgramFragments = "";
+		if (shaderInfo.vertexIncludes != null) {
+			for (vertexInclude in shaderInfo.vertexIncludes) {
+				vertexProgramFragments += "// " + vertexInclude + ":\n" + ShaderReader.instance().shaderWithKey(vertexInclude) + "\n";
+			}
+		}
+		if (shaderInfo.fragmentIncludes != null) {
+			for (fragmentInclude in shaderInfo.fragmentIncludes) {
+				fragmentProgramFragments += "// " + fragmentInclude + ":\n" + ShaderReader.instance().shaderWithKey(fragmentInclude) + "\n";
+			}
+		}
+
 		// precision
 		var precisionText = (precision == null) ? "" : "\n\nprecision " + precision + " float;";
 
@@ -236,6 +250,7 @@ class ShaderProgram extends KFObject {
 			_prefixVertex +
 			"\n// extra vertex attributes:\n" + vertexAttributes +
 			"\n// vertexUniforms:\n" + vertexUniformsString +
+			vertexProgramFragments +
 			"\n// VertexProgram:\n" + vertexProgram;
 		_fragmentProgram = "// fragment shader: " + shaderName +
 			precisionText +
@@ -243,6 +258,7 @@ class ShaderProgram extends KFObject {
 			"\n\n// fragmentTypes:\n" + fragmentTypesString +
 			_prefixFragment +
 			"\n\n// fragmentUniforms:\n" + fragmentUniformsString +
+			fragmentProgramFragments +
 			"\n// fragmentProgram:\n" + fragmentProgram;
 
 		// Create new program
