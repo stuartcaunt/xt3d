@@ -54,7 +54,7 @@ class TestPhong1 extends View {
 			//scene.zSortingEnabled = false;
 
 			// create geometries
-			var sphere = Sphere.create(33.0, 16, 8);
+			var sphere = Sphere.create(33.0, 32, 16);
 
 			// Create a material
 			var texture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/marsmap2k.jpg");
