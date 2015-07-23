@@ -4,6 +4,11 @@ import haxe.Timer;
 
 class KF  {
 
+	public static inline var MAX_LIGHTS:String = "MAX_LIGHTS";
+	public static inline var SHADER_PRECISION:String = "SHADER_PRECISION";
+	public static inline var DEFAULT_FPS:String = "DEFAULT_FPS";
+
+
 	private static var timer:Float = Timer.stamp();
 
 	public static function Log(v:Dynamic, ?info:haxe.PosInfos):Void {

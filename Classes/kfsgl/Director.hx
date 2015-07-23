@@ -1,5 +1,7 @@
 package kfsgl;
 
+import kfsgl.gl.KFGL;
+import kfsgl.core.Configuration;
 import openfl.Lib;
 import kfsgl.utils.KF;
 import kfsgl.core.Scheduler;
@@ -18,6 +20,7 @@ class Director extends EventEmitter {
 	public static var current(get, null):Director;
 	public var renderer(get, null):Renderer;
 	public var scheduler(get, null):Scheduler;
+	public var configuration(get, null):Configuration;
 	public var openGLView(get_openGLView, set_openGLView):OpenGLView;
 	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
 	public var textureCache(get, null):TextureCache;
@@ -31,6 +34,7 @@ class Director extends EventEmitter {
 	private var _textureCache:TextureCache;
 	private var _views:Array<View> = new Array<View>();
 	private var _scheduler:Scheduler;
+	private var _configuration:Configuration;
 
 	private var _lastUpdateTime:Int = 0;
 	private var _deltaTime:Float = 0.0;
@@ -42,17 +46,25 @@ class Director extends EventEmitter {
 	private var _animationInterval:Float = 1.0 / 60.0;
 	private var _oldAnimationInterval:Float;
 
-	public static function create(openGLView:OpenGLView):Director {
+	public static function create(openGLView:OpenGLView, options:Map<String, String> = null):Director {
 		var object = new Director();
 
-		if (object != null && !(object.init(openGLView))) {
+		if (object != null && !(object.init(openGLView, options))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(openGLView:OpenGLView):Bool {
+	public function init(openGLView:OpenGLView, options:Map<String, String> = null):Bool {
+
+		var defaultConfiguration = [
+			KF.MAX_LIGHTS => "4",
+			KF.SHADER_PRECISION => KFGL.MEDIUM_PRECISION,
+			KF.DEFAULT_FPS => "60.0"
+		];
+
+		this._configuration = Configuration.create(this.buildConfiguration(defaultConfiguration, options));
 
 		// Make director current
 		this.makeCurrent();
@@ -87,6 +99,10 @@ class Director extends EventEmitter {
 
 	public inline function get_scheduler():Scheduler {
 		return this._scheduler;
+	}
+
+	public inline function get_configuration():Configuration {
+		return this._configuration;
 	}
 
 	public inline function get_openGLView():OpenGLView {
@@ -222,6 +238,27 @@ class Director extends EventEmitter {
 		this._animationInterval = animationInterval;
 
 		// TODO handle animation interval
+	}
+
+	private function buildConfiguration(defaultConfiguration:Map<String, String>, userConfiguration:Map<String, String>):Map<String, String> {
+		var configuration:Map<String, String> = new Map<String, String>();
+
+		// Add first the default configuration
+		if (defaultConfiguration != null) {
+			for (key in defaultConfiguration.keys()) {
+				configuration.set(key, defaultConfiguration.get(key));
+			}
+		}
+
+		// Override with user configuration
+		if (userConfiguration != null) {
+			for (key in userConfiguration.keys()) {
+				configuration.set(key, userConfiguration.get(key));
+			}
+		}
+
+		return configuration;
+
 	}
 
 }

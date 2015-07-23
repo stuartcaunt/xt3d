@@ -15,7 +15,6 @@ class ShaderManager {
 
 	private var _programs:Map<String,  ShaderProgram>;
 
-	private var _desiredPrecision:String = KFGL.MEDIUM_PRECISION;
 	private var _precision:String;
 	private var _highPrecisionAvailable:Bool = true;
 	private var _mediumPrecisionAvailable:Bool = true;
@@ -54,7 +53,8 @@ class ShaderManager {
 		}
 
 		// Set max precision (compared to desired precision) in shader lib
-		this.setShaderPrecision(this._desiredPrecision);
+		var desiredPrecision = Director.current.configuration.get(KF.SHADER_PRECISION);
+		this.setShaderPrecision(desiredPrecision);
 
 		return true;
 	}
@@ -64,7 +64,6 @@ class ShaderManager {
 	}
 
 	public function setShaderPrecision(precision:String):Void {
-		this._desiredPrecision = precision;
 		if (this._precisionAvailable) {
 			this._precision = precision;
 			if (precision == KFGL.HIGH_PRECISION && !this._highPrecisionAvailable) {
