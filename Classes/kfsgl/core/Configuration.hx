@@ -1,25 +1,31 @@
 package kfsgl.core;
 
+import kfsgl.utils.KF;
+import kfsgl.gl.KFGL;
 class Configuration {
 
 	// members
-	private var _configuration:Map<String, String> = new Map<String, String>();
+	private var _configuration:Map<String, String> = [
+		KF.MAX_LIGHTS => "4",
+		KF.SHADER_PRECISION => KFGL.MEDIUM_PRECISION,
+		KF.DEFAULT_FPS => "60.0"
+	];
 
-	public static function create(configuration:Map<String, String> = null):Configuration {
+	public static function create(userConfiguration:Map<String, String> = null):Configuration {
 		var object = new Configuration();
 
-		if (object != null && !(object.init(configuration))) {
+		if (object != null && !(object.init(userConfiguration))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(configuration:Map<String, String> = null):Bool {
-		if (configuration != null) {
-			// Clone config
-			for (key in configuration.keys()) {
-				this._configuration.set(key, configuration.get(key));
+	public function init(userConfiguration:Map<String, String> = null):Bool {
+		if (userConfiguration != null) {
+			// Override default configuration with user values
+			for (key in userConfiguration.keys()) {
+				this._configuration.set(key, userConfiguration.get(key));
 			}
 		}
 

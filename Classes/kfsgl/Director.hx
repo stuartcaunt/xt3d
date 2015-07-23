@@ -58,13 +58,7 @@ class Director extends EventEmitter {
 
 	public function init(openGLView:OpenGLView, options:Map<String, String> = null):Bool {
 
-		var defaultConfiguration = [
-			KF.MAX_LIGHTS => "4",
-			KF.SHADER_PRECISION => KFGL.MEDIUM_PRECISION,
-			KF.DEFAULT_FPS => "60.0"
-		];
-
-		this._configuration = Configuration.create(this.buildConfiguration(defaultConfiguration, options));
+		this._configuration = Configuration.create(options);
 
 		// Make director current
 		this.makeCurrent();
@@ -238,27 +232,6 @@ class Director extends EventEmitter {
 		this._animationInterval = animationInterval;
 
 		// TODO handle animation interval
-	}
-
-	private function buildConfiguration(defaultConfiguration:Map<String, String>, userConfiguration:Map<String, String>):Map<String, String> {
-		var configuration:Map<String, String> = new Map<String, String>();
-
-		// Add first the default configuration
-		if (defaultConfiguration != null) {
-			for (key in defaultConfiguration.keys()) {
-				configuration.set(key, defaultConfiguration.get(key));
-			}
-		}
-
-		// Override with user configuration
-		if (userConfiguration != null) {
-			for (key in userConfiguration.keys()) {
-				configuration.set(key, userConfiguration.get(key));
-			}
-		}
-
-		return configuration;
-
 	}
 
 }

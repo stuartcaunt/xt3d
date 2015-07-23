@@ -1,5 +1,6 @@
 package kfsgl.gl.shaders;
 
+import kfsgl.utils.KF;
 import kfsgl.utils.errors.KFException;
 import kfsgl.gl.shaders.ShaderTypedefs;
 import kfsgl.gl.shaders.ShaderUtils;
@@ -65,7 +66,7 @@ class UniformLib {
 					]
 				],
 				variables: [
-					{ name: "MAX_LIGHTS", value: "4" } // TODO Specify max from director config
+					{ name: "MAX_LIGHTS", value: Director.current.configuration.get(KF.MAX_LIGHTS) }
 				],
 				vertexDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],
 				fragmentDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],

@@ -71,7 +71,6 @@ class TestPhong1 extends View {
 
 			this._light = Light.createPointLight();
 			this._light.position = new Vector3D(80.0, 0.0, 40.0);
-
 			this._containerNode.addChild(this._light);
 
 			// Schedule update

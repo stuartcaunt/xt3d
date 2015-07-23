@@ -8,8 +8,6 @@ import kfsgl.node.Node3D;
 
 class Scene extends Node3D {
 
-	// TODO: set in configuration
-	public static var MAX_LIGHTS = 4;
 
 	// properties
 	public var opaqueObjects(get, null):Array<RenderObject>;
@@ -28,6 +26,8 @@ class Scene extends Node3D {
 	private var _ambientLight:Color = Color.createWithRGBHex(0x222222);
 
 	private var _borrowedChildren:Map<Node3D, Node3D> = new Map<Node3D, Node3D>();
+	private var _maxLights:Int;
+	private var _lastNumberOfLights:Int = 0;
 
 	// members
 	public static function create():Scene {
@@ -43,7 +43,7 @@ class Scene extends Node3D {
 	public function initScene():Bool {
 		var retval;
 		if ((retval = super.init())) {
-
+			this._maxLights = Director.current.configuration.getInt(KF.MAX_LIGHTS);
 		}
 
 		return retval;
@@ -155,10 +155,11 @@ class Scene extends Node3D {
 
 	public function prepareRender(camera:Camera, uniformLib:UniformLib):Void {
 
-		var numberOfLights = Math.min(this._lights.length, MAX_LIGHTS);
-		if (numberOfLights < this._lights.length) {
-			KF.Log("Number of lights in the scene exceeds maximum");
+		var numberOfLights:Int = Std.int(Math.min(this._lights.length, this._maxLights));
+		if (numberOfLights < this._lights.length && this._lights.length != this._lastNumberOfLights) {
+			KF.Warn("Number of lights in the scene (" + this._lights.length + ") exceeds maximum: only using " + this._maxLights);
 		}
+		this._lastNumberOfLights = this._lights.length;
 
 		// Enable/disable lighting
 		uniformLib.uniform("lightingEnabled").boolValue = this._lightingEnabled;
@@ -168,14 +169,14 @@ class Scene extends Node3D {
 			uniformLib.uniform("sceneAmbientColor").floatArrayValue = this._ambientLight.rgbArray;
 
 			// Disable unused lights
-			if (this._lights.length < MAX_LIGHTS) {
-				for (i in this._lights.length ... MAX_LIGHTS) {
+			if (this._lights.length < this._maxLights) {
+				for (i in this._lights.length ... this._maxLights) {
 					uniformLib.uniform("lights").at(i).get("enabled").boolValue = false;
 				}
 			}
 
 			// Set parameters for used lights
-			for (i in 0 ... lights.length) {
+			for (i in 0 ... numberOfLights) {
 				lights[i].prepareRender(camera, uniformLib, i);
 			}
 		}

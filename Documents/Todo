@@ -2,12 +2,6 @@ TODO
 ====
 
 
-- director configuration options
- - shader precision
- - number of lights (MAX_LIGHTS)
-   - verify number of lights doesn't exceed config value each frame
- - frame rate
-
 - modify opengl context
   - remove openfl OpenGL view: use lime directly
     - openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
@@ -137,6 +131,11 @@ x   Material colors/shininess
 x   PhongShader (per pixel)
 x   shared "includes" for vertex and fragment shaders
 x shader files automatically from directory, modify ShaderReader so don't need to specify glsl files
+x director configuration options
+x  shader precision
+x  number of lights (MAX_LIGHTS)
+x    verify number of lights doesn't exceed config value each frame
+x  frame rate
 
 
 
