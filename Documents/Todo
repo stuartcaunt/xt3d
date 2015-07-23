@@ -1,35 +1,17 @@
 TODO
 ====
 
-- lighting
-x   Light class
-x   Gather lights at beginning of render cycle and set global uniforms
-x   shader extensions based on names
-x     _texture, _phong, _etc
-x   declare uniform types in shaderlib
-x   uniform array types
-x   uniform struct types
-x   bool shader data type
-x   GouraudShader (per vertex)
-x   Lights as global uniforms
-x     Add variables (including MAX_LIGHTS) to uniform lib (combine these with those in shader lib)
-x     Add data types to uniform lib (combine these to those in shaderlib)
-x     allow for uniform lib (common uniforms) to have array/struct types
-x     Use common lighting uniforms in gouraud shader
-x   Set lighting uniforms from scene lights
-x   optimisation to setting lighting uniforms in Light
-x   default values for uniform typedefs
-x   Material colors/shininess
-x   PhongShader (per pixel)
-x   shared "includes" for vertex and fragment shaders
-
-- shader files automatically from directory, modify ShaderReader so don't need to specify glsl files
 
 - director configuration options
  - shader precision
  - number of lights (MAX_LIGHTS)
    - verify number of lights doesn't exceed config value each frame
  - frame rate
+
+- modify opengl context
+  - remove openfl OpenGL view: use lime directly
+    - openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
+  - control over depth/stencil
 
 - bump mapping / normal mapping
  - bump to normal convertor
@@ -39,10 +21,6 @@ x   shared "includes" for vertex and fragment shaders
 - perfs
   - checking if uniforms change: optional?
 
-- modify opengl context
-  - remove openfl OpenGL view: use lime directly
-    - openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
-  - control over depth/stencil
 
 - android
  - problem returning to application
@@ -137,6 +115,29 @@ x remove all singletons?
 x   use "current" director
 x schedule callbacks in nodes (update with dt)
 x   Improve test with overloaded View
+x lighting
+x   Light class
+x   Gather lights at beginning of render cycle and set global uniforms
+x   shader extensions based on names
+x     _texture, _phong, _etc
+x   declare uniform types in shaderlib
+x   uniform array types
+x   uniform struct types
+x   bool shader data type
+x   GouraudShader (per vertex)
+x   Lights as global uniforms
+x     Add variables (including MAX_LIGHTS) to uniform lib (combine these with those in shader lib)
+x     Add data types to uniform lib (combine these to those in shaderlib)
+x     allow for uniform lib (common uniforms) to have array/struct types
+x     Use common lighting uniforms in gouraud shader
+x   Set lighting uniforms from scene lights
+x   optimisation to setting lighting uniforms in Light
+x   default values for uniform typedefs
+x   Material colors/shininess
+x   PhongShader (per pixel)
+x   shared "includes" for vertex and fragment shaders
+x shader files automatically from directory, modify ShaderReader so don't need to specify glsl files
+
 
 
 

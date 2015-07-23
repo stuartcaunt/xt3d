@@ -1,5 +1,6 @@
 package kfsgl.gl.shaders;
 
+import kfsgl.utils.StringFunctions;
 import openfl.Assets;
 
 import kfsgl.utils.KF;
@@ -25,14 +26,18 @@ class ShaderReader  {
 
 
 	public function init():Void {
-		var shaderFiles = [
-			"prefix_vertex" => "prefix_vertex.glsl",
-			"prefix_fragment" => "prefix_fragment.glsl",
-			"generic_vertex" => "generic_vertex.glsl",
-			"generic_fragment" => "generic_fragment.glsl",
-			"gouraud_vertex_part" => "gouraud_vertex_part.glsl",
-			"phong_fragment_part" => "phong_fragment_part.glsl"
-		];
+		var shaderFiles = new Map<String, String>();
+
+		// Get list of all available glsl files
+		var textAssets = Assets.list(AssetType.TEXT);
+		var glslAssests = new Array<String>();
+		for (textAsset in textAssets) {
+			var suffix = "glsl";
+			if (StringFunctions.hasSuffix(textAsset, suffix)) {
+				var shaderName = StringFunctions.fileWithoutPathAndSuffix(textAsset);
+				shaderFiles.set(shaderName, textAsset);
+			}
+		}
 
 		for (key in shaderFiles.keys()) {
 			var shaderFile = shaderFiles.get(key);
@@ -40,7 +45,7 @@ class ShaderReader  {
 			// Read shader file
 			//KF.Log("Reading shader file " + shaderFile);
 
-			var fileContents = Assets.getText("assets/shaders/" + shaderFile);
+			var fileContents = Assets.getText(shaderFile);
 			_shaderPrograms.set(key, fileContents);
 		}
 	}
@@ -52,6 +57,20 @@ class ShaderReader  {
 		}
 
 		throw new KFException("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
+	}
+
+	public function shaderWithFilename(filename):String {
+		var fileContents = Assets.getText(filename);
+		if (fileContents != null) {
+			// Add to available shaders
+			var shaderName = StringFunctions.fileWithoutPathAndSuffix(filename);
+			if (!this._shaderPrograms.exists(shaderName)) {
+				_shaderPrograms.set(shaderName, fileContents);
+			}
+		}
+
+		return fileContents;
+
 	}
 
 }
