@@ -1,5 +1,6 @@
 package kfsgl.core;
 
+import kfsgl.utils.errors.KFException;
 import kfsgl.utils.KF;
 import kfsgl.gl.KFGL;
 class Configuration {
@@ -47,32 +48,20 @@ class Configuration {
 		if (this._configuration.exists(key)) {
 			var stringValue = this._configuration.get(key);
 
-			var intValue:Int = Std.parseInt(stringValue);
-			if (intValue == Math.NaN) {
-				return null;
-
-			} else {
-				return intValue;
-			}
+			return Std.parseInt(stringValue);
 		}
 
-		return null;
+		throw new KFException("KeyDoesNotExist", "No value for the key \"" + key + "\" exists in the configuration");
 	}
 
 	public function getFloat(key:String):Float {
 		if (this._configuration.exists(key)) {
 			var stringValue = this._configuration.get(key);
 
-			var floatValue:Float = Std.parseFloat(stringValue);
-			if (floatValue == Math.NaN) {
-				return null;
-
-			} else {
-				return floatValue;
-			}
+			return Std.parseFloat(stringValue);
 		}
 
-		return null;
+		throw new KFException("KeyDoesNotExist", "No value for the key \"" + key + "\" exists in the configuration");
 	}
 
 }

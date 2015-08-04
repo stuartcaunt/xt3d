@@ -165,7 +165,10 @@ class GLTextureManager {
 
 		} else {
 
-			var byteArray = @:privateAccess (bitmapData.__image).data.buffer;
+			var image = @:privateAccess (bitmapData.__image);
+			// Stu: hack to put image format back to rgba32 after update to OpenFl 3.2.2
+			image.format = RGBA32;
+			var byteArray = image.data.buffer;
 			var source = new UInt8Array(byteArray);
 
 
@@ -189,6 +192,17 @@ class GLTextureManager {
 		}
 
 		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {
+			#if (desktop || ios)
+			var internalFormat = GL.RGBA;
+			var format = 0x80E1;
+			#elseif sys
+			var internalFormat = 0x80E1;
+			var format = 0x80E1;
+			#else
+			var internalFormat = GL.RGBA;
+			var format = GL.RGBA;
+			#end
+
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, formattedDataSource);
 
 		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
