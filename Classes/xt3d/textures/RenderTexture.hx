@@ -1,13 +1,13 @@
 package xt3d.textures;
 
 import openfl.display.BitmapData;
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 import openfl.gl.GL;
 import openfl.gl.GLFramebuffer;
 import openfl.gl.GLRenderbuffer;
 import xt3d.utils.Size;
 import xt3d.utils.Color;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 class RenderTexture extends Texture2D {
 
 	// properties
@@ -29,16 +29,16 @@ class RenderTexture extends Texture2D {
 		return object;
 	}
 
-	public function init(size:Size<Int>, textureOptions:TextureOptions = null, depthStencilFormat:Int = KFGL.DepthStencilFormatDepth):Bool {
+	public function init(size:Size<Int>, textureOptions:TextureOptions = null, depthStencilFormat:Int = XTGL.DepthStencilFormatDepth):Bool {
 		var retval;
 
 		if (textureOptions  == null) {
 			textureOptions = new TextureOptions();
 			textureOptions.forcePOT = true;
-			textureOptions.minFilter = KFGL.GL_NEAREST;
-			textureOptions.magFilter = KFGL.GL_NEAREST;
-			textureOptions.wrapS = KFGL.GL_REPEAT;
-			textureOptions.wrapT = KFGL.GL_REPEAT;
+			textureOptions.minFilter = XTGL.GL_NEAREST;
+			textureOptions.magFilter = XTGL.GL_NEAREST;
+			textureOptions.wrapS = XTGL.GL_REPEAT;
+			textureOptions.wrapT = XTGL.GL_REPEAT;
 			textureOptions.generateMipMaps = false;
 		}
 
@@ -71,13 +71,13 @@ class RenderTexture extends Texture2D {
 
 	public function get_clearFlags():Int {
 		var clearFlags = GL.COLOR_BUFFER_BIT;
-		if (this._depthStencilFormat == KFGL.DepthStencilFormatDepth) {
+		if (this._depthStencilFormat == XTGL.DepthStencilFormatDepth) {
 			clearFlags |= GL.DEPTH_BUFFER_BIT;
 
-		} else if (this._depthStencilFormat == KFGL.DepthStencilFormatStencil) {
+		} else if (this._depthStencilFormat == XTGL.DepthStencilFormatStencil) {
 			clearFlags |= GL.STENCIL_BUFFER_BIT;
 
-		} else if (this._depthStencilFormat == KFGL.DepthStencilFormatDepthAndStencil) {
+		} else if (this._depthStencilFormat == XTGL.DepthStencilFormatDepthAndStencil) {
 			clearFlags |= (GL.DEPTH_BUFFER_BIT | GL.STENCIL_BUFFER_BIT);
 		}
 
@@ -112,15 +112,15 @@ class RenderTexture extends Texture2D {
 
 		GL.framebufferTexture2D(GL.FRAMEBUFFER, GL.COLOR_ATTACHMENT0, GL.TEXTURE_2D, this._glTexture, 0);
 
-		if (this._depthStencilFormat != KFGL.DepthStencilFormatNone) {
+		if (this._depthStencilFormat != XTGL.DepthStencilFormatNone) {
 			// Generate render buffer for depth and stencil
 			this._depthStencilRenderBuffer = frameBufferManager.createRenderBuffer();
 
-			if (this._depthStencilFormat == KFGL.DepthStencilFormatDepth) {
+			if (this._depthStencilFormat == XTGL.DepthStencilFormatDepth) {
 				GL.renderbufferStorage(GL.RENDERBUFFER, GL.DEPTH_COMPONENT16, this._pixelsWidth, this._pixelsHeight);
 				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.DEPTH_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 
-			} else if (this._depthStencilFormat == KFGL.DepthStencilFormatStencil) {
+			} else if (this._depthStencilFormat == XTGL.DepthStencilFormatStencil) {
 				GL.renderbufferStorage(GL.RENDERBUFFER, GL.STENCIL_INDEX8, this._pixelsWidth, this._pixelsHeight);
 				GL.framebufferRenderbuffer(GL.FRAMEBUFFER, GL.STENCIL_ATTACHMENT, GL.RENDERBUFFER, this._depthStencilRenderBuffer);
 
@@ -137,7 +137,7 @@ class RenderTexture extends Texture2D {
 
 		var frameBufferStatus = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
 		if (frameBufferStatus != GL.FRAMEBUFFER_COMPLETE) {
-			KF.Error("Could not create complete framebuffer object with render texture");
+			XT.Error("Could not create complete framebuffer object with render texture");
 		}
 	}
 

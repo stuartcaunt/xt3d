@@ -10,7 +10,7 @@ import openfl.gl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.utils.errors.KFException;
 import xt3d.gl.shaders.ShaderTypedefs;
 
@@ -143,7 +143,7 @@ class Uniform  {
 				}
 
 			} else {
-				KF.Warn("Unknown data type \"" + uniformType + "\" for uniform \"" + this._name + "\"");
+				XT.Warn("Unknown data type \"" + uniformType + "\" for uniform \"" + this._name + "\"");
 				return false;
 			}
 		} else {
@@ -199,7 +199,7 @@ class Uniform  {
 				}
 
 			} else {
-				KF.Warn("Unknown data type \"" + uniformType + "\" for uniform \"" + this._name + "\"");
+				XT.Warn("Unknown data type \"" + uniformType + "\" for uniform \"" + this._name + "\"");
 				return false;
 			}
 
@@ -369,7 +369,7 @@ class Uniform  {
 
 			// Send value to the GPU if it is dirty
 			if (_isDirty) {
-				//KF.Log("Setting uniform " + this._name);
+				//XT.Log("Setting uniform " + this._name);
 				if (type == "float") {
 					GL.uniform1f(this._location, this._floatValue);
 
@@ -481,7 +481,7 @@ class Uniform  {
 				// Override program-specified texture slot _only_ if set by the user (default value changed)
 				var textureSlot = (uniform.textureSlot != -1) ? uniform.textureSlot :this._defaultTextureSlot;
 				this.setTextureSlot(textureSlot);
-				//KF.Log(this._textureSlot);
+				//XT.Log(this._textureSlot);
 			}
 		}
 	}

@@ -1,11 +1,11 @@
 package xt3d.core;
 
-import xt3d.utils.KFObject;
+import xt3d.utils.XTObject;
 import xt3d.textures.RenderTexture;
 import openfl.gl.GLRenderbuffer;
 import openfl.gl.GLFramebuffer;
 import xt3d.gl.GLFrameBufferManager;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.gl.GLTextureManager;
 import xt3d.gl.GLBufferManager;
 import xt3d.gl.GLAttributeManager;
@@ -14,7 +14,7 @@ import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.UniformLib;
 import openfl.geom.Matrix3D;
 import xt3d.utils.Color;
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 import xt3d.gl.shaders.ShaderManager;
 import xt3d.node.Camera;
 import xt3d.node.Light;
@@ -26,7 +26,7 @@ import openfl.geom.Rectangle;
 
 
 
-class Renderer extends KFObject {
+class Renderer extends XTObject {
 
 	// properties
 	public var stateManager(get, null):GLStateManager;
@@ -168,7 +168,7 @@ class Renderer extends KFObject {
 		if (_viewport == null || !_viewport.equals(viewport)) {
 			_viewport = viewport;
 			GL.viewport(Std.int (_viewport.x), Std.int (_viewport.y), Std.int (_viewport.width), Std.int (_viewport.height));
-			//KF.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
+			//XT.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
 		}
 	}
 
@@ -219,7 +219,7 @@ class Renderer extends KFObject {
 			// Sort objects
 			if (this._sortingEnabled) {
 
-				if (scene.zSortingStrategy & KFGL.ZSortingOpaque > 0) {
+				if (scene.zSortingStrategy & XTGL.ZSortingOpaque > 0) {
 					// Project transparent objects if we want to sort them in z
 					for (renderObject in scene.opaqueObjects) {
 						renderObject.calculateRenderZ(this._viewProjectionMatrix);
@@ -232,7 +232,7 @@ class Renderer extends KFObject {
 					scene.opaqueObjects.sort(this.materialSortStable);
 				}
 
-				if (scene.zSortingStrategy & KFGL.ZSortingTransparent > 0) {
+				if (scene.zSortingStrategy & XTGL.ZSortingTransparent > 0) {
 					// Project transparent objects if we want to sort them in z
 					for (renderObject in scene.transparentObjects) {
 						renderObject.calculateRenderZ(this._viewProjectionMatrix);
@@ -248,7 +248,7 @@ class Renderer extends KFObject {
 			}
 
 			// Render opaque objects
-			_stateManager.setBlending(KFGL.NoBlending);
+			_stateManager.setBlending(XTGL.NoBlending);
 			this.renderObjects(scene.opaqueObjects, camera, false/*, overrideMaterial*/);
 
 			// Render transparent objects
@@ -269,7 +269,7 @@ class Renderer extends KFObject {
 		this._currentProgram = null;
 
 		for (renderObject in renderObjects) {
-			//KF.Log("Rendering object " + renderObject.id);
+			//XT.Log("Rendering object " + renderObject.id);
 
 			// Update model matrices
 			renderObject.updateRenderMatrices(camera);

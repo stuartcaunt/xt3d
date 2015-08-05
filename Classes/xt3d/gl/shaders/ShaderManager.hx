@@ -1,14 +1,14 @@
 package xt3d.gl.shaders;
 
 import xt3d.gl.GLTextureManager;
-import xt3d.gl.KFGL;
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
+import xt3d.gl.XTGL;
 import openfl.gl.GL;
 import openfl.gl.GLShaderPrecisionFormat;
 import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.ShaderLib;
 import xt3d.utils.errors.KFException;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 
 class ShaderManager {
 
@@ -53,7 +53,7 @@ class ShaderManager {
 		}
 
 		// Set max precision (compared to desired precision) in shader lib
-		var desiredPrecision = Director.current.configuration.get(KF.SHADER_PRECISION);
+		var desiredPrecision = Director.current.configuration.get(XT.SHADER_PRECISION);
 		this.setShaderPrecision(desiredPrecision);
 
 		return true;
@@ -66,18 +66,18 @@ class ShaderManager {
 	public function setShaderPrecision(precision:String):Void {
 		if (this._precisionAvailable) {
 			this._precision = precision;
-			if (precision == KFGL.HIGH_PRECISION && !this._highPrecisionAvailable) {
+			if (precision == XTGL.HIGH_PRECISION && !this._highPrecisionAvailable) {
 				if (this._mediumPrecisionAvailable) {
-					this._precision = KFGL.MEDIUM_PRECISION;
-					KF.Warn("high precision not supported, reverting to medium precision");
+					this._precision = XTGL.MEDIUM_PRECISION;
+					XT.Warn("high precision not supported, reverting to medium precision");
 
 				} else {
-					this._precision = KFGL.LOW_PRECISION;
-					KF.Warn("high precision not supported, reverting to low precision");
+					this._precision = XTGL.LOW_PRECISION;
+					XT.Warn("high precision not supported, reverting to low precision");
 				}
-			} else if (precision == KFGL.MEDIUM_PRECISION && !this._mediumPrecisionAvailable) {
-				this._precision = KFGL.LOW_PRECISION;
-				KF.Warn("medium precision not supported, reverting to low precision");
+			} else if (precision == XTGL.MEDIUM_PRECISION && !this._mediumPrecisionAvailable) {
+				this._precision = XTGL.LOW_PRECISION;
+				XT.Warn("medium precision not supported, reverting to low precision");
 			}
 		} else {
 			this._precision = null;
@@ -152,7 +152,7 @@ class ShaderManager {
 		// Add the program
 		_programs.set(name, program);
 
-		//KF.Log("Added shader program \"" + name + "\"");
+		//XT.Log("Added shader program \"" + name + "\"");
 	}
 
 	public function programWithName(name:String):ShaderProgram {

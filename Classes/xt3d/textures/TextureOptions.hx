@@ -1,6 +1,6 @@
 package xt3d.textures;
 
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 class TextureOptions {
 
 	// properties
@@ -15,12 +15,12 @@ class TextureOptions {
 	// members
 	private var _forcePOT:Bool = true;
 	private var _generateMipMaps:Bool = true;
-	private var _minFilter:Int = KFGL.GL_LINEAR;
-	private var _magFilter:Int = KFGL.GL_LINEAR;
-	private var _wrapS:Int = KFGL.GL_REPEAT;
-	private var _wrapT:Int = KFGL.GL_REPEAT;
+	private var _minFilter:Int = XTGL.GL_LINEAR;
+	private var _magFilter:Int = XTGL.GL_LINEAR;
+	private var _wrapS:Int = XTGL.GL_REPEAT;
+	private var _wrapT:Int = XTGL.GL_REPEAT;
 
-	private var _pixelFormat:Int = KFGL.Texture2DPixelFormat_RGBA8888;
+	private var _pixelFormat:Int = XTGL.Texture2DPixelFormat_RGBA8888;
 
 	public function new() {
 

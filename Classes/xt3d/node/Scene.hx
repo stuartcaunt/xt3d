@@ -2,8 +2,8 @@ package xt3d.node;
 
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.Color;
-import xt3d.utils.KF;
-import xt3d.gl.KFGL;
+import xt3d.utils.XT;
+import xt3d.gl.XTGL;
 import xt3d.node.Node3D;
 
 class Scene extends Node3D {
@@ -19,7 +19,7 @@ class Scene extends Node3D {
 
 	private var _opaqueObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _transparentObjects:Array<RenderObject> = new Array<RenderObject>();
-	private var _zSortingStrategy:Int = KFGL.ZSortingAll;
+	private var _zSortingStrategy:Int = XTGL.ZSortingAll;
 
 	private var _lights:Array<Light> = new Array<Light>();
 	private var _lightingEnabled:Bool = true;
@@ -43,7 +43,7 @@ class Scene extends Node3D {
 	public function initScene():Bool {
 		var retval;
 		if ((retval = super.init())) {
-			this._maxLights = Director.current.configuration.getInt(KF.MAX_LIGHTS);
+			this._maxLights = Director.current.configuration.getInt(XT.MAX_LIGHTS);
 		}
 
 		return retval;
@@ -149,7 +149,7 @@ class Scene extends Node3D {
 			child.parent = parent;
 
 		} else {
-			KF.Log("Borrowed child node did not exist in scene");
+			XT.Log("Borrowed child node did not exist in scene");
 		}
 	}
 
@@ -157,7 +157,7 @@ class Scene extends Node3D {
 
 		var numberOfLights:Int = Std.int(Math.min(this._lights.length, this._maxLights));
 		if (numberOfLights < this._lights.length && this._lights.length != this._lastNumberOfLights) {
-			KF.Warn("Number of lights in the scene (" + this._lights.length + ") exceeds maximum: only using " + this._maxLights);
+			XT.Warn("Number of lights in the scene (" + this._lights.length + ") exceeds maximum: only using " + this._maxLights);
 		}
 		this._lastNumberOfLights = this._lights.length;
 

@@ -2,7 +2,7 @@ package xt3d.gl.vertexdata;
 
 import openfl.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
 import xt3d.utils.errors.KFAbstractMethodError;

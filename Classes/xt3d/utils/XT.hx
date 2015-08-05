@@ -2,7 +2,7 @@ package xt3d.utils;
 
 import haxe.Timer;
 
-class KF  {
+class XT  {
 
 	public static inline var MAX_LIGHTS:String = "MAX_LIGHTS";
 	public static inline var SHADER_PRECISION:String = "SHADER_PRECISION";

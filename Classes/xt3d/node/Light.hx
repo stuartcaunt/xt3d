@@ -1,7 +1,7 @@
 package xt3d.node;
 
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.utils.math.MatrixHelper;
 import xt3d.utils.math.VectorHelper;
 import xt3d.gl.shaders.UniformLib;
@@ -9,7 +9,7 @@ import xt3d.node.Scene;
 import xt3d.node.Node3D;
 import openfl.geom.Vector3D;
 import xt3d.utils.Color;
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 
 class Light extends Node3D {
 
@@ -31,7 +31,7 @@ class Light extends Node3D {
 
 
 	// members
-	private var _lightType:Int = KFGL.PointLight;
+	private var _lightType:Int = XTGL.PointLight;
 	private var _ambientColor:Color;
 	private var _diffuseColor:Color;
 	private var _specularColor:Color;
@@ -81,7 +81,7 @@ class Light extends Node3D {
 	public function initPointLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Bool {
 		var retval;
 		if ((retval = super.init())) {
-			this._lightType = KFGL.PointLight;
+			this._lightType = XTGL.PointLight;
 			this._ambientColor = Color.createWithRGBHex(ambient);
 			this._diffuseColor = Color.createWithRGBHex(diffuse);
 			this._specularColor = Color.createWithRGBHex(specular);
@@ -96,7 +96,7 @@ class Light extends Node3D {
 	public function initDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, direction:Vector3D = null):Bool {
 		var retval;
 		if ((retval = super.init())) {
-			this._lightType = KFGL.DirectionalLight;
+			this._lightType = XTGL.DirectionalLight;
 			this._ambientColor = Color.createWithRGBHex(ambient);
 			this._diffuseColor = Color.createWithRGBHex(diffuse);
 			this._specularColor = Color.createWithRGBHex(specular);
@@ -113,7 +113,7 @@ class Light extends Node3D {
 	public function initSpotLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null, cutoffAngle:Float = 15.0, falloffExponent:Float = 0.0):Bool {
 		var retval;
 		if ((retval = super.init())) {
-			this._lightType = KFGL.SpotLight;
+			this._lightType = XTGL.SpotLight;
 			this._ambientColor = Color.createWithRGBHex(ambient);
 			this._diffuseColor = Color.createWithRGBHex(diffuse);
 			this._specularColor = Color.createWithRGBHex(specular);
@@ -251,7 +251,7 @@ class Light extends Node3D {
 		uniformLib.uniform("lights").at(index).get("enabled").boolValue = this._enabled;
 
 		// Position (depending on point, directional and spot lights
-		if (this._lightType == KFGL.PointLight || this._lightType == KFGL.SpotLight) {
+		if (this._lightType == XTGL.PointLight || this._lightType == XTGL.SpotLight) {
 			MatrixHelper.transform4x4VectorToArray(camera.viewMatrix, this.worldPosition, this._positionArray);
 			uniformLib.uniform("lights").at(index).get("position").floatArrayValue = this._positionArray;
 
@@ -273,7 +273,7 @@ class Light extends Node3D {
 		uniformLib.uniform("lights").at(index).get("specularColor").floatArrayValue = this._specularColor.rgbArray;
 
 		// Spot lights
-		if (this._lightType == KFGL.SpotLight) {
+		if (this._lightType == XTGL.SpotLight) {
 			MatrixHelper.transform3x3VectorToArray(camera.viewMatrix, this._direction, this._directionArray);
 
 			uniformLib.uniform("lights").at(index).get("spotDirection").floatArrayValue = this._directionArray;

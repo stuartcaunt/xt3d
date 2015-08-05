@@ -1,7 +1,7 @@
 package xt3d.gl;
 
 import openfl.gl.GL;
-class KFGL {
+class XTGL {
 
 
 	public static inline var LOW_PRECISION:String = "lowp";

@@ -1,15 +1,15 @@
 package xt3d.core;
 
 import xt3d.utils.errors.KFException;
-import xt3d.utils.KF;
-import xt3d.gl.KFGL;
+import xt3d.utils.XT;
+import xt3d.gl.XTGL;
 class Configuration {
 
 	// members
 	private var _configuration:Map<String, String> = [
-		KF.MAX_LIGHTS => "4",
-		KF.SHADER_PRECISION => KFGL.MEDIUM_PRECISION,
-		KF.DEFAULT_FPS => "60.0"
+		XT.MAX_LIGHTS => "4",
+		XT.SHADER_PRECISION => XTGL.MEDIUM_PRECISION,
+		XT.DEFAULT_FPS => "60.0"
 	];
 
 	public static function create(userConfiguration:Map<String, String> = null):Configuration {

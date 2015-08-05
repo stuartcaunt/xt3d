@@ -1,6 +1,6 @@
 package xt3d.gl.shaders;
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.utils.errors.KFException;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.gl.shaders.ShaderUtils;
@@ -66,7 +66,7 @@ class UniformLib {
 					]
 				],
 				variables: [
-					{ name: "MAX_LIGHTS", value: Director.current.configuration.get(KF.MAX_LIGHTS) }
+					{ name: "MAX_LIGHTS", value: Director.current.configuration.get(XT.MAX_LIGHTS) }
 				],
 				vertexDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],
 				fragmentDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],

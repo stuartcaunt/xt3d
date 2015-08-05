@@ -1,13 +1,13 @@
 package xt3d.textures;
 
-import xt3d.utils.KFObject;
+import xt3d.utils.XTObject;
 import xt3d.utils.Color;
 import xt3d.utils.ImageLoader;
 import xt3d.gl.GLTextureManager;
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 import flash.utils.ByteArray;
 import openfl.utils.UInt8Array;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import openfl.gl.GL;
 import openfl.gl.GLTexture;
 import openfl.display.BitmapData;
@@ -15,7 +15,7 @@ import openfl.geom.Point;
 import xt3d.utils.Size;
 import openfl.Assets;
 
-	class Texture2D extends KFObject {
+	class Texture2D extends XTObject {
 
 	// properties
 	public var name(get, null):String;
@@ -161,7 +161,7 @@ import openfl.Assets;
 		// Get bitmap data from asset
 		var bitmapData = Assets.getBitmapData(imagePath);
 		if (bitmapData == null) {
-			KF.Error("Cannot get bitmap data from \"" + imagePath + "\"");
+			XT.Error("Cannot get bitmap data from \"" + imagePath + "\"");
 			return false;
 		}
 
@@ -193,7 +193,7 @@ import openfl.Assets;
 				this._isReady = true;
 			},
 			function (error) {
-				KF.Error("Texture2D failed to create texture: " + error);
+				XT.Error("Texture2D failed to create texture: " + error);
 			});
 
 
@@ -210,7 +210,7 @@ import openfl.Assets;
 		// Get bitmap data from asset in async
 		Assets.loadBitmapData(imagePath, function (bitmapData:BitmapData) {
 			if (bitmapData == null) {
-				KF.Error("Cannot get bitmap data from \"" + imagePath + "\"");
+				XT.Error("Cannot get bitmap data from \"" + imagePath + "\"");
 
 			} else {
 				// Handle the bitmap data
@@ -239,7 +239,7 @@ import openfl.Assets;
 		// Get bitmap data from asset
 		var bitmapData = new BitmapData(2, 2, true, color.intValue());
 		if (bitmapData == null) {
-			KF.Error("Cannot get bitmap data from color \"" + color.toString + "\"");
+			XT.Error("Cannot get bitmap data from color \"" + color.toString + "\"");
 			return false;
 		}
 

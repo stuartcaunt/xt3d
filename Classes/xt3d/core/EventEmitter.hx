@@ -1,8 +1,8 @@
 package xt3d.core;
 
-import xt3d.utils.KFObject;
+import xt3d.utils.XTObject;
 
-class EventEmitter extends KFObject {
+class EventEmitter extends XTObject {
 
 	private var _listeners:Map<String, Array<Void->Void> > = new Map<String, Array<Void->Void> >();
 

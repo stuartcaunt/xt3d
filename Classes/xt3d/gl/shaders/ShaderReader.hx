@@ -3,7 +3,7 @@ package xt3d.gl.shaders;
 import xt3d.utils.StringFunctions;
 import openfl.Assets;
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.utils.errors.KFException;
 
 class ShaderReader  {
@@ -43,7 +43,7 @@ class ShaderReader  {
 			var shaderFile = shaderFiles.get(key);
 
 			// Read shader file
-			//KF.Log("Reading shader file " + shaderFile);
+			//XT.Log("Reading shader file " + shaderFile);
 
 			var fileContents = Assets.getText(shaderFile);
 			_shaderPrograms.set(key, fileContents);
@@ -52,7 +52,7 @@ class ShaderReader  {
 
 	public function shaderWithKey(key):String {
 		if (_shaderPrograms.exists(key)) {
-			//KF.Log("Getting shader program for key " + key);
+			//XT.Log("Getting shader program for key " + key);
 			return _shaderPrograms.get(key);
 		}
 

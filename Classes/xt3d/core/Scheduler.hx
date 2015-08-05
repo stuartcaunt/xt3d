@@ -1,16 +1,16 @@
 package xt3d.core;
 
-import xt3d.utils.KF;
-import xt3d.utils.KFObject;
+import xt3d.utils.XT;
+import xt3d.utils.XTObject;
 
 typedef UpdatableElement = {
-	var target:KFObject;
+	var target:XTObject;
 	var paused:Bool;
 	var markedForDeletion:Bool;
 };
 
 typedef ScheduledTimer = {
-	var target:KFObject;
+	var target:XTObject;
 	var callback:Float->Void;
 	var runForever:Bool;
 	var useDelay:Bool;
@@ -22,7 +22,7 @@ typedef ScheduledTimer = {
 };
 
 typedef TimerElement = {
-	var target:KFObject;
+	var target:XTObject;
 	var timers:Array<ScheduledTimer>;
 	var paused:Bool;
 	var currentTimerIndex:Int;
@@ -36,12 +36,12 @@ class Scheduler {
 	public var timeScale(get, set):Float;
 
 	// members
-	private var _scheduledUpdatesMap:Map<KFObject, UpdatableElement> = new Map<KFObject, UpdatableElement>();
+	private var _scheduledUpdatesMap:Map<XTObject, UpdatableElement> = new Map<XTObject, UpdatableElement>();
 	private var _scheduledUpdatesToAdd:Array<UpdatableElement> = new Array<UpdatableElement>();
 	private var _scheduledUpdatesMapLocked:Bool = false;
-	private var _scheduledTimersMap:Map<KFObject, TimerElement> = new Map<KFObject, TimerElement>();
+	private var _scheduledTimersMap:Map<XTObject, TimerElement> = new Map<XTObject, TimerElement>();
 	private var _timeScale:Float = 1.0;
-	private var _currentTimerTarget:KFObject = null;
+	private var _currentTimerTarget:XTObject = null;
 	private var _currentTimerTargetMarkedForDeletion:Bool = false;
 
 	public static function create():Scheduler {
@@ -79,7 +79,7 @@ class Scheduler {
 
 	/* --------- Implementation --------- */
 
-	public function schedule(target:KFObject, callback:Float->Void, interval:Float = 0.0, delay:Float = 0.0, repeat:UInt = KF.RepeatForever, paused:Bool = false):Void {
+	public function schedule(target:XTObject, callback:Float->Void, interval:Float = 0.0, delay:Float = 0.0, repeat:UInt = XT.RepeatForever, paused:Bool = false):Void {
 		if (target == null || callback == null) {
 			return;
 		}
@@ -103,7 +103,7 @@ class Scheduler {
 		// Check if timer exists
 		for (scheduledTimer in timerElement.timers) {
 			if (Reflect.compareMethods(scheduledTimer.callback, callback)) {
-				KF.Log("Scheduler.schedule : Callback already scheduled. Updating interval from " + scheduledTimer.interval + " to " + interval);
+				XT.Log("Scheduler.schedule : Callback already scheduled. Updating interval from " + scheduledTimer.interval + " to " + interval);
 				scheduledTimer.interval = interval;
 				return;
 			}
@@ -113,7 +113,7 @@ class Scheduler {
 		var scheduledTimer:ScheduledTimer = {
 			target: target,
 			callback: callback,
-			runForever: (repeat == KF.RepeatForever) ? true : false,
+			runForever: (repeat == XT.RepeatForever) ? true : false,
 			useDelay: (delay > 0.0) ? true : false,
 			delay: delay,
 			interval: interval,
@@ -125,7 +125,7 @@ class Scheduler {
 		timerElement.timers.push(scheduledTimer);
 	}
 
-	public function unschedule(target:KFObject, callback:Float->Void):Void {
+	public function unschedule(target:XTObject, callback:Float->Void):Void {
 		if (target == null || callback == null) {
 			return;
 		}
@@ -166,7 +166,7 @@ class Scheduler {
 		}
 	}
 
-	public function unscheduleAllForTarget(target:KFObject):Void {
+	public function unscheduleAllForTarget(target:XTObject):Void {
 		if (target == null) {
 			return;
 		}
@@ -192,7 +192,7 @@ class Scheduler {
 	}
 
 
-	public function scheduleUpdate(target:KFObject):Void {
+	public function scheduleUpdate(target:XTObject):Void {
 		if (target == null) {
 			return;
 		}
@@ -220,7 +220,7 @@ class Scheduler {
 
 	}
 
-	public function unscheduleUpdate(target:KFObject):Void {
+	public function unscheduleUpdate(target:XTObject):Void {
 		if (target == null) {
 			return;
 		}
@@ -242,7 +242,7 @@ class Scheduler {
 		}
 	}
 
-	public function pauseTarget(target:KFObject):Void {
+	public function pauseTarget(target:XTObject):Void {
 		if (target == null) {
 			return;
 		}
@@ -264,7 +264,7 @@ class Scheduler {
 		}
 	}
 
-	public function resumeTarget(target:KFObject):Void {
+	public function resumeTarget(target:XTObject):Void {
 		if (target == null) {
 			return;
 		}

@@ -1,6 +1,6 @@
 package xt3d.utils;
 
-class KFObject {
+class XTObject {
 
 	// properties
 	public var retainCount(get, null):Int;
@@ -55,7 +55,7 @@ class KFObject {
 		Director.current.scheduler.resumeTarget(this);
 	}
 
-	public function schedule(callback:Float->Void, interval:Float = 0.0, delay:Float = 0.0, repeat:UInt = KF.RepeatForever, paused:Bool = false):Void {
+	public function schedule(callback:Float->Void, interval:Float = 0.0, delay:Float = 0.0, repeat:UInt = XT.RepeatForever, paused:Bool = false):Void {
 		Director.current.scheduler.schedule(this, callback, interval, delay, repeat, paused);
 	}
 

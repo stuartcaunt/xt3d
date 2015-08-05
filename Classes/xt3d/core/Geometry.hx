@@ -1,6 +1,6 @@
 package xt3d.core;
 
-import xt3d.utils.KFObject;
+import xt3d.utils.XTObject;
 import xt3d.gl.vertexdata.UByteVertexData;
 import xt3d.gl.vertexdata.PrimitiveVertexData;
 import xt3d.gl.GLBufferManager;
@@ -11,7 +11,7 @@ import xt3d.gl.vertexdata.IndexData;
 import xt3d.utils.errors.KFException;
 
 
-class Geometry extends KFObject {
+class Geometry extends XTObject {
 
 	// Default buffer names - !! NOTE !! identical to attribute names
 	public static var bufferNames = {

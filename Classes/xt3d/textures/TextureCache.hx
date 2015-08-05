@@ -2,7 +2,7 @@ package xt3d.textures;
 
 import xt3d.utils.Color;
 import xt3d.gl.GLTextureManager;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 class TextureCache {
 
 	// properties
@@ -91,7 +91,7 @@ class TextureCache {
 		if (this._textures.exists(textureKey)) {
 			return this._textures.get(textureKey);
 		} else {
-			KF.Warn("Texture for key \"" + textureKey + "\" does not exist");
+			XT.Warn("Texture for key \"" + textureKey + "\" does not exist");
 			return null;
 		}
 	}

@@ -7,7 +7,7 @@ import openfl.utils.Int16Array;
 import openfl.gl.GLBuffer;
 import openfl.gl.GL;
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.utils.errors.KFAbstractMethodError;
 
 class IndexData {

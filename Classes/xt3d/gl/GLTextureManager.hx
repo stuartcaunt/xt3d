@@ -2,7 +2,7 @@ package xt3d.gl;
 
 import openfl.utils.Int16Array;
 import openfl.utils.ArrayBufferView;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.textures.Texture2D;
 import openfl.utils.ByteArray;
 import openfl.utils.UInt8Array;
@@ -64,7 +64,7 @@ class GLTextureManager {
 	public function createTexture():GLTexture {
 		var texture = GL.createTexture();
 		if (texture == null) {
-			KF.Error("Cannot create a new GLTexture");
+			XT.Error("Cannot create a new GLTexture");
 		}
 		return texture;
 	}
@@ -84,7 +84,7 @@ class GLTextureManager {
 	}
 
 	public function setTexture(texture:Texture2D, textureSlot:Int):Void {
-		//KF.Log("set texture " + texture.name + " at " + textureSlot);
+		//XT.Log("set texture " + texture.name + " at " + textureSlot);
 
 		// Set texture slot
 		this.setActiveTextureSlot(textureSlot);
@@ -100,7 +100,7 @@ class GLTextureManager {
 
 	public function setActiveTextureSlot(textureSlot:Int):Void {
 		if (textureSlot > this._maxTextureSlots) {
-			KF.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._maxTextureSlots);
+			XT.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._maxTextureSlots);
 		} else {
 			if (textureSlot != this._activeTextureSlot) {
 				GL.activeTexture(GL.TEXTURE0 + textureSlot);
@@ -114,7 +114,7 @@ class GLTextureManager {
 			this._currentTextures[this._activeTextureSlot] = texture;
 			var glTexture = texture != null ? texture.glTexture : null;
 			GL.bindTexture(GL.TEXTURE_2D, glTexture);
-			//KF.Log("Binding texture " + texture.name);
+			//XT.Log("Binding texture " + texture.name);
 		}
 	}
 
@@ -126,7 +126,7 @@ class GLTextureManager {
 			if (texture.glTexture == null) {
 				texture.glTexture = this.createTexture();
 				if (texture.glTexture == null) {
-					KF.Error("Cannot create a new GLTexture");
+					XT.Error("Cannot create a new GLTexture");
 					return false;
 				}
 			}
@@ -149,10 +149,10 @@ class GLTextureManager {
 	}
 
 	private function handleTextureParams(texture:Texture2D):Void {
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, KFGL.toGLParam(texture.minFilter));
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, KFGL.toGLParam(texture.magFilter));
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, KFGL.toGLParam(texture.wrapS));
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, KFGL.toGLParam(texture.wrapT));
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, XTGL.toGLParam(texture.minFilter));
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, XTGL.toGLParam(texture.magFilter));
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, XTGL.toGLParam(texture.wrapS));
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, XTGL.toGLParam(texture.wrapT));
 	}
 
 
@@ -191,28 +191,28 @@ class GLTextureManager {
 			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
 		}
 
-		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {
+		if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA8888) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB888) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.UNSIGNED_BYTE, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA4444) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA4444) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_SHORT_4_4_4_4, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB565) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB565) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.UNSIGNED_SHORT_5_6_5, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB5A1) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB5A1) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_SHORT_5_5_5_1, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_A8) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_A8) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.ALPHA, textureWidth, textureHeight, 0, GL.ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_I8) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_I8) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE, textureWidth, textureHeight, 0, GL.LUMINANCE, GL.UNSIGNED_BYTE, formattedDataSource);
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_AI88) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_AI88) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE_ALPHA, textureWidth, textureHeight, 0, GL.LUMINANCE_ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
 		}
 	}
@@ -224,7 +224,7 @@ class GLTextureManager {
 		var r, g, b, a;
 
 		// Does data from asset ever NOT have alpha ? In this case need to handle 3 bytes per pixel as source
-		if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
+		if (pixelFormat == XTGL.Texture2DPixelFormat_RGB888) {
 			var formattedLength = numberOfPixels * 3;
 			var formattedSource = new UInt8Array(formattedLength);
 			for (i in 0 ... numberOfPixels) {
@@ -238,7 +238,7 @@ class GLTextureManager {
 			}
 			return formattedSource;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA4444) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA4444) {
 			var formattedSource = new Int16Array(numberOfPixels);
 			for (i in 0 ... numberOfPixels) {
 				r = (source[inPosition++] >> 4);
@@ -249,7 +249,7 @@ class GLTextureManager {
 			}
 			return formattedSource;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB565) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB565) {
 			var formattedSource = new Int16Array(numberOfPixels);
 			for (i in 0 ... numberOfPixels) {
 				r = (source[inPosition++] >> 3);
@@ -260,7 +260,7 @@ class GLTextureManager {
 			}
 			return formattedSource;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB5A1) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB5A1) {
 			var formattedSource = new Int16Array(numberOfPixels);
 			for (i in 0 ... numberOfPixels) {
 				r = (source[inPosition++] >> 3);
@@ -271,7 +271,7 @@ class GLTextureManager {
 			}
 			return formattedSource;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_A8) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_A8) {
 			var formattedSource = new UInt8Array(numberOfPixels);
 			for (i in 0 ... numberOfPixels) {
 				inPosition += 3;
@@ -286,28 +286,28 @@ class GLTextureManager {
 	}
 
 	private function getBitsPerPixelForFormat(pixelFormat:Int):Int {
-		if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA8888) {
+		if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA8888) {
 			return 32;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB888) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB888) {
 			return 24;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGBA4444) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA4444) {
 			return 16;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB565) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB565) {
 			return 16;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_RGB5A1) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB5A1) {
 			return 16;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_A8) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_A8) {
 			return 8;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_I8) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_I8) {
 			return 8;
 
-		} else if (pixelFormat == KFGL.Texture2DPixelFormat_AI88) {
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_AI88) {
 			return 16;
 		}
 		return 32;

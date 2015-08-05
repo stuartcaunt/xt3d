@@ -3,7 +3,7 @@ package xt3d.gl.shaders;
 import xt3d.utils.errors.KFException;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.utils.StringFunctions;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 
 class ShaderUtils {
 
@@ -114,7 +114,7 @@ class ShaderUtils {
 					shaderInfo.variables.push(shaderVariable);
 
 				} else {
-					KF.Warn("Duplicate shader variable \"" + variableName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate shader variable \"" + variableName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -135,7 +135,7 @@ class ShaderUtils {
 						clonedTypeDef.push(cloneBaseTypeInfo(baseType));
 					}
 				} else {
-					KF.Warn("Duplicate shader type \"" + typeName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate shader type \"" + typeName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -149,7 +149,7 @@ class ShaderUtils {
 				if (shaderInfo.vertexDefines.indexOf(vertexDefine) == -1) {
 					shaderInfo.vertexDefines.push(vertexDefine);
 				} else {
-					KF.Warn("Duplicate vertex define \"" + vertexDefine + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate vertex define \"" + vertexDefine + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -163,7 +163,7 @@ class ShaderUtils {
 				if (shaderInfo.fragmentDefines.indexOf(fragmentDefine) == -1) {
 					shaderInfo.fragmentDefines.push(fragmentDefine);
 				} else {
-					KF.Warn("Duplicate fragment define \"" + fragmentDefine + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate fragment define \"" + fragmentDefine + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -177,7 +177,7 @@ class ShaderUtils {
 				if (shaderInfo.vertexIncludes.indexOf(vertexInclude) == -1) {
 					shaderInfo.vertexIncludes.push(vertexInclude);
 				} else {
-					KF.Warn("Duplicate vertex include \"" + vertexInclude + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate vertex include \"" + vertexInclude + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -191,7 +191,7 @@ class ShaderUtils {
 				if (shaderInfo.fragmentIncludes.indexOf(fragmentInclude) == -1) {
 					shaderInfo.fragmentIncludes.push(fragmentInclude);
 				} else {
-					KF.Warn("Duplicate fragment include \"" + fragmentInclude + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate fragment include \"" + fragmentInclude + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -219,7 +219,7 @@ class ShaderUtils {
 					var uniformInfoClone = cloneUniformInfo(shaderExtensionInfo.uniforms.get(uniformName));
 					shaderInfo.uniforms.set(uniformName, uniformInfoClone);
 				} else {
-					KF.Warn("Duplicate uniform \"" + uniformName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("Duplicate uniform \"" + uniformName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -235,7 +235,7 @@ class ShaderUtils {
 					var attributeInfoClone = cloneAttributeInfo(shaderExtensionInfo.attributes.get(attributeName));
 					shaderInfo.attributes.set(attributeName, attributeInfoClone);
 				} else {
-					KF.Warn("attribute \"" + attributeName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
+					XT.Warn("attribute \"" + attributeName + "\" for shader \"" + shaderName + "\" with extension \"" + extensionName + "\"");
 				}
 			}
 		}
@@ -426,7 +426,7 @@ class ShaderUtils {
 			return clone;
 
 		} else {
-			KF.Warn("trying to create an array uniform info from non-array type");
+			XT.Warn("trying to create an array uniform info from non-array type");
 			return null;
 		}
 
@@ -445,7 +445,7 @@ class ShaderUtils {
 			return clone;
 
 		} else {
-			KF.Warn("trying to create a custom uniform info from base type : " + uniformInfo.type);
+			XT.Warn("trying to create a custom uniform info from base type : " + uniformInfo.type);
 			return null;
 		}
 	}

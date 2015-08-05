@@ -1,6 +1,6 @@
 package xt3d.gl.shaders;
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.gl.shaders.ShaderUtils;
 

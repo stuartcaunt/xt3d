@@ -1,14 +1,14 @@
 package xt3d.node;
 
 import xt3d.utils.math.VectorHelper;
-import xt3d.utils.KFObject;
-import xt3d.utils.KF;
+import xt3d.utils.XTObject;
+import xt3d.utils.XT;
 import xt3d.utils.errors.KFException;
 import xt3d.utils.math.MatrixHelper;
 import openfl.geom.Matrix3D;
 import openfl.geom.Vector3D;
 
-class Node3D extends KFObject {
+class Node3D extends XTObject {
 
 	// properties
 	public var id(get, null):UInt;

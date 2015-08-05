@@ -71,7 +71,7 @@ class ImageLoader {
 		this._loading = false;
 		if (this._status == 200 || event.target.content != null) {  // 200 is a successful HTTP status
 
-			KF.Log("Got image");
+			XT.Log("Got image");
 			try {
 				var bitmap:Bitmap = event.target.content;
 				var bitmapData = bitmap.bitmapData;
@@ -96,7 +96,7 @@ class ImageLoader {
 		// Progress between 0 and 1
 		this._progress = event.bytesLoaded / event.bytesTotal;
 
-		KF.Log("loading " + Math.round(this._progress * 100) + "%");
+		XT.Log("loading " + Math.round(this._progress * 100) + "%");
 	}
 
 	private inline function onSecurity(event:SecurityErrorEvent):Void {
@@ -116,7 +116,7 @@ class ImageLoader {
 	private inline function handleError(error:String) {
 		var errorString:String = "Error loading \"" + this._url + "\" : " + error;
 		if (this._errorCbk == null) {
-			KF.Error(errorString);
+			XT.Error(errorString);
 		} else {
 			this._errorCbk(errorString);
 		}

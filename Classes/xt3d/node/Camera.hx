@@ -2,7 +2,7 @@ package xt3d.node;
 
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.errors.KFException;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.utils.math.MatrixHelper;
 import xt3d.utils.math.VectorHelper;
 import openfl.geom.Vector3D;
@@ -405,7 +405,7 @@ class Camera extends Node3D {
 	 */
 	private function onViewportChanged():Void {
 		var viewportSize = this._view.viewport;
-		//KF.Log("changing viewport from " + this._width + " x " + this._height + " to " + viewportSize.width + " x " + viewportSize.height);
+		//XT.Log("changing viewport from " + this._width + " x " + this._height + " to " + viewportSize.width + " x " + viewportSize.height);
 		this._width = viewportSize.width;
 		this._height = viewportSize.height;
 
@@ -584,7 +584,7 @@ class Camera extends Node3D {
 		_matrixDirty = true;
 
 		if (!_isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
+			XT.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
 	}
 
@@ -599,7 +599,7 @@ class Camera extends Node3D {
 		_matrixDirty = true;
 
 		if (!_isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
+			XT.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
 	}
 
@@ -659,7 +659,7 @@ class Camera extends Node3D {
 
 		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
+			XT.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
 	}
 
@@ -674,7 +674,7 @@ class Camera extends Node3D {
 
 		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
+			XT.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
 
 	}
@@ -690,7 +690,7 @@ class Camera extends Node3D {
 
 		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
+			XT.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
 
 	}
@@ -706,7 +706,7 @@ class Camera extends Node3D {
 
 		this._matrixDirty = true;
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting lookAt has no effect");
+			XT.Warn("Camera : not a target camera, setting lookAt has no effect");
 		}
 
 	}
@@ -737,7 +737,7 @@ class Camera extends Node3D {
 		this.setPosition(position);
 
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting position has no effect");
+			XT.Warn("Camera : not a target camera, setting position has no effect");
 		}
 
 	}
@@ -753,7 +753,7 @@ class Camera extends Node3D {
 		this._matrixDirty = true;
 
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting \"up\" has no effect");
+			XT.Warn("Camera : not a target camera, setting \"up\" has no effect");
 		}
 
 	}
@@ -769,7 +769,7 @@ class Camera extends Node3D {
 		this._matrixDirty = true;
 
 		if (!this._isTargetCamera) {
-			KF.Warn("Camera : not a target camera, setting \"up\" has no effect");
+			XT.Warn("Camera : not a target camera, setting \"up\" has no effect");
 		}
 
 	}

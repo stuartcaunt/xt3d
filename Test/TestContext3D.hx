@@ -1,7 +1,7 @@
 package ;
 
 import openfl.events.Event;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import openfl.display.Stage3D;
 import openfl.display.Stage;
 import openfl.geom.Rectangle;
@@ -26,7 +26,7 @@ class TestContext3D extends Sprite {
 	}
 
 	private function onContextCreated():Void {
-		KF.Log("Context created");
+		XT.Log("Context created");
 	}
 
 	/* --------- Implementation --------- */
@@ -34,7 +34,7 @@ class TestContext3D extends Sprite {
 	private function createContext3D(stage:Stage, viewport:Rectangle, callback:Void->Void):Stage3D {
 
 		var stage3DsLength = stage.stage3Ds.length;
-		KF.Log("Number of stage3Ds = " + stage3DsLength);
+		XT.Log("Number of stage3Ds = " + stage3DsLength);
 
 		var stage3D:Stage3D = stage.stage3Ds[0];
 

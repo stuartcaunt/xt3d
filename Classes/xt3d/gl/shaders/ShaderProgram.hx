@@ -1,12 +1,12 @@
 package xt3d.gl.shaders;
 
-import xt3d.utils.KFObject;
+import xt3d.utils.XTObject;
 import openfl.gl.GL;
 import openfl.gl.GLProgram;
 import openfl.gl.GLShader;
 import openfl.Assets;
 
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.gl.shaders.ShaderReader;
 import xt3d.gl.shaders.Uniform;
@@ -19,7 +19,7 @@ typedef ProgramAttributeState = {
 }
 
 
-class ShaderProgram extends KFObject {
+class ShaderProgram extends XTObject {
 
 	// properties
 	public var id(get, null):Int;
@@ -45,7 +45,7 @@ class ShaderProgram extends KFObject {
 	private var _maxTextureSlots:Int;
 
 	// These are as they appear in prefix_vertex.glsl
-	public static var KFAttributes = KF.jsonToMap({
+	public static var KFAttributes = XT.jsonToMap({
 		position: "a_position",
 		normal: "a_normal",
 		color: "a_color",
@@ -265,7 +265,7 @@ class ShaderProgram extends KFObject {
 		_program = GL.createProgram();
 
 		if (_program == null) {
-			KF.Log("Failed to create new GLProgram");
+			XT.Log("Failed to create new GLProgram");
 			return false;
 		}
 
@@ -291,23 +291,23 @@ class ShaderProgram extends KFObject {
 
 		// Check for errors
 		if (GL.getProgramParameter(_program, GL.LINK_STATUS) == 0) {
-			KF.Log("ERROR: unable to link program:");
-			KF.Log(GL.getProgramInfoLog(_program));
-			KF.Log("VALIDATE_STATUS: " + GL.getProgramParameter(_program, GL.VALIDATE_STATUS));
-			KF.Log("ERROR: " + GL.getError());
+			XT.Log("ERROR: unable to link program:");
+			XT.Log(GL.getProgramInfoLog(_program));
+			XT.Log("VALIDATE_STATUS: " + GL.getProgramParameter(_program, GL.VALIDATE_STATUS));
+			XT.Log("ERROR: " + GL.getError());
 
 			return false;
 
 		} else {
-//			KF.Log("Compiled and linked successfully program \"" + this._name + "\"");
-//			KF.Log("Vertex program:\n" + _vertexProgram);
-//			KF.Log("Fragment program:\n" + _fragmentProgram);
+//			XT.Log("Compiled and linked successfully program \"" + this._name + "\"");
+//			XT.Log("Vertex program:\n" + _vertexProgram);
+//			XT.Log("Fragment program:\n" + _fragmentProgram);
 		}
 
 		// Get attribute locations from common attributes
 		for (identifier in KFAttributes.keys()) {
 			var location = GL.getAttribLocation(_program, KFAttributes.get(identifier));
-			//KF.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + location);
+			//XT.Log("attribute " + identifier + " : " + KFAttributes.get(identifier) + " = " + location);
 			_attributes.set(identifier, { name:identifier, location:location, used:false });
 		}
 
@@ -353,7 +353,7 @@ class ShaderProgram extends KFObject {
 					_globalUniforms.set(uniformName, uniform);
 				}
 			} else {
-				//KF.Log("Ignoring common uniform " + uniformName + " : overridden by shader uniform");
+				//XT.Log("Ignoring common uniform " + uniformName + " : overridden by shader uniform");
 			}
 		}
 
@@ -372,7 +372,7 @@ class ShaderProgram extends KFObject {
 		// Create new shader
 		var shader = GL.createShader(type);
 		if (shader == null) {
-			KF.Log("ERROR: Failed to create new GLShader");
+			XT.Log("ERROR: Failed to create new GLShader");
 			return null;
 		}
 
@@ -382,12 +382,12 @@ class ShaderProgram extends KFObject {
 		
 		// Verify that shader comiled
 		if (GL.getShaderParameter(shader, GL.COMPILE_STATUS) == 0) {
-			KF.Log("ERROR compiling " + (type == GL.VERTEX_SHADER ? "vertex" : "fragment") + " shader: " + GL.getShaderInfoLog(shader));
+			XT.Log("ERROR compiling " + (type == GL.VERTEX_SHADER ? "vertex" : "fragment") + " shader: " + GL.getShaderInfoLog(shader));
 			if (type == GL.VERTEX_SHADER) {
-				KF.Log("Vertex program:\n" + _vertexProgram);
+				XT.Log("Vertex program:\n" + _vertexProgram);
 			} else {
 
-				KF.Log("Fragment program:\n" + _fragmentProgram);
+				XT.Log("Fragment program:\n" + _fragmentProgram);
 			}
 			return null;
 		}
@@ -411,7 +411,7 @@ class ShaderProgram extends KFObject {
 				var textureSlot = uniform.textureSlot;
 				if (textureSlot >= 0) {
 					if (!this._availableTextureSlots[textureSlot]) {
-						KF.Error("ERROR: Uniform " + uniformName + " attempting to use unavailable texture slot " + textureSlot);
+						XT.Error("ERROR: Uniform " + uniformName + " attempting to use unavailable texture slot " + textureSlot);
 						return null;
 					}
 				} else {
@@ -423,7 +423,7 @@ class ShaderProgram extends KFObject {
 				uniform.setDefaultTextureSlot(textureSlot);
 
 				if (textureSlot > this._maxTextureSlots) {
-					KF.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
+					XT.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
 					return null;
 				}
 
@@ -507,7 +507,7 @@ class ShaderProgram extends KFObject {
 
 		} else {
 			// Debugging... not really necessary
-			KF.Log("Cannot update uniform " + uniform.name + " as it does not exist in the shader " + this._name);
+			XT.Log("Cannot update uniform " + uniform.name + " as it does not exist in the shader " + this._name);
 		}
 	}
 
@@ -529,7 +529,7 @@ class ShaderProgram extends KFObject {
 
 		} else {
 			// Debugging... not really necessary
-			KF.Log("Cannot update common uniform " + uniform.name + " as it does not exist in the shader " + this._name);
+			XT.Log("Cannot update common uniform " + uniform.name + " as it does not exist in the shader " + this._name);
 		}
 	}
 

@@ -1,9 +1,9 @@
 package xt3d;
 
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 import xt3d.core.Configuration;
 import openfl.Lib;
-import xt3d.utils.KF;
+import xt3d.utils.XT;
 import xt3d.core.Scheduler;
 import xt3d.textures.TextureCache;
 import xt3d.core.EventEmitter;

@@ -1,16 +1,16 @@
 package xt3d.core;
 
-import xt3d.utils.KFObject;
-import xt3d.utils.KF;
+import xt3d.utils.XTObject;
+import xt3d.utils.XT;
 import xt3d.gl.GLTextureManager;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.errors.KFException;
 import xt3d.gl.shaders.ShaderManager;
 import xt3d.gl.shaders.Uniform;
 import xt3d.gl.shaders.ShaderProgram;
-import xt3d.gl.KFGL;
+import xt3d.gl.XTGL;
 
-class Material extends KFObject {
+class Material extends XTObject {
 
 	// properties
 	public var id(get, null):Int;
@@ -44,10 +44,10 @@ class Material extends KFObject {
 	private var _opacity:Float = 1;
 	private var _transparent:Bool = false;
 
-	private var _blending:Int = KFGL.NormalBlending;
-	private var _blendSrc:Int = KFGL.GL_ONE;
-	private var _blendDst:Int = KFGL.GL_ONE_MINUS_SRC_ALPHA;
-	private var _blendEquation:Int = KFGL.GL_FUNC_ADD;
+	private var _blending:Int = XTGL.NormalBlending;
+	private var _blendSrc:Int = XTGL.GL_ONE;
+	private var _blendDst:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA;
+	private var _blendEquation:Int = XTGL.GL_FUNC_ADD;
 
 	private var _depthTest:Bool = true;
 	private var _depthWrite:Bool = true;
@@ -55,7 +55,7 @@ class Material extends KFObject {
 	private var _polygonOffset:Bool = false;
 	private var _polygonOffsetFactor:Float = 0.0;
 	private var _polygonOffsetUnits:Float = 0.0;
-	private var _side:Int = KFGL.FrontSide;
+	private var _side:Int = XTGL.FrontSide;
 
 	public static function create(programName:String):Material {
 		var object = new Material();
@@ -263,7 +263,7 @@ class Material extends KFObject {
 			this._opacity = opacity;
 
 		} catch (e:KFException) {
-			KF.Warn("Cannot explicity set opacity in material \"" + this._programName + "\".");
+			XT.Warn("Cannot explicity set opacity in material \"" + this._programName + "\".");
 		}
 	}
 

@@ -1,8 +1,8 @@
 package xt3d.gl;
 
 import xt3d.utils.Color;
-import xt3d.utils.KF;
-import xt3d.gl.KFGL;
+import xt3d.utils.XT;
+import xt3d.gl.XTGL;
 import openfl.gl.GL;
 
 class GLStateManager {
@@ -74,13 +74,13 @@ class GLStateManager {
 
 		// Culling
 		this._oldCullFaceEnabled = false;
-		this.setCullFace(KFGL.CullFaceBack);
+		this.setCullFace(XTGL.CullFaceBack);
 
 		// Set front face
-		this.setFrontFaceDirection(KFGL.GL_CCW);
+		this.setFrontFaceDirection(XTGL.GL_CCW);
 
 		// Set blending
-		this.setBlending(KFGL.NormalBlending);
+		this.setBlending(XTGL.NormalBlending);
 
 		// Set polygon offset
 		this._oldPolygonOffset = true;
@@ -88,10 +88,10 @@ class GLStateManager {
 	}
 
 
-	public function setBlending(blending:Int, blendEquation:Int = KFGL.GL_FUNC_ADD, blendSrc:Int = KFGL.GL_SRC_ALPHA, blendDst:Int = KFGL.GL_ONE_MINUS_SRC_ALPHA) {
-		if (blending != this._oldBlending || blending == KFGL.CustomBlending) {
+	public function setBlending(blending:Int, blendEquation:Int = XTGL.GL_FUNC_ADD, blendSrc:Int = XTGL.GL_SRC_ALPHA, blendDst:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA) {
+		if (blending != this._oldBlending || blending == XTGL.CustomBlending) {
 
-			if (blending == KFGL.NoBlending) {
+			if (blending == XTGL.NoBlending) {
 				// Disable blending
 				if (this._oldBlendingEnabled != 0) {
 					GL.disable(GL.BLEND);
@@ -111,41 +111,41 @@ class GLStateManager {
 				}
 
 				// Determine blend equation and parameters
-				if (blending == KFGL.AdditiveBlending) {
-					blendEquation = KFGL.GL_FUNC_ADD;
-					blendSrc = KFGL.GL_SRC_ALPHA;
-					blendDst = KFGL.GL_ONE;
+				if (blending == XTGL.AdditiveBlending) {
+					blendEquation = XTGL.GL_FUNC_ADD;
+					blendSrc = XTGL.GL_SRC_ALPHA;
+					blendDst = XTGL.GL_ONE;
 
-				} else if (blending == KFGL.SubtractiveBlending) {
-					blendEquation = KFGL.GL_FUNC_ADD;
-					blendSrc = KFGL.GL_ZERO;
-					blendDst = KFGL.GL_ONE_MINUS_SRC_COLOR;
+				} else if (blending == XTGL.SubtractiveBlending) {
+					blendEquation = XTGL.GL_FUNC_ADD;
+					blendSrc = XTGL.GL_ZERO;
+					blendDst = XTGL.GL_ONE_MINUS_SRC_COLOR;
 
-				} else if (blending == KFGL.MultiplyBlending) {
-					blendEquation = KFGL.GL_FUNC_ADD;
-					blendSrc = KFGL.GL_ZERO;
-					blendDst = KFGL.GL_SRC_COLOR;
+				} else if (blending == XTGL.MultiplyBlending) {
+					blendEquation = XTGL.GL_FUNC_ADD;
+					blendSrc = XTGL.GL_ZERO;
+					blendDst = XTGL.GL_SRC_COLOR;
 
-				} else if (blending == KFGL.CustomBlending) {
+				} else if (blending == XTGL.CustomBlending) {
 //					blendEquation = blendEquation;
 //					blendSrc = blendSrc;
 //					blendDst = blendDst;
 
-				} else /* KFGL.NormalBlending */ {
-					blendEquation = KFGL.GL_FUNC_ADD;
-					blendSrc = KFGL.GL_SRC_ALPHA;
-					blendDst = KFGL.GL_ONE_MINUS_SRC_ALPHA;
+				} else /* XTGL.NormalBlending */ {
+					blendEquation = XTGL.GL_FUNC_ADD;
+					blendSrc = XTGL.GL_SRC_ALPHA;
+					blendDst = XTGL.GL_ONE_MINUS_SRC_ALPHA;
 				}
 
 				// Update blend equation
 				if (blendEquation != this._oldBlendEquation) {
-					GL.blendEquation(KFGL.toGLParam(blendEquation));
+					GL.blendEquation(XTGL.toGLParam(blendEquation));
 					this._oldBlendEquation = blendEquation;
 				}
 
 				// Update blend parameters
 				if (blendSrc != this._oldBlendSrc || blendDst != this._oldBlendDst) {
-					GL.blendFunc(KFGL.toGLParam(blendSrc), KFGL.toGLParam(blendDst));
+					GL.blendFunc(XTGL.toGLParam(blendSrc), XTGL.toGLParam(blendDst));
 					this._oldBlendSrc = blendSrc;
 					this._oldBlendDst = blendDst;
 				}
@@ -162,8 +162,8 @@ class GLStateManager {
 
 	public function setMaterialSides(materialSide:Int):Void {
 
-		var doubleSided = (materialSide == KFGL.DoubleSide);
-		var flipSided = (materialSide == KFGL.BackSide);
+		var doubleSided = (materialSide == XTGL.DoubleSide);
+		var flipSided = (materialSide == XTGL.BackSide);
 
 		if (this._oldDoubleSided != doubleSided) {
 			if (doubleSided) {
@@ -178,7 +178,7 @@ class GLStateManager {
 		}
 
 		if (this._oldFlipSided != flipSided) {
-			this.setFrontFaceDirection(flipSided ? KFGL.GL_CW : KFGL.GL_CCW);
+			this.setFrontFaceDirection(flipSided ? XTGL.GL_CW : XTGL.GL_CCW);
 
 			this._oldFlipSided = flipSided;
 		}
@@ -215,10 +215,10 @@ class GLStateManager {
 
 	public inline function setColorMask(red:Bool, green:Bool, blue:Bool, alpha:Bool) {
 		var colorMask = 0;
-		colorMask |= red ? KFGL.RedBit : 0;
-		colorMask |= green ? KFGL.GreenBit : 0;
-		colorMask |= blue ? KFGL.BlueBit : 0;
-		colorMask |= alpha ? KFGL.AlphaBit : 0;
+		colorMask |= red ? XTGL.RedBit : 0;
+		colorMask |= green ? XTGL.GreenBit : 0;
+		colorMask |= blue ? XTGL.BlueBit : 0;
+		colorMask |= alpha ? XTGL.AlphaBit : 0;
 		if (this._colorMask != colorMask) {
 			GL.colorMask(red, green, blue, alpha);
 
@@ -252,17 +252,17 @@ class GLStateManager {
 
 	public function setCullFace(cullFace) {
 		// Enable/disable face culling
-		this.setCullFaceEnabled(cullFace != KFGL.CullFaceNone);
+		this.setCullFaceEnabled(cullFace != XTGL.CullFaceNone);
 
 		if (cullFace != this._oldCullFace) {
 			// Set appropriate face(s)
-			if (cullFace == KFGL.CullFaceNone) {
+			if (cullFace == XTGL.CullFaceNone) {
 				// Do nothing
 
-			} else if (cullFace == KFGL.CullFaceBack) {
+			} else if (cullFace == XTGL.CullFaceBack) {
 				GL.cullFace(GL.BACK);
 
-			} else if (cullFace == KFGL.CullFaceFront) {
+			} else if (cullFace == XTGL.CullFaceFront) {
 				GL.cullFace(GL.FRONT);
 
 			} else {
@@ -289,7 +289,7 @@ class GLStateManager {
 
 	public inline function setFrontFaceDirection(direction:Int) {
 		if (this._oldFrontFaceDirection != direction) {
-			GL.frontFace(KFGL.toGLParam(direction));
+			GL.frontFace(XTGL.toGLParam(direction));
 
 			this._oldFrontFaceDirection = direction;
 		}
