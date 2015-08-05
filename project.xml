@@ -7,10 +7,8 @@
     <haxedef name="source-map-content" if="html5" />
 
 
-	<meta title="Test1" package="com.kfsgl" version="1.0.0" company="StepTo" />
-<!--	<app main="TestFloatVertexData" path="Export" /> -->
+	<meta title="Test1" package="com.xt3d" version="1.0.0" company="StepTo" />
 	<app main="Test1" path="Export" />
-	<!--<app main="TestContext3D" path="Export" />-->
 
 	<!--<window fps="90" if="ios" />-->
 

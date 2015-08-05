@@ -1,27 +1,27 @@
 package;
 
 import openfl.gl.GL;
-import kfsgl.utils.Size;
-import kfsgl.textures.RenderTexture;
-import kfsgl.primitives.Plane;
-import kfsgl.gl.KFGL;
-import kfsgl.utils.KF;
-import kfsgl.textures.TextureCache;
-import kfsgl.textures.Texture2D;
-import kfsgl.node.Node3D;
-import kfsgl.node.MeshNode;
+import xt3d.utils.Size;
+import xt3d.textures.RenderTexture;
+import xt3d.primitives.Plane;
+import xt3d.gl.KFGL;
+import xt3d.utils.KF;
+import xt3d.textures.TextureCache;
+import xt3d.textures.Texture2D;
+import xt3d.node.Node3D;
+import xt3d.node.MeshNode;
 import openfl.geom.Vector3D;
-import kfsgl.node.Scene;
-import kfsgl.primitives.Sphere;
-import kfsgl.core.Geometry;
-import kfsgl.node.Camera;
-import kfsgl.core.Material;
+import xt3d.node.Scene;
+import xt3d.primitives.Sphere;
+import xt3d.core.Geometry;
+import xt3d.node.Camera;
+import xt3d.core.Material;
 import openfl.display.Sprite;
 import openfl.display.OpenGLView;
 
-import kfsgl.Director;
-import kfsgl.core.View;
-import kfsgl.utils.Color;
+import xt3d.Director;
+import xt3d.core.View;
+import xt3d.utils.Color;
 
 class Test1 extends Sprite {
 	

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<!-- use next version of openfl -->
+	<set name="webgl" if="html5" />
+	<haxedef name="KF_DEBUG" />
+	<haxedef name="webgl" />
+    <haxedef name="source-map-content" if="html5" />
+
+
+	<meta title="Test1" package="com.xt3d" version="1.0.0" company="xTalk3d" />
+	<app main="Main" path="Export" />
+
+	<!--<window fps="90" if="ios" />-->
+
+	<source path="../Test/lime" />
+	<source path="../Classes" />
+
+	<haxelib name="lime" />
+
+	<assets path="../Assets" rename="assets" exclude="openfl.svg" />
+	<icon path="../Assets/openfl.svg" />
+
+
+</project>

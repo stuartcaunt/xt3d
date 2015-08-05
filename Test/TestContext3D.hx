@@ -1,7 +1,7 @@
 package ;
 
 import openfl.events.Event;
-import kfsgl.utils.KF;
+import xt3d.utils.KF;
 import openfl.display.Stage3D;
 import openfl.display.Stage;
 import openfl.geom.Rectangle;

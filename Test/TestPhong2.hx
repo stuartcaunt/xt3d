@@ -1,20 +1,20 @@
 package ;
 
-import kfsgl.primitives.Plane;
-import kfsgl.node.Light;
-import kfsgl.utils.KF;
-import kfsgl.Director;
+import xt3d.primitives.Plane;
+import xt3d.node.Light;
+import xt3d.utils.KF;
+import xt3d.Director;
 import openfl.geom.Vector3D;
-import kfsgl.node.MeshNode;
-import kfsgl.primitives.Plane;
-import kfsgl.core.Material;
-import kfsgl.textures.RenderTexture;
-import kfsgl.utils.Size;
-import kfsgl.textures.Texture2D;
-import kfsgl.primitives.Sphere;
-import kfsgl.node.Node3D;
-import kfsgl.core.View;
-import kfsgl.utils.Color;
+import xt3d.node.MeshNode;
+import xt3d.primitives.Plane;
+import xt3d.core.Material;
+import xt3d.textures.RenderTexture;
+import xt3d.utils.Size;
+import xt3d.textures.Texture2D;
+import xt3d.primitives.Sphere;
+import xt3d.node.Node3D;
+import xt3d.core.View;
+import xt3d.utils.Color;
 
 class TestPhong2 extends View {
 
