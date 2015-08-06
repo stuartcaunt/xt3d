@@ -1,5 +1,7 @@
 package xt3d.core;
 
+import lime.math.Rectangle;
+import lime.graphics.GLRenderContext;
 import xt3d.utils.XTObject;
 import xt3d.textures.RenderTexture;
 import openfl.gl.GLRenderbuffer;
@@ -22,8 +24,6 @@ import xt3d.core.Material;
 import xt3d.node.Scene;
 import xt3d.node.RenderObject;
 import openfl.gl.GL;
-import openfl.geom.Rectangle;
-
 
 
 class Renderer extends XTObject {
@@ -40,6 +40,7 @@ class Renderer extends XTObject {
 
 
 	// members
+	private var _gl:GLRenderContext;
 	private var _stateManager:GLStateManager;
 	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
@@ -61,17 +62,18 @@ class Renderer extends XTObject {
 
 	var _globalTime:Float = 0.0;
 
-	public static function create():Renderer {
+	public static function create(gl:GLRenderContext):Renderer {
 		var object = new Renderer();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(gl))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
+	public function init(gl:GLRenderContext):Bool {
+		this._gl = gl;
 
 		this._stateManager = GLStateManager.create();
 		this._bufferManager = GLBufferManager.create();
@@ -93,6 +95,8 @@ class Renderer extends XTObject {
 		// Register with scheduler for time updates
 		this.schedule(this.updateGlobalTime);
 
+
+		this._stateManager.setDefaultGLState();
 
 		return true;
 	}
@@ -189,10 +193,10 @@ class Renderer extends XTObject {
 	public function render(scene:Scene, camera:Camera) {
 
 		// Not great... can only set the default here ? Not before the first render ?
-		if (this._needsStateInit) {
-			this._stateManager.setDefaultGLState();
-			this._needsStateInit = false;
-		}
+//		if (this._needsStateInit) {
+//			this._stateManager.setDefaultGLState();
+//			this._needsStateInit = false;
+//		}
 
 		if (scene != null && camera != null) {
 

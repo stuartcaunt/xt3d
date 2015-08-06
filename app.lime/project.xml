@@ -12,10 +12,11 @@
 
 	<!--<window fps="90" if="ios" />-->
 
-	<source path="../Test/lime" />
+	<source path="../Test" />
 	<source path="../Classes" />
 
 	<haxelib name="lime" />
+	<haxelib name="openfl" />
 
 	<assets path="../Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="../Assets/openfl.svg" />

@@ -1,5 +1,8 @@
 package xt3d;
 
+import xt3d.gl.view.Xt3dGLViewEvent;
+import xt3d.gl.view.Xt3dGLViewListener;
+import xt3d.gl.view.Xt3dGLView;
 import xt3d.gl.XTGL;
 import xt3d.core.Configuration;
 import openfl.Lib;
@@ -11,24 +14,23 @@ import xt3d.core.View;
 import xt3d.core.Renderer;
 import xt3d.utils.Color;
 
-import openfl.display.OpenGLView;
 import openfl.geom.Rectangle;
 
-class Director extends EventEmitter {
+class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	// properties
 	public static var current(get, null):Director;
 	public var renderer(get, null):Renderer;
 	public var scheduler(get, null):Scheduler;
 	public var configuration(get, null):Configuration;
-	public var openGLView(get_openGLView, set_openGLView):OpenGLView;
-	public var backgroundColor(get_backgroundColor, set_backgroundColor):Color;
+	public var glView(get, set):Xt3dGLView;
+	public var backgroundColor(get, set):Color;
 	public var textureCache(get, null):TextureCache;
 	public var paused(get, null):Bool;
 
 	// members
 	private static var _current:Director = null;
-	private var _openGLView:OpenGLView;
+	private var _glView:Xt3dGLView;
 	private var _backgroundColor:Color = new Color();
 	private var _renderer:Renderer;
 	private var _textureCache:TextureCache;
@@ -36,7 +38,7 @@ class Director extends EventEmitter {
 	private var _scheduler:Scheduler;
 	private var _configuration:Configuration;
 
-	private var _lastUpdateTime:Int = 0;
+//	private var _lastUpdateTime:Int = 0;
 	private var _deltaTime:Float = 0.0;
 	private var _globalTime = 0.0;
 	private var _paused:Bool = false;
@@ -46,17 +48,20 @@ class Director extends EventEmitter {
 	private var _animationInterval:Float = 1.0 / 60.0;
 	private var _oldAnimationInterval:Float;
 
-	public static function create(openGLView:OpenGLView, options:Map<String, String> = null):Director {
+	private var _isReady:Bool = false;
+	private var _onReadyListeners = new Array<Void->Void>();
+
+	public static function create(options:Map<String, String> = null):Director {
 		var object = new Director();
 
-		if (object != null && !(object.init(openGLView, options))) {
+		if (object != null && !(object.init(options))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(openGLView:OpenGLView, options:Map<String, String> = null):Bool {
+	public function init(options:Map<String, String> = null):Bool {
 
 		this._configuration = Configuration.create(options);
 
@@ -65,9 +70,6 @@ class Director extends EventEmitter {
 
 		// Create scheduler
 		this._scheduler = Scheduler.create();
-
-		// Set openglview
-		this.setOpenglView(openGLView);
 
 		return true;
 	}
@@ -99,13 +101,13 @@ class Director extends EventEmitter {
 		return this._configuration;
 	}
 
-	public inline function get_openGLView():OpenGLView {
-		return this._openGLView;
+	public inline function get_glView():Xt3dGLView {
+		return this._glView;
 	}
 
-	public inline function set_openGLView(openGLView) {
-		this.setOpenglView(openGLView);
-		return this._openGLView;
+	public inline function set_glView(glView:Xt3dGLView) {
+		this.setGLView(glView);
+		return this._glView;
 	}
 
 	public inline function get_backgroundColor():Color {
@@ -121,29 +123,105 @@ class Director extends EventEmitter {
 	}
 
 
+	/* --------- Xt3dViewListener Implementation --------- */
+
+	public inline function onContextInitialised(view:Xt3dGLView):Void {
+		// Remove any old renderers
+		this._renderer = null;
+
+		// Clear and remove old texture cache
+		if (this._textureCache != null) {
+			this._textureCache.removeAllTextures();
+			this._textureCache = null;
+		}
+
+		// Create new renderer for opengl view
+		this._renderer = Renderer.create(glView.gl);
+
+		// Set viewport with full rectangle
+		var displayRect = glView.displayRect;
+		_renderer.setViewport(displayRect);
+
+		// Iterate over all views
+		for (view in _views) {
+			// Update the display rect (does nothing if not changed)
+			view.setDisplayRect(displayRect);
+		}
+
+			// Create new texture cache
+		this._textureCache = TextureCache.create();
+
+		this._isReady = true;
+		this.notifyReadyListeners();
+	}
+
+
+	public inline function onUpdate(view:Xt3dGLView, dt:Float):Void {
+		this.updateDeltaTime(dt);
+	}
+
+	public inline function onRender(view:Xt3dGLView):Void {
+		this.renderLoop();
+	}
+
+	public inline function onEvent(view:Xt3dGLView, event:String):Void {
+		if (event == Xt3dGLViewEvent.RESIZE) {
+			// Set viewport with full rectangle
+			var displayRect = glView.displayRect;
+			_renderer.setViewport(displayRect);
+
+			// Iterate over all views
+			for (view in _views) {
+				// Update the display rect (does nothing if not changed)
+				view.setDisplayRect(displayRect);
+			}
+		}
+	}
+
 	/* --------- Implementation --------- */
+
+	public inline function onReady(listener:Void->Void):Void {
+		if (this._isReady) {
+			listener();
+
+		} else {
+			this._onReadyListeners.push(listener);
+		}
+	}
+
+	public function notifyReadyListeners():Void {
+		for (listener in this._onReadyListeners) {
+			listener();
+		}
+
+		// Remove all listeners
+		this._onReadyListeners.splice(0, this._onReadyListeners.length);
+	}
 
 	public inline function makeCurrent():Void {
 		_current = this;
 	}
 
-	public function setOpenglView(openGLView:OpenGLView):Void {
-		this._openGLView = openGLView;
-
-		// Create new renderer for opengl view
-		this._renderer = Renderer.create();
-
-		// Create new texture cache
-		if (this._textureCache != null) {
-			this._textureCache.removeAllTextures();
+	public function setGLView(glView:Xt3dGLView):Void {
+		if (this._glView != null) {
+			this._glView.removeListener(this);
+			this._glView = null;
 		}
-		this._textureCache = TextureCache.create();
 
-		_openGLView.render = renderLoop;
+		this._glView = glView;
+		this._isReady = false ;
+
+		if (glView != null) {
+			// Add listener to view
+			glView.addListener(this);
+		}
 	}
 
 	public inline function addView(view:View):Void {
 		_views.push(view);
+
+		// Update the display rect (does nothing if not changed)
+		view.setDisplayRect(view.displayRect);
 	}
 
 	public inline function pause():Void {
@@ -165,18 +243,21 @@ class Director extends EventEmitter {
 		}
 	}
 
-	private function renderLoop(displayRect:Rectangle):Void {
-
-		// Make current
-		this.makeCurrent();
+	private function updateDeltaTime(dt:Float):Void {
 
 		// Calculate dt
-		this.calculateDeltaTime();
+		this.calculateDeltaTime(dt);
 
 		// If not paused then update animations
 		if (!this._paused) {
 			this._scheduler.update(this._deltaTime);
 		}
+	}
+
+	private function renderLoop():Void {
+
+		// Make current
+		this.makeCurrent();
 
 		// Render (always needed even if paused to perform screen refreshes
 
@@ -186,17 +267,11 @@ class Director extends EventEmitter {
 		// Reset render target
 		_renderer.setRenderTarget(null);
 
-		// Set viewport with full rectangle
-		_renderer.setViewport(displayRect);
-
 		// Clear context
 		_renderer.clear(backgroundColor);
 
 		// Iterate over all views
 		for (view in _views) {
-			// Update the display rect (does nothing if not changed)
-			view.setDisplayRect(displayRect);
-
 			// Render view
 			view.render(_renderer);
 		}
@@ -206,15 +281,16 @@ class Director extends EventEmitter {
 
 	}
 
-	private function calculateDeltaTime():Void {
-		var now = Lib.getTimer();
+	private function calculateDeltaTime(dt:Float = 0.0):Void {
+		//var now = Lib.getTimer();
 
 		if (this._nextDeltaTimeZero) {
 			this._deltaTime = 0.0;
 			this._nextDeltaTimeZero = false;
 
 		} else {
-			this._deltaTime = 0.001 * (now - this._lastUpdateTime);
+			//this._deltaTime = 0.001 * (now - this._lastUpdateTime);
+			this._deltaTime = dt;
 			this._deltaTime = Math.max(0.0, this._deltaTime);
 		}
 
@@ -225,7 +301,7 @@ class Director extends EventEmitter {
 
 		this._globalTime += this._deltaTime;
 
-		this._lastUpdateTime = now;
+//		this._lastUpdateTime = now;
 	}
 
 	private function setAnimationInterval(animationInterval:Float):Void {

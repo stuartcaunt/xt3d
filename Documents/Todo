@@ -1,11 +1,25 @@
 TODO
 ====
 
+- limeGlView
+  - get view rectangle/size
+  - send gl to renderer
+  - update renderer viewport only at init and during resize
+
+- refactor KFExceptions
 
 - modify opengl context
   - remove openfl OpenGL view: use lime directly
     - openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
+    - create GLContext that creates default framebuffer
+      - where is color/depth/stencil buffer specified?
+      - see lime gl example
+      - do simple test
+    - how to specify framerate?
   - control over depth/stencil
+  - make Director a Sprite
+   - listen to resize/frame_enter events
+
 
 - bump mapping / normal mapping
  - bump to normal convertor
@@ -22,6 +36,7 @@ TODO
 
 - Check handling of global uniforms at F4
 - Render loop
+  - fps setting
 - Scene and Node
   - scene graph
   - onAddedToScene
@@ -34,6 +49,7 @@ TODO
   - texture material
   - color material
 - View
+  - viewport/rectangle
 - html5 development env to automatically build and re-deploy on server
 
 DONE

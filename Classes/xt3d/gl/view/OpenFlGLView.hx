@@ -3,23 +3,27 @@ package xt3d.gl.view;
 import openfl.events.Event;
 import openfl.display.Sprite;
 
-class OpenFlGLView extends Sprite implements Xt3dView {
+class OpenFlGLView extends Sprite implements Xt3dGLView {
 
 	// properties
 
 	// members
+	private var _width:Int;
+	private var _height:Int;
 
-	public static function create():OpenFlGLView {
+	public static function create(width:Int = 1024, height:Int = 768):OpenFlGLView {
 		var object = new OpenFlGLView();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.initView(width, height))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
+	public function initView(width:Int = 1024, height:Int = 768):Bool {
+		this._width = width;
+		this._height = height;
 
 		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
@@ -34,7 +38,7 @@ class OpenFlGLView extends Sprite implements Xt3dView {
 		if (stage == null) {
 			return;
 		}
-		removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+		stage.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
 
 
 		// Finally, set up an event for the actual game loop stuff.

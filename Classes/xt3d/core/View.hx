@@ -1,5 +1,7 @@
 package xt3d.core;
 
+import xt3d.utils.XT;
+import lime.math.Rectangle;
 import openfl.gl.GL;
 import openfl.geom.Vector3D;
 import xt3d.utils.errors.KFException;
@@ -9,7 +11,6 @@ import xt3d.utils.Color;
 import xt3d.textures.RenderTexture;
 import xt3d.utils.Size;
 import xt3d.node.Scene;
-import openfl.geom.Rectangle;
 
 class View extends EventEmitter {
 
@@ -239,6 +240,7 @@ class View extends EventEmitter {
 	}
 
 	public function setViewport(viewport:Rectangle) {
+		XT.Log("Setting viewport to " + viewport.width + " x " + viewport.height);
 		if (this._viewport == null || !viewport.equals(this._viewport)) {
 			// Update displayrect - do calculation if needed.
 			// Just copy for now

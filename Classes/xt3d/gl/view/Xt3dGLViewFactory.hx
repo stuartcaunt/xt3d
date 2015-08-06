@@ -1,5 +1,11 @@
 package xt3d.gl.view;
 
+#if lime
+import xt3d.gl.view.LimeGLView;
+#else
+import xt3d.gl.view.OpenFlGLView;
+#end
+
 class Xt3dGLViewFactory {
 
 	private static var _instance:Xt3dGLViewFactory = null;
@@ -15,9 +21,15 @@ class Xt3dGLViewFactory {
 		return _instance;
 	}
 
-	public function createView(width:Int = 1024, height:Int = 768):Xt3dView {
-
+#if lime
+	public function createView(width:Int = 1024, height:Int = 768):LimeGLView {
+		return LimeGLView.create(width, height);
 	}
+#else
+	public function createView(width:Int = 1024, height:Int = 768):OpenFlGLView {
+		return OpenFlGLView.create(width, height);
+	}
+#end
 
 
 }
