@@ -1,5 +1,7 @@
 package xt3d.gl.view;
 
+import lime.app.Application;
+import xt3d.utils.Size;
 import lime.math.Rectangle;
 import xt3d.utils.errors.KFException;
 import xt3d.utils.XT;
@@ -22,6 +24,7 @@ class LimeGLView extends Module implements Xt3dGLView {
 	public var width(get, null):Int;
 	public var height(get, null):Int;
 	public var displayRect(get, null):Rectangle;
+	public var size(get, set):Size<Int>;
 
 	// members
 	private var _gl:GLRenderContext = null;
@@ -73,10 +76,23 @@ class LimeGLView extends Module implements Xt3dGLView {
 		return new Rectangle(0, 0, this._width, this._height);
 	}
 
+	function set_size(size:Size<Int>) {
+		this.onWindowResize(size.width, size.height);
+		return size;
+	}
+
+	function get_size():Size<Int> {
+		return Size.createIntSize(this._width, this._height);
+	}
+
 
 	/* --------- Implementation --------- */
 
 	private function onInit():Void {
+		// Initialise width and height
+		this._width = Application.current.window.width;
+		this._height = Application.current.window.height;
+
 		for (listener in this._listeners) {
 			listener.onContextInitialised(this);
 		}

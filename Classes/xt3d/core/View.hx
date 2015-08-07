@@ -240,7 +240,7 @@ class View extends EventEmitter {
 	}
 
 	public function setViewport(viewport:Rectangle) {
-		XT.Log("Setting viewport to " + viewport.width + " x " + viewport.height);
+		//XT.Log("Setting viewport to " + viewport.width + " x " + viewport.height);
 		if (this._viewport == null || !viewport.equals(this._viewport)) {
 			// Update displayrect - do calculation if needed.
 			// Just copy for now

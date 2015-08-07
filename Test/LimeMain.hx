@@ -1,6 +1,7 @@
 package ;
 
 
+import xt3d.utils.Size;
 import xt3d.gl.view.LimeGLView;
 import xt3d.gl.view.LimeGLView;
 import xt3d.gl.view.Xt3dGLView;
@@ -11,9 +12,10 @@ import lime.graphics.RenderContext;
 import lime.app.Application;
 
 
-class Main extends Application {
+class LimeMain extends Application {
 
 	private var _director:Director;
+	private var _glView:LimeGLView;
 
 
 	public function new () {
@@ -23,15 +25,15 @@ class Main extends Application {
 		var backgroundColor = Color.createWithComponents(0.2, 0.2, 0.2);
 
 		// Create opengl view and as it as a child
-		var glView = Xt3dGLViewFactory.instance().createView();
-		this.addModule(glView);
+		this._glView = Xt3dGLViewFactory.instance().createView();
+		this.addModule(this._glView);
 
 		// Initialise director - one per application delegate
-		_director = Director.create();
-		_director.glView = glView;
-		_director.backgroundColor = backgroundColor;
+		this._director = Director.create();
+		this._director.glView = this._glView;
+		this._director.backgroundColor = backgroundColor;
 
-		_director.onReady(function () {
+		this._director.onReady(function () {
 			// Create test view
 			//var view = TestView1.create(backgroundColor);
 
@@ -46,7 +48,7 @@ class Main extends Application {
 			//var view = TestPhong4.create(backgroundColor);
 
 			// Add view to director
-			_director.addView(view);
+			this._director.addView(view);
 
 		});
 
@@ -56,7 +58,7 @@ class Main extends Application {
 //	override public function init(context:RenderContext):Void {
 //		super.init(context);
 //
-//
+//		this._glView.size = Size.createIntSize(window.width, window.height);
 //	}
 //
 //	public override function render (context:RenderContext):Void {

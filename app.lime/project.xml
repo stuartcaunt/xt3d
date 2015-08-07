@@ -8,9 +8,10 @@
 
 
 	<meta title="Test1" package="com.xt3d" version="1.0.0" company="xTalk3d" />
-	<app main="Main" path="Export" />
+	<app main="LimeMain" path="Export" />
 
 	<!--<window fps="90" if="ios" />-->
+	<window fps="60" />
 
 	<source path="../Test" />
 	<source path="../Classes" />

@@ -11,6 +11,7 @@
       <sourceFolder url="file://$MODULE_DIR$/Classes" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Test" isTestSource="false" />
       <excludeFolder url="file://$MODULE_DIR$/Export" />
+      <excludeFolder url="file://$MODULE_DIR$/app.lime/Export" />
     </content>
     <orderEntry type="jdk" jdkName="Haxe 3.2.0" jdkType="Haxe toolkit" />
     <orderEntry type="sourceFolder" forTests="false" />

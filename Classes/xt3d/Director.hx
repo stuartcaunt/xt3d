@@ -167,7 +167,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public inline function onEvent(view:Xt3dGLView, event:String):Void {
 		if (event == Xt3dGLViewEvent.RESIZE) {
 			// Set viewport with full rectangle
-			var displayRect = glView.displayRect;
+			var displayRect = this._glView.displayRect;
 			_renderer.setViewport(displayRect);
 
 			// Iterate over all views
@@ -221,7 +221,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		_views.push(view);
 
 		// Update the display rect (does nothing if not changed)
-		view.setDisplayRect(view.displayRect);
+		view.setDisplayRect(this._glView.displayRect);
 	}
 
 	public inline function pause():Void {
@@ -244,6 +244,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	}
 
 	private function updateDeltaTime(dt:Float):Void {
+		//XT.Log("fps = " + 1000.0 / dt);
 
 		// Calculate dt
 		this.calculateDeltaTime(dt);
