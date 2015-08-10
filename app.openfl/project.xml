@@ -4,20 +4,20 @@
 	<set name="webgl" if="html5" />
 	<haxedef name="KF_DEBUG" />
 	<haxedef name="webgl" />
-	<haxedef name="xt3dlime" />
+	<haxedef name="xt3dopenfl" />
     <haxedef name="source-map-content" if="html5" />
 
 
-	<meta title="xTalk3d Lime" package="com.xt3d" version="1.0.0" company="xTalk3d" />
-	<app main="MainLime" path="Export" />
+	<meta title="xTalk3d OpenFl" package="com.xt3d" version="1.0.0" company="xTalk3d" />
+	<app main="MainOpenFl" path="Export" />
 
 	<!--<window fps="90" if="ios" />-->
-	<window fps="60" />
+
 
 	<source path="../Test" />
 	<source path="../Classes" />
 
-	<haxelib name="lime" />
+
 	<haxelib name="openfl" />
 
 	<assets path="../Assets" rename="assets" exclude="openfl.svg" />

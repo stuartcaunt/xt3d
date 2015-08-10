@@ -21,8 +21,6 @@ class LimeGLView extends Module implements Xt3dGLView {
 
 	// properties
 	public var gl(get, null):GLRenderContext;
-	public var width(get, null):Int;
-	public var height(get, null):Int;
 	public var displayRect(get, null):Rectangle;
 	public var size(get, set):Size<Int>;
 
@@ -47,7 +45,7 @@ class LimeGLView extends Module implements Xt3dGLView {
 		this._width = width;
 		this._height = height;
 
-		// Set real render callback
+		// Set first render callback to be an initialisation call
 		this._renderCallback = this.onApplicationReady;
 
 		return true;
@@ -67,14 +65,6 @@ class LimeGLView extends Module implements Xt3dGLView {
 		return this._gl;
 	}
 
-	public function get_width():Int {
-		return this._width;
-	}
-
-	public function get_height():Int {
-		return this._height;
-	}
-
 	public function get_displayRect():Rectangle {
 		return new Rectangle(0, 0, this._width, this._height);
 	}
@@ -91,7 +81,7 @@ class LimeGLView extends Module implements Xt3dGLView {
 
 	/* --------- Implementation --------- */
 
-	private function onInit():Void {
+	private inline function onInit():Void {
 		// Initialise width and height
 		this._width = Application.current.window.width;
 		this._height = Application.current.window.height;
@@ -101,19 +91,19 @@ class LimeGLView extends Module implements Xt3dGLView {
 		}
 	}
 
-	private function onUpdate(dt:Float):Void {
+	private inline function onUpdate(dt:Float):Void {
 		for (listener in this._listeners) {
 			listener.onUpdate(this, dt);
 		}
 	}
 
-	private function onRender():Void {
+	private inline function onRender():Void {
 		for (listener in this._listeners) {
 			listener.onRender(this);
 		}
 	}
 
-	private function onEvent(event:String):Void {
+	private inline function onEvent(event:String):Void {
 		for (listener in this._listeners) {
 			listener.onEvent(this, event);
 		}

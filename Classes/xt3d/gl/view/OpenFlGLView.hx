@@ -1,5 +1,12 @@
 package xt3d.gl.view;
 
+import openfl.display.OpenGLView;
+import xt3d.utils.XT;
+import lime.math.Rectangle;
+import xt3d.utils.Size;
+import openfl.errors.Error;
+import openfl.Lib;
+import openfl._internal.renderer.opengl.GLRenderer;
 import openfl._internal.renderer.AbstractRenderer;
 import openfl._internal.renderer.AbstractRenderer;
 import lime.graphics.RenderContext;
@@ -8,15 +15,19 @@ import lime.graphics.GLRenderContext;
 import openfl.events.Event;
 import openfl.display.Sprite;
 
-class OpenFlGLView extends Sprite implements Xt3dGLView {
+class OpenFlGLView extends OpenGLView implements Xt3dGLView {
 
 	// properties
+	public var gl(get, null):GLRenderContext;
+	public var displayRect(get, null):Rectangle;
+	public var size(get, set):Size<Int>;
 
 	// members
 	private var _gl:GLRenderContext = null;
 	private var _listeners:Array<Xt3dGLViewListener> = new Array<Xt3dGLViewListener>();
 	private var _width:Int;
 	private var _height:Int;
+	private var _lastUpdateTime:Int = 0;
 
 	public static function create(width:Int = 1024, height:Int = 768):OpenFlGLView {
 		var object = new OpenFlGLView();
@@ -32,45 +43,47 @@ class OpenFlGLView extends Sprite implements Xt3dGLView {
 		this._width = width;
 		this._height = height;
 
-		addEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
+
+		// Set first render callback to be an initialisation call
+		super.render = this.onApplicationReady;
 
 		return true;
 	}
 
 
 	public function new() {
+		super();
 	}
 
-	public function onAddedToStage() {
-		if (stage == null) {
-			return;
-		}
-		stage.removeEventListener(Event.ADDED_TO_STAGE, onAddedToStage);
-
-		// Finally, set up an event for the actual game loop stuff.
-		stage.addEventListener(Event.ENTER_FRAME, onEnterFrame);
-
-		// We need to listen for resize event which means new context
-		// it means that we need to recreate bitmapdatas of dumped tilesheets
-		stage.addEventListener(Event.RESIZE, onResize);
-
-		// Get render context
-		var renderer:AbstractRenderer = @:privateAccess(stage.__renderer);
-
-		this._gl = renderer.gl;
 
 
-		this.setRenderContext(context);
+	/* ----------- Properties ----------- */
 
-		// If we have a context then initialise all listeners
-		if (this._gl != null) {
-			this.onInit();
+	/* ----------- Xt3dGLView Properties ----------- */
 
-		} else {
-			throw new KFException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
-		}
+	public function get_gl():GLRenderContext {
+		return this._gl;
+	}
+
+	public function get_displayRect():Rectangle {
+		return new Rectangle(0, 0, this._width, this._height);
+	}
+
+	public function set_size(size:Size<Int>):Size<Int> {
+		this.onWindowResize(size.width, size.height);
+		return size;
+	}
+
+	public function get_size():Size<Int> {
+		return Size.createIntSize(this._width, this._height);
+	}
 
 
+	/* --------- Implementation --------- */
+
+
+	private inline function onInit():Void {
+		// Initialise width and height
 		this._width = stage.stageWidth;
 		this._height = stage.stageHeight;
 
@@ -79,34 +92,69 @@ class OpenFlGLView extends Sprite implements Xt3dGLView {
 		}
 	}
 
-	private function onResize():Void {
-	}
-
-	private function onEnterFrame():Void {
-	}
-
-
-	/* ----------- Properties ----------- */
-
-	/* --------- Implementation --------- */
-
-	private function onUpdate(dt:Float):Void {
+	private inline function onUpdate(dt:Float):Void {
 		for (listener in this._listeners) {
 			listener.onUpdate(this, dt);
 		}
 	}
 
-	private function onRender():Void {
+	private inline function onRender():Void {
 		for (listener in this._listeners) {
 			listener.onRender(this);
 		}
 	}
 
-	private function onEvent(event:String):Void {
+	private inline function onEvent(event:String):Void {
 		for (listener in this._listeners) {
 			listener.onEvent(this, event);
 		}
 	}
+
+
+	private inline function onApplicationReady(rect:Rectangle):Void {
+		// Get render context
+		var renderer:AbstractRenderer = @:privateAccess (stage.__renderer);
+		try {
+			var glRenderer = cast(renderer, GLRenderer);
+
+			this._gl = glRenderer.gl;
+
+			// If we have a context then initialise all listeners
+			this.onInit();
+
+		} catch (exception:Error) {
+			throw new KFException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
+
+		}
+
+		// Perform a first render
+		this.performRender(rect);
+
+		// Set real render callback
+		super.render = this.performRender;
+	}
+
+	private inline function performRender(rect:Rectangle):Void {
+		this.onWindowResize(Std.int(rect.width), Std.int(rect.height));
+
+		var now = Lib.getTimer();
+		var deltaTimeMs = 0.001 * (now - this._lastUpdateTime);
+		this._lastUpdateTime = now;
+
+		// Notify all listeners of update
+		this.onUpdate(deltaTimeMs);
+
+		// Notify all listeners
+		this.onRender();
+	}
+
+	inline public function onWindowResize(width:Int, height:Int):Void {
+		this._width = width;
+		this._height = height;
+
+		this.onEvent(Xt3dGLViewEvent.RESIZE);
+	}
+
 
 	/* --------- Xt3dGLView Implementation --------- */
 
