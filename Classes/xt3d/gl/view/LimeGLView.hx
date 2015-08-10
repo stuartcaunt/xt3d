@@ -31,6 +31,7 @@ class LimeGLView extends Module implements Xt3dGLView {
 	private var _listeners:Array<Xt3dGLViewListener> = new Array<Xt3dGLViewListener>();
 	private var _width:Int;
 	private var _height:Int;
+	private var _renderCallback:RenderContext->Void;
 
 	public static function create(width:Int = 1024, height:Int = 768):LimeGLView {
 		var object = new LimeGLView();
@@ -45,6 +46,9 @@ class LimeGLView extends Module implements Xt3dGLView {
 	public function initView(width:Int = 1024, height:Int = 768):Bool {
 		this._width = width;
 		this._height = height;
+
+		// Set real render callback
+		this._renderCallback = this.onApplicationReady;
 
 		return true;
 	}
@@ -64,7 +68,6 @@ class LimeGLView extends Module implements Xt3dGLView {
 	}
 
 	public function get_width():Int {
-		XT.Log("GET WIDTH REALLY");
 		return this._width;
 	}
 
@@ -76,12 +79,12 @@ class LimeGLView extends Module implements Xt3dGLView {
 		return new Rectangle(0, 0, this._width, this._height);
 	}
 
-	function set_size(size:Size<Int>) {
+	public function set_size(size:Size<Int>):Size<Int> {
 		this.onWindowResize(size.width, size.height);
 		return size;
 	}
 
-	function get_size():Size<Int> {
+	public function get_size():Size<Int> {
 		return Size.createIntSize(this._width, this._height);
 	}
 
@@ -132,6 +135,32 @@ class LimeGLView extends Module implements Xt3dGLView {
 		}
 	}
 
+	private inline function onApplicationReady(context:RenderContext):Void {
+		this.setRenderContext(context);
+
+		// If we have a context then initialise all listeners
+		if (this._gl != null) {
+			this.onInit();
+
+		} else {
+			throw new KFException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
+		}
+
+		// Perform a first render
+		this.performRender(context);
+
+		// Set real render callback
+		this._renderCallback = this.performRender;
+	}
+
+	private inline function performRender(context:RenderContext):Void {
+		// Verify render context hasn't changed
+		this.setRenderContext(context);
+
+		// Notify all listeners
+		this.onRender();
+	}
+
 
 	/* --------- Xt3dGLView Implementation --------- */
 
@@ -163,18 +192,8 @@ class LimeGLView extends Module implements Xt3dGLView {
 	 * render context
 	 * @param	context The current render context
 	 */
-	override public function init(context:RenderContext):Void {
-		this.setRenderContext(context);
-
-		// If we have a context then initialise all listeners
-		if (this._gl != null) {
-			this.onInit();
-
-		} else {
-			throw new KFException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
-		}
-
-
+	override inline public function init(context:RenderContext):Void {
+		// Ignore because this is called too soon, before assets have been created. Wait for first render call
 	}
 
 
@@ -182,12 +201,8 @@ class LimeGLView extends Module implements Xt3dGLView {
 	 * Called when a render event is fired
 	 * @param	context	The current render context
 	 */
-	override public function render(context:RenderContext):Void {
-		// Verify render context hasn't changed
-		this.setRenderContext(context);
-
-		// Notify all listeners
-		this.onRender();
+	override inline public function render(context:RenderContext):Void {
+		this._renderCallback(context);
 	}
 
 
@@ -195,7 +210,7 @@ class LimeGLView extends Module implements Xt3dGLView {
 	 * Called when an update event is fired
 	 * @param	deltaTime	The amount of time in milliseconds that has elapsed since the last update
 	 */
-	override public function update (deltaTime:Int):Void {
+	override inline public function update (deltaTime:Int):Void {
 		// Notify all listeners
 		this.onUpdate(deltaTime);
 	}
@@ -205,7 +220,7 @@ class LimeGLView extends Module implements Xt3dGLView {
 	 * @param	width	The width of the window
 	 * @param	height	The height of the window
 	 */
-	override public function onWindowResize(width:Int, height:Int):Void {
+	override inline public function onWindowResize(width:Int, height:Int):Void {
 		this._width = width;
 		this._height = height;
 

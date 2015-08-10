@@ -16,6 +16,7 @@ TODO
       - see lime gl example
       - do simple test
     - how to specify framerate?
+    - send Config object to Application (depth/stencil/etc)
   - control over depth/stencil
   - make Director a Sprite
    - listen to resize/frame_enter events

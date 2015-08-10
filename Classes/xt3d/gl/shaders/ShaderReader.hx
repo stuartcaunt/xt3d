@@ -1,7 +1,7 @@
 package xt3d.gl.shaders;
 
 import xt3d.utils.StringFunctions;
-import openfl.Assets;
+import lime.Assets;
 
 import xt3d.utils.XT;
 import xt3d.utils.errors.KFException;
@@ -30,7 +30,6 @@ class ShaderReader  {
 
 		// Get list of all available glsl files
 		var textAssets = Assets.list(AssetType.TEXT);
-		var glslAssests = new Array<String>();
 		for (textAsset in textAssets) {
 			var suffix = "glsl";
 			if (StringFunctions.hasSuffix(textAsset, suffix)) {

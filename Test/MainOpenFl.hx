@@ -1,32 +1,29 @@
 package ;
 
 
-import xt3d.utils.Size;
-import xt3d.gl.view.LimeGLView;
-import xt3d.gl.view.LimeGLView;
+import openfl.display.Sprite;
+import xt3d.gl.view.OpenFlGLView;
 import xt3d.gl.view.Xt3dGLView;
 import xt3d.utils.Color;
 import xt3d.Director;
 import xt3d.gl.view.Xt3dGLViewFactory;
-import lime.graphics.RenderContext;
 import lime.app.Application;
 
 
-class LimeMain extends Application {
+class MainOpenFl extends Sprite {
 
 	private var _director:Director;
-	private var _glView:LimeGLView;
+	private var _glView:OpenFlGLView;
 
 
 	public function new () {
 		super();
 
-		//var backgroundColor = Color.createWithComponents(0.5, 0.8, 0.8, 0.5);
 		var backgroundColor = Color.createWithComponents(0.2, 0.2, 0.2);
 
 		// Create opengl view and as it as a child
 		this._glView = Xt3dGLViewFactory.instance().createView();
-		this.addModule(this._glView);
+		this.addChild(this._glView);
 
 		// Initialise director - one per application delegate
 		this._director = Director.create();
