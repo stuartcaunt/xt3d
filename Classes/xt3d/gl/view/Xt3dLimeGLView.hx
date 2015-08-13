@@ -3,7 +3,7 @@ package xt3d.gl.view;
 import lime.app.Application;
 import xt3d.utils.Size;
 import lime.math.Rectangle;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
 import openfl._internal.renderer.opengl.GLRenderer;
 import lime.graphics.GLRenderContext;
@@ -105,7 +105,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 
 				} else if (this._gl != gl) {
 					// TODO Handle change of render context
-					throw new KFException("RenderContextChanged", "The OpenGL render context changed which wasn't expected");
+					throw new XTException("RenderContextChanged", "The OpenGL render context changed which wasn't expected");
 				}
 
 			default:
@@ -120,7 +120,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 			this.onInit();
 
 		} else {
-			throw new KFException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
+			throw new XTException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
 		}
 
 		// Perform a first render

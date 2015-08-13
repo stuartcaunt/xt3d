@@ -3,7 +3,7 @@ package xt3d.node;
 import xt3d.utils.math.VectorHelper;
 import xt3d.utils.XTObject;
 import xt3d.utils.XT;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.utils.math.MatrixHelper;
 import openfl.geom.Matrix3D;
 import openfl.geom.Vector3D;
@@ -204,10 +204,10 @@ class Node3D extends XTObject {
 
 	public function addChild(child:Node3D):Void {
 		if (child.parent != null) {
-			throw new KFException("NodeCannotBeAddedTwice", "The node with id \"" + this._id + "\" cannot be added twice");
+			throw new XTException("NodeCannotBeAddedTwice", "The node with id \"" + this._id + "\" cannot be added twice");
 		}
 		if (child == null) {
-			throw new KFException("NodeCannotBeNull", "Cannot add a null node");
+			throw new XTException("NodeCannotBeNull", "Cannot add a null node");
 		}
 
 		this._children.push(child);

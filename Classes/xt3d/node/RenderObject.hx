@@ -4,7 +4,7 @@ import openfl.geom.Vector3D;
 import xt3d.utils.math.VectorHelper;
 import xt3d.gl.GLBufferManager;
 import xt3d.gl.shaders.ShaderProgram;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.gl.GLAttributeManager;
 import openfl.gl.GL;
 import xt3d.core.Geometry;
@@ -204,7 +204,7 @@ class RenderObject extends Node3D {
 		// Verify that all attributes are used
 		for (attributeState in programAttributes) {
 			if (attributeState.location >= 0 && !attributeState.used) {
-				throw new KFException("UnusedVertexAttribute", "The vertex attribute \"" + attributeState.name + "\" is unused for the program \"" + program.name + "\"");
+				throw new XTException("UnusedVertexAttribute", "The vertex attribute \"" + attributeState.name + "\" is unused for the program \"" + program.name + "\"");
 			}
 		}
 

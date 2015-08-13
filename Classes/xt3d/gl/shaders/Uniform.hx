@@ -11,7 +11,7 @@ import haxe.Json;
 import openfl.geom.Matrix3D;
 
 import xt3d.utils.XT;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.gl.shaders.ShaderTypedefs;
 
 class Uniform  {
@@ -299,7 +299,7 @@ class Uniform  {
 			return this._uniformArray[index];
 
 		} else {
-			throw new KFException("UniformNotArray", "Uniform " + this._uniformInfo.name + " is not an array");
+			throw new XTException("UniformNotArray", "Uniform " + this._uniformInfo.name + " is not an array");
 		}
 	}
 
@@ -308,7 +308,7 @@ class Uniform  {
 			return this._uniformStruct.get(typeElementName);
 
 		} else {
-			throw new KFException("UniformNotStruct", "Uniform " + this._uniformInfo.name + " is not a struct");
+			throw new XTException("UniformNotStruct", "Uniform " + this._uniformInfo.name + " is not a struct");
 		}
 	}
 
@@ -459,7 +459,7 @@ class Uniform  {
 		} else {
 
 			if (uniform.type != this._type) {
-				throw new KFException("IncompatibleUniforms", "Cannot copy uniform values from different unfiform type");
+				throw new XTException("IncompatibleUniforms", "Cannot copy uniform values from different unfiform type");
 			}
 			if (this._type == "float") {
 				this.setFloatValue(uniform.floatValue);
@@ -489,7 +489,7 @@ class Uniform  {
 
 	public function setFloatValue(value:Float) {
 		if (this._size != 1) {
-			throw new KFException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
+			throw new XTException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
 		} else {
 			_hasBeenSet = true;
 
@@ -502,7 +502,7 @@ class Uniform  {
 
 	public function setBoolValue(value:Bool) {
 		if (this._size != 1) {
-			throw new KFException("IncoherentUniformValue", "A bool value is being set for the uniform array " + _uniformInfo.name);
+			throw new XTException("IncoherentUniformValue", "A bool value is being set for the uniform array " + _uniformInfo.name);
 		} else {
 			_hasBeenSet = true;
 
@@ -516,10 +516,10 @@ class Uniform  {
 	public function setArrayValue(value:Array<Float>) {
 		if (value != null) {
 			if (this._size == 1 || this._size == 16 || this._size == 16) {
-				throw new KFException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
+				throw new XTException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
 
 			} else if (_size != value.length) {
-				throw new KFException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
+				throw new XTException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
 
 			} else {
 				this._hasBeenSet = true;
@@ -572,7 +572,7 @@ class Uniform  {
 
 	public function setTextureSlot(value:Int) {
 		if (this._type != "texture") {
-			throw new KFException("IncoherentUniformValue", "A texture slot is being set for a non-texture uniform");
+			throw new XTException("IncoherentUniformValue", "A texture slot is being set for a non-texture uniform");
 		} else {
 			_hasBeenSet = true;
 
@@ -600,7 +600,7 @@ class Uniform  {
 			if (defaultValue != null) {
 				var floatValue:Float = Std.parseFloat(defaultValue);
 				if (floatValue == Math.NaN) {
-					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
+					throw new XTException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
 					this._defaultFloatValue = floatValue;
@@ -661,7 +661,7 @@ class Uniform  {
 			if (defaultValue != null) {
 				var value:Int = Std.parseInt(defaultValue);
 				if (value == Math.NaN) {
-					throw new KFException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
+					throw new XTException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
 					this._defaultTextureSlot = value;

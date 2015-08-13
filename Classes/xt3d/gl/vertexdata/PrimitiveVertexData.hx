@@ -1,6 +1,6 @@
 package xt3d.gl.vertexdata;
 
-import xt3d.utils.errors.KFAbstractMethodError;
+import xt3d.utils.errors.XTAbstractMethodError;
 import openfl.utils.ArrayBufferView;
 import openfl.gl.GL;
 
@@ -50,7 +50,7 @@ class PrimitiveVertexData extends VertexData {
 	}
 
 	public function bindToAttribute(attributeLocation:Int, bufferManager:GLBufferManager):Void {
-		throw new KFAbstractMethodError();
+		throw new XTAbstractMethodError();
 	}
 
 }

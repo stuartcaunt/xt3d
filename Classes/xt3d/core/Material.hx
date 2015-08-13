@@ -4,7 +4,7 @@ import xt3d.utils.XTObject;
 import xt3d.utils.XT;
 import xt3d.gl.GLTextureManager;
 import xt3d.gl.shaders.UniformLib;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.gl.shaders.ShaderManager;
 import xt3d.gl.shaders.Uniform;
 import xt3d.gl.shaders.ShaderProgram;
@@ -262,7 +262,7 @@ class Material extends XTObject {
 			uniform.floatValue = opacity;
 			this._opacity = opacity;
 
-		} catch (e:KFException) {
+		} catch (e:XTException) {
 			XT.Warn("Cannot explicity set opacity in material \"" + this._programName + "\".");
 		}
 	}
@@ -276,7 +276,7 @@ class Material extends XTObject {
 			uniform = _commonUniforms.get(uniformName);
 
 			if (uniform == null) {
-				throw new KFException("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
+				throw new XTException("NoUniformExistsForUniformName", "No uniform exists with the name \"" + uniformName + "\"");
 			}
 		}
 

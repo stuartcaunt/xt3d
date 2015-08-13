@@ -1,6 +1,6 @@
 package xt3d.core;
 
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
 import xt3d.gl.XTGL;
 class Configuration {
@@ -51,7 +51,7 @@ class Configuration {
 			return Std.parseInt(stringValue);
 		}
 
-		throw new KFException("KeyDoesNotExist", "No value for the key \"" + key + "\" exists in the configuration");
+		throw new XTException("KeyDoesNotExist", "No value for the key \"" + key + "\" exists in the configuration");
 	}
 
 	public function getFloat(key:String):Float {
@@ -61,7 +61,7 @@ class Configuration {
 			return Std.parseFloat(stringValue);
 		}
 
-		throw new KFException("KeyDoesNotExist", "No value for the key \"" + key + "\" exists in the configuration");
+		throw new XTException("KeyDoesNotExist", "No value for the key \"" + key + "\" exists in the configuration");
 	}
 
 }

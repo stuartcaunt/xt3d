@@ -1,6 +1,6 @@
 package xt3d.gl.shaders;
 
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.utils.StringFunctions;
 import xt3d.utils.XT;
@@ -385,7 +385,7 @@ class ShaderUtils {
 		var rightBracketIndex = rawType.indexOf("]");
 
 		if (leftBracketIndex == -1 || leftBracketIndex == -1) {
-			throw new KFException("IncoherentUniformArrayDeclaration", "The uniform \"" + uniformInfo.name + "\" has incoherent array declaration: " + uniformInfo.type);
+			throw new XTException("IncoherentUniformArrayDeclaration", "The uniform \"" + uniformInfo.name + "\" has incoherent array declaration: " + uniformInfo.type);
 		}
 
 		var stringValue = uniformInfo.type.substring(leftBracketIndex + 1, rightBracketIndex);

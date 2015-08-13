@@ -1,7 +1,7 @@
 package xt3d.node;
 
 import xt3d.gl.shaders.UniformLib;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
 import xt3d.utils.math.MatrixHelper;
 import xt3d.utils.math.VectorHelper;
@@ -434,7 +434,7 @@ class Camera extends Node3D {
 	 */
 	public function setPerspectiveProjection(fovy:Float, near:Float, far:Float /*, orientation:DeviceOrientation = DeviceOrientation0 */):Void {
 		if (this._view == null) {
-			throw new KFException("NoViewForPerspectiveProjection", "Perspective projection requires a view object");
+			throw new XTException("NoViewForPerspectiveProjection", "Perspective projection requires a view object");
 		}
 
 		_aspect = _width / _height;

@@ -10,7 +10,7 @@ import openfl._internal.renderer.opengl.GLRenderer;
 import openfl._internal.renderer.AbstractRenderer;
 import openfl._internal.renderer.AbstractRenderer;
 import lime.graphics.RenderContext;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import lime.graphics.GLRenderContext;
 import openfl.events.Event;
 import openfl.display.Sprite;
@@ -111,7 +111,7 @@ class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 			this.onInit();
 
 		} catch (exception:Error) {
-			throw new KFException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
+			throw new XTException("InvalidGraphicsContext", "xTalk3d cannot run without OpenGL");
 
 		}
 

@@ -7,7 +7,7 @@ import openfl.gl.GL;
 import openfl.gl.GLShaderPrecisionFormat;
 import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.ShaderLib;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
 
 class ShaderManager {
@@ -130,23 +130,23 @@ class ShaderManager {
 				return program;
 
 			} else {
-				throw new KFException("UnableToCreateProgram", "The shader program \"" + shaderName + "\" did not compile");
+				throw new XTException("UnableToCreateProgram", "The shader program \"" + shaderName + "\" did not compile");
 			}
 
 		} else {
-			throw new KFException("NoShaderProgramConfig", "The shader program \"" + shaderName + "\" does not exist in library configs");
+			throw new XTException("NoShaderProgramConfig", "The shader program \"" + shaderName + "\" does not exist in library configs");
 		}
 	}
 
 	public function addProgramWithName(name:String, program:ShaderProgram):Void {
 		// Verify that a program doesn't already exist for the given name
 		if (_programs.exists(name)) {
-			throw new KFException("ProgramAlreadyExists", "A shader program with the name \"" + name + "\" already exists");
+			throw new XTException("ProgramAlreadyExists", "A shader program with the name \"" + name + "\" already exists");
 		}
 
 		// Verify that program is not null
 		if (program == null) {
-			throw new KFException("ProgramIsNull", "The shader program with the name \"" + name + "\" is null when added");
+			throw new XTException("ProgramIsNull", "The shader program with the name \"" + name + "\" is null when added");
 		}
 
 		// Add the program
@@ -163,8 +163,8 @@ class ShaderManager {
 			try {
 				program = this.createShaderProgram(name);
 
-			} catch (error:KFException) {
-				throw new KFException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
+			} catch (error:XTException) {
+				throw new XTException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
 			}
 
 		}

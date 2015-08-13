@@ -1,7 +1,7 @@
 package xt3d.gl.shaders;
 
 import xt3d.utils.XT;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.gl.shaders.ShaderUtils;
 
@@ -123,7 +123,7 @@ class UniformLib {
 					_allUniforms.set(uniform.name, uniform);
 
 				} else {
-					throw new KFException("DuplicateUniform", "The uniform with the name \"" + uniformName + "\" is duplicated");
+					throw new XTException("DuplicateUniform", "The uniform with the name \"" + uniformName + "\" is duplicated");
 				}
 			}
 		}
@@ -217,7 +217,7 @@ class UniformLib {
 			return uniform;
 
 		} else {
-			throw new KFException("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" does not exist");
+			throw new XTException("UniformDoesNotExist", "The uniform with the name \"" + uniformName + "\" does not exist");
 		}
 
 		return null;

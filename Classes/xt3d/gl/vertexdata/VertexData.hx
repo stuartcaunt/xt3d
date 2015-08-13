@@ -5,7 +5,7 @@ import xt3d.gl.GLBufferManager;
 import xt3d.utils.XT;
 import openfl.gl.GL;
 import openfl.gl.GLBuffer;
-import xt3d.utils.errors.KFAbstractMethodError;
+import xt3d.utils.errors.XTAbstractMethodError;
 class VertexData {
 
 	// properties
@@ -54,7 +54,7 @@ class VertexData {
 	}
 
 	public function getLength():Int {
-		throw new KFAbstractMethodError();
+		throw new XTAbstractMethodError();
 	}
 
 	public function setIsDirty(isDirty:Bool):Void {
@@ -62,11 +62,11 @@ class VertexData {
 	}
 
 	public function getBufferData():ArrayBufferView {
-		throw new KFAbstractMethodError();
+		throw new XTAbstractMethodError();
 	}
 
 	public function getVertexCount():Int {
-		throw new KFAbstractMethodError();
+		throw new XTAbstractMethodError();
 	}
 
 	public function writeBuffer(bufferManager:GLBufferManager):Bool {

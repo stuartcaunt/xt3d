@@ -1,7 +1,7 @@
 package xt3d.gl.vertexdata;
 
 import xt3d.utils.XT;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import openfl.utils.ArrayBufferView;
 import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
@@ -194,7 +194,7 @@ class InterleavedVertexData extends VertexData {
 	public inline function pop():Float {
 		if (this._f32Array != null) {
 			if (this._nextIndex <= 0) {
-				throw new KFException("IndexOutOfBounds", "Cannot pop from empty array");
+				throw new XTException("IndexOutOfBounds", "Cannot pop from empty array");
 			}
 			this._nextIndex--;
 
@@ -211,7 +211,7 @@ class InterleavedVertexData extends VertexData {
 
 	private inline function handleIndex(index:Int, updateNextIndex:Bool):Void {
 		if (index >= this._fixedCapacity) {
-			throw new KFException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
+			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
 		if (updateNextIndex && index > this._nextIndex) {
 			this._nextIndex = index;

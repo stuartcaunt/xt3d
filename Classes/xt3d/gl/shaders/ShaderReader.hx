@@ -4,7 +4,7 @@ import xt3d.utils.StringFunctions;
 import lime.Assets;
 
 import xt3d.utils.XT;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 
 class ShaderReader  {
 
@@ -55,7 +55,7 @@ class ShaderReader  {
 			return _shaderPrograms.get(key);
 		}
 
-		throw new KFException("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
+		throw new XTException("ShaderFProgramKeyUnknown", "The shader program key \"" + key + "\" is unknown");
 	}
 
 	public function shaderWithFilename(filename):String {

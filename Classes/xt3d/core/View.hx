@@ -4,7 +4,7 @@ import xt3d.utils.XT;
 import lime.math.Rectangle;
 import openfl.gl.GL;
 import openfl.geom.Vector3D;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.node.Node3D;
 import xt3d.node.Camera;
 import xt3d.utils.Color;
@@ -189,7 +189,7 @@ class View extends EventEmitter {
 
 	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clear:Bool = true, renderer:Renderer = null):Void {
 		if (this.scene == null) {
-			throw new KFException("CannotRenderWithNullScene", "Cannot render to texture with a null Scene for the View");
+			throw new XTException("CannotRenderWithNullScene", "Cannot render to texture with a null Scene for the View");
 
 		}
 

@@ -1,6 +1,6 @@
 package xt3d.gl.vertexdata;
 
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import xt3d.gl.vertexdata.PrimitiveVertexData;
 import openfl.utils.UInt8Array;
 import openfl.utils.ArrayBufferView;
@@ -146,7 +146,7 @@ class UByteVertexData extends PrimitiveVertexData {
 	public inline function pop():UInt {
 		if (this._ui8Array != null) {
 			if (this._nextIndex <= 0) {
-				throw new KFException("IndexOutOfBounds", "Cannot pop from empty array");
+				throw new XTException("IndexOutOfBounds", "Cannot pop from empty array");
 			}
 			this._nextIndex--;
 
@@ -161,7 +161,7 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	private inline function handleIndex(index:Int, updateNextIndex:Bool):Void {
 		if (index >= this._fixedCapacity) {
-			throw new KFException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
+			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
 		if (updateNextIndex && index > this._nextIndex) {
 			this._nextIndex = index;

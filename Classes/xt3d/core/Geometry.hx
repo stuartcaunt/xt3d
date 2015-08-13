@@ -8,7 +8,7 @@ import xt3d.gl.vertexdata.VertexData;
 import xt3d.gl.vertexdata.FloatVertexData;
 import xt3d.gl.vertexdata.InterleavedVertexData;
 import xt3d.gl.vertexdata.IndexData;
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 
 
 class Geometry extends XTObject {
@@ -216,7 +216,7 @@ class Geometry extends XTObject {
 
 	public inline function getVertexData(bufferName:String):PrimitiveVertexData {
 		if (!_vertexData.exists(bufferName)) {
-			throw new KFException("VertexBufferDoesNotExist", "The vertex buffer \"" + bufferName + "\" does not exist");
+			throw new XTException("VertexBufferDoesNotExist", "The vertex buffer \"" + bufferName + "\" does not exist");
 		}
 		return _vertexData[bufferName];
 	}

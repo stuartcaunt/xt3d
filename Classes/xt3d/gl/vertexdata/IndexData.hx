@@ -1,6 +1,6 @@
 package xt3d.gl.vertexdata;
 
-import xt3d.utils.errors.KFException;
+import xt3d.utils.errors.XTException;
 import openfl.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
 import openfl.utils.Int16Array;
@@ -8,7 +8,7 @@ import openfl.gl.GLBuffer;
 import openfl.gl.GL;
 
 import xt3d.utils.XT;
-import xt3d.utils.errors.KFAbstractMethodError;
+import xt3d.utils.errors.XTAbstractMethodError;
 
 class IndexData {
 
@@ -190,7 +190,7 @@ class IndexData {
 	public inline function pop():Int {
 		if (this._i16Array != null) {
 			if (this._nextIndex <= 0) {
-				throw new KFException("IndexOutOfBounds", "Cannot pop from empty array");
+				throw new XTException("IndexOutOfBounds", "Cannot pop from empty array");
 			}
 			this._nextIndex--;
 
@@ -205,7 +205,7 @@ class IndexData {
 
 	private inline function handleIndex(index:Int, updateNextIndex:Bool):Void {
 		if (index >= this._fixedCapacity) {
-			throw new KFException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
+			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
 		if (updateNextIndex && index > this._nextIndex) {
 			this._nextIndex = index;
