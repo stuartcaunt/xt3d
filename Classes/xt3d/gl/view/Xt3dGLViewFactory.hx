@@ -1,9 +1,9 @@
 package xt3d.gl.view;
 
 #if xt3dopenfl
-import xt3d.gl.view.OpenFlGLView;
+import xt3d.gl.view.Xt3dOpenFLGLView;
 #elseif xt3dlime
-import xt3d.gl.view.LimeGLView;
+import xt3d.gl.view.Xt3dLimeGLView;
 #end
 
 class Xt3dGLViewFactory {
@@ -22,12 +22,12 @@ class Xt3dGLViewFactory {
 	}
 
 #if xt3dopenfl
-	public function createView(width:Int = 1024, height:Int = 768):OpenFlGLView {
-		return OpenFlGLView.create(width, height);
+	public function createView():Xt3dOpenFLGLView {
+		return Xt3dOpenFLGLView.create();
 	}
 #elseif xt3dlime
-	public function createView(width:Int = 1024, height:Int = 768):LimeGLView {
-		return LimeGLView.create(width, height);
+	public function createView():Xt3dLimeGLView {
+		return Xt3dLimeGLView.create();
 	}
 #end
 

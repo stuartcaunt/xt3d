@@ -13,6 +13,7 @@
 
 	<!--<window fps="90" if="ios" />-->
 	<window fps="60" />
+	<!--<window antialiasing="1" />-->
 
 	<source path="../Test" />
 	<source path="../Classes" />

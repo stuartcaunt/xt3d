@@ -15,34 +15,30 @@ import lime.graphics.GLRenderContext;
 import openfl.events.Event;
 import openfl.display.Sprite;
 
-class OpenFlGLView extends OpenGLView implements Xt3dGLView {
+class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 
 	// properties
 	public var gl(get, null):GLRenderContext;
-	public var displayRect(get, null):Rectangle;
-	public var size(get, set):Size<Int>;
+	public var size(get, null):Size<Int>;
 
 	// members
 	private var _gl:GLRenderContext = null;
 	private var _listeners:Array<Xt3dGLViewListener> = new Array<Xt3dGLViewListener>();
-	private var _width:Int;
-	private var _height:Int;
+	private var _width:Int = 0;
+	private var _height:Int = 0;
 	private var _lastUpdateTime:Int = 0;
 
-	public static function create(width:Int = 1024, height:Int = 768):OpenFlGLView {
-		var object = new OpenFlGLView();
+	public static function create():Xt3dOpenFLGLView {
+		var object = new Xt3dOpenFLGLView();
 
-		if (object != null && !(object.initView(width, height))) {
+		if (object != null && !(object.initView())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initView(width:Int = 1024, height:Int = 768):Bool {
-		this._width = width;
-		this._height = height;
-
+	public function initView():Bool {
 
 		// Set first render callback to be an initialisation call
 		super.render = this.onApplicationReady;
@@ -63,15 +59,6 @@ class OpenFlGLView extends OpenGLView implements Xt3dGLView {
 
 	public function get_gl():GLRenderContext {
 		return this._gl;
-	}
-
-	public function get_displayRect():Rectangle {
-		return new Rectangle(0, 0, this._width, this._height);
-	}
-
-	public function set_size(size:Size<Int>):Size<Int> {
-		this.onWindowResize(size.width, size.height);
-		return size;
 	}
 
 	public function get_size():Size<Int> {
@@ -112,6 +99,7 @@ class OpenFlGLView extends OpenGLView implements Xt3dGLView {
 
 
 	private inline function onApplicationReady(rect:Rectangle):Void {
+
 		// Get render context
 		var renderer:AbstractRenderer = @:privateAccess (stage.__renderer);
 		try {
@@ -135,9 +123,15 @@ class OpenFlGLView extends OpenGLView implements Xt3dGLView {
 	}
 
 	private inline function performRender(rect:Rectangle):Void {
-		this.onWindowResize(Std.int(rect.width), Std.int(rect.height));
+		if (rect.width != this._width || rect.height != this._height) {
+			this.onWindowResize(Std.int(rect.width), Std.int(rect.height));
+		}
 
+		// Calculate time
 		var now = Lib.getTimer();
+		if (this._lastUpdateTime == 0) {
+			this._lastUpdateTime = now;
+		}
 		var deltaTimeMs = 0.001 * (now - this._lastUpdateTime);
 		this._lastUpdateTime = now;
 

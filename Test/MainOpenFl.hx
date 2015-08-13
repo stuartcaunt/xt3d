@@ -2,7 +2,7 @@ package ;
 
 
 import openfl.display.Sprite;
-import xt3d.gl.view.OpenFlGLView;
+import xt3d.gl.view.Xt3dOpenFLGLView;
 import xt3d.gl.view.Xt3dGLView;
 import xt3d.utils.Color;
 import xt3d.Director;
@@ -13,7 +13,7 @@ import lime.app.Application;
 class MainOpenFl extends Sprite {
 
 	private var _director:Director;
-	private var _glView:OpenFlGLView;
+	private var _glView:Xt3dOpenFLGLView;
 
 
 	public function new () {

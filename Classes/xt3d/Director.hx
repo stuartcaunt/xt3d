@@ -1,5 +1,6 @@
 package xt3d;
 
+import lime.math.Rectangle;
 import xt3d.gl.view.Xt3dGLViewEvent;
 import xt3d.gl.view.Xt3dGLViewListener;
 import xt3d.gl.view.Xt3dGLView;
@@ -13,8 +14,6 @@ import xt3d.core.EventEmitter;
 import xt3d.core.View;
 import xt3d.core.Renderer;
 import xt3d.utils.Color;
-
-import openfl.geom.Rectangle;
 
 class Director extends EventEmitter implements Xt3dGLViewListener {
 
@@ -139,7 +138,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		this._renderer = Renderer.create(glView.gl);
 
 		// Set viewport with full rectangle
-		var displayRect = glView.displayRect;
+		var size = glView.size;
+		var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
 		_renderer.setViewport(displayRect);
 
 		// Iterate over all views
@@ -167,7 +167,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public inline function onEvent(view:Xt3dGLView, event:String):Void {
 		if (event == Xt3dGLViewEvent.RESIZE) {
 			// Set viewport with full rectangle
-			var displayRect = this._glView.displayRect;
+			var size = glView.size;
+			var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
 			_renderer.setViewport(displayRect);
 
 			// Iterate over all views
@@ -221,7 +222,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		_views.push(view);
 
 		// Update the display rect (does nothing if not changed)
-		view.setDisplayRect(this._glView.displayRect);
+		var size = glView.size;
+		var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
+		view.setDisplayRect(displayRect);
 	}
 
 	public inline function pause():Void {

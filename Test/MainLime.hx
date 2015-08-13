@@ -2,8 +2,8 @@ package ;
 
 
 import xt3d.utils.Size;
-import xt3d.gl.view.LimeGLView;
-import xt3d.gl.view.LimeGLView;
+import xt3d.gl.view.Xt3dLimeGLView;
+import xt3d.gl.view.Xt3dLimeGLView;
 import xt3d.gl.view.Xt3dGLView;
 import xt3d.utils.Color;
 import xt3d.Director;
@@ -15,11 +15,15 @@ import lime.app.Application;
 class MainLime extends Application {
 
 	private var _director:Director;
-	private var _glView:LimeGLView;
+	private var _glView:Xt3dLimeGLView;
 
 
 	public function new () {
 		super();
+
+//		ApplicationMain.config.depthBuffer = true;
+//		ApplicationMain.config.antialiasing = true;
+//		ApplicationMain.config.width = 300;
 
 		//var backgroundColor = Color.createWithComponents(0.5, 0.8, 0.8, 0.5);
 		var backgroundColor = Color.createWithComponents(0.2, 0.2, 0.2);
