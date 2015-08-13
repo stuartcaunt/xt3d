@@ -2,7 +2,7 @@ package xt3d.core;
 
 import xt3d.utils.XT;
 import lime.math.Rectangle;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 import openfl.geom.Vector3D;
 import xt3d.utils.errors.XTException;
 import xt3d.node.Node3D;

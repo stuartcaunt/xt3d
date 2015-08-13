@@ -6,7 +6,7 @@ import xt3d.gl.GLBufferManager;
 import xt3d.gl.shaders.ShaderProgram;
 import xt3d.utils.errors.XTException;
 import xt3d.gl.GLAttributeManager;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 import xt3d.core.Geometry;
 import openfl.geom.Matrix3D;
 import xt3d.core.Material;

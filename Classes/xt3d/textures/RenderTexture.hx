@@ -2,12 +2,13 @@ package xt3d.textures;
 
 import openfl.display.BitmapData;
 import xt3d.gl.XTGL;
-import openfl.gl.GL;
-import openfl.gl.GLFramebuffer;
-import openfl.gl.GLRenderbuffer;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLFramebuffer;
+import lime.graphics.opengl.GLRenderbuffer;
 import xt3d.utils.Size;
 import xt3d.utils.Color;
 import xt3d.utils.XT;
+
 class RenderTexture extends Texture2D {
 
 	// properties

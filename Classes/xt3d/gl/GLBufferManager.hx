@@ -1,8 +1,8 @@
 package xt3d.gl;
 
 import openfl.utils.ArrayBufferView;
-import openfl.gl.GL;
-import openfl.gl.GLBuffer;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
 class GLBufferManager {
 
 	// members

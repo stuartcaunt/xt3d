@@ -3,8 +3,8 @@ package xt3d.gl.vertexdata;
 import openfl.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
 import xt3d.utils.XT;
-import openfl.gl.GL;
-import openfl.gl.GLBuffer;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLBuffer;
 import xt3d.utils.errors.XTAbstractMethodError;
 class VertexData {
 

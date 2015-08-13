@@ -7,8 +7,9 @@ import xt3d.textures.Texture2D;
 import openfl.utils.ByteArray;
 import openfl.utils.UInt8Array;
 import openfl.display.BitmapData;
-import openfl.gl.GL;
-import openfl.gl.GLTexture;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLTexture;
+
 class GLTextureManager {
 
 	// properties

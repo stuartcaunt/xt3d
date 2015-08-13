@@ -1,6 +1,6 @@
 package xt3d.gl;
 
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 
 typedef AttributeState = {
 	var location:Int;

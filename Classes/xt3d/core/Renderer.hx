@@ -2,10 +2,9 @@ package xt3d.core;
 
 import lime.math.Rectangle;
 import lime.graphics.GLRenderContext;
+import lime.graphics.opengl.GLFramebuffer;
 import xt3d.utils.XTObject;
 import xt3d.textures.RenderTexture;
-import openfl.gl.GLRenderbuffer;
-import openfl.gl.GLFramebuffer;
 import xt3d.gl.GLFrameBufferManager;
 import xt3d.utils.XT;
 import xt3d.gl.GLTextureManager;
@@ -23,7 +22,7 @@ import xt3d.node.Light;
 import xt3d.core.Material;
 import xt3d.node.Scene;
 import xt3d.node.RenderObject;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 
 
 class Renderer extends XTObject {

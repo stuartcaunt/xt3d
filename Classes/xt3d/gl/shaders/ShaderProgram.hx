@@ -1,9 +1,9 @@
 package xt3d.gl.shaders;
 
 import xt3d.utils.XTObject;
-import openfl.gl.GL;
-import openfl.gl.GLProgram;
-import openfl.gl.GLShader;
+import lime.graphics.opengl.GL;
+import lime.graphics.opengl.GLProgram;
+import lime.graphics.opengl.GLShader;
 import openfl.Assets;
 
 import xt3d.utils.XT;

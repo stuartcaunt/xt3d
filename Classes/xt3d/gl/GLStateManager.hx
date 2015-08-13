@@ -3,7 +3,7 @@ package xt3d.gl;
 import xt3d.utils.Color;
 import xt3d.utils.XT;
 import xt3d.gl.XTGL;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 
 class GLStateManager {
 

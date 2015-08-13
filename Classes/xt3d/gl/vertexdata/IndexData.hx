@@ -4,8 +4,8 @@ import xt3d.utils.errors.XTException;
 import openfl.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
 import openfl.utils.Int16Array;
-import openfl.gl.GLBuffer;
-import openfl.gl.GL;
+import lime.graphics.opengl.GLBuffer;
+import lime.graphics.opengl.GL;
 
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTAbstractMethodError;

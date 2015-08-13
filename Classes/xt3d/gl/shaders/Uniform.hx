@@ -1,12 +1,12 @@
 package xt3d.gl.shaders;
 
 import xt3d.utils.math.MatrixHelper;
-import openfl.gl.GLProgram;
 import xt3d.gl.GLTextureManager;
 import xt3d.textures.Texture2D;
-import openfl.gl.GLUniformLocation;
 import openfl.utils.Float32Array;
-import openfl.gl.GL;
+import lime.graphics.opengl.GLProgram;
+import lime.graphics.opengl.GLUniformLocation;
+import lime.graphics.opengl.GL;
 import haxe.Json;
 import openfl.geom.Matrix3D;
 

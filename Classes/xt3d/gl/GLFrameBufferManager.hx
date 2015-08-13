@@ -1,8 +1,8 @@
 package xt3d.gl;
 
-import openfl.gl.GLFramebuffer;
-import openfl.gl.GLRenderbuffer;
-import openfl.gl.GL;
+import lime.graphics.opengl.GLRenderbuffer;
+import lime.graphics.opengl.GLFramebuffer;
+import lime.graphics.opengl.GL;
 class GLFrameBufferManager {
 
 // members

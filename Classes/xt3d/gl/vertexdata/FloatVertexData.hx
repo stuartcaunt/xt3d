@@ -5,7 +5,7 @@ import xt3d.gl.vertexdata.PrimitiveVertexData;
 import openfl.utils.ArrayBufferView;
 import openfl.utils.IMemoryRange;
 import openfl.utils.Float32Array;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 
 class FloatVertexData extends PrimitiveVertexData {
 

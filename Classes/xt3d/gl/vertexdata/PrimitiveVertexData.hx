@@ -2,7 +2,7 @@ package xt3d.gl.vertexdata;
 
 import xt3d.utils.errors.XTAbstractMethodError;
 import openfl.utils.ArrayBufferView;
-import openfl.gl.GL;
+import lime.graphics.opengl.GL;
 
 class PrimitiveVertexData extends VertexData {
 
