@@ -2,9 +2,8 @@ package xt3d.gl.vertexdata;
 
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTException;
-import openfl.utils.ArrayBufferView;
-import openfl.utils.IMemoryRange;
-import openfl.utils.Float32Array;
+import lime.utils.ArrayBufferView;
+import lime.utils.Float32Array;
 import lime.graphics.opengl.GL;
 
 

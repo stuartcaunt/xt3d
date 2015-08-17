@@ -1,6 +1,7 @@
 package xt3d.utils;
 
-import openfl.utils.Float32Array;
+import lime.utils.Float32Array;
+
 class Color  {
 
 	public static var black:Color = Color.createWithRGBHex(0x000000);

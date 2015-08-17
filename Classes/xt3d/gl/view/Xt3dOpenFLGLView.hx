@@ -8,8 +8,6 @@ import openfl.errors.Error;
 import openfl.Lib;
 import openfl._internal.renderer.opengl.GLRenderer;
 import openfl._internal.renderer.AbstractRenderer;
-import openfl._internal.renderer.AbstractRenderer;
-import lime.graphics.RenderContext;
 import xt3d.utils.errors.XTException;
 import lime.graphics.GLRenderContext;
 import openfl.events.Event;

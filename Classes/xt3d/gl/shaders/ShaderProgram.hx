@@ -4,7 +4,7 @@ import xt3d.utils.XTObject;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLShader;
-import openfl.Assets;
+import lime.Assets;
 
 import xt3d.utils.XT;
 import xt3d.gl.shaders.ShaderTypedefs;

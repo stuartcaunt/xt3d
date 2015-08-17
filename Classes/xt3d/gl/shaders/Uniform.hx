@@ -3,7 +3,7 @@ package xt3d.gl.shaders;
 import xt3d.utils.math.MatrixHelper;
 import xt3d.gl.GLTextureManager;
 import xt3d.textures.Texture2D;
-import openfl.utils.Float32Array;
+import lime.utils.Float32Array;
 import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLUniformLocation;
 import lime.graphics.opengl.GL;

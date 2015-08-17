@@ -5,7 +5,6 @@ import xt3d.utils.Size;
 import lime.math.Rectangle;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
-import openfl._internal.renderer.opengl.GLRenderer;
 import lime.graphics.GLRenderContext;
 import xt3d.core.EventEmitter;
 import lime.app.Module;

@@ -1,9 +1,9 @@
 package xt3d.gl.vertexdata;
 
 import xt3d.utils.errors.XTException;
-import openfl.utils.ArrayBufferView;
+import lime.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
-import openfl.utils.Int16Array;
+import lime.utils.Int16Array;
 import lime.graphics.opengl.GLBuffer;
 import lime.graphics.opengl.GL;
 

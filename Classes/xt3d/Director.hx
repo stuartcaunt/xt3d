@@ -6,7 +6,6 @@ import xt3d.gl.view.Xt3dGLViewListener;
 import xt3d.gl.view.Xt3dGLView;
 import xt3d.gl.XTGL;
 import xt3d.core.Configuration;
-import openfl.Lib;
 import xt3d.utils.XT;
 import xt3d.core.Scheduler;
 import xt3d.textures.TextureCache;
@@ -37,7 +36,6 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	private var _scheduler:Scheduler;
 	private var _configuration:Configuration;
 
-//	private var _lastUpdateTime:Int = 0;
 	private var _deltaTime:Float = 0.0;
 	private var _globalTime = 0.0;
 	private var _paused:Bool = false;
@@ -286,14 +284,12 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	}
 
 	private function calculateDeltaTime(dt:Float = 0.0):Void {
-		//var now = Lib.getTimer();
 
 		if (this._nextDeltaTimeZero) {
 			this._deltaTime = 0.0;
 			this._nextDeltaTimeZero = false;
 
 		} else {
-			//this._deltaTime = 0.001 * (now - this._lastUpdateTime);
 			this._deltaTime = dt;
 			this._deltaTime = Math.max(0.0, this._deltaTime);
 		}
@@ -304,8 +300,6 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		}
 
 		this._globalTime += this._deltaTime;
-
-//		this._lastUpdateTime = now;
 	}
 
 	private function setAnimationInterval(animationInterval:Float):Void {
