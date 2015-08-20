@@ -1,14 +1,11 @@
 package ;
 
 
-import xt3d.utils.Size;
-import xt3d.gl.view.Xt3dLimeGLView;
 import xt3d.gl.view.Xt3dLimeGLView;
 import xt3d.gl.view.Xt3dGLView;
 import xt3d.utils.Color;
 import xt3d.Director;
 import xt3d.gl.view.Xt3dGLViewFactory;
-import lime.graphics.RenderContext;
 import lime.app.Application;
 
 
@@ -57,21 +54,5 @@ class MainLime extends Application {
 		});
 
 	}
-
-
-//	override public function init(context:RenderContext):Void {
-//		super.init(context);
-//
-//		this._glView.size = Size.createIntSize(window.width, window.height);
-//	}
-//
-//	public override function render (context:RenderContext):Void {
-//		super.render(context);
-//	}
-//
-//
-//	public override function update (deltaTime:Int):Void {
-//		super.update(deltaTime);
-//	}
 
 }

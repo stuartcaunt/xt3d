@@ -2,6 +2,11 @@ TODO
 ====
 
 
+- remove all openfl dependencies
+  - vector3
+  - matrix4
+  - bitmapdata
+    - use arraybuffer for vector/matrix data
 
 - Integration Lime GLContext / remove openfl dependencies
   - remove all openfl dependencies
