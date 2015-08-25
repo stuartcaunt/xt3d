@@ -7,7 +7,7 @@ import xt3d.utils.math.VectorHelper;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.node.Scene;
 import xt3d.node.Node3D;
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.utils.Color;
 import xt3d.gl.XTGL;
 
@@ -23,7 +23,7 @@ class Light extends Node3D {
 	public var linearAttenuation(get, set):Float;
 	public var quadraticAttenuation(get, set):Float;
 
-	public var direction(get, set):Vector3D;
+	public var direction(get, set):Vector4;
 
 	public var spotCutoffAngle(get, set):Float;
 	public var spotFalloffExponent(get, set):Float;
@@ -38,7 +38,7 @@ class Light extends Node3D {
 
 	private var _attenuation = [1.0, 0.0, 0.0];
 
-	private var _direction:Vector3D = new Vector3D();
+	private var _direction:Vector4 = new Vector4();
 
 	private var _spotCutoffAngle:Float = -1.0;
 	private var _spotFalloffExponent:Float = 1.0;
@@ -58,7 +58,7 @@ class Light extends Node3D {
 		return object;
 	}
 
-	public static function createDirectionalLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null):Light {
+	public static function createDirectionalLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector4 = null):Light {
 		var object = new Light();
 
 		if (object != null && !(object.initDirectionalLight(ambient, diffuse, specular, direction))) {
@@ -68,7 +68,7 @@ class Light extends Node3D {
 		return object;
 	}
 
-	public static function createSpotLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null, cutoffAngle:Float = 30.0, falloffExponent:Float = 1.0):Light {
+	public static function createSpotLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector4 = null, cutoffAngle:Float = 30.0, falloffExponent:Float = 1.0):Light {
 		var object = new Light();
 
 		if (object != null && !(object.initSpotLight(ambient, diffuse, specular, attenuation, direction, cutoffAngle, falloffExponent))) {
@@ -93,7 +93,7 @@ class Light extends Node3D {
 		return retval;
 	}
 
-	public function initDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, direction:Vector3D = null):Bool {
+	public function initDirectionalLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, direction:Vector4 = null):Bool {
 		var retval;
 		if ((retval = super.init())) {
 			this._lightType = XTGL.DirectionalLight;
@@ -102,7 +102,7 @@ class Light extends Node3D {
 			this._specularColor = Color.createWithRGBHex(specular);
 
 			if (direction == null) {
-				direction = new Vector3D();
+				direction = new Vector4();
 			}
 			this._direction = direction;
 		}
@@ -110,7 +110,7 @@ class Light extends Node3D {
 		return retval;
 	}
 
-	public function initSpotLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector3D = null, cutoffAngle:Float = 15.0, falloffExponent:Float = 0.0):Bool {
+	public function initSpotLight(ambient:Int = 0x222222, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0, direction:Vector4 = null, cutoffAngle:Float = 15.0, falloffExponent:Float = 0.0):Bool {
 		var retval;
 		if ((retval = super.init())) {
 			this._lightType = XTGL.SpotLight;
@@ -122,7 +122,7 @@ class Light extends Node3D {
 			this._attenuation[2] = attenuation;
 
 			if (direction == null) {
-				direction = new Vector3D();
+				direction = new Vector4();
 			}
 			this._direction = direction;
 
@@ -198,11 +198,11 @@ class Light extends Node3D {
 		return this._attenuation[2] = value;
 	}
 
-	public inline function get_direction():Vector3D {
+	public inline function get_direction():Vector4 {
 		return this._direction;
 	}
 
-	public inline function set_direction(value:Vector3D) {
+	public inline function set_direction(value:Vector4) {
 		this.setDirection(value);
 		return this._direction;
 	}
@@ -234,7 +234,7 @@ class Light extends Node3D {
 
 	/* --------- Implementation --------- */
 
-	public inline function setDirection(value:Vector3D):Void {
+	public inline function setDirection(value:Vector4):Void {
 		var len = value.length;
 		this._direction.x = value.x / len;
 		this._direction.y = value.y / len;

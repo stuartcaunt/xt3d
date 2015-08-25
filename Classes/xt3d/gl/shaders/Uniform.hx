@@ -8,7 +8,7 @@ import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLUniformLocation;
 import lime.graphics.opengl.GL;
 import haxe.Json;
-import openfl.geom.Matrix3D;
+import lime.math.Matrix4;
 
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTException;
@@ -17,14 +17,14 @@ import xt3d.gl.shaders.ShaderTypedefs;
 class Uniform  {
 
 	// properties
-	public var name(get_name, null):String;
+	public var name(get, null):String;
 	public var type(get, null):String;
 	public var boolValue(get, set):Bool;
 	public var floatValue(get, set):Float;
-	public var floatArrayValue(get_floatArrayValue, set_floatArrayValue):Array<Float>;
-	public var matrixValue(get_matrixValue, set_matrixValue):Matrix3D;
-	public var texture(get_texture, set_texture):Texture2D;
-	public var textureSlot(get_textureSlot, set_textureSlot):Int;
+	public var floatArrayValue(get, set):Array<Float>;
+	public var matrixValue(get, set):Matrix4;
+	public var texture(get, set):Texture2D;
+	public var textureSlot(get, set):Int;
 	public var isGlobal(get, null):Bool;
 	public var hasBeenSet(get, null):Bool;
 	public var uniformInfo(get, null):UniformInfo;
@@ -41,14 +41,14 @@ class Uniform  {
 	private var _floatValue:Float = 0.0;
 	private var _floatArrayValue:Array<Float> = new Array<Float>();
 	private var _float32ArrayValue:Float32Array;
-	private var _matrixValue:Matrix3D = new Matrix3D();
+	private var _matrixValue:Matrix4 = new Matrix4();
 	private var _texture:Texture2D = null;
 	private var _textureSlot:Int = -1;
 
 	private var _defaultBoolValue:Bool = false;
 	private var _defaultFloatValue:Float = 0.0;
 	private var _defaultFloatArrayValue:Array<Float> = null;
-	private var _defaultMatrixValue:Matrix3D = new Matrix3D();
+	private var _defaultMatrixValue:Matrix4 = new Matrix4();
 	private var _defaultTexture:Texture2D = null;
 	private var _defaultTextureSlot:Int = -1;
 
@@ -251,11 +251,11 @@ class Uniform  {
 		return this._floatArrayValue;
 	}
 
-	public inline function get_matrixValue():Matrix3D {
+	public inline function get_matrixValue():Matrix4 {
 		return this._matrixValue;
 	}
 
-	public function set_matrixValue(value:Matrix3D) {
+	public function set_matrixValue(value:Matrix4) {
 		setMatrixValue(value);
 		return this._matrixValue;
 	}
@@ -413,15 +413,7 @@ class Uniform  {
 					GL.uniformMatrix3fv(this._location, false, this._float32ArrayValue);
 
 				} else if (type == "mat4") {
-					#if js
-					this.copyToTypedArray(this._matrixValue.rawData.toArray(), this._float32ArrayValue);
-					#elseif neko
-					this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
-					#elseif (ios || mac || android)
-					this._float32ArrayValue.set(this._matrixValue.rawData);
-						#else
-					this._float32ArrayValue.set(this._matrixValue.rawData.toArray());
-						#end
+					this._float32ArrayValue.set(this._matrixValue);
 					GL.uniformMatrix4fv(this._location, false, this._float32ArrayValue);
 				}
 
@@ -542,17 +534,15 @@ class Uniform  {
 		}
 	}
 
-	public function setMatrixValue(value:Matrix3D) {
+	public function setMatrixValue(value:Matrix4) {
 		if (value != null) {
 			this._hasBeenSet = true;
 
 			// Comparison of both matrices
 			var hasChanged = false;
 			var i = 0;
-			var valueRawData = value.rawData;
-			var matrixRawData = this._matrixValue.rawData;
 			while (!hasChanged && i < 16) {
-				hasChanged = (valueRawData[i] != matrixRawData[i]);
+				hasChanged = (value[i] != this._matrixValue[i]);
 				i++;
 			}
 
@@ -652,7 +642,7 @@ class Uniform  {
 					defaultValue = "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]";
 				}
 				var floatArray:Array<Float> = haxe.Json.parse(defaultValue);
-				this._defaultMatrixValue.copyRawDataFrom(floatArray);
+				this._defaultMatrixValue.copythisFrom(new Float32Array(floatArray));
 			}
 			setMatrixValue(this._defaultMatrixValue);
 

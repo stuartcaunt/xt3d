@@ -1,8 +1,8 @@
 package xt3d.utils.math;
 
-import openfl.geom.Vector3D;
-import openfl.Vector;
-import openfl.geom.Matrix3D;
+import lime.utils.Float32Array;
+import lime.math.Vector4;
+import lime.math.Matrix4;
 
 import xt3d.utils.math.Quaternion;
 
@@ -26,19 +26,19 @@ class MatrixHelper {
 //	float tw;  // 15
 
 
-	static public var RAW_DATA_CONTAINER(get, null):Vector<Float>;
-	static private function get_RAW_DATA_CONTAINER():Vector<Float> {
-		return [ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ];
+	static public var RAW_DATA_CONTAINER(get, null):Matrix4;
+	static private function get_RAW_DATA_CONTAINER():Matrix4 {
+		return new Matrix4(new Float32Array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ]));
 	}
 
 
-	private static function rawDataContainerWithColumnMajorValues(
+	private static function matrixWithColumnMajorValues(
 		v0, v1, v2, v3,
 		v4, v5, v6, v7,
 		v8, v9, v10, v11,
-		v12, v13, v14, v15):Vector<Float> {
+		v12, v13, v14, v15):Matrix4 {
 
-		var raw:Vector<Float> = MatrixHelper.RAW_DATA_CONTAINER;
+		var raw:Matrix4 = MatrixHelper.RAW_DATA_CONTAINER;
 
 		raw[0] = v0;
 		raw[1] = v1;
@@ -63,13 +63,13 @@ class MatrixHelper {
 		return raw;
 	}
 
-	static private function rawDataContainerWithRowMajorValues(
+	static private function matrixWithRowMajorValues(
 		v0, v1, v2, v3,
 		v4, v5, v6, v7,
 		v8, v9, v10, v11,
-		v12, v13, v14, v15):Vector<Float> {
+		v12, v13, v14, v15):Matrix4 {
 
-		var raw:Vector<Float> = MatrixHelper.RAW_DATA_CONTAINER;
+		var raw:Matrix4 = MatrixHelper.RAW_DATA_CONTAINER;
 
 		raw[0] = v0;
 		raw[4] = v1;
@@ -106,7 +106,7 @@ class MatrixHelper {
 	 * @param y The y component of the axis of rotation.
 	 * @param z The z component of the axis of rotation.
 	 */
-	public static function setRotation(m:Matrix3D, axis:Vector3D, angle:Float):Void {
+	public static function setRotation(m:Matrix4, axis:Vector4, angle:Float):Void {
 		var q:Quaternion = Quaternion.createFromAxisAngle(axis, angle);
 
 		setRotationFromQuaternion(m, q);
@@ -121,7 +121,7 @@ class MatrixHelper {
 	 * @param rotationY The rotation about the y axis.
 	 * @param rotationZ The rotation about the z axis.
 	 */
-	public static function setRotationFromEuler(m:Matrix3D, rotationX:Float, rotationY:Float, rotationZ:Float):Void {
+	public static function setRotationFromEuler(m:Matrix4, rotationX:Float, rotationY:Float, rotationZ:Float):Void {
 		var q:Quaternion = Quaternion.createFromEuler(rotationX, rotationY, rotationZ);
 
 		setRotationFromQuaternion(m, q);
@@ -132,7 +132,7 @@ class MatrixHelper {
 	 * @param m The matrix.
 	 * @param a The quaternion.
 	 **/
-	public static function setRotationFromQuaternion(m:Matrix3D, q:Quaternion) {
+	public static function setRotationFromQuaternion(m:Matrix4, q:Quaternion) {
 		var x:Float = q.x;
 		var y:Float = q.y;
 		var z:Float = q.z;
@@ -151,18 +151,17 @@ class MatrixHelper {
 
 		var ww:Float = w * w;
 
-		var raw:Vector<Float> = m.rawData;
-		raw[0] = 1 - 2 * (zz + ww);
-		raw[1] =     2 * (yz + xw);
-		raw[2] =     2 * (yw - xz);
+		m[0] = 1 - 2 * (zz + ww);
+		m[1] =     2 * (yz + xw);
+		m[2] =     2 * (yw - xz);
 
-		raw[4] =     2 * (yz - xw);
-		raw[5] = 1 - 2 * (yy + ww);
-		raw[6] =     2 * (xy + zw);
+		m[4] =     2 * (yz - xw);
+		m[5] = 1 - 2 * (yy + ww);
+		m[6] =     2 * (xy + zw);
 
-		raw[8] =     2 * (xz + yw);
-		raw[9] =     2 * (zw - xy);
-		raw[10] = 1 - 2 * (yy + zz);
+		m[8] =     2 * (xz + yw);
+		m[9] =     2 * (zw - xy);
+		m[10] = 1 - 2 * (yy + zz);
 	}
 
 	/**
@@ -170,26 +169,24 @@ class MatrixHelper {
 	 * @param m The matrix.
 	 * @result Vector containing the rotations about x, y and z (in degrees)
 	 */
-	public static function getEulerRotationFromMatrix(m:Matrix3D):Vector3D {
-		var raw:Vector<Float> = m.rawData;
+	public static function getEulerRotationFromMatrix(m:Matrix4):Vector4 {
 
 		// Get rotation about X
-		var rotX:Float = -Math.atan2(raw[6], raw[10]);
+		var rotX:Float = -Math.atan2(m[6], m[10]);
 
 		// Create rotation matrix around X
-		var matrix = new Matrix3D();
-		MatrixHelper.setRotation(matrix, new Vector3D(1, 0, 0), rotX * 180.0 / Math.PI);
+		var matrix = new Matrix4();
+		MatrixHelper.setRotation(matrix, new Vector4(1, 0, 0), rotX * 180.0 / Math.PI);
 
 		// left-multipy rotation matrix with self to remove X rotation from transformation
 		matrix.append(m);
-		raw = matrix.rawData;
 
 		// Get rotation about Y
-		var cosRotY:Float = Math.sqrt(raw[0] * raw[0] + raw[1] * raw[1]);
-		var rotY:Float = Math.atan2(-raw[2], cosRotY);
+		var cosRotY:Float = Math.sqrt(matrix[0] * matrix[0] + matrix[1] * matrix[1]);
+		var rotY:Float = Math.atan2(-matrix[2], cosRotY);
 
 		// get rotation about Z
-		var rotZ:Float = Math.atan2(-raw[4], raw[5]);
+		var rotZ:Float = Math.atan2(-matrix[4], matrix[5]);
 
 
 		// Fix angles (from Away3D)
@@ -253,7 +250,7 @@ class MatrixHelper {
 			}
 		}
 
-		return new Vector3D(-rotX * 180.0 / Math.PI, rotY * 180.0 / Math.PI, rotZ * 180.0 / Math.PI);
+		return new Vector4(-rotX * 180.0 / Math.PI, rotY * 180.0 / Math.PI, rotZ * 180.0 / Math.PI);
 
 	}
 
@@ -271,7 +268,7 @@ class MatrixHelper {
 	 * @param upz The z componenent of the vector mapped to the y-direction of the view matrix.
 	 * @return the calculated view matrix.
 	 */
-	public static function lookAt(eye:Vector3D, center:Vector3D, up:Vector3D) {
+	public static function lookAt(eye:Vector4, center:Vector4, up:Vector4) {
 
 		// remember: z out of screen
 		var zx:Float = eye.x - center.x;
@@ -302,14 +299,14 @@ class MatrixHelper {
 		var yz:Float =  zx * xy - zy * xx;
 
 		// Create rotation matrix from new coorinate system
-		var lookat = new Matrix3D();
-		var raw:Vector<Float> = rawDataContainerWithRowMajorValues(xx, xy, xz, 0.0, yx, yy, yz, 0.0, zx, zy, zz, 0.0, 0.0, 0.0, 0.0, 1.0);
-		lookat.copyRawDataFrom(raw);
+		var lookat = new Matrix4();
+		var sMatrix:Matrix4 = matrixWithRowMajorValues(xx, xy, xz, 0.0, yx, yy, yz, 0.0, zx, zy, zz, 0.0, 0.0, 0.0, 0.0, 1.0);
+		lookat.copyFrom(sMatrix);
 
 		// create translation matrix
-		var translation = new Matrix3D();
-		var raw:Vector<Float> = rawDataContainerWithRowMajorValues(1, 0, 0, -eye.x, 0, 1, 0, -eye.y, 0, 0, 1, -eye.z, 0, 0, 0, 1);
-		translation.copyRawDataFrom(raw);
+		var translation = new Matrix4();
+		var sMatrix:Matrix4 = matrixWithRowMajorValues(1, 0, 0, -eye.x, 0, 1, 0, -eye.y, 0, 0, 1, -eye.z, 0, 0, 0, 1);
+		translation.copyFrom(sMatrix);
 
 		// calculate final lookat (projection) matrix from combination of both rotation and translation
 		lookat.prepend(translation);
@@ -326,7 +323,7 @@ class MatrixHelper {
 	 * @param zoom The zoom factor.
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public static function perspectiveMatrix(fovy:Float, aspect:Float, near:Float, far:Float, zoom:Float /*, orientation:DeviceOrientation */):Matrix3D {
+	public static function perspectiveMatrix(fovy:Float, aspect:Float, near:Float, far:Float, zoom:Float /*, orientation:DeviceOrientation */):Matrix4 {
 //		if (orientation == Isgl3dOrientation90Clockwise || orientation == Isgl3dOrientation90CounterClockwise) {
 //			aspect = 1. / aspect;
 //		}
@@ -336,28 +333,27 @@ class MatrixHelper {
 		var left:Float = aspect * bottom;
 		var right:Float = aspect * top;
 
-		var matrix:Matrix3D = new Matrix3D();
-		var raw:Vector<Float> = matrix.rawData;
+		var m:Matrix4 = new Matrix4();
 
-		raw[0] = (2 * near) / (right - left);
-		raw[1] = 0;
-		raw[2] = 0;
-		raw[3] = 0;
+		m[0] = (2 * near) / (right - left);
+		m[1] = 0;
+		m[2] = 0;
+		m[3] = 0;
 
-		raw[4] = 0;
-		raw[5] = 2 * near / (top - bottom);
-		raw[6] = 0;
-		raw[7] = 0;
+		m[4] = 0;
+		m[5] = 2 * near / (top - bottom);
+		m[6] = 0;
+		m[7] = 0;
 
-		raw[8] = (right + left) / (right - left);
-		raw[9] = (top + bottom) / (top - bottom);
-		raw[10] = -(far + near) / (far - near);
-		raw[11] = -1;
+		m[8] = (right + left) / (right - left);
+		m[9] = (top + bottom) / (top - bottom);
+		m[10] = -(far + near) / (far - near);
+		m[11] = -1;
 
-		raw[12] = 0;
-		raw[13] = 0;
-		raw[14] = -(2.0 * far * near) / (far - near);
-		raw[15] = 0;
+		m[12] = 0;
+		m[13] = 0;
+		m[14] = -(2.0 * far * near) / (far - near);
+		m[15] = 0;
 
 //		if (orientation == Isgl3dOrientation90Clockwise) {
 //			float orientationArray[9] = {0, -1, 0, 1, 0, 0, 0, 0, 1};
@@ -378,7 +374,7 @@ class MatrixHelper {
 //			im4MultiplyOnLeft3x3(&matrix, &orientationMatrix);
 //		}
 
-		return matrix;
+		return m;
 	}
 
 
@@ -393,36 +389,35 @@ class MatrixHelper {
 	 * @param zoom The zoom factor.
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public static function orthoMatrix(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, zoom:Float /*, orientation:DeviceOrientation*/):Matrix3D {
+	public static function orthoMatrix(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, zoom:Float /*, orientation:DeviceOrientation*/):Matrix4 {
 		var tx:Float = (left + right) / ((right - left) * zoom);
 		var ty:Float = (top + bottom) / ((top - bottom) * zoom);
 		var tz:Float = (far + near) / (far - near);
 
-		var matrix:Matrix3D = new Matrix3D();
-		var raw:Vector<Float> = matrix.rawData;
+		var m:Matrix4 = new Matrix4();
 
 		// THE FOLLOWING INDICES ARE PROBABLY WRONG
 
 //		if (orientation == Isgl3dOrientation0) {
-		raw[0] = 2.0 / (right - left);
-		raw[1] = 0;
-		raw[2] = 0;
-		raw[3] = 0;
+		m[0] = 2.0 / (right - left);
+		m[1] = 0;
+		m[2] = 0;
+		m[3] = 0;
 
-		raw[4] = 0;
-		raw[5] = 2.0 / (top - bottom);
-		raw[6] = 0;
-		raw[7] = 0;
+		m[4] = 0;
+		m[5] = 2.0 / (top - bottom);
+		m[6] = 0;
+		m[7] = 0;
 
-		raw[8] = 0;
-		raw[9] = 0;
-		raw[10] = -2.0 / (far - near);
-		raw[11] = 0;
+		m[8] = 0;
+		m[9] = 0;
+		m[10] = -2.0 / (far - near);
+		m[11] = 0;
 
-		raw[12]  = -tx;
-		raw[13]  = -ty;
-		raw[14]  = -tz;
-		raw[15]  = 1.0;
+		m[12]  = -tx;
+		m[13]  = -ty;
+		m[14]  = -tz;
+		m[15]  = 1.0;
 
 //		} else if (orientation == Isgl3dOrientation90Clockwise) {
 //			matrix.sxx = 0;
@@ -478,42 +473,39 @@ class MatrixHelper {
 //			matrix.swz = 0;
 //			matrix.tw  = 1;
 //		}
-		return matrix;
+		return m;
 
 	}
 
-	static public inline function copy3x3ToArray(m:Matrix3D, a:Array<Float>):Void {
-		var raw = m.rawData;
-		a[0] = raw[0];
-		a[1] = raw[1];
-		a[2] = raw[2];
-		a[3] = raw[4];
-		a[4] = raw[5];
-		a[5] = raw[6];
-		a[6] = raw[8];
-		a[7] = raw[9];
-		a[8] = raw[10];
+	static public inline function copy3x3ToArray(m:Matrix4, a:Array<Float>):Void {
+		a[0] = m[0];
+		a[1] = m[1];
+		a[2] = m[2];
+		a[3] = m[4];
+		a[4] = m[5];
+		a[5] = m[6];
+		a[6] = m[8];
+		a[7] = m[9];
+		a[8] = m[10];
 	}
 
-	public static inline function transform4x4VectorToArray(m:Matrix3D, v:Vector3D, a:Array<Float>):Void {
+	public static inline function transform4x4VectorToArray(m:Matrix4, v:Vector4, a:Array<Float>):Void {
 
 		var x:Float = v.x, y:Float = v.y, z:Float = v.z, w:Float = v.w;
-		var rawData = m.rawData;
 
-		a[0] = x * rawData[0] + y * rawData[4] + z * rawData[8] + w * rawData[12];
-		a[1] = x * rawData[1] + y * rawData[5] + z * rawData[9] + w * rawData[13];
-		a[2] = x * rawData[2] + y * rawData[6] + z * rawData[10] + w * rawData[14];
-		a[3] = x * rawData[3] + y * rawData[7] + z * rawData[11] + w * rawData[15];
+		a[0] = x * m[0] + y * m[4] + z * m[8] + w * m[12];
+		a[1] = x * m[1] + y * m[5] + z * m[9] + w * m[13];
+		a[2] = x * m[2] + y * m[6] + z * m[10] + w * m[14];
+		a[3] = x * m[3] + y * m[7] + z * m[11] + w * m[15];
 	}
 
-	public static inline function transform3x3VectorToArray(m:Matrix3D, v:Vector3D, a:Array<Float>):Void {
+	public static inline function transform3x3VectorToArray(m:Matrix4, v:Vector4, a:Array<Float>):Void {
 
 		var x:Float = v.x, y:Float = v.y, z:Float = v.z;
-		var rawData = m.rawData;
 
-		a[0] = x * rawData[0] + y * rawData[4] + z * rawData[8];
-		a[1] = x * rawData[1] + y * rawData[5] + z * rawData[9];
-		a[2] = x * rawData[2] + y * rawData[6] + z * rawData[10];
+		a[0] = x * m[0] + y * m[4] + z * m[8];
+		a[1] = x * m[1] + y * m[5] + z * m[9];
+		a[2] = x * m[2] + y * m[6] + z * m[10];
 	}
 
 }

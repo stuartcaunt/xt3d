@@ -3,7 +3,7 @@ package xt3d.core;
 import xt3d.utils.XT;
 import lime.math.Rectangle;
 import lime.graphics.opengl.GL;
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.utils.errors.XTException;
 import xt3d.node.Node3D;
 import xt3d.node.Camera;
@@ -200,7 +200,7 @@ class View extends EventEmitter {
 		var originalPosition = node.position;
 
 		// Set node matrix to identity matrix
-		node.position = new Vector3D();
+		node.position = new Vector4();
 
 		// Render node and children to texture
 		this.renderToTexture(renderTexture, clear, renderer);

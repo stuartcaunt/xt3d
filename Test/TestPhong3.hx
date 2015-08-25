@@ -4,7 +4,7 @@ import xt3d.primitives.Plane;
 import xt3d.node.Light;
 import xt3d.utils.XT;
 import xt3d.Director;
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.node.MeshNode;
 import xt3d.primitives.Plane;
 import xt3d.core.Material;
@@ -47,7 +47,7 @@ class TestPhong3 extends View {
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
-			this.camera.position = new Vector3D(cameraDistance, 0, cameraDistance);
+			this.camera.position = new Vector4(cameraDistance, 0, cameraDistance);
 
 			this._containerNode = Node3D.create();
 			this.scene.addChild(this._containerNode);
@@ -91,7 +91,7 @@ class TestPhong3 extends View {
 
 		var maxDispl:Float = 45.0;
 		var z:Float = 50.0 + Math.sin(_t * 2.0 * Math.PI / 4.0) * maxDispl;
-		this._light.position = new Vector3D(0.0, 0.0, z);
+		this._light.position = new Vector4(0.0, 0.0, z);
 	}
 
 }

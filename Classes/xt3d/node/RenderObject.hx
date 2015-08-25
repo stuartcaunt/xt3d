@@ -1,6 +1,6 @@
 package xt3d.node;
 
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.utils.math.VectorHelper;
 import xt3d.gl.GLBufferManager;
 import xt3d.gl.shaders.ShaderProgram;
@@ -8,7 +8,7 @@ import xt3d.utils.errors.XTException;
 import xt3d.gl.GLAttributeManager;
 import lime.graphics.opengl.GL;
 import xt3d.core.Geometry;
-import openfl.geom.Matrix3D;
+import lime.math.Matrix4;
 import xt3d.core.Material;
 
 class RenderObject extends Node3D {
@@ -16,10 +16,10 @@ class RenderObject extends Node3D {
 	// properties
 	public var material(get, set):Material;
 	public var geometry(get, set):Geometry;
-	public var modelMatrix(get, null):Matrix3D;
-	public var modelViewMatrix(get, null):Matrix3D;
-	public var modelViewProjectionMatrix(get, null):Matrix3D;
-	public var normalMatrix(get, null):Matrix3D;
+	public var modelMatrix(get, null):Matrix4;
+	public var modelViewMatrix(get, null):Matrix4;
+	public var modelViewProjectionMatrix(get, null):Matrix4;
+	public var normalMatrix(get, null):Matrix4;
 	public var renderElementsOffset(get, set):Int;
 	public var renderElementsCount(get, set):Int;
 	public var renderZ(get, null):Float;
@@ -28,9 +28,9 @@ class RenderObject extends Node3D {
 	private var _material:Material;
 	private var _geometry:Geometry;
 	private var _drawMode:UInt;
-	private var _modelViewMatrix:Matrix3D = new Matrix3D();
-	private var _modelViewProjectionMatrix:Matrix3D = new Matrix3D();
-	private var _normalMatrix:Matrix3D = new Matrix3D();
+	private var _modelViewMatrix:Matrix4 = new Matrix4();
+	private var _modelViewProjectionMatrix:Matrix4 = new Matrix4();
+	private var _normalMatrix:Matrix4 = new Matrix4();
 	private var _normalMatrixDirty:Bool = false;
 
 	private var _renderElementsOffset = -1;
@@ -76,19 +76,19 @@ class RenderObject extends Node3D {
 		return this._material;
 	}
 
-	public inline function get_modelMatrix():Matrix3D {
+	public inline function get_modelMatrix():Matrix4 {
 		return this._worldMatrix;
 	}
 
-	public inline function get_modelViewMatrix():Matrix3D {
+	public inline function get_modelViewMatrix():Matrix4 {
 		return this._modelViewMatrix;
 	}
 
-	public inline function get_modelViewProjectionMatrix():Matrix3D {
+	public inline function get_modelViewProjectionMatrix():Matrix4 {
 		return this._modelViewProjectionMatrix;
 	}
 
-	public inline function get_normalMatrix():Matrix3D {
+	public inline function get_normalMatrix():Matrix4 {
 		return this.getNormalMatrix();
 	}
 
@@ -132,7 +132,7 @@ class RenderObject extends Node3D {
 		this._material = value;
 	}
 
-	public inline function getNormalMatrix():Matrix3D {
+	public inline function getNormalMatrix():Matrix4 {
 		if (this._normalMatrixDirty) {
 			// normal matrix
 			this._normalMatrix.copyFrom(this._modelViewMatrix);
@@ -231,8 +231,8 @@ class RenderObject extends Node3D {
 	}
 
 
-	public function calculateRenderZ(screenProjectionMatrix:Matrix3D):Void {
-		var position:Vector3D = this.worldPosition;
+	public function calculateRenderZ(screenProjectionMatrix:Matrix4):Void {
+		var position:Vector4 = this.worldPosition;
 		VectorHelper.applyProjection(position, screenProjectionMatrix);
 
 		this._renderZ = position.z;

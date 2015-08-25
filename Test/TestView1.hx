@@ -2,7 +2,7 @@ package ;
 
 import xt3d.utils.XT;
 import xt3d.Director;
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.node.MeshNode;
 import xt3d.primitives.Plane;
 import xt3d.core.Material;
@@ -51,10 +51,10 @@ public static function create(backgroundColor:Color):TestView1 {
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 20.0;
-			this.camera.position = new Vector3D(0, 0, cameraDistance);
+			this.camera.position = new Vector4(0, 0, cameraDistance);
 
 			this._containerNode = Node3D.create();
-			this._containerNode.position = new Vector3D(0, 2.0, 0);
+			this._containerNode.position = new Vector4(0, 2.0, 0);
 			this.scene.addChild(this._containerNode);
 			//scene.zSortingEnabled = false;
 
@@ -71,12 +71,12 @@ public static function create(backgroundColor:Color):TestView1 {
 
 			// Create sphere mesh node
 			this._sphereNode = MeshNode.create(sphere, material);
-			this._sphereNode.position = new Vector3D(0.0, 0.0, -10.0);
+			this._sphereNode.position = new Vector4(0.0, 0.0, -10.0);
 			this._containerNode.addChild(this._sphereNode);
 
 			// Create mesh node
 			this._sphereNode2 = MeshNode.create(sphere, material);
-			this._sphereNode2.position = new Vector3D(7.0, 0.0, 7.0);
+			this._sphereNode2.position = new Vector4(7.0, 0.0, 7.0);
 			this._containerNode.addChild(this._sphereNode2);
 
 			//var texture:Texture2D = _director.textureCache.addTextureFromImageAsset("assets/images/HedgeHogAdventure.png");
@@ -88,7 +88,7 @@ public static function create(backgroundColor:Color):TestView1 {
 
 			// Create mesh node
 			this._sphereNode3 = MeshNode.create(sphere, textureMaterial);
-			this._sphereNode3.position = new Vector3D(-7.0, 0.0, 7.0);
+			this._sphereNode3.position = new Vector4(-7.0, 0.0, 7.0);
 			this._containerNode.addChild(this._sphereNode3);
 
 			this._sphereNode4 = null;
@@ -103,7 +103,7 @@ public static function create(backgroundColor:Color):TestView1 {
 
 				// Create mesh node
 				this._sphereNode4 = MeshNode.create(sphere, textureMaterial2);
-				this._sphereNode4.position = new Vector3D(0.0, 0.0, 0.0);
+				this._sphereNode4.position = new Vector4(0.0, 0.0, 0.0);
 				this._containerNode.addChild(this._sphereNode4);
 
 			});
@@ -141,7 +141,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			this._renderTextureView = View.createBasic3D(size);
 			//this._renderTextureView.scene = view.scene;
 			this._renderTextureView.backgroundColor = Color.createWithRGBAHex(0x00000033);
-			this._renderTextureView.camera.position = new Vector3D(0.0, 4.0, 20.0);
+			this._renderTextureView.camera.position = new Vector4(0.0, 4.0, 20.0);
 			var renderMaterial:Material = Material.create("generic+texture");
 			renderMaterial.uniform("texture").texture = this._renderTexture;
 			renderMaterial.uniform("uvScaleOffset").floatArrayValue = this._renderTexture.uvScaleOffset;
@@ -149,7 +149,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			renderMaterial.transparent = true;
 			var renderPlane = Plane.create(8, 6, 4, 4);
 			this._renderNode = MeshNode.create(renderPlane, renderMaterial);
-			this._renderNode.position = new Vector3D(0.0, -5.0, 3.0);
+			this._renderNode.position = new Vector4(0.0, -5.0, 3.0);
 			//renderNode.rotationX = -70.0;
 			this.scene.addChild(this._renderNode);
 

@@ -13,7 +13,7 @@ import xt3d.gl.GLAttributeManager;
 import xt3d.gl.GLStateManager;
 import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.UniformLib;
-import openfl.geom.Matrix3D;
+import lime.math.Matrix4;
 import xt3d.utils.Color;
 import xt3d.gl.XTGL;
 import xt3d.gl.shaders.ShaderManager;
@@ -51,7 +51,7 @@ class Renderer extends XTObject {
 	private var _shaderManager:ShaderManager;
 
 	private var _viewport:Rectangle;
-	private var _viewProjectionMatrix = new Matrix3D();
+	private var _viewProjectionMatrix = new Matrix4();
 
 	private var _currentProgram:ShaderProgram = null;
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;

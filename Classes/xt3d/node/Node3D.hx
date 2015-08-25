@@ -5,8 +5,8 @@ import xt3d.utils.XTObject;
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.math.MatrixHelper;
-import openfl.geom.Matrix3D;
-import openfl.geom.Vector3D;
+import lime.math.Matrix4;
+import lime.math.Vector4;
 
 class Node3D extends XTObject {
 
@@ -15,10 +15,10 @@ class Node3D extends XTObject {
 	public var visible(get, set):Bool;
 	public var excluded(get, set):Bool;
 	public var parent(get, set):Node3D;
-	public var position(get, set):Vector3D;
-	public var worldPosition(get, null):Vector3D;
-	public var matrix(get, set):Matrix3D;
-	public var worldMatrix(get, set):Matrix3D;
+	public var position(get, set):Vector4;
+	public var worldPosition(get, null):Vector4;
+	public var matrix(get, set):Matrix4;
+	public var worldMatrix(get, set):Matrix4;
 	public var worldMatrixDirty(get, set):Bool;
 
 	public var rotationX(get, set):Float;
@@ -35,11 +35,11 @@ class Node3D extends XTObject {
 	private var _parent:Node3D = null;
 
 	// transformations
-	private var _matrix:Matrix3D = new Matrix3D();
-	private var _position:Vector3D = new Vector3D();
+	private var _matrix:Matrix4 = new Matrix4();
+	private var _position:Vector4 = new Vector4();
 	private var _matrixDirty:Bool = false;
-	private var _worldMatrix:Matrix3D = new Matrix3D();
-	private var _worldPosition:Vector3D = new Vector3D();
+	private var _worldMatrix:Matrix4 = new Matrix4();
+	private var _worldPosition:Vector4 = new Vector4();
 	private var _worldMatrixDirty:Bool = false;
 	private var _rotationMatrixDirty:Bool = false;
 	private var _eulerAnglesDirty:Bool = false;
@@ -114,16 +114,16 @@ class Node3D extends XTObject {
 		return this._parent = value;
 	}
 
-	public inline function get_position():Vector3D {
+	public inline function get_position():Vector4 {
 		return this.getPosition();
 	}
 
-	public inline function set_position(position:Vector3D):Vector3D {
+	public inline function set_position(position:Vector4):Vector4 {
 		this.setPosition(position);
 		return position;
 	}
 
-	public inline function get_worldPosition():Vector3D {
+	public inline function get_worldPosition():Vector4 {
 		return this.getWorldPosition();
 	}
 
@@ -136,20 +136,20 @@ class Node3D extends XTObject {
 		return this._worldMatrixDirty;
 	}
 
-	public inline function get_worldMatrix():Matrix3D {
+	public inline function get_worldMatrix():Matrix4 {
 		return this._worldMatrix;
 	}
 
-	public inline function set_worldMatrix(matrix:Matrix3D):Matrix3D {
+	public inline function set_worldMatrix(matrix:Matrix4):Matrix4 {
 		this.setWorldMatrix(matrix);
 		return this._worldMatrix;
 	}
 
-	public inline function get_matrix():Matrix3D {
+	public inline function get_matrix():Matrix4 {
 		return this._matrix;
 	}
 
-	public inline function set_matrix(matrix:Matrix3D):Matrix3D {
+	public inline function set_matrix(matrix:Matrix4):Matrix4 {
 		this.setMatrix(matrix);
 		return this._matrix;
 	}
@@ -260,13 +260,12 @@ class Node3D extends XTObject {
 	/* --------- Transformation manipulation --------- */
 
 
-	inline public function getPosition():Vector3D {
-		var raw = this._matrix.rawData;
-		VectorHelper.set(this._position, raw[12], raw[13], raw[14], raw[15]);
+	inline public function getPosition():Vector4 {
+		VectorHelper.set(this._position, this._matrix[12], this._matrix[13], this._matrix[14], this._matrix[15]);
 		return this._position;
 	}
 
-	inline public function setPosition(position:Vector3D):Void {
+	inline public function setPosition(position:Vector4):Void {
 		this._matrix.position = position;
 		this._worldMatrixDirty = true;
 	}
@@ -314,7 +313,7 @@ class Node3D extends XTObject {
 	}
 
 	private function updateEulerAngles():Void {
-		var r:Vector3D = MatrixHelper.getEulerRotationFromMatrix(this._matrix);
+		var r:Vector4 = MatrixHelper.getEulerRotationFromMatrix(this._matrix);
 		this._rotationX = r.x;
 		this._rotationY = r.y;
 		this._rotationZ = r.z;
@@ -326,16 +325,15 @@ class Node3D extends XTObject {
 /* --------- Matrix Transformations --------- */
 
 	inline public function getWorldPosition() {
-		var raw = this._worldMatrix.rawData;
-		VectorHelper.set(this._worldPosition, raw[12], raw[13], raw[14], raw[15]);
+		VectorHelper.set(this._worldPosition, this._worldMatrix[12], this._worldMatrix[13], this._worldMatrix[14], this._worldMatrix[15]);
 		return this._worldPosition;
 	}
 
-	public inline function getWorldMatrix():Matrix3D {
+	public inline function getWorldMatrix():Matrix4 {
 		return this._worldMatrix;
 	}
 
-	public inline function setWorldMatrix(matrix:Matrix3D):Void {
+	public inline function setWorldMatrix(matrix:Matrix4):Void {
 		this._worldMatrix = matrix;
 
 		this._matrixDirty = false; // ??? Do we force the object NOT to update the matrix, which will override this new world matrix
@@ -343,11 +341,11 @@ class Node3D extends XTObject {
 		this._eulerAnglesDirty = true;
 	}
 
-	public inline function getMatrix():Matrix3D {
+	public inline function getMatrix():Matrix4 {
 		return this._matrix;
 	}
 
-	public inline function setMatrix(matrix:Matrix3D):Void {
+	public inline function setMatrix(matrix:Matrix4):Void {
 		this._matrix = matrix;
 
 		this._matrixDirty = false;

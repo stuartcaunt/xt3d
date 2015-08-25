@@ -4,7 +4,7 @@ import xt3d.primitives.Plane;
 import xt3d.node.Light;
 import xt3d.utils.XT;
 import xt3d.Director;
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.node.MeshNode;
 import xt3d.primitives.Plane;
 import xt3d.core.Material;
@@ -47,7 +47,7 @@ class TestGouraud2 extends View {
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
-			this.camera.position = new Vector3D(cameraDistance, 0, cameraDistance);
+			this.camera.position = new Vector4(cameraDistance, 0, cameraDistance);
 
 			this._containerNode = Node3D.create();
 			this.scene.addChild(this._containerNode);
@@ -64,8 +64,8 @@ class TestGouraud2 extends View {
 			this._containerNode.addChild(this._meshNode);
 
 			this._light = Light.createSpotLight();
-			this._light.position = new Vector3D(0.0, 0.0, 40.0);
-			this._light.direction = new Vector3D(0.0, 0.0, -1.0);
+			this._light.position = new Vector4(0.0, 0.0, 40.0);
+			this._light.direction = new Vector4(0.0, 0.0, -1.0);
 			this._light.spotCutoffAngle = 30.0;
 			this._light.spotFalloffExponent = 1.0;
 			this._containerNode.addChild(this._light);
@@ -95,7 +95,7 @@ class TestGouraud2 extends View {
 		var angle:Float = Math.sin(_t * 2.0 * Math.PI / 4.0) * maxAngle;
 		var x = Math.sin(angle * Math.PI / 180.0);
 
-		this._light.direction = new Vector3D(x, 0.0, -1.0);
+		this._light.direction = new Vector4(x, 0.0, -1.0);
 	}
 
 }

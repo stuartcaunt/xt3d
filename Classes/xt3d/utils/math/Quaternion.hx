@@ -1,6 +1,6 @@
 package xt3d.utils.math;
 
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 
 class Quaternion {
 
@@ -27,7 +27,7 @@ class Quaternion {
 		return object.fromEuler(ax, ay, az);
 	}
 
-	public static function createFromAxisAngle(axis:Vector3D, angle:Float):Quaternion {
+	public static function createFromAxisAngle(axis:Vector4, angle:Float):Quaternion {
 		var object = new Quaternion();
 		return object.fromAxisAngle(axis, angle);
 	}
@@ -121,7 +121,7 @@ class Quaternion {
 		return new Quaternion(x, y, z, w);
 	}
 
-	public function multiplyVector(vector:Vector3D):Quaternion {
+	public function multiplyVector(vector:Vector4):Quaternion {
 		var x1:Float = _x;
 		var y1:Float = _y;
 		var z1:Float = _z;
@@ -138,7 +138,7 @@ class Quaternion {
 		return this;
 	}
 
-	public function fromAxisAngle(axis:Vector3D, angle:Float):Quaternion {
+	public function fromAxisAngle(axis:Vector4, angle:Float):Quaternion {
 		var sin_a:Float = Math.sin(angle / 2);
 		var cos_a:Float = Math.cos(angle / 2);
 		_x = axis.x * sin_a;

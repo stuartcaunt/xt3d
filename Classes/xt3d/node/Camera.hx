@@ -5,9 +5,9 @@ import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
 import xt3d.utils.math.MatrixHelper;
 import xt3d.utils.math.VectorHelper;
-import openfl.geom.Vector3D;
+import lime.math.Vector4;
 import xt3d.core.View;
-import openfl.geom.Matrix3D;
+import lime.math.Matrix4;
 
 import xt3d.node.Node3D;
 
@@ -19,34 +19,34 @@ class Camera extends Node3D {
 	 * The initial position of the camera as defined during its initialisation or set afterwards.
 	 * A call to reset on the camera will place the camera at this position.
 	 */
-	public var initialPosition(get_initialPosition, set_initialPosition):Vector3D;
+	public var initialPosition(get_initialPosition, set_initialPosition):Vector4;
 
 	/**
 	 * The initial look-at position of the camera as defined during its initialistion or set afterwards.
 	 * A call to reset on the camera will make the camera look-at this position.
 	 */
-	public var initialLookAt(get_initialLookAt, set_initialLookAt):Vector3D;
+	public var initialLookAt(get_initialLookAt, set_initialLookAt):Vector4;
 
 	/**
 	 * The up vector of the camera.
 	 * A call to reset on the camera will make the camera have this up vector.
 	 */
-	public var up(get_up, set_up):Vector3D;
+	public var up(get_up, set_up):Vector4;
 
 	/**
 	 * The current view matrix.
 	 */
-	public var viewMatrix(get_viewMatrix, null):Matrix3D;
+	public var viewMatrix(get_viewMatrix, null):Matrix4;
 
 	/**
 	 * The current projection matrix.
 	 */
-	public var projectionMatrix(get_projectionMatrix, set_projectionMatrix):Matrix3D;
+	public var projectionMatrix(get_projectionMatrix, set_projectionMatrix):Matrix4;
 
 	/**
 	 * The combined view and projection matrices.
 	 */
-	public var viewProjectionMatrix(get_viewProjectionMatrix, null):Matrix3D;
+	public var viewProjectionMatrix(get_viewProjectionMatrix, null):Matrix4;
 
 	/**
 	 * Indicates whether the camera is in perspective mode.
@@ -137,16 +137,16 @@ class Camera extends Node3D {
 
 
 	// members
-	private var _projectionMatrix:Matrix3D;
-	private var _viewMatrix:Matrix3D = new Matrix3D();
-	private var _viewProjectionMatrix:Matrix3D = new Matrix3D();
+	private var _projectionMatrix:Matrix4;
+	private var _viewMatrix:Matrix4 = new Matrix4();
+	private var _viewProjectionMatrix:Matrix4 = new Matrix4();
 	private var _isViewProjectionMatrixDirty:Bool;
 
 	private var _view:View;
-	private var _up:Vector3D = new Vector3D();
-	private var _lookAt:Vector3D = new Vector3D();
-	private var _initialPosition:Vector3D = new Vector3D();
-	private var _initialLookAt:Vector3D = new Vector3D();
+	private var _up:Vector4 = new Vector4();
+	private var _lookAt:Vector4 = new Vector4();
+	private var _initialPosition:Vector4 = new Vector4();
+	private var _initialLookAt:Vector4 = new Vector4();
 
 	// Target camera looks at specific world coordinate (lookAt and up ignored).
 	// Non-target camera uses transformation matrix of parent node
@@ -171,7 +171,7 @@ class Camera extends Node3D {
 	private var _focus:Float;
 
 
-	public static function create(view:View, position:Vector3D = null, up:Vector3D = null, lookAt:Vector3D = null):Camera {
+	public static function create(view:View, position:Vector4 = null, up:Vector4 = null, lookAt:Vector4 = null):Camera {
 		var object = new Camera();
 
 		if (object != null && !(object.initWithView(view, position, up, lookAt))) {
@@ -190,19 +190,19 @@ class Camera extends Node3D {
 	 * @param up The up vector. Defaults to (0.0, 1.0, 0.0)
 	 * @param lookAt The position where the camera will look at. Defaults to (0.0, 0.0, 0.0)
 	 */
-	public function initWithView(view:View, position:Vector3D = null, up:Vector3D = null, lookAt:Vector3D = null):Bool {
+	public function initWithView(view:View, position:Vector4 = null, up:Vector4 = null, lookAt:Vector4 = null):Bool {
 
 		var retval;
 		if ((retval = super.init())) {
 
 			if (position == null) {
-				position = new Vector3D(0.0, 0.0, 10.0);
+				position = new Vector4(0.0, 0.0, 10.0);
 			}
 			if (up == null) {
-				up = new Vector3D(0.0, 1.0, 0.0);
+				up = new Vector4(0.0, 1.0, 0.0);
 			}
 			if (lookAt == null) {
-				lookAt = new Vector3D(0.0, 0.0, 0.0);
+				lookAt = new Vector4(0.0, 0.0, 0.0);
 			}
 
 // add event listener to view
@@ -230,7 +230,7 @@ class Camera extends Node3D {
 
 // Initialise view matrix
 			this._matrixDirty = true;
-			var identityMatrix = new Matrix3D();
+			var identityMatrix = new Matrix4();
 			this.updateWorldMatrix();
 
 		}
@@ -246,47 +246,47 @@ class Camera extends Node3D {
 
 	/* ----------- Properties ----------- */
 
-	public inline function get_initialPosition():Vector3D {
+	public inline function get_initialPosition():Vector4 {
 		return this._initialPosition;
 	}
 
-	public inline function set_initialPosition(value:Vector3D) {
+	public inline function set_initialPosition(value:Vector4) {
 		this._initialPosition.copyFrom(value);
 		return this._initialPosition;
 	}
 
-	public inline function get_initialLookAt():Vector3D {
+	public inline function get_initialLookAt():Vector4 {
 		return this._initialLookAt;
 	}
 
-	public inline function set_initialLookAt(value:Vector3D) {
+	public inline function set_initialLookAt(value:Vector4) {
 		this._initialLookAt.copyFrom(value);
 		return this._initialLookAt;
 	}
 
-	public inline function get_up():Vector3D {
+	public inline function get_up():Vector4 {
 		return this._up;
 	}
 
-	public inline function set_up(value:Vector3D) {
+	public inline function set_up(value:Vector4) {
 		setUp(value);
 		return this._up;
 	}
 
-	public inline function get_viewMatrix():Matrix3D {
+	public inline function get_viewMatrix():Matrix4 {
 		return this._viewMatrix;
 	}
 
-	public inline function get_projectionMatrix():Matrix3D {
+	public inline function get_projectionMatrix():Matrix4 {
 		return this._projectionMatrix;
 	}
 
-	public inline function set_projectionMatrix(value:Matrix3D) {
+	public inline function set_projectionMatrix(value:Matrix4) {
 		this._projectionMatrix.copyFrom(value);
 		return this._projectionMatrix;
 	}
 
-	public inline function get_viewProjectionMatrix():Matrix3D {
+	public inline function get_viewProjectionMatrix():Matrix4 {
 		return this.getViewProjectionMatrix();
 	}
 
@@ -579,7 +579,7 @@ class Camera extends Node3D {
 	 * Specifies the postion in space as a vector where the camera should look at.
 	 * @param lookAt The vector containing the look-at position.
 	 */
-	public function setLookAt(lookAt:Vector3D):Void {
+	public function setLookAt(lookAt:Vector4):Void {
 		_lookAt.copyFrom(lookAt);
 		_matrixDirty = true;
 
@@ -607,7 +607,7 @@ class Camera extends Node3D {
 	 * Used to obtain the look-at position as a vector.
 	 * @return The look-at position as a vector
 	 */
-	public inline function getLookAt():Vector3D {
+	public inline function getLookAt():Vector4 {
 		return this._lookAt;
 	}
 
@@ -616,9 +616,9 @@ class Camera extends Node3D {
 	 * current look-at position minus the camera position).
 	 * @return the vector along the direction of view from the observer's position.
 	 */
-	public function getEyeNormal():Vector3D {
-		var eyeNormal:Vector3D = _lookAt.clone();
-		var position:Vector3D = this.getWorldPosition();
+	public function getEyeNormal():Vector4 {
+		var eyeNormal:Vector4 = _lookAt.clone();
+		var position:Vector4 = this.getWorldPosition();
 		eyeNormal.decrementBy(position);
 
 		return eyeNormal;
@@ -716,7 +716,7 @@ class Camera extends Node3D {
 	 * @return The distance from the camera's location to the look-at position.
 	 */
 	public inline function getDistanceToLookAt():Float {
-		return Vector3D.distance(this.getWorldPosition(), this._lookAt);
+		return Vector4.distance(this.getWorldPosition(), this._lookAt);
 	}
 
 	/**
@@ -727,7 +727,7 @@ class Camera extends Node3D {
 	 * @param distance The desired distance between the look at and the camera.
 	 */
 	public function setDistanceToLookAt(distance:Float):Void {
-		var position:Vector3D = this.getWorldPosition();
+		var position:Vector4 = this.getWorldPosition();
 
 		position.decrementBy(this._lookAt);
 		position.normalize();
@@ -748,7 +748,7 @@ class Camera extends Node3D {
 	 * @param y The y component of the up vector.
 	 * @param z The z component of the up vector.
 	 */
-	public function setUp(up:Vector3D) {
+	public function setUp(up:Vector4) {
 		this._up.copyFrom(up);
 		this._matrixDirty = true;
 
@@ -787,7 +787,7 @@ class Camera extends Node3D {
 
 	private function calculateViewMatrix():Void {
 
-		var cameraPosition:Vector3D = this.worldPosition;
+		var cameraPosition:Vector4 = this.worldPosition;
 
 		if (this._isTargetCamera) {
 			// Calculate view matrix from lookat position
@@ -802,7 +802,7 @@ class Camera extends Node3D {
 		this._isViewProjectionMatrixDirty = true;
 	}
 
-	public function getViewProjectionMatrix():Matrix3D {
+	public function getViewProjectionMatrix():Matrix4 {
 		if (this._isViewProjectionMatrixDirty) {
 			this._viewProjectionMatrix.copyFrom(this._projectionMatrix);
 			this._viewProjectionMatrix.prepend(this._viewMatrix);

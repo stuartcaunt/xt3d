@@ -1,8 +1,7 @@
 package xt3d.utils.math;
 
-import openfl.Vector;
-import openfl.geom.Matrix3D;
-import openfl.geom.Vector3D;
+import lime.math.Matrix4;
+import lime.math.Vector4;
 
 class VectorHelper {
 
@@ -15,7 +14,7 @@ class VectorHelper {
 	/**
 	 * Adds vector b to a and stores the result in a
  	 **/
-	public static function add(a:Vector3D, b:Vector3D):Void {
+	public static function add(a:Vector4, b:Vector4):Void {
 		a.x += b.x;
 		a.y += b.y;
 		a.z += b.z;
@@ -24,7 +23,7 @@ class VectorHelper {
 	/**
 	 * Subtracts vector b from a and stores the result in a
  	 **/
-	public static function subtract(a:Vector3D, b:Vector3D):Void {
+	public static function subtract(a:Vector4, b:Vector4):Void {
 		a.x -= b.x;
 		a.y -= b.y;
 		a.z -= b.z;
@@ -37,7 +36,7 @@ class VectorHelper {
 	 * @param y The y translation.
 	 * @param z The z translation.
 	 */
-	public static function translate(a:Vector3D, x:Float, y:Float, z:Float):Void {
+	public static function translate(a:Vector4, x:Float, y:Float, z:Float):Void {
 		a.x += x;
 		a.y += y;
 		a.z += z;
@@ -51,7 +50,7 @@ class VectorHelper {
 	 * @param centerY The center of the rotation in the y-z plane along the y-axis.
 	 * @param centerZ The center of the rotation in the y-z plane along the z-axis.
 	 */
-	public static function rotateX(a:Vector3D, angle:Float, centerY:Float, centerZ:Float) {
+	public static function rotateX(a:Vector4, angle:Float, centerY:Float, centerZ:Float) {
 
 		angle *= DEG_TO_RAD;
 		var cosRY:Float = Math.cos(angle);
@@ -72,7 +71,7 @@ class VectorHelper {
 	 * @param centerX The center of the rotation in the x-z plane along the x-axis.
 	 * @param centerZ The center of the rotation in the x-z plane along the z-axis.
 	 */
-	public static function rotateY(a:Vector3D, angle:Float, centerX:Float, centerZ:Float) {
+	public static function rotateY(a:Vector4, angle:Float, centerX:Float, centerZ:Float) {
 
 		angle *= DEG_TO_RAD;
 		var cosRY:Float = Math.cos(angle);
@@ -93,7 +92,7 @@ class VectorHelper {
 	 * @param centerX The center of the rotation in the x-y plane along the x-axis.
 	 * @param centerY The center of the rotation in the x-y plane along the y-axis.
 	 */
-	public static function rotateZ(a:Vector3D, angle:Float, centerX:Float, centerY:Float) {
+	public static function rotateZ(a:Vector4, angle:Float, centerX:Float, centerY:Float) {
 
 		angle *= DEG_TO_RAD;
 		var cosRY:Float = Math.cos(angle);
@@ -106,42 +105,38 @@ class VectorHelper {
 		a.y = (tempX * sinRY ) + (tempY * cosRY);
 	}
 
-	public static function transform(v:Vector3D, m:Matrix3D):Void {
+	public static function transform(v:Vector4, m:Matrix4):Void {
 		var x:Float = v.x;
 		var y:Float = v.y;
 		var z:Float = v.z;
 
-		var rawData:Vector<Float> = m.rawData;
-
-		v.x = (x * rawData[0] + y * rawData[4] + z * rawData[8] + rawData[12]);
-		v.y = (x * rawData[1] + y * rawData[5] + z * rawData[9] + rawData[13]);
-		v.z = (x * rawData[2] + y * rawData[6] + z * rawData[10] + rawData[14]);
-		v.w = (x * rawData[3] + y * rawData[7] + z * rawData[11] + rawData[15]);
+		v.x = (x * m[0] + y * m[4] + z * m[8] + m[12]);
+		v.y = (x * m[1] + y * m[5] + z * m[9] + m[13]);
+		v.z = (x * m[2] + y * m[6] + z * m[10] + m[14]);
+		v.w = (x * m[3] + y * m[7] + z * m[11] + m[15]);
 	}
 
-	public static function applyProjection(v:Vector3D, m:Matrix3D):Void {
+	public static function applyProjection(v:Vector4, m:Matrix4):Void {
 		var x:Float = v.x;
 		var y:Float = v.y;
 		var z:Float = v.z;
 
-		var rawData:Vector<Float> = m.rawData;
+		var d = 1.0 / (x * m[3] + y * m[7] + z * m[11] + m[15]);
 
-		var d = 1.0 / (x * rawData[3] + y * rawData[7] + z * rawData[11] + rawData[15]);
-
-		v.x = (x * rawData[0] + y * rawData[4] + z * rawData[8] + rawData[12]) * d;
-		v.y = (x * rawData[1] + y * rawData[5] + z * rawData[9] + rawData[13]) * d;
-		v.z = (x * rawData[2] + y * rawData[6] + z * rawData[10] + rawData[14]) * d;
+		v.x = (x * m[0] + y * m[4] + z * m[8] + m[12]) * d;
+		v.y = (x * m[1] + y * m[5] + z * m[9] + m[13]) * d;
+		v.z = (x * m[2] + y * m[6] + z * m[10] + m[14]) * d;
 	}
 
 
-	public inline static function toArray(v:Vector3D, a:Array<Float>):Void {
+	public inline static function toArray(v:Vector4, a:Array<Float>):Void {
 		a[0] = v.x;
 		a[1] = v.y;
 		a[2] = v.z;
 		a[3] = v.w;
 	}
 
-	public inline static function set(v:Vector3D, x:Float, y:Float, z:Float, w:Float):Void {
+	public inline static function set(v:Vector4, x:Float, y:Float, z:Float, w:Float):Void {
 		v.x = x;
 		v.y = y;
 		v.z = z;
