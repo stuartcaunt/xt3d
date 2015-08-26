@@ -1,12 +1,12 @@
 package xt3d.gl;
 
+import lime.graphics.Image;
 import lime.utils.Int16Array;
 import lime.utils.ArrayBufferView;
 import xt3d.utils.XT;
 import xt3d.textures.Texture2D;
 import lime.utils.ByteArray;
 import lime.utils.UInt8Array;
-import openfl.display.BitmapData;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
 
@@ -138,7 +138,7 @@ class GLTextureManager {
 			this.handleTextureParams(texture);
 
 			// Upload image data
-			this.uploadImageData(texture.bitmapData, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
+			this.uploadImageData(texture.image, texture.pixelsWidth, texture.pixelsHeight, texture.pixelFormat);
 
 			// Mipmapping
 			if (texture.generateMipMaps) {
@@ -158,22 +158,20 @@ class GLTextureManager {
 
 
 
-	private function uploadImageData(bitmapData:BitmapData, textureWidth:Int, textureHeight:Int, pixelFormat:Int):Void {
+	private function uploadImageData(image:Image, textureWidth:Int, textureHeight:Int, pixelFormat:Int):Void {
 
 		var formattedDataSource;
-		if (bitmapData == null) {
+		if (image == null) {
 			formattedDataSource = null;
 
 		} else {
+//			// Stu: hack to put image format back to rgba32 after update to OpenFl 3.2.2
+//			image.format = RGBA32;
+//			var byteArray = image.data.buffer;
+//			var source = new UInt8Array(byteArray);
 
-			var image = @:privateAccess (bitmapData.__image);
-			// Stu: hack to put image format back to rgba32 after update to OpenFl 3.2.2
-			image.format = RGBA32;
-			var byteArray = image.data.buffer;
-			var source = new UInt8Array(byteArray);
-
-
-			formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
+//			formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
+			formattedDataSource = this.formatData(image.data, textureWidth, textureHeight, pixelFormat);
 		}
 
 		var bitsPerPixel:Int = this.getBitsPerPixelForFormat(pixelFormat);

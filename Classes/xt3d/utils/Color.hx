@@ -138,7 +138,7 @@ class Color  {
 	/* --------- Implementation --------- */
 
 	public function intValue():UInt {
-		return Std.int(this.red * 255) << 16 | Std.int(this.green * 255) << 8 | Std.int(this.blue * 255) << 0 | Std.int(this.alpha * 255) << 24;
+		return Std.int(this.red * 255) << 24 | Std.int(this.green * 255) << 16 | Std.int(this.blue * 255) << 8 | Std.int(this.alpha * 255) << 0;
 	}
 
 	public function toString():String {

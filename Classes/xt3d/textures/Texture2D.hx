@@ -1,5 +1,8 @@
 package xt3d.textures;
 
+import xt3d.utils.ImageHelper;
+import lime.math.Vector2;
+import lime.graphics.Image;
 import xt3d.utils.XTObject;
 import xt3d.utils.Color;
 import xt3d.utils.ImageLoader;
@@ -10,10 +13,8 @@ import lime.utils.UInt8Array;
 import xt3d.utils.XT;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
-import openfl.display.BitmapData;
-import openfl.geom.Point;
 import xt3d.utils.Size;
-import openfl.Assets;
+import lime.Assets;
 
 	class Texture2D extends XTObject {
 
@@ -28,7 +29,7 @@ import openfl.Assets;
 	public var wrapT(get, set):Int;
 	public var pixelFormat(get, set):Int;
 
-	public var bitmapData(get, null):BitmapData;
+	public var image(get, null):Image;
 	public var contentSize(get, null):Size<Int>;
 	public var pixelsWidth(get, null):Int;
 	public var pixelsHeight(get, null):Int;
@@ -56,12 +57,12 @@ import openfl.Assets;
 	private var _forcePOT:Bool;
 
 	private var _glTexture:GLTexture = null;
-	private var _bitmapData:BitmapData = null;
+	private var _image:Image = null;
 	private var _isReady:Bool = false;
 	private var _isDirty:Bool = true;
 
 	/** helper object */
-	private static var _sOrigin:Point = new Point();
+	private static var _sOrigin:Vector2 = new Vector2();
 
 	public static function createEmpty(width:Int, height:Int, textureOptions:TextureOptions = null):Texture2D {
 		var object = new Texture2D();
@@ -115,16 +116,6 @@ import openfl.Assets;
 		return object;
 	}
 
-	public static function createFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null):Texture2D {
-		var object = new Texture2D();
-
-		if (object != null && !(object.initFromBitmapData(bitmapData, textureOptions))) {
-			object = null;
-		}
-
-		return object;
-	}
-
 	public function initEmpty(width:Int, height:Int, textureOptions:TextureOptions = null):Bool {
 		this._name = "empty-texture-" + this._id;
 
@@ -134,7 +125,7 @@ import openfl.Assets;
 		var size = new Size<Int>();
 		this._contentSize = Size.createIntSize(width, height);
 
-		// Create power-of-two bitmap data
+		// Create power-of-two image data
 		if (this._forcePOT) {
 			this._pixelsWidth = this.getNextPOT(this._contentSize.width);
 			this._pixelsHeight = this.getNextPOT(this._contentSize.height);
@@ -158,15 +149,15 @@ import openfl.Assets;
 		// Set texture options
 		this.setTextureOptions(textureOptions);
 
-		// Get bitmap data from asset
-		var bitmapData = Assets.getBitmapData(imagePath);
-		if (bitmapData == null) {
-			XT.Error("Cannot get bitmap data from \"" + imagePath + "\"");
+		// Get image from asset
+		var image:Image = Assets.getImage(imagePath);
+		if (image == null) {
+			XT.Error("Image at \"" + imagePath + "\" does not exist");
 			return false;
 		}
 
-		// Handle the bitmap data
-		this.handleBitmapData(bitmapData);
+		// Handle the image data
+		this.handleImageData(image);
 
 		// Create texture immediately
 		this.uploadTexture();
@@ -184,11 +175,10 @@ import openfl.Assets;
 		// Set texture options
 		this.setTextureOptions(textureOptions);
 
-
 		var imageLoader = ImageLoader.create(imageUrl,
-			function (bitmapData:BitmapData) {
-				// Handle the bitmap data
-				this.handleBitmapData(bitmapData);
+			function (image:Image) {
+				// Handle the image data
+				this.handleImageData(image);
 
 				this._isReady = true;
 			},
@@ -207,14 +197,14 @@ import openfl.Assets;
 		// Set texture options
 		this.setTextureOptions(textureOptions);
 
-		// Get bitmap data from asset in async
-		Assets.loadBitmapData(imagePath, function (bitmapData:BitmapData) {
-			if (bitmapData == null) {
-				XT.Error("Cannot get bitmap data from \"" + imagePath + "\"");
+		// Get image from asset in async
+		Assets.loadImage(imagePath, function (image:Image) {
+			if (image == null) {
+				XT.Error("Cannot get image from \"" + imagePath + "\"");
 
 			} else {
-				// Handle the bitmap data
-				this.handleBitmapData(bitmapData);
+				// Handle the image data
+				this.handleImageData(image);
 
 				this._isReady = true;
 
@@ -236,15 +226,15 @@ import openfl.Assets;
 		// Set texture options
 		this.setTextureOptions(textureOptions);
 
-		// Get bitmap data from asset
-		var bitmapData = new BitmapData(2, 2, true, color.intValue());
-		if (bitmapData == null) {
-			XT.Error("Cannot get bitmap data from color \"" + color.toString + "\"");
+		// Get image data from asset
+		var image = ImageHelper.imageFromColor(2, 2, color);
+		if (image == null) {
+			XT.Error("Cannot create image from color \"" + color.toString + "\"");
 			return false;
 		}
 
-		// Handle the bitmap data
-		this.handleBitmapData(bitmapData);
+		// Handle the image data
+		this.handleImageData(image);
 
 		// Create texture immediately
 		this.uploadTexture();
@@ -253,24 +243,6 @@ import openfl.Assets;
 
 		return true;
 	}
-
-	public function initFromBitmapData(bitmapData:BitmapData, textureOptions:TextureOptions = null):Bool {
-		this._name = "ditmap-data-texture-" + this._id;
-
-		// Set texture options
-		this.setTextureOptions(textureOptions);
-
-		// Handle the bitmap data
-		this.handleBitmapData(bitmapData);
-
-		// Create texture immediately
-		this.uploadTexture();
-
-		this._isReady = true;
-
-		return true;
-	}
-
 
 	public function new() {
 		super();
@@ -348,8 +320,8 @@ import openfl.Assets;
 		return this._pixelFormat = value;
 	}
 
-	public inline function get_bitmapData():BitmapData {
-		return this._bitmapData;
+	public inline function get_image():Image {
+		return this._image;
 	}
 
 	public inline function get_contentSize():Size<Int> {
@@ -376,9 +348,6 @@ import openfl.Assets;
 		var renderer = Director.current.renderer;
 		renderer.textureManager.deleteTexture(this);
 		this._glTexture = null;
-
-		// Dispose of data
-		this._bitmapData.dispose();
 	}
 
 	private function uploadTexture():Void {
@@ -400,26 +369,27 @@ import openfl.Assets;
 		this._forcePOT = textureOptions.forcePOT;
 	}
 
-	private function handleBitmapData(bitmapData:BitmapData):Void {
+	private function handleImageData(image:Image):Void {
 
+		// Get content size of original image (before resizing to PoT)
 		var size = new Size<Int>();
-		this._contentSize = Size.createIntSize(bitmapData.width, bitmapData.height);
+		this._contentSize = Size.createIntSize(image.width, image.height);
 
-// Create power-of-two bitmap data
-		if (this._forcePOT) {
-			this._pixelsWidth = this.getNextPOT(this._contentSize.width);
-			this._pixelsHeight = this.getNextPOT(this._contentSize.height);
-			if (this._pixelsWidth != bitmapData.width || this._pixelsHeight != bitmapData.height) {
-				var potBitmapData = new BitmapData(this._pixelsWidth, this._pixelsHeight, true, 0);
-				potBitmapData.copyPixels(bitmapData, bitmapData.rect, _sOrigin);
-				bitmapData = potBitmapData;
+		// Create power-of-two image
+		if (this._forcePOT && !image.powerOfTwo) {
+			var potImage = image.clone();
+			potImage.powerOfTwo = true;
 
-				this._uvScaleX = this._contentSize.width / this._pixelsWidth;
-				this._uvScaleY = this._contentSize.height / this._pixelsHeight;
-			}
+			image = potImage;
 		}
 
-		this._bitmapData = bitmapData;
+		// Get real pixel width and uv scaling after any modification to the image
+		this._pixelsWidth = image.buffer.width;
+		this._pixelsHeight = image.buffer.height;
+		this._uvScaleX = this._contentSize.width / this._pixelsWidth;
+		this._uvScaleY = this._contentSize.height / this._pixelsHeight;
+
+		this._image = image;
 		this._isDirty = true;
 	}
 

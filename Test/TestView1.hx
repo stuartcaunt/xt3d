@@ -92,7 +92,7 @@ public static function create(backgroundColor:Color):TestView1 {
 			this._containerNode.addChild(this._sphereNode3);
 
 			this._sphereNode4 = null;
-			//var texture2:Texture2D = _director.textureCache.addTextureFromImageUrl("http://blog.tartiflop.com/wp-content/uploads/2008/11/checker.jpg");
+			//var texture2:Texture2D = director.textureCache.addTextureFromImageUrl("http://old.blog.tartiflop.com/wp-content/uploads/2008/11/checker.jpg");
 			director.textureCache.addTextureFromImageAssetAsync("assets/images/checker.jpg", null, function (texture2:Texture2D) {
 
 				texture2.retain();

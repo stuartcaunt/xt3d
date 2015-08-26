@@ -1,6 +1,5 @@
 package xt3d.textures;
 
-import openfl.display.BitmapData;
 import xt3d.gl.XTGL;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLFramebuffer;
