@@ -1,5 +1,6 @@
 package xt3d;
 
+import lime.app.Application;
 import lime.math.Rectangle;
 import xt3d.gl.view.Xt3dGLViewEvent;
 import xt3d.gl.view.Xt3dGLViewListener;
@@ -41,9 +42,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	private var _paused:Bool = false;
 	private var _nextDeltaTimeZero = true;
 
-	// TODO handle animation interval programatically
-	private var _animationInterval:Float = 1.0 / 60.0;
-	private var _oldAnimationInterval:Float;
+	private var _frameRate:Float = 60.0;
+	private var _oldFrameRate:Float;
 
 	private var _isReady:Bool = false;
 	private var _onReadyListeners = new Array<Void->Void>();
@@ -146,8 +146,11 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 			view.setDisplayRect(displayRect);
 		}
 
-			// Create new texture cache
+		// Create new texture cache
 		this._textureCache = TextureCache.create();
+
+		// Initialise frame rate
+		this.setFrameRate(60.0);
 
 		this._isReady = true;
 		this.notifyReadyListeners();
@@ -230,8 +233,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 			this._paused = true;
 
 			// Use slower animation interval to conserve energy on mobile devices
-			this._oldAnimationInterval = this._animationInterval;
-			this.setAnimationInterval(1.0 / 4.0);
+			this._oldFrameRate = this._frameRate;
+			this.setFrameRate(4.0);
 		}
 	}
 
@@ -240,7 +243,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 			this._paused = false;
 
 			// Set the animation interval
-			this.setAnimationInterval(this._oldAnimationInterval);
+			this.setFrameRate(this._oldFrameRate);
 		}
 	}
 
@@ -257,7 +260,6 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	}
 
 	private function renderLoop():Void {
-
 		// Make current
 		this.makeCurrent();
 
@@ -285,6 +287,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	private function calculateDeltaTime(dt:Float = 0.0):Void {
 
+		// Convert dt to seconds
+		dt *= 0.001;
+
 		if (this._nextDeltaTimeZero) {
 			this._deltaTime = 0.0;
 			this._nextDeltaTimeZero = false;
@@ -296,16 +301,17 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// Handle jumps
 		if (this._deltaTime > 0.2) {
-			this._deltaTime = this._animationInterval;
+			this._deltaTime = 1.0 / this._frameRate;
 		}
 
 		this._globalTime += this._deltaTime;
 	}
 
-	private function setAnimationInterval(animationInterval:Float):Void {
-		this._animationInterval = animationInterval;
+	private function setFrameRate(frameRate:Float):Void {
+		this._frameRate = frameRate;
 
-		// TODO handle animation interval
+		// Set the framerate
+		Application.current.frameRate = this._frameRate;
 	}
 
 }

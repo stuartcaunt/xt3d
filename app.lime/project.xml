@@ -12,7 +12,7 @@
 	<app main="MainLime" path="Export" />
 
 	<!--<window fps="90" if="ios" />-->
-	<window fps="60" />
+	<window fps="60" hardware="true" vsync="true" />
 	<!--<window antialiasing="1" />-->
 
 	<source path="../Test" />

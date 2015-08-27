@@ -2,27 +2,6 @@ TODO
 ====
 
 
-- remove all openfl dependencies
-  - vector3
-  - matrix4
-  - bitmapdata
-    - use arraybuffer for vector/matrix data
-
-- Integration Lime GLContext / remove openfl dependencies
-  - remove all openfl dependencies
-  - set framerate : Application
-  - set depth/stencil buffers :
-    - ApplicationMain.config : antialiasing, depthbuffer, etc
-x   remove openfl OpenGL view: use lime directly
-x     openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
-x   listen to resize/frame_enter events
-x limeGlView
-x   get view rectangle/size
-x   send gl to renderer
-x   update renderer viewport only at init and during resize
-x   see lime gl example
-x   do simple test
-
 
 - bump mapping / normal mapping
  - bump to normal convertor
@@ -156,6 +135,26 @@ x  number of lights (MAX_LIGHTS)
 x    verify number of lights doesn't exceed config value each frame
 x  frame rate
 x refactor XTExceptions
+x Integration Lime GLContext / remove openfl dependencies
+x   remove all openfl dependencies
+x   set framerate : Application
+x   set depth/stencil buffers :
+x     ApplicationMain.config : antialiasing, depthbuffer, etc
+x   remove openfl OpenGL view: use lime directly
+x     openfl GLRenderer sets clearColor every frame and binds framebuffer every frame
+x   listen to resize/frame_enter events
+x limeGlView
+x   get view rectangle/size
+x   send gl to renderer
+x   update renderer viewport only at init and during resize
+x   see lime gl example
+x   do simple test
+x remove all openfl dependencies
+x   vector3
+x   matrix4
+x   bitmapdata
+x     use arraybuffer for vector/matrix data
+
 
 
 
