@@ -287,9 +287,6 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	private function calculateDeltaTime(dt:Float = 0.0):Void {
 
-		// Convert dt to seconds
-		dt *= 0.001;
-
 		if (this._nextDeltaTimeZero) {
 			this._deltaTime = 0.0;
 			this._nextDeltaTimeZero = false;

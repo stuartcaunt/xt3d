@@ -187,8 +187,8 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	deltaTime	The amount of time in milliseconds that has elapsed since the last update
 	 */
 	override inline public function update (deltaTime:Int):Void {
-		// Notify all listeners
-		this.onUpdate(deltaTime);
+		// Notify all listeners, convert to seconds
+		this.onUpdate(0.001 * deltaTime);
 	}
 
 	/**
