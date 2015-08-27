@@ -2,7 +2,7 @@ package xt3d.gl.view;
 
 #if xt3dopenfl
 import xt3d.gl.view.Xt3dOpenFLGLView;
-#elseif xt3dlime
+#else
 import xt3d.gl.view.Xt3dLimeGLView;
 #end
 
@@ -25,7 +25,7 @@ class Xt3dGLViewFactory {
 	public function createView():Xt3dOpenFLGLView {
 		return Xt3dOpenFLGLView.create();
 	}
-#elseif xt3dlime
+#else
 	public function createView():Xt3dLimeGLView {
 		return Xt3dLimeGLView.create();
 	}
