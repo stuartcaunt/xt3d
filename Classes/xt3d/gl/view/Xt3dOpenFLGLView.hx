@@ -130,7 +130,7 @@ class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 		if (this._lastUpdateTime == 0) {
 			this._lastUpdateTime = now;
 		}
-		var deltaTimeMs = 0.001 * (now - this._lastUpdateTime);
+		var deltaTimeMs = (now - this._lastUpdateTime);
 		this._lastUpdateTime = now;
 
 		// Notify all listeners of update
