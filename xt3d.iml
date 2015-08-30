@@ -16,7 +16,7 @@
     </content>
     <orderEntry type="jdk" jdkName="Haxe 3.2.0" jdkType="Haxe toolkit" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Lime 2,5,2" level="project" />
     <orderEntry type="library" name="OpenFL 3,2,2" level="project" />
+    <orderEntry type="library" name="Lime 2,6,1" level="project" />
   </component>
 </module>

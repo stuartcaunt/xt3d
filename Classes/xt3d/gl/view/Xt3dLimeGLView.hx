@@ -1,5 +1,7 @@
 package xt3d.gl.view;
 
+import lime.ui.Window;
+import lime.graphics.Renderer;
 import lime.app.Application;
 import xt3d.utils.Size;
 import lime.math.Rectangle;
@@ -162,23 +164,13 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	/* --------- Module Implementation --------- */
 
 
-	/**
-	 * The init() method is called once before the first render()
-	 * call. This can be used to do initial set-up for the current
-	 * render context
-	 * @param	context The current render context
-	 */
-	override inline public function init(context:RenderContext):Void {
-		// Ignore because this is called too soon, before assets have been created. Wait for first render call
-	}
-
 
 	/**
 	 * Called when a render event is fired
 	 * @param	context	The current render context
 	 */
-	override inline public function render(context:RenderContext):Void {
-		this._renderCallback(context);
+	override inline public function render(renderer:Renderer):Void {
+		this._renderCallback(renderer.context);
 	}
 
 
@@ -196,7 +188,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	width	The width of the window
 	 * @param	height	The height of the window
 	 */
-	override inline public function onWindowResize(width:Int, height:Int):Void {
+	override inline public function onWindowResize(window:Window, width:Int, height:Int):Void {
 		this._width = width;
 		this._height = height;
 

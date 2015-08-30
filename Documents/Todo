@@ -2,37 +2,107 @@ TODO
 ====
 
 
+- Fps calculator
+  - console log
 
-- bump mapping / normal mapping
- - bump to normal convertor
-
-- Camera controller
+- demos framework
+  - use isgl3d as base
+  - command line building
 
 - perfs
   - checking if uniforms change: optional?
 
+- View
+  - viewport/rectangle
+  - multiple views
 
-- android
- - problem returning to application
-
-
-- Check handling of global uniforms at F4
-- Render loop
-  - fps setting
 - Scene and Node
   - scene graph
   - onAddedToScene
   - onRemoveFromScene
 
-- handle multiple contexts
-  - all objects created with a contextId ?
-
 - Material implementation
   - texture material
   - color material
-- View
-  - viewport/rectangle
+  - lighting
+
+- primitives
+  - cube
+  - torus
+
+- platform support
+  - android
+    - problem returning to application
+  - retina display/pixel density
+
+- interactions
+  - mouse/touch events
+  - keyboard
+  - delegate to views
+  - gesture handler
+
+- Camera
+  - Camera controller
+  - Follow camera
+  - Spring camera
+
+- Actions
+  - action manager
+  - link to scheduler
+  - pausable
+  - tweening/easing
+
+- Touch events
+  - 3DEvent
+  - ray picking
+  - render picking
+
+- text rendering
+  - fps display
+  - reading bitmap fonts
+  - ttf fonts
+
+- framework like flixel or lime
+  - sample projects (demos)
+
+- Effects
+  - bump mapping / normal mapping
+    - bump to normal convertor
+  - shadows mapping
+  - planar shadows
+
+- Importers
+ - OBJ
+ - DAE
+ - POD
+
+- Skeleton and Bones
+ - animators
+ - batched elements (mini skinning)
+ - skinning
+
+- GUI
+  - 2D elements
+
+- RenderNodes
+  - Billboard
+  - Particles
+  - Lines
+
+- Third party utilities
+  - Bitmap font
+  - texture packer
+  - particle designer
+  -
+
 - html5 development env to automatically build and re-deploy on server
+
+TODO IF POSSIBLE
+================
+
+- handle multiple contexts
+  - all objects created with a contextId ?
+
 
 DONE
 ====
@@ -154,6 +224,8 @@ x   vector3
 x   matrix4
 x   bitmapdata
 x     use arraybuffer for vector/matrix data
+x Render loop
+x   fps setting
 
 
 
