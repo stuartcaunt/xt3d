@@ -9,26 +9,37 @@ TODO
   - use isgl3d as base
   - command line building
 
+- html5 development env to automatically build and re-deploy on server
+
 - perfs
   - checking if uniforms change: optional?
+  - check ios
 
 - View
   - viewport/rectangle
   - multiple views
 
 - Scene and Node
-  - scene graph
-  - onAddedToScene
-  - onRemoveFromScene
+  - Finish Node implementation
+    - onAddedToScene
+    - onRemoveFromScene
+  - follow node
 
 - Material implementation
   - texture material
   - color material
   - lighting
+  - animated texture
 
 - primitives
   - cube
   - torus
+  - arrow
+  - cone
+  - cylinder
+  - ellipsoid
+  - ovoid
+  - multimaterial cube (extras)
 
 - platform support
   - android
@@ -37,7 +48,9 @@ TODO
 
 - interactions
   - mouse/touch events
+    - 3DEvent
   - keyboard
+  - accelerometer
   - delegate to views
   - gesture handler
 
@@ -47,13 +60,24 @@ TODO
   - Spring camera
 
 - Actions
+  - complete range of actions
+    - transformations
+      - spline
+    - grouping
+      - sequence
+      - parallel
+    - delays/repeats
   - action manager
-  - link to scheduler
-  - pausable
+    - link to scheduler
+    - pausable
   - tweening/easing
 
-- Touch events
-  - 3DEvent
+- Animators (simple)
+  - mini skinning
+    - vertex texure
+  - key frame
+
+- Picking
   - ray picking
   - render picking
 
@@ -64,12 +88,32 @@ TODO
 
 - framework like flixel or lime
   - sample projects (demos)
+  - template project
+
+- native integration
+  - export API
+  - integration to JS
+  - integration to C++
+
+- Render Nodes
+  - Billboard
+  - Particle systems
+    - Particle generator
+  - Lines
+
+- textures
+  - pvr textures
+  - texture cube
+  - depth texture
+  - screen shot
 
 - Effects
   - bump mapping / normal mapping
     - bump to normal convertor
-  - shadows mapping
-  - planar shadows
+  - shadows
+    - shadow casting lights
+    - shadow mapping
+    - planar shadows
 
 - Importers
  - OBJ
@@ -77,25 +121,25 @@ TODO
  - POD
 
 - Skeleton and Bones
- - animators
- - batched elements (mini skinning)
- - skinning
+ - animators (complex)
+   - skinning
+
+- physics
+  - bridge to physics lib
 
 - GUI
-  - 2D elements
+  - button
+  - image
+  - label
+  - progress bar
 
-- RenderNodes
-  - Billboard
-  - Particles
-  - Lines
 
 - Third party utilities
   - Bitmap font
   - texture packer
   - particle designer
-  -
 
-- html5 development env to automatically build and re-deploy on server
+
 
 TODO IF POSSIBLE
 ================
@@ -229,13 +273,3 @@ x   fps setting
 
 
 
-
-
-
-
-NAMES
-=====
-
-- Pigalle (platform independent graphics library)
-- Glass (Graphics Library Agnostic System)
-- Alegro
