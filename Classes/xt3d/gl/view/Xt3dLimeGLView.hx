@@ -30,6 +30,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	private var _width:Int = 0;
 	private var _height:Int = 0;
 	private var _renderCallback:RenderContext->Void;
+	private var _windowResizeCallback:Window->Int->Int->Void;
 
 	public static function create():Xt3dLimeGLView {
 		var object = new Xt3dLimeGLView();
@@ -44,6 +45,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	public function initView():Bool {
 		// Set first render callback to be an initialisation call
 		this._renderCallback = this.onApplicationReady;
+		this._windowResizeCallback = function (window:Window, width:Int, height:Int) {
+			// Dummy function
+		};
 
 		return true;
 	}
@@ -127,8 +131,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 		// Perform a first render
 		this.performRender(context);
 
-		// Set real render callback
+		// Set real callbacks
 		this._renderCallback = this.performRender;
+		this._windowResizeCallback = this.handleWindowResize;
 	}
 
 	private inline function performRender(context:RenderContext):Void {
@@ -137,6 +142,13 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 
 		// Notify all listeners
 		this.onRender();
+	}
+
+	private inline function handleWindowResize(window:Window, width:Int, height:Int):Void {
+		this._width = width;
+		this._height = height;
+
+		this.onEvent(Xt3dGLViewEvent.RESIZE);
 	}
 
 
@@ -189,10 +201,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	height	The height of the window
 	 */
 	override inline public function onWindowResize(window:Window, width:Int, height:Int):Void {
-		this._width = width;
-		this._height = height;
-
-		this.onEvent(Xt3dGLViewEvent.RESIZE);
+		this._windowResizeCallback(window, width, height);
 	}
 
 
