@@ -9,6 +9,7 @@ import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.ShaderLib;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
+import xt3d.core.Director;
 
 class ShaderManager {
 

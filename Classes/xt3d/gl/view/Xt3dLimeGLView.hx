@@ -1,9 +1,10 @@
 package xt3d.gl.view;
 
+import xt3d.utils.geometry.Size;
 import lime.ui.Window;
 import lime.graphics.Renderer;
 import lime.app.Application;
-import xt3d.utils.Size;
+import xt3d.utils.geometry.Size;
 import lime.math.Rectangle;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;

@@ -7,9 +7,9 @@ import lime.math.Vector4;
 import xt3d.utils.errors.XTException;
 import xt3d.node.Node3D;
 import xt3d.node.Camera;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
+import xt3d.utils.geometry.Size;
 import xt3d.node.Scene;
 
 class View extends EventEmitter {

@@ -1,6 +1,6 @@
 package xt3d.gl.view;
 
-import xt3d.utils.Size;
+import xt3d.utils.geometry.Size;
 import lime.math.Rectangle;
 import lime.graphics.GLRenderContext;
 interface Xt3dGLView {

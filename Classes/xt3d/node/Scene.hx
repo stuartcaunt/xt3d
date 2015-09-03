@@ -1,10 +1,11 @@
 package xt3d.node;
 
 import xt3d.gl.shaders.UniformLib;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 import xt3d.utils.XT;
 import xt3d.gl.XTGL;
 import xt3d.node.Node3D;
+import xt3d.core.Director;
 
 class Scene extends Node3D {
 

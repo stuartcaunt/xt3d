@@ -2,7 +2,7 @@ package xt3d.gl.shaders;
 
 import xt3d.utils.errors.XTException;
 import xt3d.gl.shaders.ShaderTypedefs;
-import xt3d.utils.StringFunctions;
+import xt3d.utils.string.StringFunctions;
 import xt3d.utils.XT;
 
 class ShaderUtils {

@@ -1,4 +1,4 @@
-package xt3d.utils;
+package xt3d.utils.color;
 
 import lime.utils.Float32Array;
 

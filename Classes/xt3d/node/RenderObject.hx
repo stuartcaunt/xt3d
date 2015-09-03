@@ -10,6 +10,7 @@ import lime.graphics.opengl.GL;
 import xt3d.core.Geometry;
 import lime.math.Matrix4;
 import xt3d.core.Material;
+import xt3d.core.Director;
 
 class RenderObject extends Node3D {
 

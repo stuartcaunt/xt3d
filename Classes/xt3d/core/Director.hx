@@ -1,4 +1,4 @@
-package xt3d;
+package xt3d.core;
 
 import lime.app.Application;
 import lime.math.Rectangle;
@@ -13,7 +13,7 @@ import xt3d.textures.TextureCache;
 import xt3d.core.EventEmitter;
 import xt3d.core.View;
 import xt3d.core.Renderer;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
 class Director extends EventEmitter implements Xt3dGLViewListener {
 

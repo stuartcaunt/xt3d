@@ -80,6 +80,7 @@ TODO
 - Picking
   - ray picking
   - render picking
+    - 3D Object grabber
 
 - text rendering
   - fps display

@@ -1,6 +1,6 @@
 package xt3d.textures;
 
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 import xt3d.gl.GLTextureManager;
 import xt3d.utils.XT;
 class TextureCache {

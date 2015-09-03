@@ -1,4 +1,4 @@
-package xt3d.utils;
+package xt3d.utils.string;
 
 class StringFunctions {
 

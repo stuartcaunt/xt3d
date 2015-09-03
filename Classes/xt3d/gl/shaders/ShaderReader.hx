@@ -1,6 +1,6 @@
 package xt3d.gl.shaders;
 
-import xt3d.utils.StringFunctions;
+import xt3d.utils.string.StringFunctions;
 import lime.Assets;
 
 import xt3d.utils.XT;

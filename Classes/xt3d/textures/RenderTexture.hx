@@ -4,9 +4,9 @@ import xt3d.gl.XTGL;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
-import xt3d.utils.Size;
-import xt3d.utils.Color;
+import xt3d.utils.geometry.Size;
 import xt3d.utils.XT;
+import xt3d.core.Director;
 
 class RenderTexture extends Texture2D {
 

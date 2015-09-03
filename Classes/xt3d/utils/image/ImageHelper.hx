@@ -1,6 +1,6 @@
-package xt3d.utils;
+package xt3d.utils.image;
 
-import lime.math.color.ARGB;
+import xt3d.utils.color.Color;
 import lime.utils.UInt8Array;
 import lime.graphics.ImageBuffer;
 import lime.graphics.Image;

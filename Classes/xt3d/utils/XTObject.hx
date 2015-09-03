@@ -1,4 +1,5 @@
 package xt3d.utils;
+import xt3d.core.Director;
 
 class XTObject {
 

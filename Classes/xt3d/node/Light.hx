@@ -8,7 +8,7 @@ import xt3d.gl.shaders.UniformLib;
 import xt3d.node.Scene;
 import xt3d.node.Node3D;
 import lime.math.Vector4;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
 
 class Light extends Node3D {

@@ -4,6 +4,7 @@ import xt3d.utils.XT;
 import xt3d.utils.errors.XTException;
 import xt3d.gl.shaders.ShaderTypedefs;
 import xt3d.gl.shaders.ShaderUtils;
+import xt3d.core.Director;
 
 class UniformLib {
 

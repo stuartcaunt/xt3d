@@ -2,18 +2,17 @@ package ;
 
 import xt3d.node.Light;
 import xt3d.utils.XT;
-import xt3d.Director;
+import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
 import xt3d.primitives.Plane;
 import xt3d.core.Material;
 import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
 import xt3d.textures.Texture2D;
 import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
 class TestPhong1 extends View {
 

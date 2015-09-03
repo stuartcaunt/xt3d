@@ -1,11 +1,11 @@
 package xt3d.textures;
 
-import xt3d.utils.ImageHelper;
+import xt3d.utils.image.ImageHelper;
 import lime.math.Vector2;
 import lime.graphics.Image;
 import xt3d.utils.XTObject;
-import xt3d.utils.Color;
-import xt3d.utils.ImageLoader;
+import xt3d.utils.color.Color;
+import xt3d.utils.image.ImageLoader;
 import xt3d.gl.GLTextureManager;
 import xt3d.gl.XTGL;
 import lime.utils.ByteArray;
@@ -13,7 +13,8 @@ import lime.utils.UInt8Array;
 import xt3d.utils.XT;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
-import xt3d.utils.Size;
+import xt3d.utils.geometry.Size;
+import xt3d.core.Director;
 import lime.Assets;
 
 	class Texture2D extends XTObject {

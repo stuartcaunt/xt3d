@@ -3,8 +3,8 @@ package ;
 
 import xt3d.gl.view.Xt3dLimeGLView;
 import xt3d.gl.view.Xt3dGLView;
-import xt3d.utils.Color;
-import xt3d.Director;
+import xt3d.utils.color.Color;
+import xt3d.core.Director;
 import xt3d.gl.view.Xt3dGLViewFactory;
 import lime.app.Application;
 
