@@ -2,8 +2,6 @@ TODO
 ====
 
 
-- Fps calculator
-  - console log
 
 - demos framework
   - use isgl3d as base
@@ -271,6 +269,8 @@ x   bitmapdata
 x     use arraybuffer for vector/matrix data
 x Render loop
 x   fps setting
+x Fps calculator
+x   console log
 
 
 

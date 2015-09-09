@@ -49,6 +49,12 @@ class StringFunctions {
 		return filename;
 	}
 
-
+	public static function floatToStringNumberOfDp(n:Float, decPlaces:Int){
+		if (decPlaces >= 0) {
+			var temp:Float = Math.pow(10, decPlaces);
+			return "" + Math.round(n * temp) / temp;
+		}
+		return "" + n;
+	}
 
 }

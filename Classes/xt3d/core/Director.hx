@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.utils.general.FPSCalculator;
 import lime.app.Application;
 import lime.math.Rectangle;
 import xt3d.gl.view.Xt3dGLViewEvent;
@@ -44,6 +45,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	private var _frameRate:Float = 60.0;
 	private var _oldFrameRate:Float;
+	private var _fpsCalculator:FPSCalculator;
 
 	private var _isReady:Bool = false;
 	private var _onReadyListeners = new Array<Void->Void>();
@@ -67,6 +69,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// Create scheduler
 		this._scheduler = Scheduler.create();
+
+		// Create fps calculator
+		this._fpsCalculator = FPSCalculator.create();
 
 		return true;
 	}
@@ -257,6 +262,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		if (!this._paused) {
 			this._scheduler.update(this._deltaTime);
 		}
+
+		// Update fps calculator
+		this._fpsCalculator.update(dt);
 	}
 
 	private function renderLoop():Void {
