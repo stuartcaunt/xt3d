@@ -1,5 +1,6 @@
 package xt3d.textures;
 
+import lime.app.Future;
 import xt3d.utils.image.ImageHelper;
 import lime.math.Vector2;
 import lime.graphics.Image;
@@ -199,7 +200,8 @@ import lime.Assets;
 		this.setTextureOptions(textureOptions);
 
 		// Get image from asset in async
-		Assets.loadImage(imagePath, function (image:Image) {
+		var promise:Future<Image> = Assets.loadImage(imagePath);
+		promise.onComplete(function (image:Image) {
 			if (image == null) {
 				XT.Error("Cannot get image from \"" + imagePath + "\"");
 
