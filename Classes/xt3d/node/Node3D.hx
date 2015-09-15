@@ -203,11 +203,11 @@ class Node3D extends XTObject {
 	/* --------- Scene graph --------- */
 
 	public function addChild(child:Node3D):Void {
-		if (child.parent != null) {
-			throw new XTException("NodeCannotBeAddedTwice", "The node with id \"" + this._id + "\" cannot be added twice");
-		}
 		if (child == null) {
 			throw new XTException("NodeCannotBeNull", "Cannot add a null node");
+		}
+		if (child.parent != null) {
+			throw new XTException("NodeCannotBeAddedTwice", "The node with id \"" + child._id + "\" cannot be added twice");
 		}
 
 		this._children.push(child);
