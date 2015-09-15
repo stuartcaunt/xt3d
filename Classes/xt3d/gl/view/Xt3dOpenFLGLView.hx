@@ -3,7 +3,7 @@ package xt3d.gl.view;
 import openfl.display.OpenGLView;
 import xt3d.utils.XT;
 import lime.math.Rectangle;
-import xt3d.utils.Size;
+import xt3d.utils.geometry.Size;
 import openfl.errors.Error;
 import openfl.Lib;
 import openfl._internal.renderer.opengl.GLRenderer;

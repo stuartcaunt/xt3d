@@ -4,8 +4,8 @@ package ;
 import openfl.display.Sprite;
 import xt3d.gl.view.Xt3dOpenFLGLView;
 import xt3d.gl.view.Xt3dGLView;
-import xt3d.utils.Color;
-import xt3d.Director;
+import xt3d.utils.color.Color;
+import xt3d.core.Director;
 import xt3d.gl.view.Xt3dGLViewFactory;
 import lime.app.Application;
 
