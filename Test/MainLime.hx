@@ -18,7 +18,7 @@ class MainLime extends Application {
 	public function new () {
 		super();
 
-//		ApplicationMain.config.depthBuffer = true;
+		ApplicationMain.config.windows[0].depthBuffer = true;
 //		ApplicationMain.config.antialiasing = true;
 //		ApplicationMain.config.width = 300;
 
@@ -36,14 +36,14 @@ class MainLime extends Application {
 
 		this._director.onReady(function () {
 			// Create test view
-			//var view = TestView1.create(backgroundColor);
+			var view = TestView1.create(backgroundColor);
 
 			//var view = TestGouraud1.create(backgroundColor);
 			//var view = TestGouraud2.create(backgroundColor);
 			//var view = TestGouraud3.create(backgroundColor);
 			//var view = TestGouraud4.create(backgroundColor);
 
-			var view = TestPhong1.create(backgroundColor);
+			//var view = TestPhong1.create(backgroundColor);
 			//var view = TestPhong2.create(backgroundColor);
 			//var view = TestPhong3.create(backgroundColor);
 			//var view = TestPhong4.create(backgroundColor);
