@@ -1,11 +1,27 @@
 TODO
 ====
 
-
+- errors
+  - add warning on vertex/index data that is too big
+  - glInfo (max vertex size)
+  - gouraud/phong difference
 
 - demos framework
   - use isgl3d as base
   - command line building
+
+- interactions
+  - mouse/touch events
+    - 3DEvent
+
+- Picking
+  - ray picking
+  - render picking
+    - 3D Object grabber
+
+- framework like flixel or lime
+  - sample projects (demos)
+  - template project
 
 - html5 development env to automatically build and re-deploy on server
 
@@ -45,8 +61,6 @@ TODO
   - retina display/pixel density
 
 - interactions
-  - mouse/touch events
-    - 3DEvent
   - keyboard
   - accelerometer
   - delegate to views
@@ -75,19 +89,10 @@ TODO
     - vertex texure
   - key frame
 
-- Picking
-  - ray picking
-  - render picking
-    - 3D Object grabber
-
 - text rendering
   - fps display
   - reading bitmap fonts
   - ttf fonts
-
-- framework like flixel or lime
-  - sample projects (demos)
-  - template project
 
 - native integration
   - export API
