@@ -19,7 +19,6 @@ class PhongMars extends MainApplication {
 	}
 
 	override public function createViews():Void {
-		// Create test view
 		var view = PhongMarsView.create();
 		this._director.addView(view);
 	}
@@ -54,7 +53,7 @@ class PhongMarsView extends View {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = Color.createWithComponents(0.2, 0.2, 0.2);
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;

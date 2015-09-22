@@ -12,16 +12,23 @@ class RunScript {
 
 		var args = Sys.args();
 
+
 		if (args.length >= 3) {
 			if (args[0] == "test") {
 				var target = args[1];
 				var testName = args[2];
+				var targetFramework = "lime";
 
-				var moduleName = null;
-				if (args.length == 4) {
-					moduleName = args[3];
+				for (i in 3 ... args.length) {
+					if (args[i] == "-openfl") {
+						targetFramework = "openfl";
+					}
 				}
 
+				var moduleName = null;
+				if (args.length >= 4 && !(args[3].indexOf("-") == 0)) {
+					moduleName = args[3];
+				}
 
 				var testDir:String = TEST_DIR + "/" + testName;
 
@@ -64,21 +71,23 @@ class RunScript {
 				trace("-> cd " + runDir);
 				Sys.setCwd(runDir);
 
-
 				// Convert project template to include test and module names
-				trace("Generating project.xml");
-				Sys.command("sh", ["-c", "sed -e s/##MODULE_NAME##/" + moduleName + "/g -e s/##TEST_NAME##/" + testName + "/g " + PROJECT_TEMPLATE_FILE + " > project.xml"]);
+				trace("Generating " + runDir + "/project.xml");
+				Sys.command("sh", ["-c", "sed -e s/##MODULE_NAME##/" + moduleName + "/g " +
+					"-e s/##TEST_NAME##/" + testName + "/g " +
+					"-e s/##TARGET_FRAMEWORK##/" + targetFramework + "/g "
+					+ PROJECT_TEMPLATE_FILE + " > project.xml"]);
 
 				// build and run for the specified the target
 				trace("-> lime test " + target);
 				Sys.command ("lime", ["test", target]);
 
-				trace("finished");
+				trace("Test ended");
 			}
 
 
 		} else {
-			trace("usage: xt3d test <target> <test_name> <module_name>");
+			trace("usage: xt3d test <target> <test_name> [<module_name>] [-openfl]");
 			Sys.exit(1);
 		}
 

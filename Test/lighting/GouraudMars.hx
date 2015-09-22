@@ -1,20 +1,30 @@
-package ;
+package;
 
 import xt3d.node.Light;
-import xt3d.utils.XT;
 import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
-import xt3d.primitives.Plane;
 import xt3d.core.Material;
-import xt3d.textures.RenderTexture;
 import xt3d.textures.Texture2D;
 import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
 import xt3d.utils.color.Color;
 
-class TestPhong1 extends View {
+
+class GouraudMars extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = GouraudMarsView.create();
+		this._director.addView(view);
+	}
+}
+
+
+class GouraudMarsView extends View {
 
 	// properties
 
@@ -26,23 +36,23 @@ class TestPhong1 extends View {
 	private var _rotation:Float = 0.0;
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestPhong1 {
-		var object = new TestPhong1();
+	public static function create():GouraudMarsView {
+		var object = new GouraudMarsView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
@@ -53,15 +63,17 @@ class TestPhong1 extends View {
 			//scene.zSortingEnabled = false;
 
 			// create geometries
-			var sphere = Sphere.create(33.0, 32, 16);
+			var sphere = Sphere.create(33.0, 64, 64);
 
 			// Create a material
 			var texture:Texture2D = director.textureCache.addTextureFromImageAsset("assets/images/marsmap2k.jpg");
 			texture.retain();
-			var material:Material = Material.create("generic+texture+phong");
+			var material:Material = Material.create("generic+texture+gouraud+material");
 			material.uniform("texture").texture = texture;
 			material.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
-			material.uniform("defaultShininess").floatValue = 10.0;
+//			material.uniform("material").get("diffuseColor").floatArrayValue = Color.createWithRGBAHex(0xff000099).rgbaArray;
+			material.uniform("material").get("shininess").floatValue = 10.0;
+			//material.uniform("material").get("specularColor").floatArrayValue = Color.createWithRGBHex(0x000000).rgbArray;
 			material.transparent = true;
 
 			// Create sphere mesh node
@@ -70,6 +82,10 @@ class TestPhong1 extends View {
 
 			this._light = Light.createPointLight();
 			this._light.position = new Vector4(80.0, 0.0, 40.0);
+
+//			this._light = Light.createDirectionalLight();
+//			this._light.direction = new Vector4(100.0, 0.0, 0.0);
+
 			this._containerNode.addChild(this._light);
 
 			// Schedule update

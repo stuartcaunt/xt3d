@@ -1,22 +1,29 @@
 package ;
 
 import xt3d.primitives.Plane;
+import xt3d.core.Director;
 import xt3d.node.Light;
-import xt3d.utils.XT;
-import xt3d.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
-import xt3d.primitives.Plane;
 import xt3d.core.Material;
-import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
-import xt3d.textures.Texture2D;
-import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
-class TestPhong2 extends View {
+
+class PhongSpotLight extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = PhongSpotLightView.create();
+		this._director.addView(view);
+	}
+}
+
+
+class PhongSpotLightView extends View {
 
 	// properties
 
@@ -25,25 +32,26 @@ class TestPhong2 extends View {
 	private var _meshNode:Node3D;
 	private var _light:Light;
 
+	private var _rotation:Float = 0.0;
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestPhong2 {
-		var object = new TestPhong2();
+	public static function create():PhongSpotLightView {
+		var object = new PhongSpotLightView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
@@ -72,6 +80,7 @@ class TestPhong2 extends View {
 
 			// Schedule update
 			this.scheduleUpdate();
+
 
 		}
 		return retval;

@@ -1,6 +1,5 @@
 package ;
 
-import xt3d.utils.XT;
 import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
@@ -14,7 +13,19 @@ import xt3d.node.Node3D;
 import xt3d.core.View;
 import xt3d.utils.color.Color;
 
-class TestView1 extends View {
+
+class RenderTest extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = RenderTestView.create();
+		this._director.addView(view);
+	}
+}
+
+class RenderTestView extends View {
 
 	// properties
 
@@ -31,23 +42,23 @@ class TestView1 extends View {
 	private var _rotation:Float = 0.0;
 	private var _t:Float = 0.0;
 
-public static function create(backgroundColor:Color):TestView1 {
-		var object = new TestView1();
+	public static function create():RenderTestView {
+		var object = new RenderTestView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 20.0;

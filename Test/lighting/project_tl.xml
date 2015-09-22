@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
 	<set name="webgl" if="html5" />
+	<haxedef name="xt3d##TARGET_FRAMEWORK##" />
 	<haxedef name="KF_DEBUG" />
 	<haxedef name="webgl" />
     <haxedef name="source-map-content" if="html5" />
 
 
-	<meta title="Test ##MODULE_NAME##" package="com.xt3d" version="1.0.0" company="xTalk3d" />
-	<app main="##MODULE_NAME##" path="../Export" />
+	<meta title="Test ##MODULE_NAME## - ##TARGET_FRAMEWORK##" package="com.xt3d" version="1.0.0" company="xTalk3d" />
+	<app main="##MODULE_NAME##" path="../../Export" />
 
 	<window fps="60" />
 
@@ -15,7 +16,7 @@
 	<source path=".." />
 	<source path="../../Classes" />
 
-	<haxelib name="lime" />
+	<haxelib name="##TARGET_FRAMEWORK##" />
 
 	<assets path="../../Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="../../Assets/openfl.svg" />

@@ -2,21 +2,28 @@ package ;
 
 import xt3d.primitives.Plane;
 import xt3d.node.Light;
-import xt3d.utils.XT;
-import xt3d.Director;
+import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
-import xt3d.primitives.Plane;
 import xt3d.core.Material;
-import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
-import xt3d.textures.Texture2D;
-import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
-class TestGouraud3 extends View {
+
+class GouraudSpotLight extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = GouraudSpotLightView.create();
+		this._director.addView(view);
+	}
+}
+
+
+class GouraudSpotLightView extends View {
 
 	// properties
 
@@ -27,23 +34,23 @@ class TestGouraud3 extends View {
 
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestGouraud3 {
-		var object = new TestGouraud3();
+	public static function create():GouraudSpotLightView {
+		var object = new GouraudSpotLightView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
@@ -63,9 +70,11 @@ class TestGouraud3 extends View {
 			this._meshNode = MeshNode.create(geometry, material);
 			this._containerNode.addChild(this._meshNode);
 
-			this._light = Light.createPointLight();
-			this._light.quadraticAttenuation = 0.005;
-			this._light.specularColor = Color.black;
+			this._light = Light.createSpotLight();
+			this._light.position = new Vector4(0.0, 0.0, 40.0);
+			this._light.direction = new Vector4(0.0, 0.0, -1.0);
+			this._light.spotCutoffAngle = 30.0;
+			this._light.spotFalloffExponent = 1.0;
 			this._containerNode.addChild(this._light);
 
 			// Schedule update
@@ -89,9 +98,11 @@ class TestGouraud3 extends View {
 
 		this._t += dt;
 
-		var maxDispl:Float = 45.0;
-		var z:Float = 50.0 + Math.sin(_t * 2.0 * Math.PI / 4.0) * maxDispl;
-		this._light.position = new Vector4(0.0, 0.0, z);
+		var maxAngle:Float = 45.0;
+		var angle:Float = Math.sin(_t * 2.0 * Math.PI / 4.0) * maxAngle;
+		var x = Math.sin(angle * Math.PI / 180.0);
+
+		this._light.direction = new Vector4(x, 0.0, -1.0);
 	}
 
 }

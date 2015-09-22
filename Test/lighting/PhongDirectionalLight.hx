@@ -2,21 +2,27 @@ package ;
 
 import xt3d.primitives.Plane;
 import xt3d.node.Light;
-import xt3d.utils.XT;
-import xt3d.Director;
+import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
-import xt3d.primitives.Plane;
 import xt3d.core.Material;
-import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
-import xt3d.textures.Texture2D;
-import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
-class TestGouraud2 extends View {
+
+class PhongDirectionalLight extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = PhongDirectionalLightView.create();
+		this._director.addView(view);
+	}
+}
+
+class PhongDirectionalLightView extends View {
 
 	// properties
 
@@ -27,23 +33,23 @@ class TestGouraud2 extends View {
 
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestGouraud2 {
-		var object = new TestGouraud2();
+	public static function create():PhongDirectionalLightView {
+		var object = new PhongDirectionalLightView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
@@ -56,18 +62,16 @@ class TestGouraud2 extends View {
 			var geometry = Plane.create(100.0, 100.0, 64, 64);
 
 			// Create a material
-			var material:Material = Material.create("generic+gouraud");
+			var material:Material = Material.create("generic+phong");
 			material.uniform("color").floatArrayValue = Color.createWithRGBHex(0x555599).rgbaArray;
 
 			// Create sphere mesh node
 			this._meshNode = MeshNode.create(geometry, material);
 			this._containerNode.addChild(this._meshNode);
 
-			this._light = Light.createSpotLight();
-			this._light.position = new Vector4(0.0, 0.0, 40.0);
+			this._light = Light.createDirectionalLight();
 			this._light.direction = new Vector4(0.0, 0.0, -1.0);
-			this._light.spotCutoffAngle = 30.0;
-			this._light.spotFalloffExponent = 1.0;
+			this._light.specularColor = Color.black;
 			this._containerNode.addChild(this._light);
 
 			// Schedule update

@@ -1,22 +1,28 @@
-package ;
+package;
 
 import xt3d.primitives.Plane;
 import xt3d.node.Light;
-import xt3d.utils.XT;
-import xt3d.Director;
+import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
-import xt3d.primitives.Plane;
 import xt3d.core.Material;
-import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
-import xt3d.textures.Texture2D;
-import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
-class TestGouraud4 extends View {
+
+class PhongPointLight extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = PhongPointLightView.create();
+		this._director.addView(view);
+	}
+}
+
+class PhongPointLightView extends View {
 
 	// properties
 
@@ -27,23 +33,23 @@ class TestGouraud4 extends View {
 
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestGouraud4 {
-		var object = new TestGouraud4();
+	public static function create():PhongPointLightView {
+		var object = new PhongPointLightView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
@@ -53,18 +59,18 @@ class TestGouraud4 extends View {
 			this.scene.addChild(this._containerNode);
 
 			// create geometries
-			var geometry = Plane.create(100.0, 100.0, 4, 4);
+			var geometry = Plane.create(100.0, 100.0, 8, 8);
 
 			// Create a material
-			var material:Material = Material.create("generic+gouraud");
+			var material:Material = Material.create("generic+phong");
 			material.uniform("color").floatArrayValue = Color.createWithRGBHex(0x555599).rgbaArray;
 
 			// Create sphere mesh node
 			this._meshNode = MeshNode.create(geometry, material);
 			this._containerNode.addChild(this._meshNode);
 
-			this._light = Light.createDirectionalLight();
-			this._light.direction = new Vector4(0.0, 0.0, -1.0);
+			this._light = Light.createPointLight();
+			this._light.quadraticAttenuation = 0.005;
 			this._light.specularColor = Color.black;
 			this._containerNode.addChild(this._light);
 
@@ -89,11 +95,9 @@ class TestGouraud4 extends View {
 
 		this._t += dt;
 
-		var maxAngle:Float = 45.0;
-		var angle:Float = Math.sin(_t * 2.0 * Math.PI / 4.0) * maxAngle;
-		var x = Math.sin(angle * Math.PI / 180.0);
-
-		this._light.direction = new Vector4(x, 0.0, -1.0);
+		var maxDispl:Float = 45.0;
+		var z:Float = 50.0 + Math.sin(_t * 2.0 * Math.PI / 4.0) * maxDispl;
+		this._light.position = new Vector4(0.0, 0.0, z);
 	}
 
 }

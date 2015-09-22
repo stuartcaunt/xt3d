@@ -2,21 +2,27 @@ package ;
 
 import xt3d.primitives.Plane;
 import xt3d.node.Light;
-import xt3d.utils.XT;
-import xt3d.Director;
+import xt3d.core.Director;
 import lime.math.Vector4;
 import xt3d.node.MeshNode;
-import xt3d.primitives.Plane;
 import xt3d.core.Material;
-import xt3d.textures.RenderTexture;
-import xt3d.utils.Size;
-import xt3d.textures.Texture2D;
-import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
-import xt3d.utils.Color;
+import xt3d.utils.color.Color;
 
-class TestPhong4 extends View {
+
+class GouraudDirectionalLight extends MainApplication {
+	public function new () {
+		super();
+	}
+
+	override public function createViews():Void {
+		var view = GouraudDirectionalLightView.create();
+		this._director.addView(view);
+	}
+}
+
+class GouraudDirectionalLightView extends View {
 
 	// properties
 
@@ -27,23 +33,23 @@ class TestPhong4 extends View {
 
 	private var _t:Float = 0.0;
 
-	public static function create(backgroundColor:Color):TestPhong4 {
-		var object = new TestPhong4();
+	public static function create():GouraudDirectionalLightView {
+		var object = new GouraudDirectionalLightView();
 
-		if (object != null && !(object.init(backgroundColor))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(backgroundColor:Color):Bool {
+	public function init():Bool {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
 			var director:Director = Director.current;
 
-			this.backgroundColor = backgroundColor;
+			this.backgroundColor = director.backgroundColor;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 90.0;
@@ -53,10 +59,10 @@ class TestPhong4 extends View {
 			this.scene.addChild(this._containerNode);
 
 			// create geometries
-			var geometry = Plane.create(100.0, 100.0, 64, 64);
+			var geometry = Plane.create(100.0, 100.0, 4, 4);
 
 			// Create a material
-			var material:Material = Material.create("generic+phong");
+			var material:Material = Material.create("generic+gouraud");
 			material.uniform("color").floatArrayValue = Color.createWithRGBHex(0x555599).rgbaArray;
 
 			// Create sphere mesh node
