@@ -6,10 +6,6 @@ TODO
   - glInfo (max vertex size)
   - gouraud/phong difference
 
-- demos framework
-  - use isgl3d as base
-  - command line building
-
 - interactions
   - mouse/touch events
     - 3DEvent
@@ -22,6 +18,8 @@ TODO
 - framework like flixel or lime
   - sample projects (demos)
   - template project
+
+- more demos
 
 - html5 development env to automatically build and re-deploy on server
 
@@ -276,6 +274,10 @@ x Render loop
 x   fps setting
 x Fps calculator
 x   console log
+x demos framework
+x   use isgl3d as base
+x   command line building
+
 
 
 
