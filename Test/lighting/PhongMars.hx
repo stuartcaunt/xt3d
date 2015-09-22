@@ -13,20 +13,20 @@ import xt3d.core.View;
 import xt3d.utils.color.Color;
 
 
-class TestPhong extends MainApplication {
+class PhongMars extends MainApplication {
 	public function new () {
 		super();
 	}
 
 	override public function createViews():Void {
 		// Create test view
-		var view = TestPhongView.create();
+		var view = PhongMarsView.create();
 		this._director.addView(view);
 	}
 }
 
 
-class TestPhongView extends View {
+class PhongMarsView extends View {
 
 	// properties
 
@@ -38,8 +38,8 @@ class TestPhongView extends View {
 	private var _rotation:Float = 0.0;
 	private var _t:Float = 0.0;
 
-	public static function create():TestPhongView {
-		var object = new TestPhongView();
+	public static function create():PhongMarsView {
+		var object = new PhongMarsView();
 
 		if (object != null && !(object.init())) {
 			object = null;

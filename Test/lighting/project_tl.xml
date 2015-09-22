@@ -6,8 +6,8 @@
     <haxedef name="source-map-content" if="html5" />
 
 
-	<meta title="Test Phong Lime" package="com.xt3d" version="1.0.0" company="xTalk3d" />
-	<app main="TestPhong" path="Export" />
+	<meta title="Test ##MODULE_NAME##" package="com.xt3d" version="1.0.0" company="xTalk3d" />
+	<app main="##MODULE_NAME##" path="../Export" />
 
 	<window fps="60" />
 

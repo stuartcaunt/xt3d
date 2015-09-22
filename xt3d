@@ -1,12 +1,11 @@
 #!/bin/sh
 
+export SCRIPT_DIR=script
+export BUILD_DIR=$SCRIPT_DIR/build
+
 set -e
 
-cd script
-haxe -main RunScript.hx -neko RunScript.n
+haxe -main RunScript.hx -cp $SCRIPT_DIR -neko $BUILD_DIR/RunScript.n
 
-cd ..
-
-neko script/RunScript.n $@
-rm script/RunScript.n
+neko $BUILD_DIR/RunScript.n $@
 
