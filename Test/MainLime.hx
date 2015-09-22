@@ -18,6 +18,8 @@ class MainLime extends Application {
 	public function new () {
 		super();
 
+		new debugger.Local(true);
+
 		ApplicationMain.config.windows[0].depthBuffer = true;
 //		ApplicationMain.config.antialiasing = true;
 //		ApplicationMain.config.width = 300;

@@ -3,6 +3,7 @@
 	<!-- use next version of openfl -->
 	<set name="webgl" if="html5" />
 	<haxedef name="KF_DEBUG" />
+	<haxedef name="HXCPP_DEBUGGER" />
 	<haxedef name="webgl" />
     <haxedef name="source-map-content" if="html5" />
 
@@ -19,6 +20,7 @@
 	<source path="./Classes" />
 
 	<haxelib name="lime" />
+	<haxelib name="hxcpp-debugger" />
 
 	<assets path="./Assets" rename="assets" exclude="openfl.svg" />
 	<icon path="./Assets/openfl.svg" />
