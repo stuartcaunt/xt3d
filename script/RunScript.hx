@@ -16,12 +16,12 @@ class RunScript {
 
 				try {
 
-					//Sys.setCwd(TEST_DIR);
+					var testDir:String = TEST_DIR + "/" + testName;
+					trace("-> cd " + testDir);
+					Sys.setCwd(testDir);
 
-					trace("Running: lime test " + target);
+					trace("-> lime test " + target);
 					Sys.command ("lime", ["test", target]);
-
-
 
 				} catch (e:Dynamic) {
 

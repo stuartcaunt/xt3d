@@ -7,7 +7,7 @@
 
 
 	<meta title="Test Phong Lime" package="com.xt3d" version="1.0.0" company="xTalk3d" />
-	<app main="TestApplication" path="Export" />
+	<app main="TestPhong" path="Export" />
 
 	<window fps="60" />
 
