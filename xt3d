@@ -1,0 +1,12 @@
+#!/bin/sh
+
+set -e
+
+cd script
+haxe -main RunScript.hx -neko RunScript.n
+
+cd ..
+
+neko script/RunScript.n $@
+rm script/RunScript.n
+
