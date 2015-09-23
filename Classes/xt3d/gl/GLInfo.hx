@@ -6,7 +6,33 @@ import lime.graphics.opengl.GL;
 class GLInfo {
 
 	// properties
+	@:isVar public var version(get, null):String;
+	@:isVar public var vendor(get, null):String;
+	@:isVar public var renderer(get, null):String;
+	@:isVar public var shadingLanguageVersion(get, null):String;
+
+	@:isVar public var alphaBits(get, null):Int;
+	@:isVar public var redBits(get, null):Int;
+	@:isVar public var greenBits(get, null):Int;
+	@:isVar public var blueBits(get, null):Int;
+	@:isVar public var depthBits(get, null):Int;
+	@:isVar public var stencilBits(get, null):Int;
+
 	public var maxTextureImageUnits(get, null):Int;
+	@:isVar public var maxVertexTexturesImageUnits(get, null):Int;
+	@:isVar public var maxCombinedTextureImageUnits(get, null):Int;
+	@:isVar public var maxTextureSize(get, null):Int;
+	@:isVar public var maxCubemapTextureSize(get, null):Int;
+
+	@:isVar public var maxVertexAttribs(get, null):Int;
+	@:isVar public var maxVaryingVectors(get, null):Int;
+	@:isVar public var maxVertexUniformVectors(get, null):Int;
+	@:isVar public var maxFragmentUniformVectors(get, null):Int;
+
+	@:isVar public var maxRenderbufferSize(get, null):Int;
+	@:isVar public var maxViewportDims(get, null):Array<Int>;
+	@:isVar public var aliasedLineWidthRange(get, null):Array<Int>;
+	@:isVar public var aliasedPointSizeRange(get, null):Array<Int>;
 
 	public var vertexShaderPrecisionHighpFloat(get, null):GLShaderPrecisionFormat;
 	public var vertexShaderPrecisionMediumpFloat(get, null):GLShaderPrecisionFormat;
@@ -98,26 +124,115 @@ class GLInfo {
 	public function new() {
 	}
 
-
 	/* ----------- Properties ----------- */
 
-	function get_maxTextureImageUnits():Int {
+
+
+	inline function get_version():String {
+		return this._version;
+	}
+
+	inline function get_vendor():String {
+		return this._vendor;
+	}
+
+	inline function get_renderer():String {
+		return this._renderer;
+	}
+
+	inline function get_shadingLanguageVersion():String {
+		return this._shadingLanguageVersion;
+	}
+
+	inline function get_alphaBits():Int {
+		return this._alphaBits;
+	}
+
+	inline function get_redBits():Int {
+		return this._redBits;
+	}
+
+	inline function get_greenBits():Int {
+		return this._greenBits;
+	}
+
+	inline function get_blueBits():Int {
+		return this._blueBits;
+	}
+
+	inline function get_depthBits():Int {
+		return this._depthBits;
+	}
+
+	inline function get_stencilBits():Int {
+		return this._stencilBits;
+	}
+
+	inline function get_maxTextureImageUnits():Int {
 		return this._maxTextureImageUnits;
 	}
 
-	function get_vertexShaderPrecisionHighpFloat():GLShaderPrecisionFormat {
+	inline function get_maxVertexTexturesImageUnits():Int {
+		return this._maxVertexTexturesImageUnits;
+	}
+
+	inline function get_maxCombinedTextureImageUnits():Int {
+		return this._maxCombinedTextureImageUnits;
+	}
+
+	inline function get_maxTextureSize():Int {
+		return this._maxTextureSize;
+	}
+
+	inline function get_maxCubemapTextureSize():Int {
+		return this._maxCubemapTextureSize;
+	}
+
+	inline function get_maxVertexAttribs():Int {
+		return this._maxVertexAttribs;
+	}
+
+	inline function get_maxVaryingVectors():Int {
+		return this._maxVaryingVectors;
+	}
+
+	inline function get_maxVertexUniformVectors():Int {
+		return this._maxVertexUniformVectors;
+	}
+
+	inline function get_maxFragmentUniformVectors():Int {
+		return this._maxFragmentUniformVectors;
+	}
+
+	inline function get_maxRenderbufferSize():Int {
+		return this._maxRenderbufferSize;
+	}
+
+	inline function get_maxViewportDims():Array<Int> {
+		return this._maxViewportDims;
+	}
+
+	inline function get_aliasedLineWidthRange():Array<Int> {
+		return this._aliasedLineWidthRange;
+	}
+
+	inline function get_aliasedPointSizeRange():Array<Int> {
+		return this._aliasedPointSizeRange;
+	}
+
+	inline function get_vertexShaderPrecisionHighpFloat():GLShaderPrecisionFormat {
 		return this._vertexShaderPrecisionHighpFloat;
 	}
 
-	function get_vertexShaderPrecisionMediumpFloat():GLShaderPrecisionFormat {
+	inline function get_vertexShaderPrecisionMediumpFloat():GLShaderPrecisionFormat {
 		return this._vertexShaderPrecisionMediumpFloat;
 	}
 
-	function get_fragmentShaderPrecisionHighpFloat():GLShaderPrecisionFormat {
+	inline function get_fragmentShaderPrecisionHighpFloat():GLShaderPrecisionFormat {
 		return this._fragmentShaderPrecisionHighpFloat;
 	}
 
-	function get_fragmentShaderPrecisionMediumpFloat():GLShaderPrecisionFormat {
+	inline function get_fragmentShaderPrecisionMediumpFloat():GLShaderPrecisionFormat {
 		return this._fragmentShaderPrecisionMediumpFloat;
 	}
 

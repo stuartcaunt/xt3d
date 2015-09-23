@@ -23,7 +23,7 @@ class RunScript {
 				for (i in 3 ... args.length) {
 					if (args[i] == "-openfl") {
 						targetFramework = "openfl";
-					} else {
+					} else if (args[i].indexOf("-") == 0) {
 						limeArgs.push(args[i]);
 					}
 				}
