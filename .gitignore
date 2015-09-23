@@ -1,4 +1,4 @@
 Export
 .DS_Store
 script/build
-Test/**/project.xml
+tests/**/project.xml

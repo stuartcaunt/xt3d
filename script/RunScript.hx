@@ -5,7 +5,7 @@ import sys.FileSystem;
 
 class RunScript {
 
-	private static var TEST_DIR:String = "Test";
+	private static var TEST_DIR:String = "tests";
 	private static var PROJECT_TEMPLATE_FILE:String = "project_tl.xml";
 
 	public static function main() {
