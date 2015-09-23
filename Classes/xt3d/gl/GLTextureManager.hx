@@ -1,5 +1,6 @@
 package xt3d.gl;
 
+import xt3d.utils.errors.XTException;
 import lime.graphics.Image;
 import lime.utils.Int16Array;
 import lime.utils.ArrayBufferView;
@@ -13,15 +14,11 @@ import lime.graphics.opengl.GLTexture;
 class GLTextureManager {
 
 	// properties
-	public var maxTextureSlots(get, null):Int;
 
 	// members
 	private var _currentTextures:Array<Texture2D> = new Array<Texture2D>();
 	private var _activeTextureSlot:Int = 0;
-	private var _maxTextureSlots:Int;
-	private var _maxVertexTextures:Int;
-	private var _maxTextureSize:Int;
-	private var _maxCubemapSize:Int;
+	private var _glInfo:GLInfo;
 
 	public static function create(glInfo:GLInfo):GLTextureManager {
 		var object = new GLTextureManager();
@@ -34,9 +31,9 @@ class GLTextureManager {
 	}
 
 	public function init(glInfo:GLInfo):Bool {
-		this._maxTextureSlots = glInfo.maxTextureImageUnits;
+		this._glInfo = glInfo;
 
-		for (i in 0 ... this._maxTextureSlots) {
+		for (i in 0 ... glInfo.maxTextureImageUnits) {
 			_currentTextures.push(null);
 		}
 
@@ -50,11 +47,6 @@ class GLTextureManager {
 
 
 	/* ----------- Properties ----------- */
-
-	public function get_maxTextureSlots():Int {
-		return this._maxTextureSlots;
-	}
-
 
 
 	/* --------- Implementation --------- */
@@ -72,7 +64,7 @@ class GLTextureManager {
 		if (texture != null && texture.glTexture != null) {
 			GL.deleteTexture(texture.glTexture);
 
-			for (i in 0 ... this._maxTextureSlots) {
+			for (i in 0 ... this._glInfo.maxTextureImageUnits) {
 				if (this._currentTextures[i] == texture) {
 					this.setActiveTextureSlot(i);
 					this.bindTexture(null);
@@ -97,8 +89,8 @@ class GLTextureManager {
 	}
 
 	public function setActiveTextureSlot(textureSlot:Int):Void {
-		if (textureSlot > this._maxTextureSlots) {
-			XT.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._maxTextureSlots);
+		if (textureSlot > this._glInfo.maxTextureImageUnits) {
+			XT.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._glInfo.maxTextureImageUnits);
 		} else {
 			if (textureSlot != this._activeTextureSlot) {
 				GL.activeTexture(GL.TEXTURE0 + textureSlot);
@@ -157,17 +149,15 @@ class GLTextureManager {
 
 	private function uploadImageData(image:Image, textureWidth:Int, textureHeight:Int, pixelFormat:Int):Void {
 
+		if (textureWidth > this._glInfo.maxTextureSize || textureHeight > this._glInfo.maxTextureSize) {
+			throw new XTException("TextureSizeExceedsMaximum", "The texture size " + textureWidth + "x" + textureHeight + " exceeds the maximum " + this._glInfo.maxTextureSize);
+		}
+
 		var formattedDataSource;
 		if (image == null) {
 			formattedDataSource = null;
 
 		} else {
-//			// Stu: hack to put image format back to rgba32 after update to OpenFl 3.2.2
-//			image.format = RGBA32;
-//			var byteArray = image.data.buffer;
-//			var source = new UInt8Array(byteArray);
-
-//			formattedDataSource = this.formatData(source, textureWidth, textureHeight, pixelFormat);
 			formattedDataSource = this.formatData(image.data, textureWidth, textureHeight, pixelFormat);
 		}
 

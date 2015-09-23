@@ -79,7 +79,7 @@ class Renderer extends XTObject {
 		this._glInfo = GLInfo.create();
 		this._stateManager = GLStateManager.create();
 		this._bufferManager = GLBufferManager.create();
-		this._attributeManager = GLAttributeManager.create();
+		this._attributeManager = GLAttributeManager.create(this._glInfo);
 		this._textureManager = GLTextureManager.create(this._glInfo);
 		this._frameBufferManager = GLFrameBufferManager.create();
 

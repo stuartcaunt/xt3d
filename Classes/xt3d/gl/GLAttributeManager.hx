@@ -14,21 +14,22 @@ class GLAttributeManager {
 	// properties
 
 	// members
-	private static var MAX_ATTRIBUTES = 16;
 	private var _attributeStates:Array<AttributeState> = new Array<AttributeState>();
+	private var _glInfo:GLInfo;
 
-	public static function create():GLAttributeManager {
+	public static function create(glInfo:GLInfo):GLAttributeManager {
 		var object = new GLAttributeManager();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(glInfo))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
-		for (i in 0 ... MAX_ATTRIBUTES) {
+	public function init(glInfo:GLInfo):Bool {
+		this._glInfo = glInfo;
+		for (i in 0 ... this._glInfo.maxVertexAttribs) {
 			var attributeState:AttributeState = { location:i, used:false, enabled:false };
 			_attributeStates.push(attributeState);
 		}
