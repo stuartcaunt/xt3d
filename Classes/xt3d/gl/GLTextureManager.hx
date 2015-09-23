@@ -23,21 +23,18 @@ class GLTextureManager {
 	private var _maxTextureSize:Int;
 	private var _maxCubemapSize:Int;
 
-	public static function create():GLTextureManager {
+	public static function create(glInfo:GLInfo):GLTextureManager {
 		var object = new GLTextureManager();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(glInfo))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
-		this._maxTextureSlots = GL.getParameter(GL.MAX_TEXTURE_IMAGE_UNITS);
-		this._maxVertexTextures = GL.getParameter(GL.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
-		this._maxTextureSize = GL.getParameter(GL.MAX_TEXTURE_SIZE);
-		this._maxCubemapSize = GL.getParameter(GL.MAX_CUBE_MAP_TEXTURE_SIZE);
+	public function init(glInfo:GLInfo):Bool {
+		this._maxTextureSlots = glInfo.maxTextureImageUnits;
 
 		for (i in 0 ... this._maxTextureSlots) {
 			_currentTextures.push(null);

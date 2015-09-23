@@ -1,0 +1,127 @@
+package xt3d.gl;
+
+import lime.graphics.opengl.GLShaderPrecisionFormat;
+import lime.graphics.opengl.GL;
+
+class GLInfo {
+
+	// properties
+	public var maxTextureImageUnits(get, null):Int;
+
+	public var vertexShaderPrecisionHighpFloat(get, null):GLShaderPrecisionFormat;
+	public var vertexShaderPrecisionMediumpFloat(get, null):GLShaderPrecisionFormat;
+	public var fragmentShaderPrecisionHighpFloat(get, null):GLShaderPrecisionFormat;
+	public var fragmentShaderPrecisionMediumpFloat(get, null):GLShaderPrecisionFormat;
+
+	// members
+	private var _version:String;
+	private var _vendor:String;
+	private var _renderer:String;
+	private var _shadingLanguageVersion:String;
+
+	private var _alphaBits:Int;
+	private var _redBits:Int;
+	private var _greenBits:Int;
+	private var _blueBits:Int;
+	private var _depthBits:Int;
+	private var _stencilBits:Int;
+
+	private var _maxTextureImageUnits:Int;
+	private var _maxVertexTexturesImageUnits:Int;
+	private var _maxCombinedTextureImageUnits:Int;
+	private var _maxTextureSize:Int;
+	private var _maxCubemapTextureSize:Int;
+
+	private var _maxVertexAttribs:Int;
+	private var _maxVaryingVectors:Int;
+	private var _maxVertexUniformVectors:Int;
+	private var _maxFragmentUniformVectors:Int;
+
+	private var _maxRenderbufferSize:Int;
+	private var _maxViewportDims:Array<Int>;
+	private var _aliasedLineWidthRange:Array<Int>;
+	private var _aliasedPointSizeRange:Array<Int>;
+
+	private var _vertexShaderPrecisionHighpFloat:GLShaderPrecisionFormat;
+	private var _vertexShaderPrecisionMediumpFloat:GLShaderPrecisionFormat;
+	private var _fragmentShaderPrecisionHighpFloat:GLShaderPrecisionFormat;
+	private var _fragmentShaderPrecisionMediumpFloat:GLShaderPrecisionFormat;
+
+
+	public static function create():GLInfo {
+		var object = new GLInfo();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function init():Bool {
+		this._version = GL.getParameter(GL.VERSION);
+		this._vendor = GL.getParameter(GL.VENDOR);
+		this._renderer = GL.getParameter(GL.RENDERER);
+		this._shadingLanguageVersion = GL.getParameter(GL.SHADING_LANGUAGE_VERSION);
+
+		this._alphaBits = GL.getParameter(GL.ALPHA_BITS);
+		this._redBits = GL.getParameter(GL.RED_BITS);
+		this._greenBits = GL.getParameter(GL.GREEN_BITS);
+		this._blueBits = GL.getParameter(GL.BLUE_BITS);
+		this._depthBits = GL.getParameter(GL.DEPTH_BITS);
+		this._stencilBits = GL.getParameter(GL.STENCIL_BITS);
+
+		this._maxTextureImageUnits = GL.getParameter(GL.MAX_TEXTURE_IMAGE_UNITS);
+		this._maxVertexTexturesImageUnits = GL.getParameter(GL.MAX_VERTEX_TEXTURE_IMAGE_UNITS);
+		this._maxCombinedTextureImageUnits = GL.getParameter(GL.MAX_COMBINED_TEXTURE_IMAGE_UNITS);
+		this._maxTextureSize = GL.getParameter(GL.MAX_TEXTURE_SIZE);
+		this._maxCubemapTextureSize = GL.getParameter(GL.MAX_CUBE_MAP_TEXTURE_SIZE);
+
+		this._maxVertexAttribs = GL.getParameter(GL.MAX_VERTEX_ATTRIBS);
+		this._maxVaryingVectors = GL.getParameter(GL.MAX_VARYING_VECTORS);
+		this._maxVertexUniformVectors = GL.getParameter(GL.MAX_VERTEX_UNIFORM_VECTORS);
+		this._maxFragmentUniformVectors = GL.getParameter(GL.MAX_FRAGMENT_UNIFORM_VECTORS);
+
+		this._maxRenderbufferSize = GL.getParameter(GL.MAX_RENDERBUFFER_SIZE);
+		this._maxViewportDims = GL.getParameter(GL.MAX_VIEWPORT_DIMS);
+		this._aliasedLineWidthRange = GL.getParameter(GL.ALIASED_LINE_WIDTH_RANGE);
+		this._aliasedPointSizeRange = GL.getParameter(GL.ALIASED_POINT_SIZE_RANGE);
+
+		this._vertexShaderPrecisionHighpFloat = GL.getShaderPrecisionFormat(GL.VERTEX_SHADER, GL.HIGH_FLOAT);
+		this._vertexShaderPrecisionMediumpFloat = GL.getShaderPrecisionFormat(GL.VERTEX_SHADER, GL.MEDIUM_FLOAT);
+		this._fragmentShaderPrecisionHighpFloat = GL.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.HIGH_FLOAT);
+		this._fragmentShaderPrecisionMediumpFloat = GL.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.MEDIUM_FLOAT);
+
+		return true;
+	}
+
+	public function new() {
+	}
+
+
+	/* ----------- Properties ----------- */
+
+	function get_maxTextureImageUnits():Int {
+		return this._maxTextureImageUnits;
+	}
+
+	function get_vertexShaderPrecisionHighpFloat():GLShaderPrecisionFormat {
+		return this._vertexShaderPrecisionHighpFloat;
+	}
+
+	function get_vertexShaderPrecisionMediumpFloat():GLShaderPrecisionFormat {
+		return this._vertexShaderPrecisionMediumpFloat;
+	}
+
+	function get_fragmentShaderPrecisionHighpFloat():GLShaderPrecisionFormat {
+		return this._fragmentShaderPrecisionHighpFloat;
+	}
+
+	function get_fragmentShaderPrecisionMediumpFloat():GLShaderPrecisionFormat {
+		return this._fragmentShaderPrecisionMediumpFloat;
+	}
+
+
+/* --------- Implementation --------- */
+
+}

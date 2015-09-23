@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.gl.GLInfo;
 import lime.math.Rectangle;
 import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLFramebuffer;
@@ -40,6 +41,7 @@ class Renderer extends XTObject {
 
 	// members
 	private var _gl:GLRenderContext;
+	private var _glInfo:GLInfo;
 	private var _stateManager:GLStateManager;
 	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
@@ -74,17 +76,18 @@ class Renderer extends XTObject {
 	public function init(gl:GLRenderContext):Bool {
 		this._gl = gl;
 
+		this._glInfo = GLInfo.create();
 		this._stateManager = GLStateManager.create();
 		this._bufferManager = GLBufferManager.create();
 		this._attributeManager = GLAttributeManager.create();
-		this._textureManager = GLTextureManager.create();
+		this._textureManager = GLTextureManager.create(this._glInfo);
 		this._frameBufferManager = GLFrameBufferManager.create();
 
 		// Initialise uniform lib
 		this._uniformLib = UniformLib.create();
 
 		// Initialise shader manager and build default shaders
-		this._shaderManager = ShaderManager.create(this._uniformLib, this._textureManager.maxTextureSlots);
+		this._shaderManager = ShaderManager.create(this._uniformLib, this._glInfo);
 		this._shaderManager.loadDefaultShaders();
 
 #if ios

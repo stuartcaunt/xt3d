@@ -1,9 +1,6 @@
 package xt3d.gl.shaders;
 
-import xt3d.gl.GLTextureManager;
 import xt3d.gl.XTGL;
-import xt3d.gl.XTGL;
-import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLShaderPrecisionFormat;
 import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.ShaderLib;
@@ -23,27 +20,27 @@ class ShaderManager {
 	private var _uniformLib:UniformLib;
 	private var _maxTextureSlots:Int;
 
-	public static function create(uniformLib:UniformLib, maxTextureSlots:Int):ShaderManager {
+	public static function create(uniformLib:UniformLib, glInfo:GLInfo):ShaderManager {
 		var object = new ShaderManager();
 
-		if (object != null && !(object.init(uniformLib, maxTextureSlots))) {
+		if (object != null && !(object.init(uniformLib, glInfo))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	private function init(uniformLib:UniformLib, maxTextureSlots:Int):Bool {
+	private function init(uniformLib:UniformLib, glInfo:GLInfo):Bool {
 		this._uniformLib = uniformLib;
-		this._maxTextureSlots = maxTextureSlots;
+		this._maxTextureSlots = glInfo.maxTextureImageUnits;
 
 		_programs = new Map<String, ShaderProgram>();
 
 		// Get available precisions
-		var vertexShaderPrecisionHighpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.VERTEX_SHADER, GL.HIGH_FLOAT);
-		var vertexShaderPrecisionMediumpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.VERTEX_SHADER, GL.MEDIUM_FLOAT);
-		var fragmentShaderPrecisionHighpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.HIGH_FLOAT);
-		var fragmentShaderPrecisionMediumpFloat:GLShaderPrecisionFormat = GL.getShaderPrecisionFormat(GL.FRAGMENT_SHADER, GL.MEDIUM_FLOAT);
+		var vertexShaderPrecisionHighpFloat:GLShaderPrecisionFormat = glInfo.vertexShaderPrecisionHighpFloat;
+		var vertexShaderPrecisionMediumpFloat:GLShaderPrecisionFormat = glInfo.vertexShaderPrecisionMediumpFloat;
+		var fragmentShaderPrecisionHighpFloat:GLShaderPrecisionFormat = glInfo.fragmentShaderPrecisionHighpFloat;
+		var fragmentShaderPrecisionMediumpFloat:GLShaderPrecisionFormat = glInfo.fragmentShaderPrecisionMediumpFloat;
 
 		if (vertexShaderPrecisionHighpFloat != null) {
 			this._highPrecisionAvailable = (vertexShaderPrecisionHighpFloat.precision > 0 && fragmentShaderPrecisionHighpFloat.precision > 0);

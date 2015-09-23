@@ -18,10 +18,13 @@ class RunScript {
 				var target = args[1];
 				var testName = args[2];
 				var targetFramework = "lime";
+				var limeArgs = [];
 
 				for (i in 3 ... args.length) {
 					if (args[i] == "-openfl") {
 						targetFramework = "openfl";
+					} else {
+						limeArgs.push(args[i]);
 					}
 				}
 
@@ -79,8 +82,10 @@ class RunScript {
 					+ PROJECT_TEMPLATE_FILE + " > project.xml"]);
 
 				// build and run for the specified the target
-				trace("-> lime test " + target);
-				Sys.command ("lime", ["test", target]);
+				var allArgs = ["test", target];
+				allArgs = allArgs.concat(limeArgs);
+				trace("-> lime " + allArgs.join(" "));
+				Sys.command ("lime", allArgs);
 
 				trace("Test ended");
 			}
