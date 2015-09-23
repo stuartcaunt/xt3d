@@ -1,11 +1,6 @@
 TODO
 ====
 
-- errors
-  - add warning on vertex/index data that is too big
-  - glInfo (max vertex size)
-  - gouraud/phong difference
-
 - interactions
   - mouse/touch events
     - 3DEvent
@@ -277,6 +272,10 @@ x   console log
 x demos framework
 x   use isgl3d as base
 x   command line building
+x errors
+x   add warning on vertex/index data that is too big
+x   glInfo (max vertex size)
+
 
 
 
