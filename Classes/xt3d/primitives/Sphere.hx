@@ -59,7 +59,7 @@ class Sphere extends Geometry {
 //		var normals = super.createNormalData();
 //		var uvs = super.createUVData();
 		var colors = super.createByteColorData(nVertices * 4);
-		var indices = super.createIndexData();
+		var indices = super.createIndexData(nIndices);
 
 		var theta:Float;
 		var phi:Float;

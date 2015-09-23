@@ -12,6 +12,8 @@ import xt3d.utils.errors.XTAbstractMethodError;
 
 class IndexData {
 
+	private static var MAX_INDEX_CAPACITY = 2 << 16 - 1;
+
 	// properties
 	public var isDirty(get, set):Bool;
 	public var count(get, null):Int;
@@ -68,6 +70,10 @@ class IndexData {
 	}
 
 	public function initWithFixedCapacity(fixedCapacity:Int):Bool {
+		if (fixedCapacity > MAX_INDEX_CAPACITY) {
+			throw new XTException("IndexDataCapacityExceedMaximum", "The index data capacity " + fixedCapacity + " exceeds the maximum " + MAX_INDEX_CAPACITY);
+		}
+
 		this._i16Array = new Int16Array(fixedCapacity);
 		this._fixedCapacity = fixedCapacity;
 
@@ -161,6 +167,9 @@ class IndexData {
 			this._i16Array[this._nextIndex++] = value;
 
 		} else {
+			if (index > MAX_INDEX_CAPACITY) {
+				throw new XTException("IndexDataCapacityExceedMaximum", "The index data capacity " + index + " exceeds the maximum " + MAX_INDEX_CAPACITY);
+			}
 			this._array[index] = value;
 		}
 		this._isDirty = true;
@@ -183,6 +192,9 @@ class IndexData {
 
 		} else {
 			_array.push(value);
+			if (this._array.length > MAX_INDEX_CAPACITY) {
+				throw new XTException("IndexDataCapacityExceedMaximum", "The index data capacity " + this._array.length + " exceeds the maximum " + MAX_INDEX_CAPACITY);
+			}
 		}
 		this._isDirty = true;
 	}
