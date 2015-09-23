@@ -14,6 +14,9 @@ TODO
   - sample projects (demos)
   - template project
 
+- lights
+  - add rendered object to show light position
+
 - more demos
 
 - html5 development env to automatically build and re-deploy on server
