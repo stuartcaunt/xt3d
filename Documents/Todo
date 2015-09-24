@@ -14,9 +14,6 @@ TODO
   - sample projects (demos)
   - template project
 
-- lights
-  - add rendered object to show light position
-
 - more demos
 
 - html5 development env to automatically build and re-deploy on server
@@ -278,6 +275,8 @@ x   command line building
 x errors
 x   add warning on vertex/index data that is too big
 x   glInfo (max vertex size)
+x lights
+x   add rendered object to show light position
 
 
 

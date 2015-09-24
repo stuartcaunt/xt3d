@@ -1,6 +1,8 @@
 package xt3d.node;
 
 
+import xt3d.primitives.Sphere;
+import xt3d.core.Material;
 import xt3d.utils.XT;
 import xt3d.utils.math.MatrixHelper;
 import xt3d.utils.math.VectorHelper;
@@ -29,6 +31,7 @@ class Light extends Node3D {
 	public var spotFalloffExponent(get, set):Float;
 	public var enabled(get, set):Bool;
 
+	public var renderLight(get, set):Bool;
 
 	// members
 	private var _lightType:Int = XTGL.PointLight;
@@ -47,6 +50,9 @@ class Light extends Node3D {
 
 	private var _positionArray = new Array<Float>();
 	private var _directionArray = new Array<Float>();
+
+	private var _renderLight:Bool = false;
+	private var _renderedLight:Node3D = null;
 
 	public static function createPointLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
 		var object = new Light();
@@ -88,6 +94,8 @@ class Light extends Node3D {
 
 			// Quadratic attenuation
 			this._attenuation[2] = attenuation;
+
+			this._renderLight = false;
 		}
 
 		return retval;
@@ -105,6 +113,8 @@ class Light extends Node3D {
 				direction = new Vector4();
 			}
 			this._direction = direction;
+
+			this._renderLight = false;
 		}
 
 		return retval;
@@ -128,6 +138,8 @@ class Light extends Node3D {
 
 			this._spotCutoffAngle = cutoffAngle;
 			this._spotFalloffExponent = falloffExponent;
+
+			this._renderLight = false;
 		}
 
 		return retval;
@@ -231,6 +243,15 @@ class Light extends Node3D {
 		return this._enabled = value;
 	}
 
+	function set_renderLight(value:Bool) {
+		this.setRenderLight(value);
+		return this._renderLight;
+	}
+
+	function get_renderLight():Bool {
+		return this._renderLight;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -246,6 +267,32 @@ class Light extends Node3D {
 			scene.addLight(this);
 		}
 	}
+
+	public function setRenderLight(renderLight:Bool):Void {
+		if (this._lightType == XTGL.DirectionalLight) {
+			XT.Warn("Light is directional an cannot therefore be rendered on scene");
+			return;
+		}
+
+		if (renderLight != this._renderLight) {
+			// Remove previous rendered light
+			if (!renderLight && this._renderedLight != null) {
+				this.removeChild(this._renderedLight);
+			}
+
+			this._renderLight = renderLight;
+
+			if (this._renderLight) {
+				var material:Material = Material.create("generic");
+				material.uniform("color").floatArrayValue = this._diffuseColor.rgbaArray;
+				var mesh:Sphere = Sphere.create(0.2, 4, 2);
+
+				this._renderedLight = MeshNode.create(mesh, material);
+				this.addChild(this._renderedLight);
+			}
+		}
+	}
+
 
 	public function prepareRender(camera:Camera, uniformLib:UniformLib, index:Int):Void {
 		uniformLib.uniform("lights").at(index).get("enabled").boolValue = this._enabled;

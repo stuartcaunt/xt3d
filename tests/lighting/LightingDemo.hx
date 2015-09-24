@@ -62,6 +62,7 @@ class LightingDemoView extends View {
 
 			var director:Director = Director.current;
 			this.backgroundColor = director.backgroundColor;
+			//director.timeFactor = 0.1;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 20.0;
@@ -97,16 +98,20 @@ class LightingDemoView extends View {
 			// Create the lights
 			this._blueLight =Light.createPointLight(0x000011, 0x0000FF, 0xFFFFFF, 0.02);
 			this._containerNode.addChild(this._blueLight);
+			this._blueLight.renderLight = true;
 
 			this._greenLight =Light.createPointLight(0x001100, 0x00FF00, 0xFFFFFF, 0.02);
 			this._containerNode.addChild(this._greenLight);
+			this._greenLight.renderLight = true;
 
 			this._redLight =Light.createPointLight(0x110000, 0xFF0000, 0xFFFFFF, 0.02);
 			this._containerNode.addChild(this._redLight);
+			this._redLight.renderLight = true;
 
 			this._whiteLight = Light.createPointLight();
 			this._whiteLight.position = new Vector4(7.0, 7.0, 4.0);
 			this._containerNode.addChild(this._whiteLight);
+			this._whiteLight.renderLight = true;
 
 			// Set the scene ambient color
 			this._scene.ambientLight = Color.createWithRGBHex(0x444444);

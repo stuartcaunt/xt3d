@@ -11,7 +11,7 @@ class Sphere extends Geometry {
 	private var _lons:Int;
 	private var _lats:Int;
 
-	public static function create(radius:Float = 1.0, lons:Int = 8, lats:Int = 8):Geometry {
+	public static function create(radius:Float = 1.0, lons:Int = 8, lats:Int = 8):Sphere {
 		var object = new Sphere();
 
 		if (object != null && !(object.initWithGeometry(radius, lons, lats))) {

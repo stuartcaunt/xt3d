@@ -27,6 +27,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public var backgroundColor(get, set):Color;
 	public var textureCache(get, null):TextureCache;
 	public var paused(get, null):Bool;
+	public var timeFactor(get, set):Float;
 
 	// members
 	private static var _current:Director = null;
@@ -39,6 +40,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	private var _configuration:Configuration;
 
 	private var _deltaTime:Float = 0.0;
+	private var _timeFactor:Float = 1.0;
 	private var _globalTime = 0.0;
 	private var _paused:Bool = false;
 	private var _nextDeltaTimeZero = true;
@@ -122,6 +124,14 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	public function get_paused():Bool {
 		return this._paused;
+	}
+
+	function set_timeFactor(value:Float) {
+		return this._timeFactor = value;
+	}
+
+	function get_timeFactor():Float {
+		return this._timeFactor;
 	}
 
 
@@ -260,7 +270,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// If not paused then update animations
 		if (!this._paused) {
-			this._scheduler.update(this._deltaTime);
+			this._scheduler.update(this._timeFactor * this._deltaTime);
 		}
 
 		// Update fps calculator
