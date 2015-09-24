@@ -51,35 +51,39 @@ class RunScript {
 							trace("Found module " + moduleName);
 						}
 					}
+				} else {
+					// Verify module exists
+					if (!FileSystem.exists(testDir + "/" + moduleName + ".hx")) {
+						trace("Error: module \"" + moduleName + "\" does not exist in \"" + testDir + "\"");
+						Sys.exit(1);
+					}
 				}
 
-				var runDir = TEST_DIR;
 
 				// See if we have a project template file in the test directory
-				var projectTemplateFile = testDir + "/" + PROJECT_TEMPLATE_FILE;
-				if (FileSystem.exists(projectTemplateFile)) {
-					runDir = testDir;
+				var projectTemplateFile = testName + "/" + PROJECT_TEMPLATE_FILE;
+				if (FileSystem.exists(TEST_DIR + "/" + projectTemplateFile)) {
 					trace("Using project template file in \"" + testDir + "\"");
 				} else {
 
 					// Verify we have a main project template file
-					var projectTemplateFile = TEST_DIR + "/" + PROJECT_TEMPLATE_FILE;
-					if (!FileSystem.exists(projectTemplateFile)) {
+					projectTemplateFile = PROJECT_TEMPLATE_FILE;
+					if (!FileSystem.exists(TEST_DIR + "/" + projectTemplateFile)) {
 						trace("Error: could not find project template file in test directory \"" + TEST_DIR + "\"");
 						Sys.exit(1);
 					}
 				}
 
 				// Go to test directory
-				trace("-> cd " + runDir);
-				Sys.setCwd(runDir);
+				trace("-> cd " + TEST_DIR);
+				Sys.setCwd(TEST_DIR);
 
 				// Convert project template to include test and module names
-				trace("Generating " + runDir + "/project.xml");
+				trace("Generating " + TEST_DIR + "/project.xml");
 				Sys.command("sh", ["-c", "sed -e s/##MODULE_NAME##/" + moduleName + "/g " +
 					"-e s/##TEST_NAME##/" + testName + "/g " +
 					"-e s/##TARGET_FRAMEWORK##/" + targetFramework + "/g "
-					+ PROJECT_TEMPLATE_FILE + " > project.xml"]);
+					+ projectTemplateFile + " > project.xml"]);
 
 				// build and run for the specified the target
 				var allArgs = ["test", target];

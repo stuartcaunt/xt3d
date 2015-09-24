@@ -8,18 +8,18 @@
 
 
 	<meta title="Test ##MODULE_NAME## - ##TARGET_FRAMEWORK##" package="com.xt3d" version="1.0.0" company="xTalk3d" />
-	<app main="##MODULE_NAME##" path="../../Export" />
+	<app main="##MODULE_NAME##" path="Export" />
 
 	<window fps="60" />
 
-	<source path="." />
-	<source path=".." />
-	<source path="../../Classes" />
+    <source path="##TEST_NAME##" />
+    <source path="." />
+    <source path="../Classes" />
 
 	<haxelib name="##TARGET_FRAMEWORK##" />
 
-	<assets path="../../Assets" rename="assets" exclude="openfl.svg" />
-	<icon path="../../Assets/openfl.svg" />
+	<assets path="../Assets" rename="assets" exclude="openfl.svg" />
+	<icon path="../Assets/openfl.svg" />
 
 
 </project>
