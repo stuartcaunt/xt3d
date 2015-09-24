@@ -1,5 +1,7 @@
 package xt3d.core;
 
+import xt3d.events.MouseDispatcher;
+import xt3d.events.TouchDispatcher;
 import xt3d.utils.general.FPSCalculator;
 import lime.app.Application;
 import lime.math.Rectangle;
@@ -52,6 +54,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	private var _isReady:Bool = false;
 	private var _onReadyListeners = new Array<Void->Void>();
 
+	private var _touchDispatcher:TouchDispatcher = null;
+	private var _mouseDispatcher:MouseDispatcher = null;
+
 	public static function create(options:Map<String, String> = null):Director {
 		var object = new Director();
 
@@ -71,6 +76,12 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// Create scheduler
 		this._scheduler = Scheduler.create();
+
+		// Create touch dispatcher
+		this._touchDispatcher = TouchDispatcher.create();
+
+		// Create mouse dispatcher
+		this._mouseDispatcher = MouseDispatcher.create();
 
 		// Create fps calculator
 		this._fpsCalculator = FPSCalculator.create();
@@ -231,6 +242,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		if (glView != null) {
 			// Add listener to view
 			glView.addListener(this);
+
+			glView.touchDelegate = this._touchDispatcher;
+			glView.mouseDelegate = this._mouseDispatcher;
 		}
 	}
 

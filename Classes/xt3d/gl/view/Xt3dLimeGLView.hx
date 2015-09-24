@@ -1,5 +1,6 @@
 package xt3d.gl.view;
 
+import lime.ui.Touch;
 import xt3d.utils.geometry.Size;
 import lime.ui.Window;
 import lime.graphics.Renderer;
@@ -24,6 +25,8 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	// properties
 	public var gl(get, null):GLRenderContext;
 	public var size(get, null):Size<Int>;
+	public var touchDelegate(get, set):TouchDelegate;
+	public var mouseDelegate(get, set):MouseDelegate;
 
 	// members
 	private var _gl:GLRenderContext = null;
@@ -32,6 +35,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	private var _height:Int = 0;
 	private var _renderCallback:RenderContext->Void;
 	private var _windowResizeCallback:Window->Int->Int->Void;
+
+	private var _touchDelegate:TouchDelegate;
+	private var _mouseDelegate:MouseDelegate;
 
 	public static function create():Xt3dLimeGLView {
 		var object = new Xt3dLimeGLView();
@@ -63,12 +69,28 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 
 	/* ----------- Xt3dGLView Properties ----------- */
 
-	public function get_gl():GLRenderContext {
+	inline public function get_gl():GLRenderContext {
 		return this._gl;
 	}
 
-	public function get_size():Size<Int> {
+	inline public function get_size():Size<Int> {
 		return Size.createIntSize(this._width, this._height);
+	}
+
+	inline public function get_touchDelegate():TouchDelegate {
+		return this._touchDelegate;
+	}
+
+	inline public function set_touchDelegate(value:TouchDelegate) {
+		return this._touchDelegate = value;
+	}
+
+	inline public function get_mouseDelegate():MouseDelegate {
+		return this._mouseDelegate;
+	}
+
+	inline public function set_mouseDelegate(value:MouseDelegate) {
+		return this._mouseDelegate = value;
 	}
 
 
@@ -205,5 +227,104 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 		this._windowResizeCallback(window, width, height);
 	}
 
+	/**
+	 * Called when a mouse down event is fired
+	 * @param	window	The window dispatching the event
+	 * @param	x	The current x coordinate of the mouse
+	 * @param	y	The current y coordinate of the mouse
+	 * @param	button	The ID of the mouse button that was pressed
+	 */
+	override public function onMouseDown (window:Window, x:Float, y:Float, button:Int):Void {
+		if (this._mouseDelegate != null) {
+			this._mouseDelegate.onMouseDown(window, x, y, button);
+		}
+	}
+
+
+	/**
+	 * Called when a mouse move event is fired
+	 * @param	window	The window dispatching the event
+	 * @param	x	The current x coordinate of the mouse
+	 * @param	y	The current y coordinate of the mouse
+	 * @param	button	The ID of the mouse button that was pressed
+	 */
+	override public function onMouseMove (window:Window, x:Float, y:Float):Void {
+		if (this._mouseDelegate != null) {
+			this._mouseDelegate.onMouseMove(window, x, y);
+		}
+	}
+
+
+	/**
+	 * Called when a mouse move relative event is fired
+	 * @param	window	The window dispatching the event
+	 * @param	x	The x movement of the mouse
+	 * @param	y	The y movement of the mouse
+	 * @param	button	The ID of the mouse button that was pressed
+	 */
+	override public function onMouseMoveRelative (window:Window, x:Float, y:Float):Void {
+		if (this._mouseDelegate != null) {
+			this._mouseDelegate.onMouseMoveRelative(window, x, y);
+		}
+	}
+
+
+	/**
+	 * Called when a mouse up event is fired
+	 * @param	window	The window dispatching the event
+	 * @param	x	The current x coordinate of the mouse
+	 * @param	y	The current y coordinate of the mouse
+	 * @param	button	The ID of the button that was released
+	 */
+	override public function onMouseUp (window:Window, x:Float, y:Float, button:Int):Void {
+		if (this._mouseDelegate != null) {
+			this._mouseDelegate.onMouseUp(window, x, y, button);
+		}
+	}
+
+
+	/**
+	 * Called when a mouse wheel event is fired
+	 * @param	window	The window dispatching the event
+	 * @param	deltaX	The amount of horizontal scrolling (if applicable)
+	 * @param	deltaY	The amount of vertical scrolling (if applicable)
+	 */
+	override public function onMouseWheel (window:Window, deltaX:Float, deltaY:Float):Void {
+		if (this._mouseDelegate != null) {
+			this._mouseDelegate.onMouseWheel(window, deltaX, deltaY);
+		}
+	}
+
+	/**
+	 * Called when a touch end event is fired
+	 * @param	touch	The current touch object
+	 */
+	override public function onTouchEnd (touch:Touch):Void {
+		if (this._touchDelegate != null) {
+			this._touchDelegate.onTouchEnd(touch);
+		}
+	}
+
+
+	/**
+	 * Called when a touch move event is fired
+	 * @param	touch	The current touch object
+	 */
+	override public function onTouchMove (touch:Touch):Void {
+		if (this._touchDelegate != null) {
+			this._touchDelegate.onTouchMove(touch);
+		}
+	}
+
+
+	/**
+	 * Called when a touch start event is fired
+	 * @param	touch	The current touch object
+	 */
+	override public function onTouchStart (touch:Touch):Void {
+		if (this._touchDelegate != null) {
+			this._touchDelegate.onTouchStart(touch);
+		}
+	}
 
 }

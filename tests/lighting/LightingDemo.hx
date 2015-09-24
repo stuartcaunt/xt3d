@@ -60,6 +60,11 @@ class LightingDemoView extends View {
 		var retval;
 		if ((retval = super.initBasic3D())) {
 
+#if xt3dopenfl
+#else
+//			ApplicationMain.config.windows[0].antialiasing = 1;
+#end
+
 			var director:Director = Director.current;
 			this.backgroundColor = director.backgroundColor;
 			//director.timeFactor = 0.1;
