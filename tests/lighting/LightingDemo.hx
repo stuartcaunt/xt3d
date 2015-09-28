@@ -67,7 +67,7 @@ class LightingDemoView extends View {
 
 			var director:Director = Director.current;
 			this.backgroundColor = director.backgroundColor;
-			//director.timeFactor = 0.1;
+			director.timeFactor = 0.1;
 
 			// Create a camera and set it in the view
 			var cameraDistance:Float = 20.0;

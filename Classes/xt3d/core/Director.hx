@@ -30,6 +30,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public var textureCache(get, null):TextureCache;
 	public var paused(get, null):Bool;
 	public var timeFactor(get, set):Float;
+	public var touchDispatcher(get, null):TouchDispatcher;
+	public var mouseDispatcher(get, null):MouseDispatcher;
 
 	// members
 	private static var _current:Director = null;
@@ -145,6 +147,13 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		return this._timeFactor;
 	}
 
+	function get_touchDispatcher():TouchDispatcher {
+		return this._touchDispatcher;
+	}
+
+	function get_mouseDispatcher():MouseDispatcher {
+		return this._mouseDispatcher;
+	}
 
 	/* --------- Xt3dViewListener Implementation --------- */
 

@@ -3,12 +3,16 @@ TODO
 
 - interactions
   - mouse/touch events
-    - 3DEvent
+    - Bring into single interface of tap (multi), swipe, pinch (left click + scroll wheel), drag, pan (=scroll wheel), rotate, press+tap (=right-click)
+
+- Node:
+  - On added to scene
 
 - Picking
   - ray picking
   - render picking
     - 3D Object grabber
+    - 3DEvent
 
 - framework like flixel or lime
   - sample projects (demos)
