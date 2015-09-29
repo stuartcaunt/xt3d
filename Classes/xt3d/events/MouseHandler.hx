@@ -1,7 +1,5 @@
 package xt3d.events;
 
-import lime.ui.Window;
-
 interface MouseHandler {
 
 	public function onMouseDown (x:Float, y:Float, button:Int):Bool;
