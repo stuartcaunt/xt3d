@@ -13,19 +13,21 @@ class TouchDispatcher implements TouchDelegate {
 	private var _handlersToAdd:Array<TouchHandler> = new Array<TouchHandler>();
 	private var _handlersToRemove:Array<TouchHandler> = new Array<TouchHandler>();
 	private var _locked:Bool;
+	private var _gestureDispatcher:GestureDispatcher;
 
-	public static function create():TouchDispatcher {
+	public static function create(gestureDispatcher:GestureDispatcher):TouchDispatcher {
 		var object = new TouchDispatcher();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(gestureDispatcher))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
+	public function init(gestureDispatcher:GestureDispatcher):Bool {
 		this._locked = false;
+		this._gestureDispatcher = gestureDispatcher;
 
 		return true;
 	}
@@ -80,6 +82,9 @@ class TouchDispatcher implements TouchDelegate {
 	 * @param	touch	The current touch object
 	 */
 	public function onTouchStart (touch:Touch):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onTouchStart(touch);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;
@@ -98,6 +103,9 @@ class TouchDispatcher implements TouchDelegate {
 	 * @param	touch	The current touch object
 	 */
 	public function onTouchEnd (touch:Touch):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onTouchEnd(touch);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;
@@ -117,6 +125,9 @@ class TouchDispatcher implements TouchDelegate {
 	 * @param	touch	The current touch object
 	 */
 	public function onTouchMove (touch:Touch):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onTouchMove(touch);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;

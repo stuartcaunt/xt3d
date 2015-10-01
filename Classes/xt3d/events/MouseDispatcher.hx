@@ -13,18 +13,20 @@ class MouseDispatcher implements MouseDelegate {
 	private var _handlersToAdd:Array<MouseHandler> = new Array<MouseHandler>();
 	private var _handlersToRemove:Array<MouseHandler> = new Array<MouseHandler>();
 	private var _locked:Bool;
+	private var _gestureDispatcher:GestureDispatcher = null;
 
-	public static function create():MouseDispatcher {
+	public static function create(gestureDispatcher:GestureDispatcher):MouseDispatcher {
 		var object = new MouseDispatcher();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(gestureDispatcher))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
+	public function init(gestureDispatcher:GestureDispatcher):Bool {
+		this._gestureDispatcher = gestureDispatcher;
 		this._locked = false;
 
 		return true;
@@ -83,6 +85,9 @@ class MouseDispatcher implements MouseDelegate {
 	 * @param	button	The ID of the mouse button that was pressed
 	 */
 	public function onMouseDown(window:Window, x:Float, y:Float, button:Int):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onMouseDown(x, y, button);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;
@@ -104,6 +109,9 @@ class MouseDispatcher implements MouseDelegate {
 	 * @param	button	The ID of the mouse button that was pressed
 	 */
 	public function onMouseMove (window:Window, x:Float, y:Float):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onMouseMove(x, y);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;
@@ -125,6 +133,9 @@ class MouseDispatcher implements MouseDelegate {
 	 * @param	button	The ID of the mouse button that was pressed
 	 */
 	public function onMouseMoveRelative (window:Window, x:Float, y:Float):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onMouseMoveRelative(x, y);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;
@@ -146,6 +157,9 @@ class MouseDispatcher implements MouseDelegate {
 	 * @param	button	The ID of the button that was released
 	 */
 	public function onMouseUp (window:Window, x:Float, y:Float, button:Int):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onMouseUp(x, y, button);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;
@@ -166,6 +180,9 @@ class MouseDispatcher implements MouseDelegate {
 	 * @param	deltaY	The amount of vertical scrolling (if applicable)
 	 */
 	public function onMouseWheel (window:Window, deltaX:Float, deltaY:Float):Void {
+		// Delegate to gesture dispatcher first
+		this._gestureDispatcher.onMouseWheel(deltaX, deltaY);
+
 		this._locked = true;
 		var iterator = this._handlers.iterator();
 		var isClaimed = false;

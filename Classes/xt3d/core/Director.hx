@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.events.GestureDispatcher;
 import xt3d.events.MouseDispatcher;
 import xt3d.events.TouchDispatcher;
 import xt3d.utils.general.FPSCalculator;
@@ -32,6 +33,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public var timeFactor(get, set):Float;
 	public var touchDispatcher(get, null):TouchDispatcher;
 	public var mouseDispatcher(get, null):MouseDispatcher;
+	public var gestureDispatcher(get, null):GestureDispatcher;
 
 	// members
 	private static var _current:Director = null;
@@ -58,6 +60,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	private var _touchDispatcher:TouchDispatcher = null;
 	private var _mouseDispatcher:MouseDispatcher = null;
+	private var _gestureDispatcher:GestureDispatcher = null;
 
 	public static function create(options:Map<String, String> = null):Director {
 		var object = new Director();
@@ -79,11 +82,14 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		// Create scheduler
 		this._scheduler = Scheduler.create();
 
+		// Create gesture dispatcher
+		this._gestureDispatcher = GestureDispatcher.create();
+
 		// Create touch dispatcher
-		this._touchDispatcher = TouchDispatcher.create();
+		this._touchDispatcher = TouchDispatcher.create(this._gestureDispatcher);
 
 		// Create mouse dispatcher
-		this._mouseDispatcher = MouseDispatcher.create();
+		this._mouseDispatcher = MouseDispatcher.create(this._gestureDispatcher);
 
 		// Create fps calculator
 		this._fpsCalculator = FPSCalculator.create();
@@ -153,6 +159,10 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	function get_mouseDispatcher():MouseDispatcher {
 		return this._mouseDispatcher;
+	}
+
+	function get_gestureDispatcher():GestureDispatcher {
+		return this._gestureDispatcher;
 	}
 
 	/* --------- Xt3dViewListener Implementation --------- */
@@ -298,6 +308,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// Update fps calculator
 		this._fpsCalculator.update(dt);
+
+		// Update gesture dispatcher
+		this._gestureDispatcher.update(dt);
 	}
 
 	private function renderLoop():Void {
