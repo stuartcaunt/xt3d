@@ -4,19 +4,34 @@ TODO
 - interactions
   - mouse/touch events
     - Bring into single interface of tap (multi), swipe, pinch (left click + scroll wheel), drag, pan (=scroll wheel), rotate, press+tap (=right-click)
+  - gesture handler
+  - delegate to views
+
+- Camera
+  - Camera controller
 
 - Node:
-  - On added to scene
+  - onAddedToScene
+  - onRemoveFromScene
 
 - Picking
   - ray picking
   - render picking
     - 3D Object grabber
     - 3DEvent
+    - 16 bits for face ( each face = 3 elements) and 16 bit for object
 
 - framework like flixel or lime
   - sample projects (demos)
   - template project
+
+- interactions
+  - keyboard
+
+- textures
+  - screen shot
+
+- Exporter
 
 - more demos
 
@@ -31,9 +46,6 @@ TODO
   - multiple views
 
 - Scene and Node
-  - Finish Node implementation
-    - onAddedToScene
-    - onRemoveFromScene
   - follow node
 
 - Material implementation
@@ -58,13 +70,9 @@ TODO
   - retina display/pixel density
 
 - interactions
-  - keyboard
   - accelerometer
-  - delegate to views
-  - gesture handler
 
 - Camera
-  - Camera controller
   - Follow camera
   - Spring camera
 
@@ -106,7 +114,6 @@ TODO
   - pvr textures
   - texture cube
   - depth texture
-  - screen shot
 
 - Effects
   - bump mapping / normal mapping
