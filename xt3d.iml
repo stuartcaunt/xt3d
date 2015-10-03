@@ -2,7 +2,7 @@
 <module type="HAXE_MODULE" version="4">
   <component name="HaxeModuleSettingsStorage">
     <option name="buildConfig" value="3" />
-    <option name="openFLPath" value="$MODULE_DIR$/project.xml" />
+    <option name="openFLPath" value="$MODULE_DIR$/tests/lighting/project.xml" />
     <option name="openFLTarget" value="Mac OS" />
     <option name="outputFolder" value="$MODULE_DIR$/../out/production/xt3d" />
   </component>

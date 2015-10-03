@@ -1,5 +1,6 @@
 package xt3d.events.gestures;
 
+import lime.math.Vector2;
 import lime.ui.Touch;
 class GestureRecognizer {
 
@@ -53,6 +54,13 @@ class GestureRecognizer {
 
 	public function onTouchMove (touch:Touch):Bool {
 		return false;
+	}
+
+
+	private function distanceBetweenPoints(p1:Vector2, p2:Vector2):Float {
+		var deltaX = p2.x - p1.x;
+		var deltaY = p2.y - p1.y;
+		return Math.sqrt(deltaX * deltaX + deltaY * deltaY);
 	}
 
 }
