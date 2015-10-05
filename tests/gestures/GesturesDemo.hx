@@ -1,5 +1,6 @@
 package;
 
+import xt3d.extras.CameraController;
 import xt3d.events.gestures.PanGestureRecognizer.PanGestureDelegate;
 import xt3d.events.gestures.PanGestureRecognizer;
 import xt3d.utils.XT;
@@ -31,7 +32,7 @@ class GesturesDemo extends MainApplication {
 }
 
 
-class GesturesDemoView extends View implements TapGestureDelegate implements PanGestureDelegate {
+class GesturesDemoView extends View implements TapGestureDelegate {
 
 	// properties
 
@@ -51,6 +52,7 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pan
 
 	private var _tapGestureRecognizer:TapGestureRecognizer;
 	private var _panGestureRecognizer:PanGestureRecognizer;
+	private var _cameraController:CameraController;
 
 	public static function create():GesturesDemoView {
 		var object = new GesturesDemoView();
@@ -80,8 +82,8 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pan
 			this._tapGestureRecognizer = TapGestureRecognizer.create(this, 2);
 			Director.current.gestureDispatcher.addGestureRecognizer(this._tapGestureRecognizer);
 
-			this._panGestureRecognizer = PanGestureRecognizer.create(this);
-			Director.current.gestureDispatcher.addGestureRecognizer(this._panGestureRecognizer);
+			this._cameraController = CameraController.create(this._camera, 20.0);
+			this._cameraController.xOrbitFactor = 1.5;
 
 			// Schedule update
 			this.scheduleUpdate();
@@ -122,10 +124,10 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pan
 
 	private function createScene():Void {
 		var director:Director = Director.current;
-
-		// Create a camera and set it in the view
-		var cameraDistance:Float = 20.0;
-		this.camera.position = new Vector4(0, 0, cameraDistance);
+//
+//		// Create a camera and set it in the view
+//		var cameraDistance:Float = 20.0;
+//		this.camera.position = new Vector4(0, 0, cameraDistance);
 
 		this._containerNode = Node3D.create();
 		this.scene.addChild(this._containerNode);
@@ -185,12 +187,6 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pan
 		} else if (tapEvent.tapType == TapType.TapTypeUp) {
 			XT.Log("Double-tap");
 		}
-
-		return false;
-	}
-
-	public function onPan(panEvent:PanEvent):Bool {
-		XT.Log("Pan by " + panEvent.globalDelta + " location = " + panEvent.location);
 
 		return false;
 	}
