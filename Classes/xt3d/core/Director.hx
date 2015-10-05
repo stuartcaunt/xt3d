@@ -308,9 +308,6 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// Update fps calculator
 		this._fpsCalculator.update(dt);
-
-		// Update gesture dispatcher
-		this._gestureDispatcher.update(dt);
 	}
 
 	private function renderLoop():Void {

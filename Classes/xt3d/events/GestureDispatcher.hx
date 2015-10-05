@@ -1,5 +1,6 @@
 package xt3d.events;
 
+import xt3d.utils.XT;
 import xt3d.utils.XTObject;
 import xt3d.events.gestures.GestureRecognizer;
 import lime.ui.Touch;
@@ -76,133 +77,95 @@ class GestureDispatcher implements MouseHandler implements TouchHandler {
 	}
 
 
-	public function update(dt:Float):Void {
-		this._locked = true;
-		// Send update to all recognizers
-		for (recognizer in this._gestureRecognizers) {
-			recognizer.update(dt);
-		}
-		this._locked = false;
-		this.handleDeferredRequests();
-	}
-
-
-	public function onMouseDown (x:Float, y:Float, button:Int):Bool {
+	private function handleEvent(eventHandler:GestureRecognizer->Bool):Bool {
 		this._locked = true;
 		var iterator = this._gestureRecognizers.iterator();
+		var claimingRecognizer:GestureRecognizer = null;
 		var isClaimed = false;
 
 		// Iterate over gesture recognizers until one claims the event
 		while (iterator.hasNext() && !isClaimed) {
 			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onMouseDown(x, y, button);
+			isClaimed = eventHandler(gestureRecognizer);
+			if (isClaimed) {
+				claimingRecognizer = gestureRecognizer;
+			}
 		}
+
+		// If claimed then cancel all recognizers
+		if (isClaimed) {
+			for (gestureRecognizer in this._gestureRecognizers) {
+				if (gestureRecognizer != claimingRecognizer) {
+					gestureRecognizer.onGestureClaimed();
+				}
+			}
+		}
+
 		this._locked = false;
+
+		return isClaimed;
+	}
+
+	public function onMouseDown (x:Float, y:Float, button:Int):Bool {
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onMouseDown(x, y, button);
+		});
 
 		return isClaimed;
 	}
 
 	public function onMouseMove (x:Float, y:Float):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onMouseMove(x, y);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onMouseMove(x, y);
+		});
 
 		return isClaimed;
 	}
 
 	public function onMouseMoveRelative (x:Float, y:Float):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onMouseMoveRelative(x, y);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onMouseMoveRelative(x, y);
+		});
 
 		return isClaimed;
 	}
 
 	public function onMouseUp (x:Float, y:Float, button:Int):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onMouseUp(x, y, button);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onMouseUp(x, y, button);
+		});
 
 		return isClaimed;
 	}
 
 	public function onMouseWheel (deltaX:Float, deltaY:Float):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onMouseWheel(deltaX, deltaY);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onMouseWheel(deltaX, deltaY);
+		});
 
 		return isClaimed;
 	}
 
 	public function onTouchStart (touch:Touch):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onTouchStart(touch);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onTouchStart(touch);
+		});
 
 		return isClaimed;
 	}
 
 	public function onTouchEnd (touch:Touch):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onTouchEnd(touch);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onTouchEnd(touch);
+		});
 
 		return isClaimed;
 	}
 
 	public function onTouchMove (touch:Touch):Bool {
-		this._locked = true;
-		var iterator = this._gestureRecognizers.iterator();
-		var isClaimed = false;
-
-		// Iterate over gesture recognizers until one claims the event
-		while (iterator.hasNext() && !isClaimed) {
-			var gestureRecognizer = iterator.next();
-			isClaimed = gestureRecognizer.onTouchMove(touch);
-		}
-		this._locked = false;
+		var isClaimed = this.handleEvent(function (gestureRecognizer:GestureRecognizer):Bool {
+			return gestureRecognizer.onTouchMove(touch);
+		});
 
 		return isClaimed;
 	}

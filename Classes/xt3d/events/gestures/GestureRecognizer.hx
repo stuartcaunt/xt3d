@@ -2,6 +2,7 @@ package xt3d.events.gestures;
 
 import lime.math.Vector2;
 import lime.ui.Touch;
+
 class GestureRecognizer {
 
 	// properties
@@ -21,7 +22,7 @@ class GestureRecognizer {
 
 	/* --------- Implementation --------- */
 
-	public function update(dt:Float):Void {
+	public function onGestureClaimed():Void {
 	}
 
 	public function onMouseDown (x:Float, y:Float, button:Int):Bool {

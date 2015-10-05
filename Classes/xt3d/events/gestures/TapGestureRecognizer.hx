@@ -49,7 +49,7 @@ class TapEvent {
 
 
 interface TapGestureDelegate {
-	public function onTap(tapEvent:TapEvent):Void;
+	public function onTap(tapEvent:TapEvent):Bool;
 }
 
 
@@ -74,7 +74,7 @@ class TapGestureRecognizer extends GestureRecognizer {
 	private var _startTime:Int;
 	private var _endTime:Int;
 
-	public static function create(delegate:TapGestureDelegate, numberOfTapsRequired:Int):TapGestureRecognizer {
+	public static function create(delegate:TapGestureDelegate, numberOfTapsRequired:Int = 1):TapGestureRecognizer {
 		var object = new TapGestureRecognizer();
 
 		if (object != null && !(object.initTap(delegate, numberOfTapsRequired))) {
@@ -84,7 +84,7 @@ class TapGestureRecognizer extends GestureRecognizer {
 		return object;
 	}
 
-	public function initTap(delegate:TapGestureDelegate, numberOfTapsRequired:Int):Bool {
+	public function initTap(delegate:TapGestureDelegate, numberOfTapsRequired:Int = 1):Bool {
 		this._delegate = delegate;
 		this._numberOfTapsRequired = numberOfTapsRequired;
 
@@ -97,6 +97,8 @@ class TapGestureRecognizer extends GestureRecognizer {
 	public function new() {
 		super();
 	}
+
+	/* ----------- Properties ----------- */
 
 	function get_maxDurationBetweenTaps():Float {
 		return this._maxDurationBetweenTaps;
@@ -131,12 +133,12 @@ class TapGestureRecognizer extends GestureRecognizer {
 	}
 
 
-	/* ----------- Properties ----------- */
-
-
 
 	/* --------- Implementation --------- */
 
+	override public function onGestureClaimed():Void {
+		this.stopGestureRecognition();
+	}
 
 	override public function onMouseDown (x:Float, y:Float, button:Int):Bool {
 		if (button == 0) {
@@ -160,6 +162,7 @@ class TapGestureRecognizer extends GestureRecognizer {
 		return this.tapUp(touch.x, touch.y);
 	}
 
+	/* --------- Private methods --------- */
 
 	private function tapDown(x:Float, y:Float):Bool {
 		// Avoid multi taps (two tap downs before a tap up)
@@ -178,7 +181,7 @@ class TapGestureRecognizer extends GestureRecognizer {
 
 		// Generate TapDown event
 		var tapDown = TapEvent.create(new Vector2(x, y), TapType.TapTypeDown);
-		this._delegate.onTap(tapDown);
+		var cancelPropagation = this._delegate.onTap(tapDown);
 		var duration = (time - this._startTime); // duration of tap in milliseconds
 
 		if (this._taps > 0 && this._taps < this._numberOfTapsRequired) {
@@ -192,11 +195,11 @@ class TapGestureRecognizer extends GestureRecognizer {
 		}
 
 		this._isRecognizing = true;
-		return true;
+		return cancelPropagation;
 	}
 
 	private function tapUp(x:Float, y:Float):Bool {
-		var isClaimed = false;
+		var cancelPropagation = false;
 		if (this._isRecognizing) {
 
 			//calculate duration
@@ -217,17 +220,16 @@ class TapGestureRecognizer extends GestureRecognizer {
 
 					// Generate tap up
 					var tapUp = TapEvent.create(this._initialPosition.clone(), TapType.TapTypeUp);
-					this._delegate.onTap(tapUp);
+					cancelPropagation = this._delegate.onTap(tapUp);
 
 					this.stopGestureRecognition();
-					isClaimed = true;
 				}
 			} else {
 				this.stopGestureRecognition();
 			}
 		}
 
-		return isClaimed;
+		return cancelPropagation;
 	}
 
 	private function stopGestureRecognition():Void {

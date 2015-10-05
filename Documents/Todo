@@ -5,7 +5,7 @@ TODO
   - mouse/touch events
     - Bring into single interface of tap (multi), swipe, pinch (left click + scroll wheel), drag, pan (=scroll wheel), rotate, press+tap (=right-click)
   - gesture handler
-  - delegate to views
+    - Node : addChild, onAddedToScene, etc ?
 
 - Camera
   - Camera controller

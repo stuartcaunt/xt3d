@@ -1,5 +1,7 @@
 package;
 
+import xt3d.events.gestures.PanGestureRecognizer.PanGestureDelegate;
+import xt3d.events.gestures.PanGestureRecognizer;
 import xt3d.utils.XT;
 import xt3d.events.gestures.TapGestureRecognizer;
 import xt3d.events.gestures.TapGestureRecognizer.TapGestureDelegate;
@@ -29,7 +31,7 @@ class GesturesDemo extends MainApplication {
 }
 
 
-class GesturesDemoView extends View implements TapGestureDelegate {
+class GesturesDemoView extends View implements TapGestureDelegate implements PanGestureDelegate {
 
 	// properties
 
@@ -48,6 +50,7 @@ class GesturesDemoView extends View implements TapGestureDelegate {
 	private var _sceneObjects:Array<Node3D> = new Array<Node3D>();
 
 	private var _tapGestureRecognizer:TapGestureRecognizer;
+	private var _panGestureRecognizer:PanGestureRecognizer;
 
 	public static function create():GesturesDemoView {
 		var object = new GesturesDemoView();
@@ -76,6 +79,9 @@ class GesturesDemoView extends View implements TapGestureDelegate {
 			// Recognizers
 			this._tapGestureRecognizer = TapGestureRecognizer.create(this, 2);
 			Director.current.gestureDispatcher.addGestureRecognizer(this._tapGestureRecognizer);
+
+			this._panGestureRecognizer = PanGestureRecognizer.create(this);
+			Director.current.gestureDispatcher.addGestureRecognizer(this._panGestureRecognizer);
 
 			// Schedule update
 			this.scheduleUpdate();
@@ -172,13 +178,21 @@ class GesturesDemoView extends View implements TapGestureDelegate {
 		this._scene.ambientLight = Color.createWithRGBHex(0x444444);
 	}
 
-	public function onTap(tapEvent:TapEvent):Void {
+	public function onTap(tapEvent:TapEvent):Bool {
 		if (tapEvent.tapType == TapType.TapTypeDown) {
 			//XT.Log("TapDown");
 
 		} else if (tapEvent.tapType == TapType.TapTypeUp) {
 			XT.Log("Double-tap");
 		}
+
+		return false;
+	}
+
+	public function onPan(panEvent:PanEvent):Bool {
+		XT.Log("Pan by " + panEvent.globalDelta + " location = " + panEvent.location);
+
+		return false;
 	}
 
 }
