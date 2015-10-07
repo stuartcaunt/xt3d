@@ -1,31 +1,32 @@
 package xt3d.events.gestures;
 
 
+import xt3d.utils.XT;
 import lime.ui.Touch;
 import lime.math.Vector2;
 class PinchEvent {
 
 	// properties
+	public var deltaDistance(get, null):Float;
+	public var totalDistance(get, null):Float;
 
 	// members
-	private var _position1:Vector2;
-	private var _position2:Vector2;
 	private var _deltaDistance:Float;
-	private var _distance:Float;
-	private var _initialDistance:Float;
+	private var _totalDistance:Float;
 
-
-	public static function create():PinchEvent {
+	public static function create(deltaDistance:Float, totalDistance:Float):PinchEvent {
 		var object = new PinchEvent();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(deltaDistance, totalDistance))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
+	public function init(deltaDistance:Float, totalDistance:Float):Bool {
+		this._deltaDistance = deltaDistance;
+		this._totalDistance = totalDistance;
 		return true;
 	}
 
@@ -36,13 +37,21 @@ class PinchEvent {
 	/* ----------- Properties ----------- */
 
 
+	function get_deltaDistance():Float {
+		return this._deltaDistance;
+	}
+
+	function get_totalDistance():Float {
+		return this._totalDistance;
+	}
+
 	/* --------- Implementation --------- */
 
 }
 
 
 interface PinchGestureDelegate {
-	public function onPinch():Bool;
+	public function onPinch(pinchEvent:PinchEvent):Bool;
 }
 
 
@@ -57,15 +66,13 @@ class PinchGestureRecognizer extends GestureRecognizer {
 	var _delegate:PinchGestureDelegate;
 
 	private var _touches:Array<Touch> = new Array<Touch>();
+	private var _initialTouchDistance:Float;
 	private var _lastTouchDistance:Float;
 
-	private var _initialMousePosition:Vector2 = new Vector2();
-	private var _mouseLocation:Vector2 = new Vector2();
+	private var _initialMouseLocationY:Float;
+	private var _mouseLocationY:Float;
 
 	private var _isRecognizing:Bool = false;
-
-
-
 
 	public static function create(delegate:PinchGestureDelegate):PinchGestureRecognizer {
 		var object = new PinchGestureRecognizer();
@@ -85,7 +92,7 @@ class PinchGestureRecognizer extends GestureRecognizer {
 
 
 	public function new() {
-
+		super();
 	}
 
 
@@ -105,14 +112,14 @@ class PinchGestureRecognizer extends GestureRecognizer {
 /* --------- Implementation --------- */
 
 	override public function onMouseDown (x:Float, y:Float, button:Int):Bool {
-		if (button == 1) {
+		if (button == 2) {
 			// Avoid multiple touches - pan is single touch only
 			if (this._isRecognizing) {
 				return false;
 			}
 
-			this._initialMousePosition.setTo(x, y);
-			this._mouseLocation.setTo(x, y);
+			this._initialMouseLocationY = y;
+			this._mouseLocationY = y;
 
 			this._isRecognizing = true;
 		}
@@ -120,7 +127,7 @@ class PinchGestureRecognizer extends GestureRecognizer {
 	}
 
 	override public function onMouseUp (x:Float, y:Float, button:Int):Bool {
-		if (button == 1) {
+		if (button == 2) {
 			this._isRecognizing = false;
 		}
 		return false;
@@ -131,14 +138,17 @@ class PinchGestureRecognizer extends GestureRecognizer {
 			return false;
 		}
 
+		var mouseDeltaY = y - this._mouseLocationY;
+		var mouseTotalDeltaY = y - this._initialMouseLocationY;
+
 		// Check for threshold
-		if (Math.abs(x - this._mouseLocation.x) < this._pinchThreshold || Math.abs(y - this._mouseLocation.y) < this._pinchThreshold) {
+		if (Math.abs(mouseDeltaY) < this._pinchThreshold) {
 			return false;
 		}
 
-		this._mouseLocation.setTo(x, y);
+		this._mouseLocationY = y;
 
-		return this.pinchMove(this._initialMousePosition, this._mouseLocation);
+		return this.pinchMove(-mouseDeltaY, -mouseTotalDeltaY);
 	}
 
 	override public function onTouchStart (touch:Touch):Bool {
@@ -157,6 +167,7 @@ class PinchGestureRecognizer extends GestureRecognizer {
 			var dy = Math.abs(touch1.y - touch2.y);
 
 			this._lastTouchDistance = Math.sqrt(dx * dx + dy* dy);
+			this._initialTouchDistance = this._lastTouchDistance;
 
 			this._isRecognizing = true;
 		}
@@ -175,7 +186,7 @@ class PinchGestureRecognizer extends GestureRecognizer {
 
 	override public function onTouchMove (touch:Touch):Bool {
 		if (!this._isRecognizing) {
-			return;
+			return false;
 		}
 
 		var touch1 = this._touches[0];
@@ -193,33 +204,27 @@ class PinchGestureRecognizer extends GestureRecognizer {
 			return false;
 		}
 
-
-		this._touchPosition1.setTo(touch1.x, touch1.y);
-		this._touchPosition2.setTo(touch2.x, touch2.y);
-
 		var dx = Math.abs(touch1.x - touch2.x);
 		var dy = Math.abs(touch1.y - touch2.y);
 
 		var distance = Math.sqrt(dx * dx + dy* dy);
 
-		CCPinch * pinch = CCPinch::create();
 
-//decide type of pinch
-		if (lastDistance<=distance) {
-		pinch->type = kPinchGestureRecognizerTypeOpen;
-		}
-		else {
-		pinch->type = kPinchGestureRecognizerTypeClose;
-		}
+		var deltaDistance = distance - this._lastTouchDistance;
+		var totalDistance = distance - this._initialTouchDistance;
+		this._lastTouchDistance = distance;
 
-		gestureRecognized(pinch);
+		return this.pinchMove(deltaDistance, totalDistance);
 	}
 
 	/* --------- Private methods --------- */
 
 
-	private function pinchMove(position1:Vector2, position2, Vector2):Bool {
+	private function pinchMove(deltaDistance:Float, totalDistance:Float):Bool {
+		var pinchEvent = PinchEvent.create(deltaDistance, totalDistance);
+		var cancelPropagation = this._delegate.onPinch(pinchEvent);
 
+		return cancelPropagation;
 	}
 
 
