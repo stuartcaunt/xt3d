@@ -55,6 +55,8 @@ class Node3D extends XTObject {
 	private var _visible:Bool = true;
 	private var _excluded:Bool = false;
 
+	private var _running:Bool = false;
+
 	public static function create():Node3D {
 		var object = new Node3D();
 
@@ -72,6 +74,7 @@ class Node3D extends XTObject {
 		this._worldMatrixDirty = false;
 		this._matrixDirty = false;
 		this._rotationMatrixDirty = false;
+		this._running = false;
 
 		return retval;
 	}
@@ -213,9 +216,19 @@ class Node3D extends XTObject {
 		this._children.push(child);
 		child._parent = this;
 
+		// Call on enter if running
+		if (this._running) {
+			child.onEnter();
+		}
 	}
 
 	public inline function removeChild(child:Node3D):Void {
+
+		// Call on exit first if running
+		if (this._running) {
+			child.onExit();
+		}
+
 		this._children.remove(child);
 		child._parent = null;
 	}
@@ -255,6 +268,23 @@ class Node3D extends XTObject {
 			child.traverse(callback);
 		}
 	}
+
+	public function onEnter():Void {
+		for (child in this._children) {
+			child.onEnter();
+		}
+
+		this._running = true;
+	}
+
+	public function onExit():Void {
+		this._running = false;
+
+		for (child in this._children) {
+			child.onExit();
+		}
+	}
+
 
 
 	/* --------- Transformation manipulation --------- */
