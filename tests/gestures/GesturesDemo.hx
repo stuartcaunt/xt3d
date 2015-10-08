@@ -1,6 +1,5 @@
 package;
 
-import xt3d.events.gestures.PinchGestureRecognizer;
 import xt3d.extras.CameraController;
 import xt3d.utils.XT;
 import xt3d.events.gestures.TapGestureRecognizer;
@@ -30,7 +29,7 @@ class GesturesDemo extends MainApplication {
 }
 
 
-class GesturesDemoView extends View implements TapGestureDelegate implements PinchGestureDelegate {
+class GesturesDemoView extends View implements TapGestureDelegate {
 
 	// properties
 
@@ -49,7 +48,6 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pin
 	private var _sceneObjects:Array<Node3D> = new Array<Node3D>();
 
 	private var _tapGestureRecognizer:TapGestureRecognizer;
-	private var _pinchGestureRecognizer:PinchGestureRecognizer;
 	private var _cameraController:CameraController;
 
 	public static function create():GesturesDemoView {
@@ -79,8 +77,6 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pin
 			// Recognizers
 			this._tapGestureRecognizer = TapGestureRecognizer.create(this, 2);
 			Director.current.gestureDispatcher.addGestureRecognizer(this._tapGestureRecognizer);
-			this._pinchGestureRecognizer = PinchGestureRecognizer.create(this);
-			Director.current.gestureDispatcher.addGestureRecognizer(this._pinchGestureRecognizer);
 
 			this._cameraController = CameraController.create(this._camera, 20.0);
 			this._cameraController.xOrbitFactor = 1.5;
@@ -187,12 +183,6 @@ class GesturesDemoView extends View implements TapGestureDelegate implements Pin
 		} else if (tapEvent.tapType == TapType.TapTypeUp) {
 			XT.Log("Double-tap");
 		}
-
-		return false;
-	}
-
-	public function onPinch(pinchEvent:PinchEvent):Bool {
-		XT.Log("pinch : " + pinchEvent.deltaDistance);
 
 		return false;
 	}

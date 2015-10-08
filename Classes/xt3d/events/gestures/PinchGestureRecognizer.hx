@@ -151,6 +151,16 @@ class PinchGestureRecognizer extends GestureRecognizer {
 		return this.pinchMove(-mouseDeltaY, -mouseTotalDeltaY);
 	}
 
+	override public function onMouseWheel (deltaX:Float, deltaY:Float):Bool {
+		if (this._isRecognizing) {
+			return false;
+		}
+
+		return this.pinchMove(-deltaY * 2, -deltaY * 2);
+
+		return false;
+	}
+
 	override public function onTouchStart (touch:Touch):Bool {
 		if (this._isRecognizing) {
 			return false;

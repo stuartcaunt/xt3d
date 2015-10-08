@@ -1,5 +1,6 @@
 package xt3d.extras;
 
+import xt3d.events.gestures.PinchGestureRecognizer;
 import xt3d.node.Node3D;
 import lime.math.Vector4;
 import xt3d.utils.XTObject;
@@ -7,7 +8,7 @@ import xt3d.core.Director;
 import xt3d.events.gestures.PanGestureRecognizer;
 import xt3d.node.Camera;
 
-class CameraController extends XTObject implements PanGestureDelegate {
+class CameraController extends XTObject implements PanGestureDelegate implements PinchGestureDelegate {
 
 	// properties
 	public var orbit(get, set):Float;
@@ -36,6 +37,7 @@ class CameraController extends XTObject implements PanGestureDelegate {
 	private var _vPhi:Float = 0.0;
 
 	private var _panGestureRecognizer:PanGestureRecognizer;
+	private var _pinchGestureRecognizer:PinchGestureRecognizer;
 
 	public static function create(camera:Camera, orbit:Float = 10.0):CameraController {
 		var object = new CameraController();
@@ -54,6 +56,8 @@ class CameraController extends XTObject implements PanGestureDelegate {
 
 		this._panGestureRecognizer = PanGestureRecognizer.create(this);
 		Director.current.gestureDispatcher.addGestureRecognizer(this._panGestureRecognizer);
+		this._pinchGestureRecognizer = PinchGestureRecognizer.create(this);
+		Director.current.gestureDispatcher.addGestureRecognizer(this._pinchGestureRecognizer);
 
 		this.update(0.0);
 		this.scheduleUpdate();
@@ -173,6 +177,12 @@ class CameraController extends XTObject implements PanGestureDelegate {
 	public function onPan(panEvent:PanEvent):Bool {
 		this._vPhi = -panEvent.delta.y / 4.0;
 		this._vTheta = panEvent.delta.x / 4.0;
+
+		return false;
+	}
+
+	public function onPinch(pinchEvent:PinchEvent):Bool {
+		this._orbit += pinchEvent.deltaDistance * 0.1;
 
 		return false;
 	}
