@@ -1,19 +1,6 @@
 TODO
 ====
 
-- interactions
-  - mouse/touch events
-    - Bring into single interface of tap (multi), swipe, pinch (left click + scroll wheel), drag, pan (=scroll wheel), rotate, press+tap (=right-click)
-  - gesture handler
-    - Node : addChild, onAddedToScene, etc ?
-
-- Camera
-  - Camera controller
-
-- Node:
-  - onAddedToScene
-  - onRemoveFromScene
-
 - Picking
   - ray picking
   - render picking
@@ -24,6 +11,10 @@ TODO
 - framework like flixel or lime
   - sample projects (demos)
   - template project
+
+- Gestures:
+  - Swipe
+  - Long press
 
 - interactions
   - keyboard
@@ -288,6 +279,17 @@ x   add warning on vertex/index data that is too big
 x   glInfo (max vertex size)
 x lights
 x   add rendered object to show light position
+x interactions
+x   mouse/touch events
+x     Bring into single interface of tap (multi), swipe, pinch (left click + scroll wheel), drag, pan (=scroll wheel), rotate, press+tap (=right-click)
+x   gesture handler
+x     Node : addChild, onAddedToScene, etc
+x Camera
+x   Camera controller
+x Node:
+x   onAddedToScene
+x   onRemoveFromScene
+
 
 
 

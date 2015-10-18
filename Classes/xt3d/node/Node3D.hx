@@ -269,10 +269,17 @@ class Node3D extends XTObject {
 		}
 	}
 
+	override public function scheduleUpdate(ignored:Bool = false):Void {
+		super.scheduleUpdate(!this._running);
+	}
+
 	public function onEnter():Void {
 		for (child in this._children) {
 			child.onEnter();
 		}
+
+		// Resume scheduled callback if set
+		this.resumeScheduler();
 
 		this._running = true;
 	}
@@ -283,6 +290,9 @@ class Node3D extends XTObject {
 		for (child in this._children) {
 			child.onExit();
 		}
+
+		// Pause any scheduled callback
+		this.pauseScheduler();
 	}
 
 

@@ -37,6 +37,8 @@ class View extends EventEmitter {
 
 	private var _contentScaleFactor = 1.0;
 
+	private var _running:Bool = false;
+
 	public static function create():View {
 		var object = new View();
 
@@ -171,6 +173,33 @@ class View extends EventEmitter {
 		}
 
 	}
+
+	override public function scheduleUpdate(ignored:Bool = false):Void {
+		super.scheduleUpdate(!this._running);
+	}
+
+	public function onEnter():Void {
+		if (this._scene != null) {
+			this._scene.onEnter();
+		}
+
+		// Resume scheduled callback if set
+		this.resumeScheduler();
+
+		this._running = true;
+	}
+
+	public function onExit():Void {
+		this._running = false;
+
+		if (this._scene != null) {
+			this._scene.onExit();
+		}
+
+		// Pause any scheduled callback
+		this.pauseScheduler();
+	}
+
 
 	public function render(renderer:Renderer = null):Void {
 		if (renderer == null) {

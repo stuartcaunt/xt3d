@@ -47,9 +47,6 @@ class GesturesDemoView extends View implements TapGestureDelegate {
 
 	private var _sceneObjects:Array<Node3D> = new Array<Node3D>();
 
-	private var _tapGestureRecognizer:TapGestureRecognizer;
-	private var _cameraController:CameraController;
-
 	public static function create():GesturesDemoView {
 		var object = new GesturesDemoView();
 
@@ -75,11 +72,12 @@ class GesturesDemoView extends View implements TapGestureDelegate {
 			this.createLights();
 
 			// Recognizers
-			this._tapGestureRecognizer = TapGestureRecognizer.create(this, 2);
-			Director.current.gestureDispatcher.addGestureRecognizer(this._tapGestureRecognizer);
+			var tapGestureRecognizer = TapGestureRecognizer.create(this, 2);
+			this.scene.addChild(tapGestureRecognizer);
 
-			this._cameraController = CameraController.create(this._camera, 20.0);
-			this._cameraController.xOrbitFactor = 1.5;
+			var cameraController = CameraController.create(this._camera, 20.0);
+			cameraController.xOrbitFactor = 1.5;
+			this.scene.addChild(cameraController);
 
 			// Schedule update
 			this.scheduleUpdate();

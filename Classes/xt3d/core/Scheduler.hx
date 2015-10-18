@@ -192,7 +192,7 @@ class Scheduler {
 	}
 
 
-	public function scheduleUpdate(target:XTObject):Void {
+	public function scheduleUpdate(target:XTObject, paused:Bool):Void {
 		if (target == null) {
 			return;
 		}
@@ -202,7 +202,7 @@ class Scheduler {
 
 			var updatableElement = {
 				target: target,
-				paused: false,
+				paused: paused,
 				markedForDeletion: false
 			};
 

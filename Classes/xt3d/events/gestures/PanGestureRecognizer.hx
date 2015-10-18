@@ -83,10 +83,13 @@ class PanGestureRecognizer extends GestureRecognizer {
 	}
 
 	public function initPan(delegate:PanGestureDelegate):Bool {
-		this._delegate = delegate;
-		this._isRecognizing = false;
+		var initOk;
+		if ((initOk = super.init())) {
+			this._delegate = delegate;
+			this._isRecognizing = false;
+		}
 
-		return true;
+		return initOk;
 	}
 
 

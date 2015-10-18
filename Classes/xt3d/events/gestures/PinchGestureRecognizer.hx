@@ -85,9 +85,11 @@ class PinchGestureRecognizer extends GestureRecognizer {
 	}
 
 	public function initPinch(delegate:PinchGestureDelegate):Bool {
-		this._delegate = delegate;
-
-		return true;
+		var initOk;
+		if ((initOk = super.init())) {
+			this._delegate = delegate;
+		}
+		return initOk;
 	}
 
 

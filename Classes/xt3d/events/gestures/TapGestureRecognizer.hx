@@ -85,13 +85,15 @@ class TapGestureRecognizer extends GestureRecognizer {
 	}
 
 	public function initTap(delegate:TapGestureDelegate, numberOfTapsRequired:Int = 1):Bool {
-		this._delegate = delegate;
-		this._numberOfTapsRequired = numberOfTapsRequired;
+		var initOk;
+		if ((initOk = super.init())) {
+			this._delegate = delegate;
+			this._numberOfTapsRequired = numberOfTapsRequired;
 
-		this._taps = 0;
-		this._isRecognizing = false;
-
-		return true;
+			this._taps = 0;
+			this._isRecognizing = false;
+		}
+		return initOk;
 	}
 
 	public function new() {

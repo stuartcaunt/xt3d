@@ -1,22 +1,32 @@
 package xt3d.events.gestures;
 
+import xt3d.core.Director;
+import xt3d.node.Node3D;
 import lime.math.Vector2;
 import lime.ui.Touch;
 
-class GestureRecognizer {
+class GestureRecognizer extends Node3D {
 
 	// properties
 
 	// members
 
-	public function init():Bool {
-		return true;
-	}
-
 
 	public function new() {
+		super();
 	}
 
+	override public function onEnter() {
+		super.onEnter();
+
+		Director.current.gestureDispatcher.addGestureRecognizer(this);
+	}
+
+	override public function onExit() {
+		super.onExit();
+
+		Director.current.gestureDispatcher.removeGestureRecognizer(this);
+	}
 
 	/* ----------- Properties ----------- */
 

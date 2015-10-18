@@ -40,8 +40,8 @@ class XTObject {
 	public function update(dt:Float):Void {
 		// Method to be overridden to get automatic updates every frame if scheduleUpdate has been called
 	}
-	public function scheduleUpdate():Void {
-		Director.current.scheduler.scheduleUpdate(this);
+	public function scheduleUpdate(paused:Bool = false):Void {
+		Director.current.scheduler.scheduleUpdate(this, paused);
 	}
 
 	public function unscheduleUpdate():Void {

@@ -8,7 +8,7 @@ import xt3d.core.Director;
 import xt3d.events.gestures.PanGestureRecognizer;
 import xt3d.node.Camera;
 
-class CameraController extends XTObject implements PanGestureDelegate implements PinchGestureDelegate {
+class CameraController extends Node3D implements PanGestureDelegate implements PinchGestureDelegate {
 
 	// properties
 	public var orbit(get, set):Float;
@@ -36,28 +36,26 @@ class CameraController extends XTObject implements PanGestureDelegate implements
 	private var _vTheta:Float = 0.0;
 	private var _vPhi:Float = 0.0;
 
-	private var _panGestureRecognizer:PanGestureRecognizer;
-	private var _pinchGestureRecognizer:PinchGestureRecognizer;
-
 	public static function create(camera:Camera, orbit:Float = 10.0):CameraController {
 		var object = new CameraController();
 
-		if (object != null && !(object.init(camera, orbit))) {
+		if (object != null && !(object.initWithCamera(camera, orbit))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(camera:Camera, orbit:Float = 10.0):Bool {
+	public function initWithCamera(camera:Camera, orbit:Float = 10.0):Bool {
 		this._camera = camera;
 		this._orbit = orbit;
 		this._orbitMin = 0.3 * orbit;
 
-		this._panGestureRecognizer = PanGestureRecognizer.create(this);
-		Director.current.gestureDispatcher.addGestureRecognizer(this._panGestureRecognizer);
-		this._pinchGestureRecognizer = PinchGestureRecognizer.create(this);
-		Director.current.gestureDispatcher.addGestureRecognizer(this._pinchGestureRecognizer);
+		var panGestureRecognizer = PanGestureRecognizer.create(this);
+		this.addChild(panGestureRecognizer);
+
+		var pinchGestureRecognizer = PinchGestureRecognizer.create(this);
+		this.addChild(pinchGestureRecognizer);
 
 		this.update(0.0);
 		this.scheduleUpdate();

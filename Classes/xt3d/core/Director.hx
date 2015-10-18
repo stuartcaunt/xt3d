@@ -274,6 +274,19 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		var size = glView.size;
 		var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
 		view.setDisplayRect(displayRect);
+
+		// activate view
+		view.onEnter();
+	}
+
+	public inline function removeView(view:View):Void {
+		var viewIndex = this._views.indexOf(view);
+		if (viewIndex >= 0) {
+			_views.splice(viewIndex, 1);
+
+			// deactivate view
+			view.onExit();
+		}
 	}
 
 	public inline function pause():Void {
