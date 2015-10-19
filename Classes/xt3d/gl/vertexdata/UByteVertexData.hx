@@ -9,11 +9,13 @@ import lime.graphics.opengl.GL;
 class UByteVertexData extends PrimitiveVertexData {
 
 	// properties
+	public var uint8Array(get, null):UInt8Array;
+	public var arrayLength(get, set):Int;
 
 	// members
 	private var _ui8Array:UInt8Array = null;
 	private var _fixedCapacity:Int = 0;
-	private var _nextIndex:Int = 0;
+	private var _length:Int = 0;
 
 	private var _array:Array<UInt> = new Array<UInt>();
 
@@ -81,14 +83,24 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	/* ----------- Properties ----------- */
 
+	function get_uint8Array():UInt8Array {
+		return this._ui8Array;
+	}
 
+	function get_arrayLength():Int {
+		return this._length;
+	}
+
+	function set_arrayLength(value:Int) {
+		return this._length = value;
+	}
 
 	/* --------- Implementation --------- */
 
 	// Number of elements
 	override public function getLength():Int {
 		if (this._ui8Array != null) {
-			return this._nextIndex;
+			return this._length;
 		} else {
 			return this._array.length;
 		}
@@ -114,7 +126,7 @@ class UByteVertexData extends PrimitiveVertexData {
 	public inline function set(index:Int, value:UInt):Void {
 		if (this._ui8Array != null) {
 			this.handleIndex(index, true);
-			this._ui8Array[this._nextIndex++] = value;
+			this._ui8Array[this._length++] = value;
 
 		} else {
 			this._array[index] = value;
@@ -134,8 +146,8 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	public inline function push(value:UInt):Void {
 		if (this._ui8Array != null) {
-			this.handleIndex(this._nextIndex, false);
-			this._ui8Array[this._nextIndex++] = value;
+			this.handleIndex(this._length, false);
+			this._ui8Array[this._length++] = value;
 
 		} else {
 			_array.push(value);
@@ -145,13 +157,13 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	public inline function pop():UInt {
 		if (this._ui8Array != null) {
-			if (this._nextIndex <= 0) {
+			if (this._length <= 0) {
 				throw new XTException("IndexOutOfBounds", "Cannot pop from empty array");
 			}
-			this._nextIndex--;
+			this._length--;
 
 			this._isDirty = true;
-			return this._ui8Array[this._nextIndex];
+			return this._ui8Array[this._length];
 
 		} else {
 			this._isDirty = true;
@@ -163,8 +175,8 @@ class UByteVertexData extends PrimitiveVertexData {
 		if (index >= this._fixedCapacity) {
 			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
-		if (updateNextIndex && index > this._nextIndex) {
-			this._nextIndex = index;
+		if (updateNextIndex && index > this._length) {
+			this._length = index;
 		}
 	}
 

@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.core.RendererOverrider;
 import lime.math.Vector4;
 import xt3d.utils.math.VectorHelper;
 import xt3d.gl.GLBufferManager;
@@ -159,24 +160,74 @@ class RenderObject extends Node3D {
 
 	}
 
-	public function renderBuffer(program:ShaderProgram):Void {
+	public function renderBuffer(program:ShaderProgram, overrider:RendererOverrider = null):Void {
 		var renderer = Director.current.renderer;
 		var attributeManager = renderer.attributeManager;
 		var bufferManager = renderer.bufferManager;
 
-		var programAttributes = program.attributes;
-		var isIndexed = this._geometry.isIndexed;
+		var geometry = this._geometry;
+		if (overrider != null && overrider.geometry != null && overrider.geometryBlend == GeometryBlendType.GeometryBlendTypeReplace) {
+			geometry = overrider.geometry;
+		}
+
+		var isIndexed = geometry.isIndexed;
 
 		// Initialise attribute manager for this object
 		attributeManager.initForRenderObject();
 
 		// Initialise state of attributes before render
+		var programAttributes = program.attributes;
 		for (attributeState in programAttributes) {
 			attributeState.used = false;
 		}
 
+		// Bind geometry vertex buffers to the attribute locations
+		this.bindVertexBuffersToProgramAttributes(geometry, programAttributes);
+
+		// Add extra buffer data from overrider geometry for custom render pass
+		if (overrider != null && overrider.geometry != null && overrider.geometryBlend == GeometryBlendType.GeometryBlendTypeMix) {
+			this.bindVertexBuffersToProgramAttributes(overrider.geometry, programAttributes);
+		}
+
+		// Disable unused attributes
+		attributeManager.disableUnusedAttributes();
+
+		// Verify that all attributes are used
+		for (attributeState in programAttributes) {
+			if (attributeState.location >= 0 && !attributeState.used) {
+				throw new XTException("UnusedVertexAttribute", "The vertex attribute \"" + attributeState.name + "\" is unused for the program \"" + program.name + "\"");
+			}
+		}
+
+
+		if (isIndexed) {
+			var indices = geometry.indices;
+
+			// Bind the indices
+			indices.bind(bufferManager);
+
+			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
+			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.indexCount;
+
+
+			// Draw the indexed vertices
+			GL.drawElements(this._drawMode, elementCount, indices.type, elementOffset);
+
+		} else {
+			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
+			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.vertexCount;
+
+			GL.drawArrays(this._drawMode, elementOffset, elementCount);
+		}
+	}
+
+	public function bindVertexBuffersToProgramAttributes(geometry:Geometry, programAttributes:Map<String, ProgramAttributeState>):Void {
+		var renderer = Director.current.renderer;
+		var attributeManager = renderer.attributeManager;
+		var bufferManager = renderer.bufferManager;
+
 		// Make sure the geometry data is up to date and is written to opengl buffers
-		this._geometry.updateGeometry(bufferManager);
+		geometry.updateGeometry(bufferManager);
 
 		// Iterate over program attributes
 		for (programAttributeState in programAttributes) {
@@ -196,38 +247,6 @@ class RenderObject extends Node3D {
 					programAttributeState.used = true;
 				}
 			}
-
-		}
-
-		// Disable unused attributes
-		attributeManager.disableUnusedAttributes();
-
-		// Verify that all attributes are used
-		for (attributeState in programAttributes) {
-			if (attributeState.location >= 0 && !attributeState.used) {
-				throw new XTException("UnusedVertexAttribute", "The vertex attribute \"" + attributeState.name + "\" is unused for the program \"" + program.name + "\"");
-			}
-		}
-
-
-		if (isIndexed) {
-			var indices = this._geometry.indices;
-
-			// Bind the indices
-			indices.bind(bufferManager);
-
-			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
-			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.indexCount;
-
-
-			// Draw the indexed vertices
-			GL.drawElements(this._drawMode, elementCount, indices.type, elementOffset);
-
-		} else {
-			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
-			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.vertexCount;
-
-			GL.drawArrays(this._drawMode, elementOffset, elementCount);
 		}
 	}
 

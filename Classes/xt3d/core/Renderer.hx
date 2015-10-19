@@ -47,7 +47,6 @@ class Renderer extends XTObject {
 	private var _attributeManager:GLAttributeManager;
 	private var _textureManager:GLTextureManager;
 	private var _frameBufferManager:GLFrameBufferManager;
-	private var _needsStateInit:Bool = true;
 
 	private var _uniformLib:UniformLib;
 	private var _shaderManager:ShaderManager;
@@ -192,13 +191,7 @@ class Renderer extends XTObject {
 	}
 
 
-	public function render(scene:Scene, camera:Camera) {
-
-		// Not great... can only set the default here ? Not before the first render ?
-//		if (this._needsStateInit) {
-//			this._stateManager.setDefaultGLState();
-//			this._needsStateInit = false;
-//		}
+	public function render(scene:Scene, camera:Camera, overrider:RendererOverrider = null) {
 
 		if (scene != null && camera != null) {
 
@@ -222,8 +215,14 @@ class Renderer extends XTObject {
 			// Set global uniforms for scene
 			scene.prepareRender(camera, this._uniformLib);
 
+			// Initialise overrider
+			if (overrider != null) {
+				overrider.prepareRenderer();
+			}
+
 			// Sort objects
-			if (this._sortingEnabled) {
+			var overrideSorting:Bool = (overrider != null && overrider.sortingEnabled);
+			if ((this._sortingEnabled && overrideSorting) || overrideSorting) {
 
 				if (scene.zSortingStrategy & XTGL.ZSortingOpaque > 0) {
 					// Project transparent objects if we want to sort them in z
@@ -255,10 +254,10 @@ class Renderer extends XTObject {
 
 			// Render opaque objects
 			_stateManager.setBlending(XTGL.NoBlending);
-			this.renderObjects(scene.opaqueObjects, camera, false/*, overrideMaterial*/);
+			this.renderObjects(scene.opaqueObjects, camera, false, overrider);
 
 			// Render transparent objects
-			this.renderObjects(scene.transparentObjects, camera, true/*, overrideMaterial*/);
+			this.renderObjects(scene.transparentObjects, camera, true, overrider);
 
 			// Prepare all common uniforms
 			this._uniformLib.prepareUniforms();
@@ -268,7 +267,7 @@ class Renderer extends XTObject {
 	/**
 	 * Render list of objects
 	 **/
-	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera, useBlending:Bool/*, overrideMaterial:Material*/) {
+	public function renderObjects(renderObjects:Array<RenderObject>, camera:Camera, useBlending:Bool, overrider:RendererOverrider) {
 
 		// Initialise states of shader programs
 		this._renderPassShaders = new Map<String, ShaderProgram>();
@@ -286,8 +285,17 @@ class Renderer extends XTObject {
 			this._uniformLib.uniform("modelViewProjectionMatrix").matrixValue = renderObject.modelViewProjectionMatrix;
 			this._uniformLib.uniform("normalMatrix").matrixValue = renderObject.normalMatrix;
 
-			// Update shader program
+			// Update shader program (overrider if necessary)
 			var material = renderObject.material;
+			if (overrider != null) {
+				// Custom stuff before rendering the object
+				overrider.prepareRenderObject(renderObject, this._uniformLib);
+
+				// Override material if desired
+				if (overrider.material != null) {
+					material = overrider.material;
+				}
+			}
 
 			// Set blending
 			if (useBlending) {
@@ -305,17 +313,17 @@ class Renderer extends XTObject {
 			_stateManager.setMaterialSides(material.side);
 
 			// Render the object buffers
-			this.renderBuffer(material, renderObject, camera);
+			this.renderBuffer(material, renderObject, camera, overrider);
 		}
 	}
 
-	private function renderBuffer(material:Material, renderObject:RenderObject, camera:Camera):Void {
+	private function renderBuffer(material:Material, renderObject:RenderObject, camera:Camera, overrider:RendererOverrider):Void {
 
 		// Set program and uniforms
 		this.setProgram(material, renderObject, camera);
 
 		// Render the buffers
-		renderObject.renderBuffer(material.program);
+		renderObject.renderBuffer(material.program, overrider);
 	}
 
 	private function setProgram(material:Material, renderObject:RenderObject, camera:Camera):Void {

@@ -24,7 +24,7 @@ class Plane extends Geometry {
 
 	public function initWithGeometry(width:Float, height:Float, nx:Int, ny:Int):Bool {
 		var retval;
-		if ((retval = super.init())) {
+		if ((retval = super.initGeometry())) {
 			this._width = width;
 			this._height = height;
 			this._nx = nx;

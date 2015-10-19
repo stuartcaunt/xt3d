@@ -23,8 +23,9 @@ class InterleavedVertexData extends VertexData {
 
 	// properties
 	public var stride(get, null):Int;
+	public var float32Array(get, null):Float32Array;
 
-	// members
+		// members
 	public static var INTERLEAVED_BUFFER_NAME = "interleaved";
 
 	private var _f32Array:Float32Array = null;
@@ -90,6 +91,9 @@ class InterleavedVertexData extends VertexData {
 		return this._stride;
 	}
 
+	function get_float32Array():Float32Array {
+		return this._f32Array;
+	}
 
 	/* --------- Implementation --------- */
 

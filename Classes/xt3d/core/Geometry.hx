@@ -29,6 +29,8 @@ class Geometry extends XTObject {
 		color: 4
 	};
 
+	public static inline var MAX_INDEXED_VERTICES:Int = 1 << 16;
+
 	private static var defaultInterleavedStructure:Map<String, VertexInfo> = [
 		bufferNames.position => { name: bufferNames.position, vertexSize: bufferVertexSizes.position, offset: -1}, // not used by default
 		bufferNames.normal => { name: bufferNames.normal, vertexSize: bufferVertexSizes.normal, offset: -1}, // not used by default
@@ -62,14 +64,14 @@ class Geometry extends XTObject {
 	public static function create():Geometry {
 		var object = new Geometry();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.initGeometry())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init():Bool {
+	public function initGeometry():Bool {
 
 		return true;
 	}
@@ -281,6 +283,22 @@ class Geometry extends XTObject {
 		this._vertexData[bufferNames.color] = data;
 	}
 
+	public inline function getCustomFloatData(bufferName:String):FloatVertexData {
+		return cast this._vertexData[bufferName];
+	}
+
+	public inline function setCustomFloatData(bufferName:String, data:FloatVertexData):Void {
+		this._vertexData[bufferName] = data;
+	}
+
+	public inline function getCustomByteData(bufferName:String):UByteVertexData {
+		return cast this._vertexData[bufferName];
+	}
+
+	public inline function setCustomByteData(bufferName:String, data:UByteVertexData):Void {
+		this._vertexData[bufferName] = data;
+	}
+
 	public inline function createInterleavedVertexData(stride:Int, interleavedDataStructure:Map<String, VertexInfo> = null, fixedCapacity:Int = 0):InterleavedVertexData {
 		if (interleavedDataStructure == null) {
 			interleavedDataStructure = this.cloneDefaultInterleavedStructure();
@@ -353,6 +371,30 @@ class Geometry extends XTObject {
 			vertexData = UByteVertexData.create(bufferNames.color, bufferVertexSizes.color);
 		}
 		this.setByteColorData(vertexData);
+		return vertexData;
+	}
+
+	public inline function createCustomFloatData(bufferName:String, bufferVertexSize:Int, fixedCapacity:Int = 0):FloatVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = FloatVertexData.createWithFixedCapacity(fixedCapacity, bufferName, bufferVertexSize);
+
+		} else {
+			vertexData = FloatVertexData.create(bufferName, bufferVertexSize);
+		}
+		this.setCustomFloatData(bufferName, vertexData);
+		return vertexData;
+	}
+
+	public inline function createCustomByteData(bufferName:String, bufferVertexSize:Int, fixedCapacity:Int = 0):UByteVertexData {
+		var vertexData = null;
+		if (fixedCapacity > 0) {
+			vertexData = UByteVertexData.createWithFixedCapacity(fixedCapacity, bufferName, bufferVertexSize);
+
+		} else {
+			vertexData = UByteVertexData.create(bufferName, bufferVertexSize);
+		}
+		this.setCustomByteData(bufferName, vertexData);
 		return vertexData;
 	}
 

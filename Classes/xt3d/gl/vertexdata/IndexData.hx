@@ -1,9 +1,9 @@
 package xt3d.gl.vertexdata;
 
+import lime.utils.UInt16Array;
 import xt3d.utils.errors.XTException;
 import lime.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
-import lime.utils.Int16Array;
 import lime.graphics.opengl.GLBuffer;
 import lime.graphics.opengl.GL;
 
@@ -15,15 +15,17 @@ class IndexData {
 	private static var MAX_INDEX_CAPACITY = 2 << 16 - 1;
 
 	// properties
+	public var uint16Array(get, null):UInt16Array;
+	public var arrayLength(get, set):Int;
 	public var isDirty(get, set):Bool;
 	public var count(get, null):Int;
 	public var buffer(get, null):GLBuffer;
 	public var type(get, null):Int;
 
 	// members
-	private var _i16Array:Int16Array = null;
+	private var _ui16Array:UInt16Array = null;
 	private var _fixedCapacity:Int = 0;
-	private var _nextIndex:Int = 0;
+	private var _length:Int = 0;
 
 	private var _array:Array<UInt> = new Array<UInt>();
 	private var _buffer:GLBuffer = null;
@@ -74,7 +76,7 @@ class IndexData {
 			throw new XTException("IndexDataCapacityExceedMaximum", "The index data capacity " + fixedCapacity + " exceeds the maximum " + MAX_INDEX_CAPACITY);
 		}
 
-		this._i16Array = new Int16Array(fixedCapacity);
+		this._ui16Array = new UInt16Array(fixedCapacity);
 		this._fixedCapacity = fixedCapacity;
 
 		return true;
@@ -85,6 +87,18 @@ class IndexData {
 	}
 
 	/* ----------- Properties ----------- */
+
+	function get_uint16Array():UInt16Array {
+		return this._ui16Array;
+	}
+
+	function get_arrayLength():Int {
+		return this._length;
+	}
+
+	function set_arrayLength(value:Int) {
+		return this._length = value;
+	}
 
 	public inline function get_isDirty():Bool {
 		return this._isDirty;
@@ -117,8 +131,8 @@ class IndexData {
 
 	// Number of elements
 	public inline function getLength():Int {
-		if (this._i16Array != null) {
-			return this._nextIndex;
+		if (this._ui16Array != null) {
+			return this._length;
 		} else {
 			return this._array.length;
 		}
@@ -149,10 +163,10 @@ class IndexData {
 	}
 
 	private inline function getBufferData():ArrayBufferView {
-		if (this._i16Array != null) {
-			return this._i16Array;
+		if (this._ui16Array != null) {
+			return this._ui16Array;
 		} else {
-			return new Int16Array(this._array);
+			return new UInt16Array(this._array);
 		}
 	}
 
@@ -162,9 +176,9 @@ class IndexData {
 	}
 
 	public inline function set(index:Int, value:Int):Void {
-		if (this._i16Array != null) {
+		if (this._ui16Array != null) {
 			this.handleIndex(index, true);
-			this._i16Array[this._nextIndex++] = value;
+			this._ui16Array[this._length++] = value;
 
 		} else {
 			if (index > MAX_INDEX_CAPACITY) {
@@ -176,9 +190,9 @@ class IndexData {
 	}
 
 	public inline function get(index:Int):Int {
-		if (this._i16Array != null) {
+		if (this._ui16Array != null) {
 			this.handleIndex(index, false);
-			return this._i16Array[index];
+			return this._ui16Array[index];
 
 		} else {
 			return _array[index];
@@ -186,9 +200,9 @@ class IndexData {
 	}
 
 	public inline function push(value:Int):Void {
-		if (this._i16Array != null) {
-			this.handleIndex(this._nextIndex, false);
-			this._i16Array[this._nextIndex++] = value;
+		if (this._ui16Array != null) {
+			this.handleIndex(this._length, false);
+			this._ui16Array[this._length++] = value;
 
 		} else {
 			_array.push(value);
@@ -200,14 +214,14 @@ class IndexData {
 	}
 
 	public inline function pop():Int {
-		if (this._i16Array != null) {
-			if (this._nextIndex <= 0) {
+		if (this._ui16Array != null) {
+			if (this._length <= 0) {
 				throw new XTException("IndexOutOfBounds", "Cannot pop from empty array");
 			}
-			this._nextIndex--;
+			this._length--;
 
 			this._isDirty = true;
-			return this._i16Array[this._nextIndex];
+			return this._ui16Array[this._length];
 
 		} else {
 			this._isDirty = true;
@@ -219,8 +233,8 @@ class IndexData {
 		if (index >= this._fixedCapacity) {
 			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
-		if (updateNextIndex && index > this._nextIndex) {
-			this._nextIndex = index;
+		if (updateNextIndex && index > this._length) {
+			this._length = index;
 		}
 	}
 

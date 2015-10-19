@@ -23,7 +23,7 @@ class Sphere extends Geometry {
 
 	public function initWithGeometry(radius:Float, lons:Int, lats:Int):Bool {
 		var retval;
-		if ((retval = super.init())) {
+		if ((retval = super.initGeometry())) {
 			this._radius = radius;
 			this._lats = lats;
 			this._lons = lons;
