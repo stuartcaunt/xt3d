@@ -1,5 +1,10 @@
 package ;
 
+import xt3d.gl.XTGL;
+import xt3d.gl.XTGL;
+import xt3d.gl.view.Xt3dGLView;
+import xt3d.core.Geometry;
+import xt3d.core.Geometry;
 import xt3d.events.picking.FacePicker;
 import xt3d.extras.CameraController;
 import xt3d.utils.XT;
@@ -69,7 +74,7 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 			var tapGestureRecognizer = TapGestureRecognizer.create(this);
 			this.scene.addChild(tapGestureRecognizer);
 
-			var cameraController = CameraController.create(this._camera, 10.0);
+			var cameraController = CameraController.create(this._camera, 20.0);
 			cameraController.xOrbitFactor = 1.5;
 			this.scene.addChild(cameraController);
 
@@ -92,8 +97,6 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 
 	override public function update(dt:Float):Void {
 
-		this._containerNode.rotationY = this._containerAngle;
-		this._containerAngle -= dt * (360.0 / 16.0);
 	}
 
 
@@ -109,20 +112,20 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 		var material:Material = Material.create("generic+texture+phong");
 		material.uniform("texture").texture = texture;
 		material.uniform("uvScaleOffset").floatArrayValue = texture.uvScaleOffset;
-		material.uniform("defaultShininess").floatValue = 0.7;
 
 		// create geometriy
-		var sphere = Sphere.create(1.3, 15, 15);
+		var geometry = this.createGeometry(10.0, 0.4);
 
-		var sphereNode:MeshNode = MeshNode.create(sphere, material);
-		this._containerNode.addChild(sphereNode);
+		var meshNode:MeshNode = MeshNode.create(geometry, material);
+		material.side = XTGL.DoubleSide;
+		this._containerNode.addChild(meshNode);
 	}
 
 
 	private function createLights():Void {
 
 		this._whiteLight = Light.createPointLight();
-		this._whiteLight.position = new Vector4(7.0, 7.0, 4.0);
+		this._whiteLight.position = new Vector4(10.0, 10.0, 20.0);
 		this._scene.addChild(this._whiteLight);
 		this._whiteLight.renderLight = true;
 
@@ -138,6 +141,78 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 		}
 
 		return false;
+	}
+
+	private function createGeometry(maxDistance:Float, quadSize:Float):Geometry {
+		var nQuads = 1024;
+		var nVertices = 4 * nQuads * 8;
+		var nIndices = 6 * nQuads;
+
+		var geometry = Geometry.create();
+		var vertexData = geometry.createInterleavedVertexData(8, null, nVertices);
+		vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
+		vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
+		vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
+
+		var indices = geometry.createIndexData(nIndices);
+
+		for (i in 0 ... nQuads) {
+			var index = i * 4;
+			var x = (Math.random() - 0.5) * maxDistance;
+			var y = (Math.random() - 0.5) * maxDistance;
+			var z = (Math.random() - 0.5) * maxDistance;
+
+			vertexData.push(x - quadSize);
+			vertexData.push(y - quadSize);
+			vertexData.push(z);
+			vertexData.push(0.0);
+			vertexData.push(0.0);
+			vertexData.push(1.0);
+			vertexData.push(0.0);
+			vertexData.push(1.0);
+
+			vertexData.push(x + quadSize);
+			vertexData.push(y - quadSize);
+			vertexData.push(z);
+			vertexData.push(0.0);
+			vertexData.push(0.0);
+			vertexData.push(1.0);
+			vertexData.push(1.0);
+			vertexData.push(1.0);
+
+			vertexData.push(x - quadSize);
+			vertexData.push(y + quadSize);
+			vertexData.push(z);
+			vertexData.push(0.0);
+			vertexData.push(0.0);
+			vertexData.push(1.0);
+			vertexData.push(0.0);
+			vertexData.push(0.0);
+
+			vertexData.push(x + quadSize);
+			vertexData.push(y + quadSize);
+			vertexData.push(z);
+			vertexData.push(0.0);
+			vertexData.push(0.0);
+			vertexData.push(1.0);
+			vertexData.push(1.0);
+			vertexData.push(0.0);
+
+			var first = index;
+			var second = index + 1;
+			var third = index + 2;
+			var fourth = index + 3;
+
+			indices.push(first);
+			indices.push(second);
+			indices.push(third);
+
+			indices.push(third);
+			indices.push(second);
+			indices.push(fourth);
+		}
+
+		return geometry;
 	}
 
 }

@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.utils.geometry.Size;
 import xt3d.events.GestureDispatcher;
 import xt3d.events.MouseDispatcher;
 import xt3d.events.TouchDispatcher;
@@ -34,6 +35,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public var touchDispatcher(get, null):TouchDispatcher;
 	public var mouseDispatcher(get, null):MouseDispatcher;
 	public var gestureDispatcher(get, null):GestureDispatcher;
+	public var displaySize(get, null):Size<Int>;
 
 	// members
 	private static var _current:Director = null;
@@ -165,6 +167,14 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		return this._gestureDispatcher;
 	}
 
+	function get_displaySize():Size<Int> {
+		if (this._glView != null) {
+			return this._glView.size;
+		}
+		return Size.createIntSize(0, 0);
+	}
+
+
 	/* --------- Xt3dViewListener Implementation --------- */
 
 	public inline function onContextInitialised(view:Xt3dGLView):Void {
@@ -178,10 +188,10 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		}
 
 		// Create new renderer for opengl view
-		this._renderer = Renderer.create(glView.gl);
+		this._renderer = Renderer.create(_glView.gl);
 
 		// Set viewport with full rectangle
-		var size = glView.size;
+		var size = _glView.size;
 		var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
 		_renderer.setViewport(displayRect);
 
@@ -213,7 +223,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public inline function onEvent(view:Xt3dGLView, event:String):Void {
 		if (event == Xt3dGLViewEvent.RESIZE) {
 			// Set viewport with full rectangle
-			var size = glView.size;
+			var size = _glView.size;
 			var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
 			_renderer.setViewport(displayRect);
 
@@ -271,7 +281,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		_views.push(view);
 
 		// Update the display rect (does nothing if not changed)
-		var size = glView.size;
+		var size = _glView.size;
 		var displayRect:Rectangle = new Rectangle(0, 0, size.width, size.height);
 		view.setDisplayRect(displayRect);
 
