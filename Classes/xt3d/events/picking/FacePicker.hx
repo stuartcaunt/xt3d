@@ -1,5 +1,8 @@
 package xt3d.events.picking;
 
+import xt3d.utils.color.Color;
+import xt3d.core.Material;
+import xt3d.core.Material;
 import xt3d.node.Scene;
 import xt3d.node.Camera;
 import xt3d.core.Director;
@@ -19,6 +22,7 @@ class FacePicker {
 
 	// members
 	private var _facePickerGeometry:Geometry = null;
+	private var _facePickerMaterial:Material = null;
 	private var _rendererOverrider:RendererOverrider = null;
 
 	public static function create(geometryType:FacePickerGeometryType = null):FacePicker {
@@ -45,8 +49,11 @@ class FacePicker {
 			this._facePickerGeometry = QuadFacePickerGeometry.create();
 		}
 
+		// Create the material we want to use for the face picking
+		this._facePickerMaterial = Material.create("picking+facePicking");
+
 		// Create a renderer overrider
-		this._rendererOverrider = RendererOverrider.createWithGeometry(this._facePickerGeometry);
+		this._rendererOverrider = RendererOverrider.createWithMaterialAndGeometry(this._facePickerMaterial, this._facePickerGeometry);
 		this._rendererOverrider.geometryBlend = GeometryBlendType.GeometryBlendTypeMix;
 
 		return true;
@@ -66,6 +73,7 @@ class FacePicker {
 		// Set up render texture
 
 		// Render scene with overrider
+		Director.current.renderer.clear(Color.createWithRGBHex(0xFF0000));
 		Director.current.renderer.render(scene, camera, this._rendererOverrider);
 
 		// Determine picked object and face

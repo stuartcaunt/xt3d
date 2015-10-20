@@ -50,6 +50,14 @@ class ShaderLib  {
 				uniforms: [
 					"color" => { name: "u_color", type: "vec4", shader: "vf", defaultValue: "[1, 1, 1, 1]" }
 				]
+			},
+			"picking" => {
+				vertexProgram: "picking_vertex",
+				fragmentProgram: "picking_fragment",
+				commonUniformGroups: ["matrixCommon"],
+				uniforms: [
+					"objectId" => { name: "u_objectId", type: "vec2", shader: "f", defaultValue: "[0.0, 0.0]" }
+				]
 			}
 		];
 
@@ -85,6 +93,14 @@ class ShaderLib  {
 			"material" => {
 				vertexDefines: ["#define USE_MATERIAL_COLOR"],
 				commonUniformGroups: ["material"]
+			},
+
+			"facePicking" => {
+				vertexDefines: ["#define FACE_PICKING"],
+				fragmentDefines: ["#define FACE_PICKING"],
+				attributes: [
+					"faceId" => { name: "a_faceId", type: "vec2" }
+				]
 			}
 
 		];
