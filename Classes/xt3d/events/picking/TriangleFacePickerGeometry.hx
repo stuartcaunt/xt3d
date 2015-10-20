@@ -45,7 +45,7 @@ class TriangleFacePickerGeometry extends Geometry {
 
 	private function createGeometry():Void {
 		// Create a geometry where we change value every 4 vertices
-		var faceInfo = super.createCustomByteData("face_info", 2, this._nVertices * 2);
+		var faceInfo = super.createCustomByteData("face_id", 2, this._nVertices * 2);
 		faceInfo.arrayLength = this._nVertices * 2;
 		var faceInfoArray = faceInfo.uint8Array;
 		var nTriangles = Std.int(this._nVertices / 3);

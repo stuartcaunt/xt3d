@@ -55,6 +55,6 @@ void main(void) {
 //	vec4 mvPosition = u_modelViewMatrix * a_position;
 //	gl_Position = u_projectionMatrix * mvPosition;
 
-	gl_Position = u_modelViewProjectionMatrix * a_position;
+	gl_Position = u_modelViewProjectionMatrix * position;
 //	gl_Position.xy += a_userData;
 }
