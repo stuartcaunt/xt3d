@@ -25,6 +25,7 @@ class RenderObject extends Node3D {
 	public var renderElementsOffset(get, set):Int;
 	public var renderElementsCount(get, set):Int;
 	public var renderZ(get, null):Float;
+	public var renderId(get, set):Int;
 
 	// members
 	private var _material:Material;
@@ -37,6 +38,8 @@ class RenderObject extends Node3D {
 
 	private var _renderElementsOffset = -1;
 	private var _renderElementsCount = -1;
+
+	private var _renderId:Int = 0;
 
 	private var _renderZ:Float = 0.0;
 
@@ -112,6 +115,14 @@ class RenderObject extends Node3D {
 
 	public inline function get_renderZ():Float {
 		return this._renderZ;
+	}
+
+	public inline function get_renderId():Int {
+		return this._renderId;
+	}
+
+	public inline function set_renderId(value:Int) {
+		return this._renderId = value;
 	}
 
 
@@ -267,9 +278,10 @@ class RenderObject extends Node3D {
 		if (this._visible) {
 			// Add object to opaque or transparent list
 			if (this._material.transparent || this._material.opacity < 1.0) {
-				scene.transparentObjects.push(this);
+				scene.addObjectToTransparentRenderList(this);
+
 			} else {
-				scene.opaqueObjects.push(this);
+				scene.addObjectToOpaqueRenderList(this);
 			}
 		}
 	}

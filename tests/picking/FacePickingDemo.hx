@@ -44,6 +44,7 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 	private var _facePicker:FacePicker;
 	private var _containerAngle:Float = 0.0;
 	private var _whiteLight:Light;
+	private var _meshNode:MeshNode;
 
 	public static function create():FacePickingDemoView {
 		var object = new FacePickingDemoView();
@@ -116,9 +117,9 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 		// create geometriy
 		var geometry = this.createGeometry(10.0, 0.4);
 
-		var meshNode:MeshNode = MeshNode.create(geometry, material);
+		this._meshNode = MeshNode.create(geometry, material);
 		material.side = XTGL.DoubleSide;
-		this._containerNode.addChild(meshNode);
+		this._containerNode.addChild(this._meshNode);
 	}
 
 
@@ -135,7 +136,24 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 
 	public function onTap(tapEvent:TapEvent):Bool {
 		if (tapEvent.tapType == TapType.TapTypeDown) {
-			this._facePicker.findPicked(this.scene, this.camera, tapEvent.location);
+			var pickingResult = this._facePicker.findPicked(this.scene, this.camera, tapEvent.location);
+			if (pickingResult.renderObject != null) {
+				XT.Log("Got object " + pickingResult.renderObject.renderId + ", face Id " + pickingResult.faceId);
+
+
+				// Hide quad
+//				if (pickingResult.renderObject == this._meshNode) {
+//					var index = pickingResult.faceId * 6;
+//					var vertexIndex = pickingResult.faceId * 4;
+//					if (this._meshNode.geometry.indexCount > index) {
+//						for (i in 0 ... 4) {
+//							this._meshNode.geometry
+//
+//						}
+//					}
+//				}
+
+			}
 
 		} else if (tapEvent.tapType == TapType.TapTypeUp) {
 		}

@@ -21,6 +21,7 @@ class Scene extends Node3D {
 	private var _opaqueObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _transparentObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _zSortingStrategy:Int = XTGL.ZSortingAll;
+	private var _renderObjectCounter:Int = 0;
 
 	private var _lights:Array<Light> = new Array<Light>();
 	private var _lightingEnabled:Bool = true;
@@ -123,6 +124,7 @@ class Scene extends Node3D {
 		this._opaqueObjects.splice(0, this._opaqueObjects.length);
 		this._transparentObjects.splice(0, this._transparentObjects.length);
 		this._lights.splice(0, this._lights.length);
+		this._renderObjectCounter = 0;
 	}
 
 	inline public function borrowChild(child:Node3D):Void {
@@ -181,7 +183,32 @@ class Scene extends Node3D {
 				lights[i].prepareRender(camera, uniformLib, i);
 			}
 		}
+	}
 
+	public function addObjectToTransparentRenderList(renderObject:RenderObject):Void {
+		this._transparentObjects.push(renderObject);
+		renderObject.renderId = _renderObjectCounter++;
+	}
+
+	public function addObjectToOpaqueRenderList(renderObject:RenderObject):Void {
+		this._opaqueObjects.push(renderObject);
+		renderObject.renderId = _renderObjectCounter++;
+	}
+
+	public function getRenderObjectWithRenderId(renderId:Int):RenderObject {
+		for (renderObject in this._transparentObjects) {
+			if (renderObject.renderId == renderId) {
+				return renderObject;
+			}
+		}
+
+		for (renderObject in this._opaqueObjects) {
+			if (renderObject.renderId == renderId) {
+				return renderObject;
+			}
+		}
+
+		return null;
 	}
 
 }

@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import lime.utils.ArrayBufferView;
 import xt3d.gl.GLInfo;
 import lime.math.Rectangle;
 import lime.graphics.GLRenderContext;
@@ -288,13 +289,13 @@ class Renderer extends XTObject {
 			// Update shader program (overrider if necessary)
 			var material = renderObject.material;
 			if (overrider != null) {
-				// Custom stuff before rendering the object
-				overrider.prepareRenderObject(renderObject, this._uniformLib);
-
 				// Override material if desired
 				if (overrider.material != null) {
 					material = overrider.material;
 				}
+
+				// Custom stuff before rendering the object
+				overrider.prepareRenderObject(renderObject, material);
 			}
 
 			// Set blending
@@ -354,7 +355,7 @@ class Renderer extends XTObject {
 	}
 
 
-	function materialSortStable(a:RenderObject, b:RenderObject):Int {
+	private function materialSortStable(a:RenderObject, b:RenderObject):Int {
 
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;
@@ -368,7 +369,7 @@ class Renderer extends XTObject {
 		}
 	}
 
-	function painterSortStable(a:RenderObject, b:RenderObject):Int {
+	private function painterSortStable(a:RenderObject, b:RenderObject):Int {
 
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;
@@ -385,7 +386,7 @@ class Renderer extends XTObject {
 		}
 	}
 
-	function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
+	private function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
 
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;

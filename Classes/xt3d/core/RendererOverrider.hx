@@ -1,14 +1,19 @@
 package xt3d.core;
 
-import xt3d.gl.shaders.UniformLib;
-import xt3d.gl.shaders.UniformLib;
 import xt3d.node.RenderObject;
-import xt3d.node.RenderObject;
+
+
+
 enum GeometryBlendType {
 	GeometryBlendTypeReplace;
 	GeometryBlendTypeMix;
 }
 
+
+interface RendererOverriderDelegate {
+	public function prepareRenderer():Void;
+	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void;
+}
 
 class RendererOverrider {
 
@@ -17,12 +22,15 @@ class RendererOverrider {
 	public var geometry(get, set):Geometry;
 	public var geometryBlend(get, set):GeometryBlendType;
 	public var sortingEnabled(get, set):Bool;
+	@:isVar public var delegate(get, set):RendererOverriderDelegate;
 
 	// members
 	private var _material:Material;
 	private var _geometry:Geometry;
 	private var _geometryBlend:GeometryBlendType = GeometryBlendType.GeometryBlendTypeReplace;
 	private var _sortingEnabled:Bool = false;
+
+	private var _delegate:RendererOverriderDelegate = null;
 
 
 	public static function createWithMaterial(material:Material):RendererOverrider {
@@ -116,16 +124,28 @@ class RendererOverrider {
 		return this._sortingEnabled = value;
 	}
 
+	inline function get_delegate():RendererOverriderDelegate {
+		return this._delegate;
+	}
+
+	inline function set_delegate(value:RendererOverriderDelegate) {
+		return this._delegate = value;
+	}
+
 
 	/* --------- Implementation --------- */
 
 
 	public function prepareRenderer():Void {
-		// TODO... delegate ?
+		if (this._delegate != null) {
+			this._delegate.prepareRenderer();
+		}
 	}
 
-	public function prepareRenderObject(renderObject:RenderObject, uniformLib:UniformLib):Void {
-		// TODO... delegate ?
+	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void {
+		if (this._delegate != null) {
+			this._delegate.prepareRenderObject(renderObject, material);
+		}
 	}
 
 }
