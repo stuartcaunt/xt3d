@@ -136,7 +136,7 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 
 	public function onTap(tapEvent:TapEvent):Bool {
 		if (tapEvent.tapType == TapType.TapTypeDown) {
-			var pickingResult = this._facePicker.findPicked(this.scene, this.camera, tapEvent.location);
+			var pickingResult = this._facePicker.findPickedFace(this, tapEvent.location);
 			if (pickingResult.renderObject != null) {
 				XT.Log("Got object " + pickingResult.renderObject.renderId + ", face Id " + pickingResult.faceId);
 

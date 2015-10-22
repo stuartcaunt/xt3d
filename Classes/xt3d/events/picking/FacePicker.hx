@@ -1,5 +1,6 @@
 package xt3d.events.picking;
 
+import xt3d.core.View;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.node.RenderObject;
 import lime.graphics.opengl.GL;
@@ -36,6 +37,7 @@ class FacePicker implements RendererOverriderDelegate {
 	private var _facePickerMaterial:Material = null;
 	private var _rendererOverrider:RendererOverrider = null;
 	private var _renderTexture:RenderTexture;
+	private var _clearColor:Color = Color.createWithRGBAHex(0xffffffff);
 
 	public static function create(geometryType:FacePickerGeometryType = null):FacePicker {
 		var object = new FacePicker();
@@ -82,44 +84,29 @@ class FacePicker implements RendererOverriderDelegate {
 
 	/* --------- Implementation --------- */
 
-	public function findPicked(scene:Scene, camera:Camera, location:Vector2):FacePickingResult {
-		// Set up render texture
-		var displaySize = Director.current.displaySize;
-		if (this._renderTexture == null || this._renderTexture.contentSize.width != displaySize.width || this._renderTexture.contentSize.height != displaySize.height) {
-			this._renderTexture = RenderTexture.create(displaySize);
-			XT.Log("Created render texture with size " + displaySize);
+	public function findPickedFace(view:View, location:Vector2):FacePickingResult {
+		// Render scene
+		this.renderForPicking(view);
+
+		// Get picking result
+		return this.getPickingResultAtLocation(location, view.scene);
+	}
+
+	public function findPickedFaces(view:View, locations:Array<Vector2>):Array<FacePickingResult> {
+		// Render scene
+		this.renderForPicking(view);
+
+		// Get picking results at all the locations
+		var results:Array<FacePickingResult> = new Array<FacePickingResult>();
+		for (location in locations) {
+			results.push(this.getPickingResultAtLocation(location, view.scene));
 		}
 
-		// Render scene with overrider
-		Director.current.renderer.setRenderTarget(this._renderTexture);
-		Director.current.renderer.clear(Color.createWithRGBAHex(0xffffffff), this._renderTexture.clearFlags);
-		Director.current.renderer.render(scene, camera, this._rendererOverrider);
-
-		// TODO use view to do render with render target
-		// TODO view.renderToTexture(this._renderTexture, this._rendererOverrider);
-
-		// Get pixel color
-		var pixels = new UInt8Array(4);
-		GL.readPixels(Std.int(location.x), Std.int(this._renderTexture.contentSize.height - location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
-
-//		XT.Log(pixels[0] + ", " + pixels[1] + ", " + pixels[2] + ", " + pixels[3]);
-
-		// Determine picked object and face
-		var renderObjectId = pixels[0] * 256 + pixels[1];
-		var faceId = pixels[2] * 256 + pixels[3];
-
-		var renderObject = null;
-
-		// Return picking result
-		if (renderObjectId != 0xffff && faceId != 0xffff) {
-			renderObject = scene.getRenderObjectWithRenderId(renderObjectId);
-		}
-
-		return { renderObject: renderObject, faceId: faceId };
+		return results;
 	}
 
 
-	// Delegate functions
+	/* --------- Delegate functions --------- */
 
 	public function prepareRenderer():Void {
 		// Nothing to do
@@ -135,5 +122,38 @@ class FacePicker implements RendererOverriderDelegate {
 		this._facePickerMaterial.side = renderObject.material.side;
 	}
 
+
+	/* --------- Private functions --------- */
+
+
+	private function renderForPicking(view:View) {
+		// Set up render texture
+		var displaySize = Director.current.displaySize;
+		if (this._renderTexture == null || this._renderTexture.contentSize.width != displaySize.width || this._renderTexture.contentSize.height != displaySize.height) {
+			this._renderTexture = RenderTexture.create(displaySize);
+			XT.Log("Created render texture with size " + displaySize);
+		}
+
+		// Render scene (using overrider) to render texture
+		view.renderToTexture(this._renderTexture, true, this._clearColor, this._rendererOverrider);
+	}
+
+	private function getPickingResultAtLocation(location:Vector2, scene:Scene):FacePickingResult {
+		// Get pixel color
+		var pixels = new UInt8Array(4);
+		GL.readPixels(Std.int(location.x), Std.int(this._renderTexture.contentSize.height - location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
+
+		// Convert pixel colors to faceId and renderedObjectId
+		var renderObjectId = pixels[0] * 256 + pixels[1];
+		var faceId = pixels[2] * 256 + pixels[3];
+
+		// Return picking result corresponding to object/face ids
+		var renderObject = null;
+		if (renderObjectId != 0xffff && faceId != 0xffff) {
+			renderObject = scene.getRenderObjectWithRenderId(renderObjectId);
+		}
+
+		return { renderObject: renderObject, faceId: faceId };
+	}
 
 }
