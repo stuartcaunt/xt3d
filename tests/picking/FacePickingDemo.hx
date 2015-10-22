@@ -151,7 +151,7 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 
 						// Iterate over 4 vertices
 						for (i in 0 ... 4) {
-							var fromVertexPosition = 4 * numberOfQuads + i;
+							var fromVertexPosition = 4 * (numberOfQuads - 1) + i;
 							var toVertexPosition = 4 * pickingResult.faceId + i;
 
 							// Copy position data
