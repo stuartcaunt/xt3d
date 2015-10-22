@@ -165,7 +165,7 @@ class InterleavedVertexData extends VertexData {
 	public inline function set(index:Int, value:Float):Void {
 		if (this._f32Array != null) {
 			this.handleIndex(index, true);
-			this._f32Array[this._nextIndex++] = value;
+			this._f32Array[index] = value;
 
 		} else {
 			this._array[index] = value;

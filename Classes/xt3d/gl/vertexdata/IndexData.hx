@@ -178,7 +178,7 @@ class IndexData {
 	public inline function set(index:Int, value:Int):Void {
 		if (this._ui16Array != null) {
 			this.handleIndex(index, true);
-			this._ui16Array[this._length++] = value;
+			this._ui16Array[index] = value;
 
 		} else {
 			if (index > MAX_INDEX_CAPACITY) {

@@ -126,7 +126,7 @@ class UByteVertexData extends PrimitiveVertexData {
 	public inline function set(index:Int, value:UInt):Void {
 		if (this._ui8Array != null) {
 			this.handleIndex(index, true);
-			this._ui8Array[this._length++] = value;
+			this._ui8Array[index] = value;
 
 		} else {
 			this._array[index] = value;
