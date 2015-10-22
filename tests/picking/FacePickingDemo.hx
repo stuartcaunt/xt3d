@@ -140,18 +140,32 @@ class FacePickingDemoView extends View implements TapGestureDelegate {
 			if (pickingResult.renderObject != null) {
 				XT.Log("Got object " + pickingResult.renderObject.renderId + ", face Id " + pickingResult.faceId);
 
-
 				// Hide quad
-//				if (pickingResult.renderObject == this._meshNode) {
-//					var index = pickingResult.faceId * 6;
-//					var vertexIndex = pickingResult.faceId * 4;
-//					if (this._meshNode.geometry.indexCount > index) {
-//						for (i in 0 ... 4) {
-//							this._meshNode.geometry
-//
-//						}
-//					}
-//				}
+				if (pickingResult.renderObject == this._meshNode) {
+					var index = pickingResult.faceId * 6;
+					var vertexIndex = pickingResult.faceId * 4;
+					if (this._meshNode.geometry.indexCount > index) {
+						var vertexData = this._meshNode.geometry.interleavedVertexData;
+
+						var numberOfQuads = (this._meshNode.geometry.indexCount / 6);
+
+						// Iterate over 4 vertices
+						for (i in 0 ... 4) {
+							var fromVertexPosition = 4 * numberOfQuads + i;
+							var toVertexPosition = 4 * pickingResult.faceId + i;
+
+							// Copy position data
+							for (p in 0 ... 3) {
+								var fromDataPosition = Std.int(fromVertexPosition * 8) + p;
+								var toDataPosition = Std.int(toVertexPosition * 8) + p;
+								vertexData.set(toDataPosition, vertexData.get(fromDataPosition));
+							}
+						}
+
+						// Reduce number of indices
+						this._meshNode.geometry.indexCount -= 6;
+					}
+				}
 
 			}
 

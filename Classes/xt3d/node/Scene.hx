@@ -20,8 +20,8 @@ class Scene extends Node3D {
 
 	private var _opaqueObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _transparentObjects:Array<RenderObject> = new Array<RenderObject>();
+	private var _allRenderedObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _zSortingStrategy:Int = XTGL.ZSortingAll;
-	private var _renderObjectCounter:Int = 0;
 
 	private var _lights:Array<Light> = new Array<Light>();
 	private var _lightingEnabled:Bool = true;
@@ -104,12 +104,25 @@ class Scene extends Node3D {
 		return this._transparentObjects;
 	}
 
-	inline public function addOpqueObject(object:RenderObject):Void {
-		this._opaqueObjects.push(object);
+	public function addObjectToTransparentRenderList(renderObject:RenderObject):Void {
+		this._transparentObjects.push(renderObject);
+
+		renderObject.renderId = this._allRenderedObjects.length;
+		this._allRenderedObjects.push(renderObject);
 	}
 
-	inline public function addTransparentObject(object:RenderObject):Void {
-		this._transparentObjects.push(object);
+	public function addObjectToOpaqueRenderList(renderObject:RenderObject):Void {
+		this._opaqueObjects.push(renderObject);
+
+		renderObject.renderId = this._allRenderedObjects.length;
+		this._allRenderedObjects.push(renderObject);
+	}
+
+	public function getRenderObjectWithRenderId(renderId:Int):RenderObject {
+		if (renderId < this._allRenderedObjects.length) {
+			return this._allRenderedObjects[renderId];
+		}
+		return null;
 	}
 
 	inline public function addLight(light:Light):Void {
@@ -123,8 +136,8 @@ class Scene extends Node3D {
 		// Initialise arrays for transparent and opaque objects
 		this._opaqueObjects.splice(0, this._opaqueObjects.length);
 		this._transparentObjects.splice(0, this._transparentObjects.length);
+		this._allRenderedObjects.splice(0, this._allRenderedObjects.length);
 		this._lights.splice(0, this._lights.length);
-		this._renderObjectCounter = 0;
 	}
 
 	inline public function borrowChild(child:Node3D):Void {
@@ -183,32 +196,6 @@ class Scene extends Node3D {
 				lights[i].prepareRender(camera, uniformLib, i);
 			}
 		}
-	}
-
-	public function addObjectToTransparentRenderList(renderObject:RenderObject):Void {
-		this._transparentObjects.push(renderObject);
-		renderObject.renderId = _renderObjectCounter++;
-	}
-
-	public function addObjectToOpaqueRenderList(renderObject:RenderObject):Void {
-		this._opaqueObjects.push(renderObject);
-		renderObject.renderId = _renderObjectCounter++;
-	}
-
-	public function getRenderObjectWithRenderId(renderId:Int):RenderObject {
-		for (renderObject in this._transparentObjects) {
-			if (renderObject.renderId == renderId) {
-				return renderObject;
-			}
-		}
-
-		for (renderObject in this._opaqueObjects) {
-			if (renderObject.renderId == renderId) {
-				return renderObject;
-			}
-		}
-
-		return null;
 	}
 
 }
