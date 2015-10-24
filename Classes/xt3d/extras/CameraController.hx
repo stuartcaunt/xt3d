@@ -19,6 +19,7 @@ class CameraController extends Node3D implements PanGestureDelegate implements P
 
 	public var camera(get, set):Camera;
 	public var target(get, set):Node3D;
+	public var cameraPosition(get, set):Vector4;
 
 	// members
 	private var _orbit:Float;
@@ -128,6 +129,17 @@ class CameraController extends Node3D implements PanGestureDelegate implements P
 		return this._target = value;
 	}
 
+	function get_cameraPosition():Vector4 {
+		return this.getCameraPosition();
+	}
+
+	function set_cameraPosition(value:Vector4) {
+		this.setCameraPosition(value);
+		return value;
+	}
+
+
+
 	/* --------- Implementation --------- */
 
 	override public function update(dt:Float):Void {
@@ -184,5 +196,25 @@ class CameraController extends Node3D implements PanGestureDelegate implements P
 
 		return false;
 	}
+
+	public function getCameraPosition():Vector4 {
+		return this._camera.position;
+	}
+
+	public function setCameraPosition(position:Vector4):Void {
+		var x = position.x;
+		var y = position.y;
+		var z = position.z;
+		var xMod = x / this._xOrbitFactor;
+		var yMod = y / this._yOrbitFactor;
+		var zMod = z / this._zOrbitFactor;
+
+		this._orbit = Math.sqrt(x * x + y * y + z * z);
+		this._phi = Math.asin(yMod / this._orbit) * 180.0 / Math.PI;
+		this._theta = Math.asin(xMod / this._orbit) * 180.0 / Math.PI;
+
+		this._camera.position = new Vector4(x, y, z);
+	}
+
 
 }

@@ -15,7 +15,6 @@ import lime.math.Vector4;
 import xt3d.node.MeshNode;
 import xt3d.core.Material;
 import xt3d.textures.Texture2D;
-import xt3d.primitives.Sphere;
 import xt3d.node.Node3D;
 import xt3d.core.View;
 import xt3d.utils.color.Color;

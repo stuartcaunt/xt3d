@@ -201,10 +201,8 @@ class View extends EventEmitter {
 	}
 
 
-	public function render(renderer:Renderer = null):Void {
-		if (renderer == null) {
-			renderer = Director.current.renderer;
-		}
+	public function render(rendererOverrider:RendererOverrider = null):Void {
+		var renderer = Director.current.renderer;
 
 		// Set viewport with full rectangle
 		renderer.setViewport(viewport);
@@ -213,7 +211,7 @@ class View extends EventEmitter {
 		renderer.clear(backgroundColor);
 
 		// Render scene with camera
-		renderer.render(this.scene, this.camera);
+		renderer.render(this.scene, this.camera, rendererOverrider);
 	}
 
 	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {

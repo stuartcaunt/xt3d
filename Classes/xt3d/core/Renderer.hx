@@ -208,7 +208,7 @@ class Renderer extends XTObject {
 			this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
 
 			// Update objects - anything that needs to be done before rendering
-			scene.updateObjects(scene);
+			scene.prepareObjectsForRender(scene, overrider);
 
 			// Set global uniforms for camera
 			camera.prepareRender(this._uniformLib);

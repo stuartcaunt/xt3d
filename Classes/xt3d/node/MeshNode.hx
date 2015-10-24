@@ -42,10 +42,4 @@ class MeshNode extends RenderObject {
 
 	/* --------- Implementation --------- */
 
-	/* --------- Scene graph --------- */
-
-	override public function updateObject(scene:Scene):Void {
-		super.updateObject(scene);
-	}
-
 }

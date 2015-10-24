@@ -272,12 +272,17 @@ class RenderObject extends Node3D {
 
 	/* --------- Scene graph --------- */
 
-	override public function updateObject(scene:Scene):Void {
-		super.updateObject(scene);
+	override public function prepareObjectForRender(scene:Scene, overrider:RendererOverrider = null):Void {
+		super.prepareObjectForRender(scene, overrider);
 
 		if (this._visible) {
+			var material = this._material;
+			if (overrider != null && overrider.material != null) {
+				material = overrider.material;
+			}
+
 			// Add object to opaque or transparent list
-			if (this._material.transparent || this._material.opacity < 1.0) {
+			if (material.transparent || material.opacity < 1.0) {
 				scene.addObjectToTransparentRenderList(this);
 
 			} else {

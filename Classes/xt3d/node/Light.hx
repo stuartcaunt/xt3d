@@ -1,6 +1,7 @@
 package xt3d.node;
 
 
+import xt3d.core.RendererOverrider;
 import xt3d.primitives.Sphere;
 import xt3d.core.Material;
 import xt3d.utils.XT;
@@ -262,7 +263,7 @@ class Light extends Node3D {
 		this._direction.z = value.z / len;
 	}
 
-	override public function updateObject(scene:Scene):Void {
+	override public function prepareObjectForRender(scene:Scene, overrider:RendererOverrider = null):Void {
 		if (this._enabled) {
 			scene.addLight(this);
 		}

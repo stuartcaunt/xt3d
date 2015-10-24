@@ -101,8 +101,15 @@ class ShaderLib  {
 				attributes: [
 					"faceId" => { name: "a_faceId", type: "vec2" }
 				]
-			}
+			},
 
+			"alphaCulling" => {
+				vertexDefines: ["#define ALPHA_CULLING"],
+				fragmentDefines: ["#define ALPHA_CULLING"],
+				uniforms: [
+					"alphaCullingValue" => { name: "u_alphaCullingValue", type: "float", shader: "f", slot: "0.0" }
+				]
+			}
 		];
 	}
 

@@ -1,72 +1,50 @@
 package xt3d.events.picking;
 
-import xt3d.core.View;
-import xt3d.node.RenderObject;
-import lime.graphics.opengl.GL;
-import lime.utils.UInt8Array;
-import xt3d.utils.geometry.Size;
-import xt3d.textures.RenderTexture;
-import xt3d.utils.color.Color;
-import xt3d.core.Material;
 import xt3d.node.Scene;
+import xt3d.events.picking.FacePicker.FacePickingResult;
+import lime.utils.UInt8Array;
 import xt3d.core.Director;
 import lime.math.Vector2;
+import lime.graphics.opengl.GL;
+import xt3d.core.View;
+import xt3d.core.Material;
 import xt3d.core.RendererOverrider;
-import xt3d.core.Geometry;
+import xt3d.textures.RenderTexture;
+import xt3d.utils.color.Color;
+import xt3d.node.RenderObject;
 
-typedef FacePickingResult = {
+typedef ObjectPickingResult = {
 	var renderObject:RenderObject;
-	var faceId:Int;
 };
 
-enum FacePickerGeometryType {
-	FacePickerGeometryTypeTriangle;
-	FacePickerGeometryTypeQuad;
-	FacePickerGeometryTypeCustom;
-}
 
-class FacePicker implements RendererOverriderDelegate {
+class ObjectPicker implements RendererOverriderDelegate {
 
 	// properties
 
 	// members
-	private var _facePickerGeometry:Geometry = null;
-	private var _facePickerMaterial:Material = null;
+	private var _objectPickerMaterial:Material = null;
 	private var _rendererOverrider:RendererOverrider = null;
 	private var _renderTexture:RenderTexture;
 	private var _clearColor:Color = Color.createWithRGBAHex(0xffffffff);
 
-	public static function create(geometryType:FacePickerGeometryType = null):FacePicker {
-		var object = new FacePicker();
+	public static function create():ObjectPicker {
+		var object = new ObjectPicker();
 
-		if (object != null && !(object.init(geometryType))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(geometryType:FacePickerGeometryType = null):Bool {
-
-		if (geometryType == null) {
-			geometryType = FacePickerGeometryType.FacePickerGeometryTypeTriangle;
-		}
-
-		// Create face picking geometry
-		if (geometryType == FacePickerGeometryType.FacePickerGeometryTypeTriangle) {
-			this._facePickerGeometry = TriangleFacePickerGeometry.create();
-
-		} else if (geometryType == FacePickerGeometryType.FacePickerGeometryTypeQuad) {
-			this._facePickerGeometry = QuadFacePickerGeometry.create();
-		}
-
-		// Create the material we want to use for the face picking
-		this._facePickerMaterial = Material.create("picking+facePicking");
+	public function init():Bool {
+		// Create the material we want to use for the object picking
+		this._objectPickerMaterial = Material.create("picking");
 
 		// Create a renderer overrider
-		this._rendererOverrider = RendererOverrider.createWithMaterialAndGeometry(this._facePickerMaterial, this._facePickerGeometry);
+		this._rendererOverrider = RendererOverrider.createWithMaterial(this._objectPickerMaterial);
 		this._rendererOverrider.delegate = this;
-		this._rendererOverrider.geometryBlend = GeometryBlendType.GeometryBlendTypeMix;
 
 		return true;
 	}
@@ -81,7 +59,8 @@ class FacePicker implements RendererOverriderDelegate {
 
 	/* --------- Implementation --------- */
 
-	public function findPickedFace(view:View, location:Vector2):FacePickingResult {
+
+	public function findPickedObject(view:View, location:Vector2):ObjectPickingResult {
 		// Render scene
 		this.renderForPicking(view);
 
@@ -89,12 +68,12 @@ class FacePicker implements RendererOverriderDelegate {
 		return this.getPickingResultAtLocation(location, view.scene);
 	}
 
-	public function findPickedFaces(view:View, locations:Array<Vector2>):Array<FacePickingResult> {
+	public function findPickedObjects(view:View, locations:Array<Vector2>):Array<ObjectPickingResult> {
 		// Render scene
 		this.renderForPicking(view);
 
 		// Get picking results at all the locations
-		var results:Array<FacePickingResult> = new Array<FacePickingResult>();
+		var results:Array<ObjectPickingResult> = new Array<ObjectPickingResult>();
 		for (location in locations) {
 			results.push(this.getPickingResultAtLocation(location, view.scene));
 		}
@@ -113,10 +92,10 @@ class FacePicker implements RendererOverriderDelegate {
 		// Set render object id in material uniforms
 		var renderIdHigh = Std.int(renderObject.renderId / 256);
 		var renderIdLow = renderObject.renderId % 256;
-		this._facePickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 256, renderIdLow / 256];
+		this._objectPickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 256, renderIdLow / 256];
 
 		// Set picking material sided-ness to match original material
-		this._facePickerMaterial.side = renderObject.material.side;
+		this._objectPickerMaterial.side = renderObject.material.side;
 	}
 
 
@@ -134,22 +113,21 @@ class FacePicker implements RendererOverriderDelegate {
 		view.renderToTexture(this._renderTexture, true, this._clearColor, this._rendererOverrider);
 	}
 
-	private function getPickingResultAtLocation(location:Vector2, scene:Scene):FacePickingResult {
+	private function getPickingResultAtLocation(location:Vector2, scene:Scene):ObjectPickingResult {
 		// Get pixel color
 		var pixels = new UInt8Array(4);
 		GL.readPixels(Std.int(location.x), Std.int(this._renderTexture.contentSize.height - location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
 
-		// Convert pixel colors to faceId and renderedObjectId
+		// Convert pixel colors to renderedObjectId
 		var renderObjectId = pixels[0] * 256 + pixels[1];
-		var faceId = pixels[2] * 256 + pixels[3];
 
 		// Return picking result corresponding to object/face ids
 		var renderObject = null;
-		if (renderObjectId != 0xffff && faceId != 0xffff) {
+		if (renderObjectId != 0xffff) {
 			renderObject = scene.getRenderObjectWithRenderId(renderObjectId);
 		}
 
-		return { renderObject: renderObject, faceId: faceId };
+		return { renderObject: renderObject };
 	}
 
 }

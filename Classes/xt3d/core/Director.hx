@@ -351,7 +351,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		// Iterate over all views
 		for (view in _views) {
 			// Render view
-			view.render(_renderer);
+			view.render();
 		}
 
 		// send pre-render event (custom updates before rendering)

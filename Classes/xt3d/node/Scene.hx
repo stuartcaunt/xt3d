@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.core.RendererOverrider;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.color.Color;
 import xt3d.utils.XT;
@@ -132,7 +133,7 @@ class Scene extends Node3D {
 
 	/* --------- Scene graph --------- */
 
-	override public function updateObject(scene:Scene):Void {
+	override public function prepareObjectForRender(scene:Scene, overrider:RendererOverrider = null):Void {
 		// Initialise arrays for transparent and opaque objects
 		this._opaqueObjects.splice(0, this._opaqueObjects.length);
 		this._transparentObjects.splice(0, this._transparentObjects.length);

@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.core.RendererOverrider;
 import xt3d.utils.math.VectorHelper;
 import xt3d.utils.XTObject;
 import xt3d.utils.XT;
@@ -238,23 +239,23 @@ class Node3D extends XTObject {
 		return this._parent;
 	}
 
-	public function updateObjects(scene:Scene):Void {
+	public function prepareObjectsForRender(scene:Scene, overrider:RendererOverrider = null):Void {
 		// If excluded then ignore all children too
 		if (this._excluded) {
 			return;
 		}
 
 		// Individual update
-		this.updateObject(scene);
+		this.prepareObjectForRender(scene, overrider);
 
 		for (child in this._children) {
-			child.updateObjects(scene);
+			child.prepareObjectsForRender(scene, overrider);
 		}
 
 	}
 
 
-	public function updateObject(scene:Scene):Void {
+	public function prepareObjectForRender(scene:Scene, overrider:RendererOverrider = null):Void {
 		// Override me
 	}
 

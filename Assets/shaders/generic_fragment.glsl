@@ -23,6 +23,12 @@ void main() {
 	specular += v_specular;
 #endif /* GOURAUD_LIGHTING */
 
+#ifdef ALPHA_CULLING
+	if (color.a <= u_alphaCullingValue) {
+		discard;
+	}
+#endif /* ALPHA_CULLING */
+
 	color = vec4(color.rgb + specular, color.a);
 	color = clamp(color, 0.0, 1.0);
 
