@@ -1,15 +1,6 @@
 TODO
 ====
 
-- Picking
-x   render picking
-x     16 bits for face ( each face = 3 elements) and 16 bit for object
-x     render pass with id
-x       specify objects that are rendered for specific id
-x   face picking
-  - object picking
-    - transparent materials not working...
-
 - Uniforms
   - int/byte values
 
@@ -302,6 +293,13 @@ x   Camera controller
 x Node:
 x   onAddedToScene
 x   onRemoveFromScene
+x Picking
+x   render picking
+x     16 bits for face ( each face = 3 elements) and 16 bit for object
+x     render pass with id
+x       specify objects that are rendered for specific id
+x   face picking
+x  - object picking
 
 
 
