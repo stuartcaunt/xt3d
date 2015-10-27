@@ -22,6 +22,7 @@ class Uniform  {
 	public var type(get, null):String;
 	public var boolValue(get, set):Bool;
 	public var floatValue(get, set):Float;
+	public var intValue(get, set):Int;
 	public var floatArrayValue(get, set):Array<Float>;
 	public var matrixValue(get, set):Matrix4;
 	public var texture(get, set):Texture2D;
@@ -40,6 +41,7 @@ class Uniform  {
 
 	private var _boolValue:Bool = false;
 	private var _floatValue:Float = 0.0;
+	private var _intValue:Int = 0;
 	private var _floatArrayValue:Array<Float> = new Array<Float>();
 	private var _float32ArrayValue:Float32Array;
 	private var _matrixValue:Matrix4 = new Matrix4();
@@ -48,6 +50,7 @@ class Uniform  {
 
 	private var _defaultBoolValue:Bool = false;
 	private var _defaultFloatValue:Float = 0.0;
+	private var _defaultIntValue:Int = 0;
 	private var _defaultFloatArrayValue:Array<Float> = null;
 	private var _defaultMatrixValue:Matrix4 = new Matrix4();
 	private var _defaultTexture:Texture2D = null;
@@ -243,6 +246,15 @@ class Uniform  {
 		return this._floatValue;
 	}
 
+	public inline function get_intValue():Int {
+		return this._intValue;
+	}
+
+	public function set_intValue(value:Int) {
+		this.setIntValue(value);
+		return this._intValue;
+	}
+
 	public inline function get_floatArrayValue():Array<Float> {
 		return this._floatArrayValue;
 	}
@@ -374,6 +386,9 @@ class Uniform  {
 				if (type == "float") {
 					GL.uniform1f(this._location, this._floatValue);
 
+				} else if (type == "int") {
+					GL.uniform1i(this._location, this._intValue);
+
 				} else if (type == "bool") {
 					GL.uniform1i(this._location, this._boolValue ? 1 : 0);
 
@@ -457,6 +472,9 @@ class Uniform  {
 			if (this._type == "float") {
 				this.setFloatValue(uniform.floatValue);
 
+			} else if (this._type == "int") {
+				this.setIntValue(uniform.intValue);
+
 			} else if (this._type == "bool") {
 				this.setBoolValue(uniform.boolValue);
 
@@ -483,6 +501,10 @@ class Uniform  {
 	public function setFloatValue(value:Float) {
 		if (this._size != 1) {
 			throw new XTException("IncoherentUniformValue", "A float value is being set for the uniform array " + _uniformInfo.name);
+
+		} else if (this._type != "float") {
+			throw new XTException("IncoherentUniformValue", "A float value is being set for a " + this._type + " uniform " + _uniformInfo.name);
+
 		} else {
 			_hasBeenSet = true;
 
@@ -493,9 +515,30 @@ class Uniform  {
 		}
 	}
 
+	public function setIntValue(value:Int) {
+		if (this._size != 1) {
+			throw new XTException("IncoherentUniformValue", "An int value is being set for the uniform array " + _uniformInfo.name);
+
+		} else if (this._type != "int") {
+			throw new XTException("IncoherentUniformValue", "An int value is being set for a " + this._type + " uniform " + _uniformInfo.name);
+
+		} else {
+			_hasBeenSet = true;
+
+			if (_intValue != value) {
+				_intValue = value;
+				_isDirty = true;
+			}
+		}
+	}
+
 	public function setBoolValue(value:Bool) {
 		if (this._size != 1) {
 			throw new XTException("IncoherentUniformValue", "A bool value is being set for the uniform array " + _uniformInfo.name);
+
+		} else if (this._type != "bool") {
+			throw new XTException("IncoherentUniformValue", "A bool value is being set for a " + this._type + " uniform " + _uniformInfo.name);
+
 		} else {
 			_hasBeenSet = true;
 
@@ -598,6 +641,18 @@ class Uniform  {
 				}
 			}
 			setFloatValue(this._defaultFloatValue);
+
+		} else if (type == "int") {
+			if (defaultValue != null) {
+				var intValue:Int = Std.parseInt(defaultValue);
+				if (intValue == Math.NaN) {
+					throw new XTException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
+
+				} else {
+					this._defaultIntValue = intValue;
+				}
+			}
+			setIntValue(this._defaultIntValue);
 
 		} else if (type == "bool") {
 			this._size = 1;
