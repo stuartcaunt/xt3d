@@ -1,9 +1,6 @@
 TODO
 ====
 
-- Uniforms
-  - int/byte values
-
 - framework like flixel or lime
   - sample projects (demos)
   - template project
@@ -300,6 +297,9 @@ x     render pass with id
 x       specify objects that are rendered for specific id
 x   face picking
 x  - object picking
+x Uniforms
+x   int values
+
 
 
 

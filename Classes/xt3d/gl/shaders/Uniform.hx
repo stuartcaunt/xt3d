@@ -4,6 +4,7 @@ import xt3d.utils.math.MatrixHelper;
 import xt3d.gl.GLTextureManager;
 import xt3d.textures.Texture2D;
 import lime.utils.Float32Array;
+import lime.utils.Int32Array;
 import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLUniformLocation;
 import lime.graphics.opengl.GL;
@@ -24,6 +25,7 @@ class Uniform  {
 	public var floatValue(get, set):Float;
 	public var intValue(get, set):Int;
 	public var floatArrayValue(get, set):Array<Float>;
+	public var intArrayValue(get, set):Array<Int>;
 	public var matrixValue(get, set):Matrix4;
 	public var texture(get, set):Texture2D;
 	public var textureSlot(get, set):Int;
@@ -43,7 +45,9 @@ class Uniform  {
 	private var _floatValue:Float = 0.0;
 	private var _intValue:Int = 0;
 	private var _floatArrayValue:Array<Float> = new Array<Float>();
+	private var _intArrayValue:Array<Int> = new Array<Int>();
 	private var _float32ArrayValue:Float32Array;
+	private var _int32ArrayValue:Int32Array;
 	private var _matrixValue:Matrix4 = new Matrix4();
 	private var _texture:Texture2D = null;
 	private var _textureSlot:Int = -1;
@@ -52,6 +56,7 @@ class Uniform  {
 	private var _defaultFloatValue:Float = 0.0;
 	private var _defaultIntValue:Int = 0;
 	private var _defaultFloatArrayValue:Array<Float> = null;
+	private var _defaultIntArrayValue:Array<Int> = null;
 	private var _defaultMatrixValue:Matrix4 = new Matrix4();
 	private var _defaultTexture:Texture2D = null;
 	private var _defaultTextureSlot:Int = -1;
@@ -260,8 +265,17 @@ class Uniform  {
 	}
 
 	public function set_floatArrayValue(value:Array<Float>) {
-		setArrayValue(value);
+		setFloatArrayValue(value);
 		return this._floatArrayValue;
+	}
+
+	public inline function get_intArrayValue():Array<Int> {
+		return this._intArrayValue;
+	}
+
+	public function set_intArrayValue(value:Array<Int>) {
+		setIntArrayValue(value);
+		return this._intArrayValue;
 	}
 
 	public inline function get_matrixValue():Matrix4 {
@@ -397,7 +411,7 @@ class Uniform  {
 
 				} else if (type == "vec2") {
 					#if js
-					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					this.copyToTypedFloatArray(this._floatArrayValue, this._float32ArrayValue);
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
@@ -405,7 +419,7 @@ class Uniform  {
 
 				} else if (type == "vec3") {
 					#if js
-					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					this.copyToTypedFloatArray(this._floatArrayValue, this._float32ArrayValue);
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
@@ -413,16 +427,40 @@ class Uniform  {
 
 				} else if (type == "vec4") {
 					#if js
-					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					this.copyToTypedFloatArray(this._floatArrayValue, this._float32ArrayValue);
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
 					GL.uniform4fv(this._location, this._float32ArrayValue);
 
+				} else if (type == "ivec2") {
+					#if js
+					this.copyToTypedIntArray(this._intArrayValue, this._int32ArrayValue);
+					#else
+					this._int32ArrayValue.set(this._intArrayValue);
+					#end
+					GL.uniform2iv(this._location, this._int32ArrayValue);
+
+				} else if (type == "ivec3") {
+					#if js
+					this.copyToTypedIntArray(this._intArrayValue, this._int32ArrayValue);
+					#else
+					this._int32ArrayValue.set(this._intArrayValue);
+					#end
+					GL.uniform3iv(this._location, this._int32ArrayValue);
+
+				} else if (type == "ivec4") {
+					#if js
+					this.copyToTypedIntArray(this._intArrayValue, this._int32ArrayValue);
+					#else
+					this._int32ArrayValue.set(this._intArrayValue);
+					#end
+					GL.uniform4iv(this._location, this._int32ArrayValue);
+
 				} else if (type == "mat3") {
 					MatrixHelper.copy3x3ToArray(this._matrixValue, this._floatArrayValue);
 					#if js
-					this.copyToTypedArray(this._floatArrayValue, this._float32ArrayValue);
+					this.copyToTypedFloatArray(this._floatArrayValue, this._float32ArrayValue);
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
@@ -446,7 +484,14 @@ class Uniform  {
 		}
 	}
 
-	private inline function copyToTypedArray(input:Array<Float>, out:Float32Array):Void {
+	private inline function copyToTypedFloatArray(input:Array<Float>, out:Float32Array):Void {
+		var length = input.length;
+		for (i in 0 ... length) {
+			out[i] = input[i];
+		}
+	}
+
+	private inline function copyToTypedIntArray(input:Array<Int>, out:Int32Array):Void {
 		var length = input.length;
 		for (i in 0 ... length) {
 			out[i] = input[i];
@@ -480,7 +525,12 @@ class Uniform  {
 
 			} else if (this._type == "vec2" || this.type == "vec3" || this.type == "vec4") {
 				if (uniform.floatArrayValue != null && uniform.floatArrayValue.length > 0) {
-					this.setArrayValue(uniform.floatArrayValue);
+					this.setFloatArrayValue(uniform.floatArrayValue);
+				}
+
+			} else if (this._type == "ivec2" || this.type == "ivec3" || this.type == "ivec4") {
+				if (uniform.intArrayValue != null && uniform.intArrayValue.length > 0) {
+					this.setIntArrayValue(uniform.intArrayValue);
 				}
 
 			} else if (this._type == "mat3" || this._type == "mat4") {
@@ -549,13 +599,16 @@ class Uniform  {
 		}
 	}
 
-	public function setArrayValue(value:Array<Float>) {
+	public function setFloatArrayValue(value:Array<Float>) {
 		if (value != null) {
 			if (this._size == 1 || this._size == 16 || this._size == 16) {
 				throw new XTException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
 
 			} else if (_size != value.length) {
 				throw new XTException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
+
+			} else if (this._type != "vec2" && this._type != "vec3" && this._type != "vec4") {
+				throw new XTException("IncoherentUniformValue", "A non float vector value is being set for a " + this._type + " uniform " + _uniformInfo.name);
 
 			} else {
 				this._hasBeenSet = true;
@@ -571,6 +624,38 @@ class Uniform  {
 				if (hasChanged) {
 					// Copy array values
 					this._floatArrayValue = value.copy();
+					this._isDirty = true;
+				}
+
+			}
+		}
+	}
+
+	public function setIntArrayValue(value:Array<Int>) {
+		if (value != null) {
+			if (this._size == 1 || this._size == 16 || this._size == 16) {
+				throw new XTException("IncoherentUniformValue", "A float or matrix value is being set for the array uniform " + _uniformInfo.name);
+
+			} else if (_size != value.length) {
+				throw new XTException("IncoherentUniformValue", "An array of size " + value.length + " is being set for the uniform array " + _uniformInfo.name + " with size " + _size);
+
+			} else if (this._type != "ivec2" && this._type != "ivec3" && this._type != "ivec4") {
+				throw new XTException("IncoherentUniformValue", "A non int vector value is being set for a " + this._type + " uniform " + _uniformInfo.name);
+
+			} else {
+				this._hasBeenSet = true;
+
+				// Comparison of both arrays
+				var hasChanged = false;
+				var i = 0;
+				while (!hasChanged && i < value.length) {
+					hasChanged = (value[i] != this._intArrayValue[i]);
+					i++;
+				}
+
+				if (hasChanged) {
+					// Copy array values
+					this._intArrayValue = value.copy();
 					this._isDirty = true;
 				}
 
@@ -667,7 +752,7 @@ class Uniform  {
 			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
 			}
-			setArrayValue(this._defaultFloatArrayValue);
+			setFloatArrayValue(this._defaultFloatArrayValue);
 
 		} else if (type == "vec3") {
 			this._size = 3;
@@ -675,7 +760,7 @@ class Uniform  {
 			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
 			}
-			setArrayValue(this._defaultFloatArrayValue);
+			setFloatArrayValue(this._defaultFloatArrayValue);
 
 		} else if (type == "vec4") {
 			this._size = 4;
@@ -683,7 +768,31 @@ class Uniform  {
 			if (defaultValue != null) {
 				this._defaultFloatArrayValue = haxe.Json.parse(defaultValue);
 			}
-			setArrayValue(this._defaultFloatArrayValue);
+			setFloatArrayValue(this._defaultFloatArrayValue);
+
+		} else if (type == "ivec2") {
+			this._size = 2;
+			this._int32ArrayValue = new Int32Array(2);
+			if (defaultValue != null) {
+				this._defaultIntArrayValue = haxe.Json.parse(defaultValue);
+			}
+			setIntArrayValue(this._defaultIntArrayValue);
+
+		} else if (type == "ivec3") {
+			this._size = 3;
+			this._int32ArrayValue = new Int32Array(3);
+			if (defaultValue != null) {
+				this._defaultIntArrayValue = haxe.Json.parse(defaultValue);
+			}
+			setIntArrayValue(this._defaultIntArrayValue);
+
+		} else if (type == "ivec4") {
+			this._size = 4;
+			this._int32ArrayValue = new Int32Array(4);
+			if (defaultValue != null) {
+				this._defaultIntArrayValue = haxe.Json.parse(defaultValue);
+			}
+			setIntArrayValue(this._defaultIntArrayValue);
 
 		} else if (type == "mat3" || type == "mat4") {
 			if (type == "mat3") {
