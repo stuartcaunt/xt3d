@@ -1,7 +1,12 @@
 TODO
 ====
 
+- update lime
+
 - framework like flixel or lime
+  - fix lime version
+  - add include.xml
+    - include lime dependency ?
   - sample projects (demos)
   - template project
 

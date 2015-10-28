@@ -12,7 +12,7 @@ class XT  {
 	private static var timer:Float = Timer.stamp();
 
 	public static function Log(v:Dynamic, ?info:haxe.PosInfos):Void {
-#if KF_DEBUG
+#if XT_DEBUG
 		var ms = (Std.int)((Timer.stamp() - timer) * 1000) % 1000;
 		haxe.Log.trace(DateTools.format(Date.now(), "%d/%m/%Y %H:%M:%S") + "." + ms + ": " + v, info);
 #else
@@ -21,7 +21,7 @@ class XT  {
 	}
 
 	public static function Warn(v:Dynamic, ?info:haxe.PosInfos):Void {
-		#if KF_DEBUG
+		#if XT_DEBUG
 		var ms = (Std.int)((Timer.stamp() - timer) * 1000) % 1000;
 		haxe.Log.trace(DateTools.format(Date.now(), "%d/%m/%Y %H:%M:%S") + "." + ms + ": " + v, info);
 #else
@@ -30,7 +30,7 @@ class XT  {
 	}
 
 	public static function Error(v:Dynamic, ?info:haxe.PosInfos):Void {
-		#if KF_DEBUG
+		#if XT_DEBUG
 		var ms = (Std.int)((Timer.stamp() - timer) * 1000) % 1000;
 		haxe.Log.trace(DateTools.format(Date.now(), "%d/%m/%Y %H:%M:%S") + "." + ms + ": " + v, info);
 #else

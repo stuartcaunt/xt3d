@@ -2,7 +2,7 @@
 <project>
 	<set name="webgl" if="html5" />
 	<haxedef name="xt3d##TARGET_FRAMEWORK##" />
-	<haxedef name="KF_DEBUG" />
+	<haxedef name="XT_DEBUG" />
 	<haxedef name="webgl" />
     <haxedef name="source-map-content" if="html5" />
 

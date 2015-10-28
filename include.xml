@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension>
+
+	<set name="webgl" if="html5" />
+	<haxedef name="XT_DEBUG" />
+	<haxedef name="webgl" />
+
+	<!--<haxelib name="xt3d-samples" if="setup" />-->
+
+	<include haxelib="lime-samples" if="create" />
+
+</extension>
