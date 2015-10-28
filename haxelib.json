@@ -1,0 +1,12 @@
+{
+  "name": "xTalk3d",
+  "url": "https://bitbucket.org/stuartcaunt/xt3d",
+  "license": "MIT",
+  "tags": [],
+  "description": "An open-source, cross-platform, 3D graphics and game-development framework",
+  "version": "0.1.1",
+  "contributors": [ "stuartcaunt" ],
+  "dependencies": {
+    "lime": "2.6.4"
+  }
+}
