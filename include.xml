@@ -5,8 +5,7 @@
 	<haxedef name="XT_DEBUG" />
 	<haxedef name="webgl" />
 
-	<!--<haxelib name="xt3d-samples" if="setup" />-->
-
-	<include haxelib="lime-samples" if="create" />
+	<haxelib name="xt3d-samples" if="setup" />
+	<include haxelib="xt3d-samples" if="create" />
 
 </extension>
