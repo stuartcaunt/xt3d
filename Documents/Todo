@@ -3,11 +3,15 @@ TODO
 
 - update lime
 
+- readme.md
+
 - framework like flixel or lime
+  - separate pure xt3d framework
   - fix lime version
   - add include.xml
     - include lime dependency ?
-  - sample projects (demos)
+  - samples
+  - private demos
   - template project
 
 - textures
