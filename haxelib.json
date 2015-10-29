@@ -4,7 +4,8 @@
   "license": "MIT",
   "tags": [],
   "description": "An open-source, cross-platform, 3D graphics and game-development framework",
-  "version": "0.1.1",
+  "version": "0.1.2",
+  "releasenote": "haxelib integration, separation of library files from demos, refactoring",
   "contributors": [ "stuartcaunt" ],
   "dependencies": {
     "lime": "2.6.4"

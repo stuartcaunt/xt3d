@@ -2,10 +2,15 @@
 <extension>
 
 	<set name="webgl" if="html5" />
+    <haxedef name="xt3dlime" />
 	<haxedef name="XT_DEBUG" />
 	<haxedef name="webgl" />
 
 	<haxelib name="xt3d-samples" if="setup" />
 	<include haxelib="xt3d-samples" if="create" />
+
+    <haxelib name="lime" />
+
+    <assets path="Assets" rename="xt3d-assets" exclude="openfl.svg" />
 
 </extension>

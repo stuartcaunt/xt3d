@@ -2,3 +2,4 @@ Export
 .DS_Store
 script/build
 tests/**/project.xml
+*.iml
