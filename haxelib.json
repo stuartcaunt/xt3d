@@ -2,12 +2,12 @@
   "name": "xTalk3d",
   "url": "https://bitbucket.org/stuartcaunt/xt3d",
   "license": "MIT",
-  "tags": [],
+  "tags": [ "xt3d", "3d", "engine", "cross", "opengl", "game" ],
   "description": "An open-source, cross-platform, 3D graphics and game-development framework",
-  "version": "0.1.2",
-  "releasenote": "haxelib integration, separation of library files from demos, refactoring",
+  "version": "0.1.3",
+  "releasenote": "Update Lime version",
   "contributors": [ "stuartcaunt" ],
   "dependencies": {
-    "lime": "2.6.4"
+    "lime": "2.7.0"
   }
 }
