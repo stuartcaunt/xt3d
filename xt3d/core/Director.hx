@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.textures.RenderTexture;
 import xt3d.utils.geometry.Size;
 import xt3d.events.GestureDispatcher;
 import xt3d.events.MouseDispatcher;
@@ -342,8 +343,18 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		// send pre-render event (custom updates before rendering)
 		this.emit("pre_render");
 
+		// Perform render
+		this.render(this._backgroundColor);
+
+		// send pre-render event (custom updates before rendering)
+		this.emit("post_render");
+
+	}
+
+	public function render(backgroundColor:Color, renderTarget:RenderTexture = null, overrider:RendererOverrider = null) {
+
 		// Reset render target
-		_renderer.setRenderTarget(null);
+		_renderer.setRenderTarget(renderTarget);
 
 		// Clear context
 		_renderer.clear(backgroundColor);
@@ -351,11 +362,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		// Iterate over all views
 		for (view in _views) {
 			// Render view
-			view.render();
+			view.render(overrider);
 		}
-
-		// send pre-render event (custom updates before rendering)
-		this.emit("post_render");
 
 	}
 
