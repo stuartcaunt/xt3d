@@ -1,7 +1,7 @@
 package xt3d.math;
 
-import lime.math.Matrix4;
-import lime.math.Vector4;
+import xt3d.math.Matrix4;
+import xt3d.math.Vector4;
 
 class VectorHelper {
 

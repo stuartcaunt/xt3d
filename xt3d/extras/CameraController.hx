@@ -2,7 +2,7 @@ package xt3d.extras;
 
 import xt3d.events.gestures.PinchGestureRecognizer;
 import xt3d.node.Node3D;
-import lime.math.Vector4;
+import xt3d.math.Vector4;
 import xt3d.utils.XTObject;
 import xt3d.core.Director;
 import xt3d.events.gestures.PanGestureRecognizer;

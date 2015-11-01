@@ -1,7 +1,7 @@
 package xt3d.node;
 
 import xt3d.core.RendererOverrider;
-import lime.math.Vector4;
+import xt3d.math.Vector4;
 import xt3d.math.VectorHelper;
 import xt3d.gl.GLBufferManager;
 import xt3d.gl.shaders.ShaderProgram;
@@ -9,7 +9,7 @@ import xt3d.utils.errors.XTException;
 import xt3d.gl.GLAttributeManager;
 import lime.graphics.opengl.GL;
 import xt3d.core.Geometry;
-import lime.math.Matrix4;
+import xt3d.math.Matrix4;
 import xt3d.core.Material;
 import xt3d.core.Director;
 

@@ -1,6 +1,6 @@
 package xt3d.math;
 
-import lime.math.Vector4;
+import xt3d.math.Vector4;
 
 class Quaternion {
 

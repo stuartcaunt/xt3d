@@ -5,9 +5,9 @@ import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
 import xt3d.math.MatrixHelper;
 import xt3d.math.VectorHelper;
-import lime.math.Vector4;
+import xt3d.math.Vector4;
 import xt3d.core.View;
-import lime.math.Matrix4;
+import xt3d.math.Matrix4;
 
 import xt3d.node.Node3D;
 

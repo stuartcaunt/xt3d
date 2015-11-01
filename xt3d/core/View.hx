@@ -3,7 +3,7 @@ package xt3d.core;
 import xt3d.utils.XT;
 import lime.math.Rectangle;
 import lime.graphics.opengl.GL;
-import lime.math.Vector4;
+import xt3d.math.Vector4;
 import xt3d.utils.errors.XTException;
 import xt3d.node.Node3D;
 import xt3d.node.Camera;

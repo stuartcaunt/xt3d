@@ -9,7 +9,7 @@ import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLUniformLocation;
 import lime.graphics.opengl.GL;
 import haxe.Json;
-import lime.math.Matrix4;
+import xt3d.math.Matrix4;
 import xt3d.core.Director;
 
 import xt3d.utils.XT;

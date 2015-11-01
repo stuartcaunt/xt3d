@@ -15,7 +15,7 @@ import xt3d.gl.GLAttributeManager;
 import xt3d.gl.GLStateManager;
 import xt3d.gl.shaders.ShaderProgram;
 import xt3d.gl.shaders.UniformLib;
-import lime.math.Matrix4;
+import xt3d.math.Matrix4;
 import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
 import xt3d.gl.shaders.ShaderManager;

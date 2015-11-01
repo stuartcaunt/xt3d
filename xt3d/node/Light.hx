@@ -10,7 +10,7 @@ import xt3d.math.VectorHelper;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.node.Scene;
 import xt3d.node.Node3D;
-import lime.math.Vector4;
+import xt3d.math.Vector4;
 import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
 
