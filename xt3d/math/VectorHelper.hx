@@ -1,4 +1,4 @@
-package xt3d.utils.math;
+package xt3d.math;
 
 import lime.math.Matrix4;
 import lime.math.Vector4;

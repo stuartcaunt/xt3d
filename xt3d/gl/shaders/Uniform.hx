@@ -1,6 +1,6 @@
 package xt3d.gl.shaders;
 
-import xt3d.utils.math.MatrixHelper;
+import xt3d.math.MatrixHelper;
 import xt3d.gl.GLTextureManager;
 import xt3d.textures.Texture2D;
 import lime.utils.Float32Array;

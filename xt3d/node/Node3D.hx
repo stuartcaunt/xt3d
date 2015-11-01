@@ -1,11 +1,11 @@
 package xt3d.node;
 
 import xt3d.core.RendererOverrider;
-import xt3d.utils.math.VectorHelper;
+import xt3d.math.VectorHelper;
 import xt3d.utils.XTObject;
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTException;
-import xt3d.utils.math.MatrixHelper;
+import xt3d.math.MatrixHelper;
 import lime.math.Matrix4;
 import lime.math.Vector4;
 

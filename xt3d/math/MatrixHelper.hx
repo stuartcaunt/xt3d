@@ -1,10 +1,10 @@
-package xt3d.utils.math;
+package xt3d.math;
 
 import lime.utils.Float32Array;
-import lime.math.Vector4;
-import lime.math.Matrix4;
 
-import xt3d.utils.math.Quaternion;
+import xt3d.math.Vector4;
+import xt3d.math.Matrix4;
+import xt3d.math.Quaternion;
 
 class MatrixHelper {
 
