@@ -1,10 +1,10 @@
 {
-  "name": "xTalk3d",
+  "name": "xt3d",
   "url": "https://github.com/stuartcaunt/xt3d",
   "license": "MIT",
   "tags": [ "xt3d", "3d", "engine", "cross", "opengl", "game" ],
   "description": "An open-source, cross-platform, 3D graphics and game-development framework",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "releasenote": "See History.md",
   "contributors": [ "stuartcaunt" ],
   "dependencies": {

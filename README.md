@@ -2,7 +2,7 @@
 Introduction
 ============
 
-xTalk3d (or xt3d) is an open-source, cross-platform, 3D graphics and game-development framework built with Haxe and Lime.
+xTalk3d (crosstalk3d or xt3d for short) is an open-source, cross-platform, 3D graphics and game-development framework built with Haxe and Lime.
 
 xTalk3d aims to provide a simple means of developing 3D games and applications for multiple platforms with optimised performance. 
 Depending on the target platform it uses OpenGL, OpenGL ES or WebGL for graphics capabilities. 
