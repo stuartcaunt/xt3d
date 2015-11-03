@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.exporter.collada.ColladaExporter;
 import xt3d.core.RendererOverrider;
 import xt3d.math.VectorHelper;
 import xt3d.utils.XTObject;
@@ -16,6 +17,7 @@ class Node3D extends XTObject {
 	public var visible(get, set):Bool;
 	public var excluded(get, set):Bool;
 	public var parent(get, set):Node3D;
+	public var children(get, null):Array<Node3D>;
 	public var position(get, set):Vector4;
 	public var worldPosition(get, null):Vector4;
 	public var matrix(get, set):Matrix4;
@@ -116,6 +118,10 @@ class Node3D extends XTObject {
 	private inline function set_parent(value:Node3D):Node3D {
 		// Should only be used internally
 		return this._parent = value;
+	}
+
+	private inline function get_children():Array<Node3D> {
+		return this._children;
 	}
 
 	public inline function get_position():Vector4 {
