@@ -1,5 +1,6 @@
 package xt3d.exporter.collada;
 
+import xt3d.utils.general.DateTime;
 import xt3d.utils.XT;
 import xt3d.core.Material;
 import xt3d.node.RenderObject;
@@ -87,10 +88,23 @@ class ColladaExporter {
 		this.addLine("<COLLADA xmlns=\"http://www.collada.org/2008/03/COLLADASchema\" version=\"1.5.0\">");
 
 		// Write assets
+		this.writeAssets();
+
+		// Write library
 		this.writeLibrary(geometries, materials);
 
 		// Finish collada
 		this.addLine("</COLLADA>");
+	}
+
+	private function writeAssets():Void {
+		this.addLine("<asset>", 1);
+		this.addLine("<author>xTalk3d</author>", 2);
+		var now = DateTime.now();
+		this.addLine("<created>" + now + "</created>", 2);
+		this.addLine("<modified>" + now + "</modified>", 2);
+
+		this.addLine("</asset>", 1);
 	}
 
 	private function writeLibrary(geometries:Map<Int, Geometry>, materials:Map<Int, Material>):Void {
