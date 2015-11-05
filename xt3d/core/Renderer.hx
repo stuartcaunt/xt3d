@@ -21,7 +21,7 @@ import xt3d.gl.XTGL;
 import xt3d.gl.shaders.ShaderManager;
 import xt3d.node.Camera;
 import xt3d.node.Light;
-import xt3d.core.Material;
+import xt3d.material.Material;
 import xt3d.node.Scene;
 import xt3d.node.RenderObject;
 import lime.graphics.opengl.GL;

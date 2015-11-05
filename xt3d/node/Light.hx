@@ -3,7 +3,7 @@ package xt3d.node;
 
 import xt3d.core.RendererOverrider;
 import xt3d.primitives.Sphere;
-import xt3d.core.Material;
+import xt3d.material.Material;
 import xt3d.utils.XT;
 import xt3d.math.MatrixHelper;
 import xt3d.math.VectorHelper;
@@ -284,7 +284,7 @@ class Light extends Node3D {
 			this._renderLight = renderLight;
 
 			if (this._renderLight) {
-				var material:Material = Material.create("generic");
+				var material:Material = Material.createMaterial("generic");
 				material.uniform("color").floatArrayValue = this._diffuseColor.rgbaArray;
 				var mesh:Sphere = Sphere.create(0.2, 4, 2);
 

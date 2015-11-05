@@ -1,7 +1,7 @@
 package xt3d.core;
 
 import xt3d.node.RenderObject;
-
+import xt3d.material.Material;
 
 
 enum GeometryBlendType {

@@ -1,7 +1,8 @@
-package xt3d.core;
+package xt3d.material;
 
 import xt3d.utils.XTObject;
 import xt3d.utils.XT;
+import xt3d.core.Director;
 import xt3d.gl.GLTextureManager;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.errors.XTException;
@@ -57,17 +58,17 @@ class Material extends XTObject {
 	private var _polygonOffsetUnits:Float = 0.0;
 	private var _side:Int = XTGL.FrontSide;
 
-	public static function create(programName:String):Material {
+	public static function createMaterial(programName:String):Material {
 		var object = new Material();
 
-		if (object != null && !(object.init(programName))) {
+		if (object != null && !(object.initMaterial(programName))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(programName:String):Bool {
+	public function initMaterial(programName:String):Bool {
 		this.setProgramName(programName);
 
 		return true;

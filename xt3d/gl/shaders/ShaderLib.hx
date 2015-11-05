@@ -69,11 +69,7 @@ class ShaderLib  {
 			"texture" => {
 				vertexDefines: ["#define USE_TEXTURE"],
 				fragmentDefines: ["#define USE_TEXTURE"],
-				commonUniformGroups: ["texture"],
-				uniforms: [
-					// Example of overriding common uniform
-					"texture" => { name: "u_texture", type: "texture", shader: "f", slot: "5" }
-				]
+				commonUniformGroups: ["texture"]
 			},
 
 			"gouraud" => {

@@ -4,7 +4,7 @@ package xt3d.node;
 import lime.graphics.opengl.GL;
 import xt3d.node.RenderObject;
 import xt3d.core.Geometry;
-import xt3d.core.Material;
+import xt3d.material.Material;
 
 class MeshNode extends RenderObject {
 

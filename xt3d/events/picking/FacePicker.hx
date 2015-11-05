@@ -7,7 +7,7 @@ import lime.utils.UInt8Array;
 import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;
 import xt3d.utils.color.Color;
-import xt3d.core.Material;
+import xt3d.material.Material;
 import xt3d.node.Scene;
 import xt3d.core.Director;
 import lime.math.Vector2;
@@ -61,7 +61,7 @@ class FacePicker implements RendererOverriderDelegate {
 		}
 
 		// Create the material we want to use for the face picking
-		this._facePickerMaterial = Material.create("picking+facePicking");
+		this._facePickerMaterial = Material.createMaterial("picking+facePicking");
 
 		// Create a renderer overrider
 		this._rendererOverrider = RendererOverrider.createWithMaterialAndGeometry(this._facePickerMaterial, this._facePickerGeometry);

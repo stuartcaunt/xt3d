@@ -7,7 +7,7 @@ import xt3d.core.Director;
 import lime.math.Vector2;
 import lime.graphics.opengl.GL;
 import xt3d.core.View;
-import xt3d.core.Material;
+import xt3d.material.Material;
 import xt3d.core.RendererOverrider;
 import xt3d.textures.RenderTexture;
 import xt3d.utils.color.Color;
@@ -40,7 +40,7 @@ class ObjectPicker implements RendererOverriderDelegate {
 
 	public function init():Bool {
 		// Create the material we want to use for the object picking
-		this._objectPickerMaterial = Material.create("picking");
+		this._objectPickerMaterial = Material.createMaterial("picking");
 
 		// Create a renderer overrider
 		this._rendererOverrider = RendererOverrider.createWithMaterial(this._objectPickerMaterial);
