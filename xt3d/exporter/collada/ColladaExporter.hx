@@ -1,6 +1,6 @@
 package xt3d.exporter.collada;
 
-import xt3d.utils.general.DateTime;
+//import xt3d.utils.general.DateTime;
 import xt3d.utils.XT;
 import xt3d.material.Material;
 import xt3d.node.RenderObject;
@@ -100,9 +100,9 @@ class ColladaExporter {
 	private function writeAssets():Void {
 		this.addLine("<asset>", 1);
 		this.addLine("<author>xTalk3d</author>", 2);
-		var now = DateTime.now();
-		this.addLine("<created>" + now + "</created>", 2);
-		this.addLine("<modified>" + now + "</modified>", 2);
+//		var now = DateTime.now();
+//		this.addLine("<created>" + now + "</created>", 2);
+//		this.addLine("<modified>" + now + "</modified>", 2);
 
 		this.addLine("</asset>", 1);
 	}
