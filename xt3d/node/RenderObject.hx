@@ -282,7 +282,7 @@ class RenderObject extends Node3D {
 			}
 
 			// Add object to opaque or transparent list
-			if (material.transparent || material.opacity < 1.0) {
+			if (material.transparent) {
 				scene.addObjectToTransparentRenderList(this);
 
 			} else {

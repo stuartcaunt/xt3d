@@ -18,7 +18,6 @@ class Material extends XTObject {
 	public var programId(get, null):Int;
 	public var programName(get, set):String;
 	public var program(get, set):ShaderProgram;
-	public var opacity(get, set):Float;
 	public var transparent(get, set):Bool;
 	public var blending(get, set):Int;
 	public var blendEquation(get, set):Int;
@@ -42,7 +41,6 @@ class Material extends XTObject {
 	private var _uniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _commonUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 
-	private var _opacity:Float = 1;
 	private var _transparent:Bool = false;
 
 	private var _blending:Int = XTGL.NormalBlending;
@@ -107,16 +105,7 @@ class Material extends XTObject {
 		return this._program;
 	}
 
-	public inline function get_opacity():Float {
-		return this._opacity;
-	}
-
-	public inline function set_opacity(value:Float) {
-		this.setOpacity(value);
-		return this._opacity;
-	}
-
-	public inline function get_transparent():Bool {
+	public function get_transparent():Bool {
 		return this._transparent;
 	}
 
@@ -254,18 +243,6 @@ class Material extends XTObject {
 
 		_uniforms = new Map<String, Uniform>();
 		_commonUniforms = new Map<String, Uniform>();
-	}
-
-	public function setOpacity(opacity:Float):Void {
-		// Check if shader supports opacity
-		try {
-			var uniform = this.uniform("opacity");
-			uniform.floatValue = opacity;
-			this._opacity = opacity;
-
-		} catch (e:XTException) {
-			XT.Warn("Cannot explicity set opacity in material \"" + this._programName + "\".");
-		}
 	}
 
 	public function uniform(uniformName:String):Uniform {

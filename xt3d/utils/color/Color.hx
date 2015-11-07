@@ -134,6 +134,11 @@ class Color  {
 		return this._colorArray.slice(0, 3);
 	}
 
+	public inline function copyFrom(color:Color):Void {
+		for (i in 0 ... 4) {
+			this._colorArray[i] = color._colorArray[i];
+		}
+	}
 
 	/* --------- Implementation --------- */
 
