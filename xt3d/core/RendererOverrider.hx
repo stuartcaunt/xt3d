@@ -28,7 +28,7 @@ class RendererOverrider {
 	private var _material:Material;
 	private var _geometry:Geometry;
 	private var _geometryBlend:GeometryBlendType = GeometryBlendType.GeometryBlendTypeReplace;
-	private var _sortingEnabled:Bool = false;
+	private var _sortingEnabled:Bool = true;
 
 	private var _delegate:RendererOverriderDelegate = null;
 

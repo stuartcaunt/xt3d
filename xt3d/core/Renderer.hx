@@ -222,8 +222,11 @@ class Renderer extends XTObject {
 			}
 
 			// Sort objects
-			var overrideSorting:Bool = (overrider != null && overrider.sortingEnabled);
-			if ((this._sortingEnabled && overrideSorting) || overrideSorting) {
+			var sortingEnabled = this._sortingEnabled;
+			if (overrider != null) {
+				sortingEnabled = overrider.sortingEnabled;
+			}
+			if (sortingEnabled) {
 
 				if (scene.zSortingStrategy & XTGL.ZSortingOpaque > 0) {
 					// Project transparent objects if we want to sort them in z
