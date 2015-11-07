@@ -49,17 +49,16 @@ class BaseTypedMaterial extends Material {
 	// Alpha culling
 	private var _alphaCullingValue:Float = 0.0;
 
-	public function initBaseTypedMaterial(lightingEnabled:Bool = false,
-										  highQualityLighting:Bool = true,
-										  lightingColorAttributesEnabled:Bool = false,
-										  alphaCullingEnabled:Bool = false,
-										  vertexColorsEnabled:Bool = false):Bool {
+	public function initBaseTypedMaterial(materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		this._lightingEnabled = lightingEnabled;
-		this._isHighQualityLighting = highQualityLighting;
-		this._lightingColorAttributesEnabled = lightingColorAttributesEnabled;
-		this._alphaCullingEnabled = alphaCullingEnabled;
-		this._vertexColorsEnabled = vertexColorsEnabled;
+
+		if (materialOptions != null) {
+			this._lightingEnabled = materialOptions.lightingEnabled != null ? materialOptions.lightingEnabled : false;
+			this._isHighQualityLighting = materialOptions.isHighQualityLighting != null ? materialOptions.isHighQualityLighting : true;
+			this._lightingColorAttributesEnabled = materialOptions.lightingColorAttributesEnabled != null ? materialOptions.lightingColorAttributesEnabled : false;
+			this._alphaCullingEnabled = materialOptions.alphaCullingEnabled != null ? materialOptions.alphaCullingEnabled : false;
+			this._vertexColorsEnabled = materialOptions.vertexColorsEnabled != null ? materialOptions.vertexColorsEnabled : false;
+		}
 
 		var materialName = this.constructMaterialName();
 

@@ -22,20 +22,20 @@ class TextureMaterial extends BaseTypedMaterial {
 	private var _uvScaleOffset:Array<Float> = new Array<Float>();
 
 
-	public static function createWithTexture(texture:Texture2D):TextureMaterial {
+	public static function createWithTexture(texture:Texture2D, materialOptions:MaterialOptions = null):TextureMaterial {
 		var object = new TextureMaterial();
 
-		if (object != null && !(object.initWithTexture(texture))) {
+		if (object != null && !(object.initWithTexture(texture, materialOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createWithImageAsset(imagePath:String, textureOptions:TextureOptions = null):TextureMaterial {
+	public static function createWithImageAsset(imagePath:String, textureOptions:TextureOptions = null, materialOptions:MaterialOptions = null):TextureMaterial {
 		var object = new TextureMaterial();
 
-		if (object != null && !(object.initWithImageAsset(imagePath, textureOptions))) {
+		if (object != null && !(object.initWithImageAsset(imagePath, textureOptions, materialOptions))) {
 			object = null;
 		}
 
@@ -43,10 +43,10 @@ class TextureMaterial extends BaseTypedMaterial {
 	}
 
 #if js
-	public static function createWithImageUrl(imageUrl:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null):TextureMaterial {
+	public static function createWithImageUrl(imageUrl:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null, materialOptions:MaterialOptions = null):TextureMaterial {
 		var object = new TextureMaterial();
 
-		if (object != null && !(object.initWithImageUrl(imageUrl, textureOptions, userCallback))) {
+		if (object != null && !(object.initWithImageUrl(imageUrl, textureOptions, userCallback, materialOptions))) {
 			object = null;
 		}
 
@@ -54,20 +54,20 @@ class TextureMaterial extends BaseTypedMaterial {
 	}
 #end
 
-	public static function createWithImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null):TextureMaterial {
+	public static function createWithImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null, materialOptions:MaterialOptions = null):TextureMaterial {
 		var object = new TextureMaterial();
 
-		if (object != null && !(object.initWithImageAssetAsync(imagePath, textureOptions, userCallback))) {
+		if (object != null && !(object.initWithImageAssetAsync(imagePath, textureOptions, userCallback, materialOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createWithColor(color:Color, textureOptions:TextureOptions = null):TextureMaterial {
+	public static function createWithColor(color:Color, textureOptions:TextureOptions = null, materialOptions:MaterialOptions = null):TextureMaterial {
 		var object = new TextureMaterial();
 
-		if (object != null && !(object.initWithColor(color, textureOptions))) {
+		if (object != null && !(object.initWithColor(color, textureOptions, materialOptions))) {
 			object = null;
 		}
 
@@ -76,18 +76,18 @@ class TextureMaterial extends BaseTypedMaterial {
 
 
 
-	public function initWithTexture(texture:Texture2D):Bool {
+	public function initWithTexture(texture:Texture2D, materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		if ((isOk = super.initBaseTypedMaterial())) {
+		if ((isOk = super.initBaseTypedMaterial(materialOptions))) {
 			this.setTexture(texture);
 		}
 
 		return isOk;
 	}
 
-	public function initWithImageAsset(imagePath:String, textureOptions:TextureOptions = null):Bool {
+	public function initWithImageAsset(imagePath:String, textureOptions:TextureOptions = null, materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		if ((isOk = super.initBaseTypedMaterial())) {
+		if ((isOk = super.initBaseTypedMaterial(materialOptions))) {
 			var texture:Texture2D = Director.current.textureCache.addTextureFromImageAsset(imagePath, textureOptions);
 			this.setTexture(texture);
 		}
@@ -97,9 +97,9 @@ class TextureMaterial extends BaseTypedMaterial {
 
 
 #if js
-	public function initWithImageUrl(imageUrl:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null):Bool {
+	public function initWithImageUrl(imageUrl:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null, materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		if ((isOk = super.initBaseTypedMaterial())) {
+		if ((isOk = super.initBaseTypedMaterial(materialOptions))) {
 			var texture:Texture2D = Director.current.textureCache.addTextureFromImageUrl(imageUrl, textureOptions, function (texture:Texture2D) {
 				this.setTexture(texture);
 
@@ -114,9 +114,9 @@ class TextureMaterial extends BaseTypedMaterial {
 	}
 #end
 
-	public function initWithImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null):Bool {
+	public function initWithImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, userCallback:TextureMaterial -> Void = null, materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		if ((isOk = super.initBaseTypedMaterial())) {
+		if ((isOk = super.initBaseTypedMaterial(materialOptions))) {
 			var texture:Texture2D = Director.current.textureCache.addTextureFromImageAssetAsync(imagePath, textureOptions, function (texture:Texture2D) {
 				this.setTexture(texture);
 
@@ -130,9 +130,9 @@ class TextureMaterial extends BaseTypedMaterial {
 		return isOk;
 	}
 
-	public function initWithColor(color:Color, textureOptions:TextureOptions = null):Bool {
+	public function initWithColor(color:Color, textureOptions:TextureOptions = null, materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		if ((isOk = super.initBaseTypedMaterial())) {
+		if ((isOk = super.initBaseTypedMaterial(materialOptions))) {
 			var texture:Texture2D = Director.current.textureCache.addTextureFromColor(color, textureOptions);
 			this.setTexture(texture);
 

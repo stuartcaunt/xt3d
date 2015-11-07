@@ -8,20 +8,20 @@ class ColorMaterial extends BaseTypedMaterial {
 
 	// members
 
-	public static function create():ColorMaterial {
+	public static function create(materialOptions:MaterialOptions = null):ColorMaterial {
 		var object = new ColorMaterial();
 
-		if (object != null && !(object.initWithColor(null))) {
+		if (object != null && !(object.initWithColor(null, materialOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createWithColor(color:Color):ColorMaterial {
+	public static function createWithColor(color:Color, materialOptions:MaterialOptions = null):ColorMaterial {
 		var object = new ColorMaterial();
 
-		if (object != null && !(object.initWithColor(color))) {
+		if (object != null && !(object.initWithColor(color, materialOptions))) {
 			object = null;
 		}
 
@@ -29,39 +29,39 @@ class ColorMaterial extends BaseTypedMaterial {
 	}
 
 
-	public static function createWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0):ColorMaterial {
+	public static function createWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0, materialOptions:MaterialOptions = null):ColorMaterial {
 		var object = new ColorMaterial();
 
-		if (object != null && !(object.initWithColor(Color.createWithComponents(red, green, blue, alpha)))) {
+		if (object != null && !(object.initWithColor(Color.createWithComponents(red, green, blue, alpha), materialOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createWithRGBHex(hex:UInt):ColorMaterial {
+	public static function createWithRGBHex(hex:UInt, materialOptions:MaterialOptions = null):ColorMaterial {
 		var object = new ColorMaterial();
 
-		if (object != null && !(object.initWithColor(Color.createWithRGBHex(hex)))) {
+		if (object != null && !(object.initWithColor(Color.createWithRGBHex(hex), materialOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createWithRGBAHex(hex:UInt):ColorMaterial {
+	public static function createWithRGBAHex(hex:UInt, materialOptions:MaterialOptions = null):ColorMaterial {
 		var object = new ColorMaterial();
 
-		if (object != null && !(object.initWithColor(Color.createWithRGBAHex(hex)))) {
+		if (object != null && !(object.initWithColor(Color.createWithRGBAHex(hex), materialOptions))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initWithColor(color:Color):Bool {
+	public function initWithColor(color:Color, materialOptions:MaterialOptions = null):Bool {
 		var isOk;
-		if ((isOk = super.initBaseTypedMaterial())) {
+		if ((isOk = super.initBaseTypedMaterial(materialOptions))) {
 
 			if (color != null) {
 				// Set color value
