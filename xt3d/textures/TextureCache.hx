@@ -52,12 +52,16 @@ class TextureCache {
 	}
 
 #if js
-	public function addTextureFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Texture2D {
+	public function addTextureFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Texture2D {
 		if (this._textures.exists(imageUrl)) {
-			return this._textures.get(imageUrl);
+			var texture = this._textures.get(imageUrl);
+			if (callback != null) {
+				callback(texture)
+			}
+			return texture;
 		}
 
-		var texture = Texture2D.createFromImageUrl(imageUrl, textureOptions);
+		var texture = Texture2D.createFromImageUrl(imageUrl, textureOptions, callback);
 		this._textures.set(imageUrl, texture);
 
 		return texture;
@@ -66,7 +70,11 @@ class TextureCache {
 
 	public function addTextureFromImageAssetAsync(imagePath:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Texture2D {
 		if (this._textures.exists(imagePath)) {
-			return this._textures.get(imagePath);
+			var texture = this._textures.get(imagePath);
+			if (callback != null) {
+				callback(texture);
+			}
+			return texture;
 		}
 
 		var texture = Texture2D.createFromImageAssetAsync(imagePath, textureOptions, callback);

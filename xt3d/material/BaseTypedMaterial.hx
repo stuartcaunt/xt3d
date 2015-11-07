@@ -49,8 +49,18 @@ class BaseTypedMaterial extends Material {
 	// Alpha culling
 	private var _alphaCullingValue:Float = 0.0;
 
-	public function initBaseTypedMaterial():Bool {
+	public function initBaseTypedMaterial(lightingEnabled:Bool = false,
+										  highQualityLighting:Bool = true,
+										  lightingColorAttributesEnabled:Bool = false,
+										  alphaCullingEnabled:Bool = false,
+										  vertexColorsEnabled:Bool = false):Bool {
 		var isOk;
+		this._lightingEnabled = lightingEnabled;
+		this._isHighQualityLighting = highQualityLighting;
+		this._lightingColorAttributesEnabled = lightingColorAttributesEnabled;
+		this._alphaCullingEnabled = alphaCullingEnabled;
+		this._vertexColorsEnabled = vertexColorsEnabled;
+
 		var materialName = this.constructMaterialName();
 
 		if ((isOk = super.initMaterial(materialName))) {
@@ -283,13 +293,11 @@ class BaseTypedMaterial extends Material {
 
 	private function constructMaterial():Void {
 		var materialName = this.constructMaterialName();
-		XT.Log("Constructed material " + materialName);
 
 		// Compare to current material
 		if (this._programName != materialName) {
 
 			// Set the program in the material
-			XT.Log("Setting material to " + materialName);
 			this.setProgramName(materialName);
 
 			// Set the material uniforms
@@ -302,7 +310,10 @@ class BaseTypedMaterial extends Material {
 		var materialName:String = "generic";
 
 		// Specific name of typed material
-		materialName += this.getTypedMaterialName();
+		var typedMaterialName = this.getTypedMaterialName();
+		if (typedMaterialName != null && typedMaterialName != "") {
+			materialName += "+" + this.getTypedMaterialName();
+		}
 
 		// Vertex color
 		if (this._vertexColorsEnabled) {
@@ -358,6 +369,9 @@ class BaseTypedMaterial extends Material {
 		if (this._alphaCullingEnabled) {
 			this.uniform("alphaCullingValue").floatValue = this._alphaCullingValue;
 		}
+
+		// Typed material uniforms
+		this.setTypedMaterialUniforms();
 	}
 
 
@@ -369,6 +383,10 @@ class BaseTypedMaterial extends Material {
 	private function getTypedMaterialExtensions():String {
 		// To be overridden
 		return "";
+	}
+
+	private function setTypedMaterialUniforms():Void {
+		// To be overridden
 	}
 
 }

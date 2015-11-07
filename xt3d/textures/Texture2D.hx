@@ -36,7 +36,7 @@ import lime.Assets;
 	public var pixelsWidth(get, null):Int;
 	public var pixelsHeight(get, null):Int;
 
-	public var uvScaleOffset(get, null):Array<Float>;
+	public var uvScaleOffset(get, set):Array<Float>;
 
 	// members
 	private static var ID_COUNTER = 0;
@@ -87,10 +87,10 @@ import lime.Assets;
 	}
 
 #if js
-	public static function createFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Texture2D {
+	public static function createFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Texture2D {
 		var object = new Texture2D();
 
-		if (object != null && !(object.initFromImageUrl(imageUrl, textureOptions))) {
+		if (object != null && !(object.initFromImageUrl(imageUrl, textureOptions, callback))) {
 			object = null;
 		}
 
@@ -171,7 +171,7 @@ import lime.Assets;
 
 
 #if js
-	public function initFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null):Bool {
+	public function initFromImageUrl(imageUrl:String, textureOptions:TextureOptions = null, callback:Texture2D -> Void = null):Bool {
 		this._name = imageUrl;
 
 		// Set texture options
@@ -183,6 +183,11 @@ import lime.Assets;
 				this.handleImageData(image);
 
 				this._isReady = true;
+
+				// user callback
+				if (callback != null) {
+					callback(this);
+				}
 			},
 			function (error) {
 				XT.Error("Texture2D failed to create texture: " + error);
@@ -342,6 +347,15 @@ import lime.Assets;
 
 	public inline function get_uvScaleOffset():Array<Float> {
 		return [this._uvScaleX, this._uvScaleY, this._uvOffsetX, this._uvOffsetY];
+	}
+
+	public inline function set_uvScaleOffset(uvScaleOffset:Array<Float>):Array<Float> {
+		this._uvScaleX  = uvScaleOffset[0];
+		this._uvScaleY  = uvScaleOffset[1];
+		this._uvOffsetX = uvScaleOffset[2];
+		this._uvOffsetY = uvScaleOffset[3];
+
+		return uvScaleOffset;
 	}
 
 
