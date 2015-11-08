@@ -1,8 +1,10 @@
-0.1.5 / 2015-11-01
+0.1.5 / 2015-11-08
 ===================
 
  * Fix installation of samples using lime create xt3d:<sample>
  * Remove default XT_DEBUG
+ * Typed Materials implementation : ColorMaterial and TextureMaterial
+ * Start of a Collada exporter
  
 0.1.4 / 2015-10-31
 ===================
