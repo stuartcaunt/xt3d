@@ -88,6 +88,7 @@ class ShaderLib  {
 
 			"material" => {
 				vertexDefines: ["#define USE_MATERIAL_COLOR"],
+				fragmentDefines: ["#define USE_MATERIAL_COLOR"],
 				commonUniformGroups: ["material"]
 			},
 

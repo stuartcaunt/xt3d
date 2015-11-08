@@ -247,7 +247,7 @@ class BaseTypedMaterial extends Material {
 	public inline function setAmbientColor(value:Color):Void {
 		this._ambientColor.copyFrom(value);
 		try {
-			this.uniform("ambientColor").floatArrayValue = value.rgbArray;
+			this.uniform("material").get("ambientColor").floatArrayValue = value.rgbArray;
 		} catch (e:XTException) {
 		}
 	}
@@ -255,7 +255,7 @@ class BaseTypedMaterial extends Material {
 	public inline function setDiffuseColor(value:Color):Void {
 		this._diffuseColor.copyFrom(value);
 		try {
-			this.uniform("diffuseColor").floatArrayValue = value.rgbaArray;
+			this.uniform("material").get("diffuseColor").floatArrayValue = value.rgbaArray;
 		} catch (e:XTException) {
 		}
 	}
@@ -263,7 +263,7 @@ class BaseTypedMaterial extends Material {
 	public inline function setSpecularColor(value:Color):Void {
 		this._specularColor.copyFrom(value);
 		try {
-			this.uniform("specularColor").floatArrayValue = value.rgbaArray;
+			this.uniform("material").get("specularColor").floatArrayValue = value.rgbArray;
 		} catch (e:XTException) {
 		}
 	}
@@ -272,7 +272,7 @@ class BaseTypedMaterial extends Material {
 		this._shininess = value;
 		try {
 			if (this._lightingColorAttributesEnabled) {
-				this.uniform("shininess").floatValue = this._shininess;
+				this.uniform("material").get("shininess").floatValue = this._shininess;
 
 			} else {
 				this.uniform("defaultShininess").floatValue = this._shininess;
@@ -328,11 +328,10 @@ class BaseTypedMaterial extends Material {
 			} else  {
 				materialName += "+gouraud";
 			}
-
-			// lighting color attributes
-			if (this._lightingColorAttributesEnabled) {
-				materialName += "+material";
-			}
+		}
+		// lighting color attributes
+		if (this._lightingColorAttributesEnabled) {
+			materialName += "+material";
 		}
 
 		// Alpha culling
@@ -354,10 +353,10 @@ class BaseTypedMaterial extends Material {
 		// Lighting
 		if (this._lightingEnabled) {
 			if (this._lightingColorAttributesEnabled) {
-				this.uniform("shininess").floatValue = this._shininess;
-				this.uniform("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
-				this.uniform("diffuseColor").floatArrayValue = this._diffuseColor.rgbaArray;
-				this.uniform("specularColor").floatArrayValue = this._specularColor.rgbArray;
+//				this.uniform("material").get("shininess").floatValue = this._shininess;
+//				this.uniform("material").get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
+//				this.uniform("material").get("diffuseColor").floatArrayValue = this._diffuseColor.rgbaArray;
+//				this.uniform("material").get("specularColor").floatArrayValue = this._specularColor.rgbArray;
 
 			} else {
 				this.uniform("defaultShininess").floatValue = this._shininess;
