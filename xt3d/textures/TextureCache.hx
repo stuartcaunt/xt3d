@@ -56,7 +56,7 @@ class TextureCache {
 		if (this._textures.exists(imageUrl)) {
 			var texture = this._textures.get(imageUrl);
 			if (callback != null) {
-				callback(texture)
+				callback(texture);
 			}
 			return texture;
 		}
