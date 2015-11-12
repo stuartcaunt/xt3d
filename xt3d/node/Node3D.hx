@@ -14,6 +14,7 @@ class Node3D extends XTObject {
 
 	// properties
 	public var id(get, null):UInt;
+	public var name(get, set):String;
 	public var visible(get, set):Bool;
 	public var excluded(get, set):Bool;
 	public var parent(get, set):Node3D;
@@ -21,6 +22,7 @@ class Node3D extends XTObject {
 	public var position(get, set):Vector4;
 	public var worldPosition(get, null):Vector4;
 	public var matrix(get, set):Matrix4;
+	public var matrixDirty(get, set):Bool;
 	public var worldMatrix(get, set):Matrix4;
 	public var worldMatrixDirty(get, set):Bool;
 
@@ -32,6 +34,7 @@ class Node3D extends XTObject {
 	// members
 	private static var ID_COUNTER = 0;
 	private var _id:Int = ID_COUNTER++;
+	private var _name:String = "";
 
 	// scene graph
 	private var _children:Array<Node3D> = new Array<Node3D>();
@@ -91,6 +94,14 @@ class Node3D extends XTObject {
 
 	public inline function get_id():Int {
 		return this._id;
+	}
+
+	public inline function get_name():String {
+		return this._name;
+	}
+
+	public inline function set_name(name:String):String {
+		return this._name = name;
 	}
 
 	public inline function get_excluded():Bool {
@@ -162,6 +173,14 @@ class Node3D extends XTObject {
 	public inline function set_matrix(matrix:Matrix4):Matrix4 {
 		this.setMatrix(matrix);
 		return this._matrix;
+	}
+
+	public inline function get_matrixDirty():Bool {
+		return this._matrixDirty;
+	}
+
+	public inline function set_matrixDirty(isDirty:Bool):Bool {
+		return this._matrixDirty = isDirty;
 	}
 
 	inline public function get_rotationX():Float {

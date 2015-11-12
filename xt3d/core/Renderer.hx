@@ -235,7 +235,7 @@ class Renderer extends XTObject {
 					}
 
 					// Sort opaque objects by z
-					scene.opaqueObjects.sort(this.painterSortStable);
+					scene.opaqueObjects.sort(this.reversePainterSortStable);
 				} else {
 					// Sort opaque objects by material Id (avoid swapping shaders often)
 					scene.opaqueObjects.sort(this.materialSortStable);
@@ -248,7 +248,7 @@ class Renderer extends XTObject {
 					}
 
 					// Sort transparent objects by z
-					scene.transparentObjects.sort(this.reversePainterSortStable);
+					scene.transparentObjects.sort(this.painterSortStable);
 				} else {
 					// Sort transparent obejcts by material/object id (group by shader)
 					scene.transparentObjects.sort(this.materialSortStable);
@@ -372,7 +372,7 @@ class Renderer extends XTObject {
 		}
 	}
 
-	private function painterSortStable(a:RenderObject, b:RenderObject):Int {
+	private function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
 
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;
@@ -389,7 +389,7 @@ class Renderer extends XTObject {
 		}
 	}
 
-	private function reversePainterSortStable(a:RenderObject, b:RenderObject):Int {
+	private function painterSortStable(a:RenderObject, b:RenderObject):Int {
 
 		if (a.material.depthWrite != b.material.depthWrite) {
 			return a.material.depthWrite ? 1 : -1;

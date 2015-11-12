@@ -33,6 +33,16 @@ class RendererOverrider {
 	private var _delegate:RendererOverriderDelegate = null;
 
 
+	public static function create():RendererOverrider {
+		var object = new RendererOverrider();
+
+		if (object != null && !(object.init())) {
+			object = null;
+		}
+
+		return object;
+	}
+
 	public static function createWithMaterial(material:Material):RendererOverrider {
 		var object = new RendererOverrider();
 
@@ -61,6 +71,13 @@ class RendererOverrider {
 		}
 
 		return object;
+	}
+
+	public function init():Bool {
+		this._material = null;
+		this._geometry = null;
+
+		return true;
 	}
 
 	public function initWithMaterial(material:Material):Bool {
