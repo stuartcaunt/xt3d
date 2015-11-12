@@ -718,7 +718,7 @@ class Uniform  {
 			this._size = 1;
 			if (defaultValue != null) {
 				var floatValue:Float = Std.parseFloat(defaultValue);
-				if (floatValue == Math.NaN) {
+				if (Math.isNaN(floatValue)) {
 					throw new XTException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
@@ -730,7 +730,7 @@ class Uniform  {
 		} else if (type == "int") {
 			if (defaultValue != null) {
 				var intValue:Int = Std.parseInt(defaultValue);
-				if (intValue == Math.NaN) {
+				if (Math.isNaN(intValue)) {
 					throw new XTException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
@@ -815,7 +815,7 @@ class Uniform  {
 			this._size = 1;
 			if (defaultValue != null) {
 				var value:Int = Std.parseInt(defaultValue);
-				if (value == Math.NaN) {
+				if (Math.isNaN(value)) {
 					throw new XTException("UnableToParseUniformValue", "Could not parse default value " + defaultValue + " for uniform " + _uniformInfo.name);
 
 				} else {
