@@ -49,8 +49,8 @@ class Plane extends Geometry {
 
 	private function createGeometry():Void {
 		// Calculate number of vertices and indices (fixed)
-		var nVertices = (this._nx + 1) * (this._ny + 1) * 8;
-		var nIndices = this._nx * this._ny * 6;
+		var nVertices = this._nx * this._ny * 8;
+		var nIndices = (this._nx - 1) * (this._ny - 1) * 6;
 
 		// Create vertex data
 		var vertexData = super.createInterleavedVertexData(8, null, nVertices);
@@ -67,13 +67,13 @@ class Plane extends Geometry {
 
 
 		// Calculate vertex data attributes
-		for (j in 0 ... this._ny + 1) {
-			y = -(this._height / 2.0) + j * (this._height / this._ny);
-			v = 1.0 - 1.0 * j / this._ny;
+		for (j in 0 ... this._ny) {
+			y = -(this._height / 2.0) + j * (this._height / (this._ny - 1));
+			v = 1.0 - 1.0 * j / (this._ny - 1);
 
-			for (i in 0 ... this._nx + 1) {
-				x = -(this._width / 2.0) + i * (this._width / this._nx);
-				u = 1.0 * i / this._nx;
+			for (i in 0 ... this._nx) {
+				x = -(this._width / 2.0) + i * (this._width / (this._nx - 1));
+				u = 1.0 * i / (this._nx - 1);
 
 				vertexData.push(x);
 				vertexData.push(y);
@@ -93,11 +93,11 @@ class Plane extends Geometry {
 		var second:Int;
 		var third:Int;
 		var fourth:Int;
-		for (j in 0 ... this._ny) {
-			for (i in 0 ... this._nx) {
+		for (j in 0 ... this._ny - 1) {
+			for (i in 0 ... this._nx - 1) {
 
-				first = j * (this._nx + 1) + i;
-				second = first + (this._nx + 1);
+				first = j * this._nx + i;
+				second = first + this._nx;
 				third = first + 1;
 				fourth = second + 1;
 
