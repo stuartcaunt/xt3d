@@ -194,14 +194,14 @@ class BaseTypedMaterial extends Material {
 	/* --------- Implementation --------- */
 
 	public inline function setLightingEnabled(value:Bool) {
-		this._isHighQualityLighting = value;
+		this._lightingEnabled  = value;
 
 		// Rebuild material
 		this.constructMaterial();
 	}
 
 	public inline function setIsHighQualityLighting(value:Bool) {
-		this._lightingEnabled = value;
+		this._isHighQualityLighting = value;
 
 		// Rebuild material
 		this.constructMaterial();

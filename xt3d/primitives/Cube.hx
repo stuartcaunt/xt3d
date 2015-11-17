@@ -99,9 +99,6 @@ class Cube extends Geometry {
 			for (i in 0 ... nx) {
 				planeX = -(width / 2.0) + i * (width / (nx - 1));
 				u = 1.0 * i / (nx - 1);
-				if (clockwise) {
-					u = 1.0 - u;
-				}
 
 				if (normalZ != 0.0) {
 					x = transX + planeX;

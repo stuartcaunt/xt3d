@@ -40,16 +40,45 @@ class CameraController extends Node3D implements PanGestureDelegate implements P
 	public static function create(camera:Camera, orbit:Float = 10.0):CameraController {
 		var object = new CameraController();
 
-		if (object != null && !(object.initWithCamera(camera, orbit))) {
+		if (object != null && !(object.initWithCameraAndOrbit(camera, orbit))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initWithCamera(camera:Camera, orbit:Float = 10.0):Bool {
+	public static function createWithPosition(camera:Camera, position:Vector4):CameraController {
+		var object = new CameraController();
+
+		if (object != null && !(object.initWithCameraAndPosition(camera, position))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public function initWithCameraAndOrbit(camera:Camera, orbit:Float = 10.0):Bool {
 		this._camera = camera;
 		this._orbit = orbit;
+		this._orbitMin = 0.3 * orbit;
+
+		var panGestureRecognizer = PanGestureRecognizer.create(this);
+		this.addChild(panGestureRecognizer);
+
+		var pinchGestureRecognizer = PinchGestureRecognizer.create(this);
+		this.addChild(pinchGestureRecognizer);
+
+		this.update(0.0);
+		this.scheduleUpdate();
+
+		return true;
+	}
+
+	public function initWithCameraAndPosition(camera:Camera, position:Vector4):Bool {
+		this._camera = camera;
+
+		this.setCameraPosition(position);
+
 		this._orbitMin = 0.3 * orbit;
 
 		var panGestureRecognizer = PanGestureRecognizer.create(this);
@@ -209,9 +238,9 @@ class CameraController extends Node3D implements PanGestureDelegate implements P
 		var yMod = y / this._yOrbitFactor;
 		var zMod = z / this._zOrbitFactor;
 
-		this._orbit = Math.sqrt(x * x + y * y + z * z);
+		this._orbit = Math.sqrt(xMod * xMod + yMod * yMod + zMod * zMod);
 		this._phi = Math.asin(yMod / this._orbit) * 180.0 / Math.PI;
-		this._theta = Math.asin(xMod / this._orbit) * 180.0 / Math.PI;
+		this._theta = Math.atan2(xMod, zMod) * 180.0 / Math.PI;
 
 		this._camera.position = new Vector4(x, y, z);
 	}

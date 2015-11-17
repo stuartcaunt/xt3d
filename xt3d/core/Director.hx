@@ -37,6 +37,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public var mouseDispatcher(get, null):MouseDispatcher;
 	public var gestureDispatcher(get, null):GestureDispatcher;
 	public var displaySize(get, null):Size<Int>;
+	public var fpsEnabled(get, set):Bool;
 
 	// members
 	private static var _current:Director = null;
@@ -57,6 +58,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	private var _frameRate:Float = 60.0;
 	private var _oldFrameRate:Float;
 	private var _fpsCalculator:FPSCalculator;
+	private var _fpsEnabled:Bool;
 
 	private var _isReady:Bool = false;
 	private var _onReadyListeners = new Array<Void->Void>();
@@ -173,6 +175,14 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 			return this._glView.size;
 		}
 		return Size.createIntSize(0, 0);
+	}
+
+	function set_fpsEnabled(value:Bool) {
+		return this._fpsEnabled = value;
+	}
+
+	function get_fpsEnabled():Bool {
+		return this._fpsEnabled;
 	}
 
 
@@ -331,7 +341,9 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		}
 
 		// Update fps calculator
-		this._fpsCalculator.update(dt);
+		if (this._fpsEnabled) {
+			this._fpsCalculator.update(dt);
+		}
 	}
 
 	private function renderLoop():Void {

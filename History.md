@@ -1,3 +1,10 @@
+0.1.7 / 2015-11-17
+===================
+
+ * Various bug fixes (UVs in cube, camera controller setup, base material properties). 
+ * BasicApplication utility. 
+ * Other small changes.
+
 0.1.6 / 2015-11-11
 ===================
 

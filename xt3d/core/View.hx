@@ -31,7 +31,7 @@ class View extends EventEmitter {
 	public var _displayRect:Rectangle;
 	public var _viewport:Rectangle;
 	public var _viewportInPixels:Rectangle;
-	public var _backgroundColor:Color = new Color();
+	public var _backgroundColor:Color = null;
 	private var _scene:Scene;
 	private var _camera:Camera;
 
@@ -111,7 +111,7 @@ class View extends EventEmitter {
 
 
 	public inline function get_displayRect():Rectangle {
-		return _displayRect;
+		return this._displayRect;
 	}
 
 	public inline function set_displayRect(value:Rectangle) {
@@ -120,7 +120,7 @@ class View extends EventEmitter {
 	}
 
 	public inline function get_viewport():Rectangle {
-		return _viewport;
+		return this._viewport;
 	}
 
 	public inline function set_viewport(value:Rectangle) {
@@ -129,7 +129,7 @@ class View extends EventEmitter {
 	}
 
 	public inline function get_viewportInPixels():Rectangle {
-		return _viewportInPixels;
+		return this._viewportInPixels;
 	}
 
 	public inline function set_viewportInPixels(value:Rectangle) {
@@ -138,7 +138,11 @@ class View extends EventEmitter {
 	}
 
 	public inline function get_backgroundColor():Color {
-		return _backgroundColor;
+		if (this._backgroundColor == null) {
+			this._backgroundColor = Director.current.backgroundColor;
+		}
+
+		return this._backgroundColor;
 	}
 
 	public inline function set_backgroundColor(value:Color) {
@@ -146,7 +150,7 @@ class View extends EventEmitter {
 	}
 
 	public inline function get_scene():Scene {
-		return _scene;
+		return this._scene;
 	}
 
 	public inline function set_scene(value:Scene) {
@@ -155,7 +159,7 @@ class View extends EventEmitter {
 	}
 
 	public inline function get_camera():Camera {
-		return _camera;
+		return this._camera;
 	}
 
 	public inline function set_camera(value:Camera) {
@@ -205,13 +209,13 @@ class View extends EventEmitter {
 		var renderer = Director.current.renderer;
 
 		// Set viewport with full rectangle
-		renderer.setViewport(viewport);
+		renderer.setViewport(this._viewport);
 
 		// Clear view
-		renderer.clear(backgroundColor);
+		renderer.clear(this.backgroundColor);
 
 		// Render scene with camera
-		renderer.render(this.scene, this.camera, rendererOverrider);
+		renderer.render(this._scene, this._camera, rendererOverrider);
 	}
 
 	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
@@ -251,12 +255,12 @@ class View extends EventEmitter {
 
 		// Clear and initialise render to texture
 		if (clear) {
-			var color = (clearColor == null) ? this._backgroundColor : clearColor;
+			var color = (clearColor == null) ? this.backgroundColor : clearColor;
 			renderer.clear(color, renderTexture.clearFlags);
 		}
 
 		// Render scene with camera
-		renderer.render(this.scene, this.camera, rendererOverrider);
+		renderer.render(this._scene, this._camera, rendererOverrider);
 	}
 
 
