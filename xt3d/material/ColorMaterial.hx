@@ -29,7 +29,7 @@ class ColorMaterial extends BaseTypedMaterial {
 	}
 
 
-	public static function createWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0, materialOptions:MaterialOptions = null):ColorMaterial {
+	public static function createWithComponents(red:Float = 1.0, green:Float = 1.0, blue:Float = 1.0, alpha:Float = 1.0, materialOptions:MaterialOptions = null):ColorMaterial {
 		var object = new ColorMaterial();
 
 		if (object != null && !(object.initWithColor(Color.createWithComponents(red, green, blue, alpha), materialOptions))) {

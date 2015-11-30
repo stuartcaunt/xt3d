@@ -16,7 +16,7 @@ class IndexData {
 
 	// properties
 	public var uint16Array(get, null):UInt16Array;
-	public var arrayLength(get, set):Int;
+	public var length(get, set):Int;
 	public var isDirty(get, set):Bool;
 	public var count(get, null):Int;
 	public var buffer(get, null):GLBuffer;
@@ -29,6 +29,7 @@ class IndexData {
 
 	private var _array:Array<UInt> = new Array<UInt>();
 	private var _buffer:GLBuffer = null;
+	private var _bufferByteLength:Int = 0;
 	private var _isDirty = false;
 
 	public static function create():IndexData {
@@ -92,11 +93,11 @@ class IndexData {
 		return this._ui16Array;
 	}
 
-	function get_arrayLength():Int {
+	function get_length():Int {
 		return this._length;
 	}
 
-	function set_arrayLength(value:Int) {
+	function set_length(value:Int) {
 		return this._length = value;
 	}
 
@@ -126,6 +127,7 @@ class IndexData {
 	public inline function dispose() {
 		if (this._buffer != null) {
 			GL.deleteBuffer(this._buffer);
+			this._buffer = null;
 		}
 	}
 
@@ -149,11 +151,26 @@ class IndexData {
 	public function writeBuffer(bufferManager:GLBufferManager):Bool {
 		if (this._isDirty) {
 			var bufferData = this.getBufferData();
+			var bufferByteLength = bufferData.byteLength;
+
 			if (this._buffer == null) {
+				// Create new buffer
 				this._buffer = bufferManager.createElementBuffer(bufferData);
+				this._bufferByteLength = bufferByteLength;
 
 			} else {
-				bufferManager.updateElementBuffer(this._buffer, bufferData);
+				if (bufferByteLength > this._bufferByteLength) {
+					// Delete previous buffer
+					GL.deleteBuffer(this._buffer);
+
+					// Create new buffer
+					this._buffer = bufferManager.createElementBuffer(bufferData);
+					this._bufferByteLength = bufferByteLength;
+
+				} else {
+					// Update existing buffer
+					bufferManager.updateElementBuffer(this._buffer, bufferData);
+				}
 			}
 
 			this._isDirty = false;

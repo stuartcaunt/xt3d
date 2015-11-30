@@ -15,6 +15,7 @@ class VertexData {
 
 	// members
 	private var _buffer:GLBuffer = null;
+	private var _bufferByteLength:Int = 0;
 	private var _isDirty = false;
 
 	public function initVertexData():Bool {
@@ -72,11 +73,26 @@ class VertexData {
 	public function writeBuffer(bufferManager:GLBufferManager):Bool {
 		if (this._isDirty) {
 			var bufferData:ArrayBufferView = this.getBufferData();
+			var bufferByteLength = bufferData.byteLength;
+
 			if (this._buffer == null) {
+				// Create new buffer
 				this._buffer = bufferManager.createVertexBuffer(bufferData);
+				this._bufferByteLength = bufferByteLength;
 
 			} else {
-				bufferManager.updateVertexBuffer(this._buffer, bufferData);
+				if (bufferByteLength > this._bufferByteLength) {
+					// Delete previous buffer
+					GL.deleteBuffer(this._buffer);
+
+					// Create new buffer
+					this._buffer = bufferManager.createVertexBuffer(bufferData);
+					this._bufferByteLength = bufferByteLength;
+
+				} else {
+					// Update existing buffer
+					bufferManager.updateVertexBuffer(this._buffer, bufferData);
+				}
 			}
 
 			this._isDirty = false;

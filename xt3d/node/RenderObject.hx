@@ -181,6 +181,11 @@ class RenderObject extends Node3D {
 			geometry = overrider.geometry;
 		}
 
+		// Verify that geometry has something to render before continuing
+		if (geometry.isEmpty()) {
+			return;
+		}
+
 		var isIndexed = geometry.isIndexed;
 
 		// Initialise attribute manager for this object

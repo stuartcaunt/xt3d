@@ -478,13 +478,30 @@ class Geometry extends XTObject {
 		if (this._vertexData.exists(attributeName)) {
 			var vertexData = this._vertexData.get(attributeName);
 
-			// Bind to attribute location for individual buffer
-			vertexData.bindToAttribute(attributeLocation, bufferManager);
+			// Verify that vertex data has data
+			if (vertexData.length > 0) {
+				// Bind to attribute location for individual buffer
+				vertexData.bindToAttribute(attributeLocation, bufferManager);
 
-			return true;
+				return true;
+			}
 		}
 
 		return false;
+	}
+
+	public function isEmpty():Bool {
+		// Verify that we have vertices or indices to render
+		var isEmpty:Bool = true;
+		for (vertexData in this._vertexData) {
+			isEmpty = isEmpty && (vertexData.length == 0);
+		}
+
+		if (this._indexData != null) {
+			isEmpty = isEmpty && (this._indexData.length == 0);
+		}
+
+		return isEmpty;
 	}
 
 }
