@@ -1,3 +1,10 @@
+0.1.8 / 2015-11-30
+===================
+
+ * Fix geometry bug : zero size and increasing size of already created buffer.
+ * Added Long Press gesture recognizer. 
+ * Added Swipe gesture recognizer. 
+
 0.1.7 / 2015-11-17
 ===================
 
