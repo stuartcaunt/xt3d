@@ -16,9 +16,8 @@ class IndexData {
 
 	// properties
 	public var uint16Array(get, null):UInt16Array;
-	public var length(get, set):Int;
+	public var length(get, null):Int;
 	public var isDirty(get, set):Bool;
-	public var count(get, null):Int;
 	public var buffer(get, null):GLBuffer;
 	public var type(get, null):Int;
 
@@ -94,11 +93,7 @@ class IndexData {
 	}
 
 	function get_length():Int {
-		return this._length;
-	}
-
-	function set_length(value:Int) {
-		return this._length = value;
+		return this.getLength();
 	}
 
 	public inline function get_isDirty():Bool {
@@ -107,10 +102,6 @@ class IndexData {
 
 	public inline function set_isDirty(value:Bool):Bool {
 		return this._isDirty = value;
-	}
-
-	public inline function get_count():Int {
-		return this.getLength();
 	}
 
 	public inline function get_buffer():GLBuffer {

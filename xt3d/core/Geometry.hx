@@ -497,6 +497,10 @@ class Geometry extends XTObject {
 			isEmpty = isEmpty && (vertexData.length == 0);
 		}
 
+		if (this._interleavedVertexData != null) {
+			isEmpty = isEmpty && (this._interleavedVertexData.length == 0);
+		}
+
 		if (this._indexData != null) {
 			isEmpty = isEmpty && (this._indexData.length == 0);
 		}
