@@ -110,6 +110,14 @@ class ShaderLib  {
 		];
 	}
 
+	public function addShaderConfigs(shaderConfigs:Map<String, ShaderInfo>) {
+		for (shaderName in shaderConfigs.keys()) {
+			var shaderInfo = shaderConfigs.get(shaderName);
+
+			this._baseShaderConfigs.set(shaderName, shaderInfo);
+		}
+	}
+
 	public function getShaderInfo(shaderName:String):ShaderInfo {
 		var shaderConfig:ShaderInfo = null;
 		if (this._shaderConfigs.exists(shaderName)) {

@@ -306,7 +306,7 @@ class BaseTypedMaterial extends Material {
 	}
 
 	private function constructMaterialName():String {
-		var materialName:String = "generic";
+		var materialName:String = this.getBaseMaterialName();
 
 		// Specific name of typed material
 		var typedMaterialName = this.getTypedMaterialName();
@@ -347,16 +347,22 @@ class BaseTypedMaterial extends Material {
 
 	private function setMaterialUniforms():Void {
 		// Generic
-		this.uniform("color").floatArrayValue = this._color.rgbaArray;
-		this.uniform("opacity").floatValue = this._opacity;
+		try {
+			this.uniform("color").floatArrayValue = this._color.rgbaArray;
+		} catch (e:XTException) {
+		}
+		try {
+			this.uniform("opacity").floatValue = this._opacity;
+		} catch (e:XTException) {
+		}
 
 		// Lighting
 		if (this._lightingEnabled) {
 			if (this._lightingColorAttributesEnabled) {
-//				this.uniform("material").get("shininess").floatValue = this._shininess;
-//				this.uniform("material").get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
-//				this.uniform("material").get("diffuseColor").floatArrayValue = this._diffuseColor.rgbaArray;
-//				this.uniform("material").get("specularColor").floatArrayValue = this._specularColor.rgbArray;
+				this.uniform("material").get("shininess").floatValue = this._shininess;
+				this.uniform("material").get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
+				this.uniform("material").get("diffuseColor").floatArrayValue = this._diffuseColor.rgbaArray;
+				this.uniform("material").get("specularColor").floatArrayValue = this._specularColor.rgbArray;
 
 			} else {
 				this.uniform("defaultShininess").floatValue = this._shininess;
@@ -372,6 +378,11 @@ class BaseTypedMaterial extends Material {
 		this.setTypedMaterialUniforms();
 	}
 
+
+	private function getBaseMaterialName():String {
+		// Can be overridden
+		return "generic";
+	}
 
 	private function getTypedMaterialName():String {
 		// To be overridden
