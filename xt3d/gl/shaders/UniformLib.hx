@@ -32,6 +32,7 @@ class UniformLib {
 					"modelViewMatrix" => { name: "u_modelViewMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
 					"modelMatrix" => { name: "u_modelMatrix", type: "mat4", shader: "v", defaultValue: "identity" },
 					"viewMatrix" => { name: "u_viewMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
+					"viewProjectionMatrix" => { name: "u_viewProjectionMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
 					"projectionMatrix" => { name: "u_projectionMatrix", type: "mat4", shader: "v", defaultValue: "identity", global: true },
 					"normalMatrix" => { name: "u_normalMatrix", type: "mat3", shader: "v", defaultValue: "identity" }
 				]

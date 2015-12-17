@@ -814,6 +814,7 @@ class Camera extends Node3D {
 
 	public function prepareRender(uniformLib:UniformLib):Void {
 		uniformLib.uniform("viewMatrix").matrixValue = this._viewMatrix;
+		uniformLib.uniform("viewProjectionMatrix").matrixValue = this._viewProjectionMatrix;
 		uniformLib.uniform("projectionMatrix").matrixValue = this._projectionMatrix;
 	}
 
