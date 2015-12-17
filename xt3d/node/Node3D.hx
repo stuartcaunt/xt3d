@@ -29,6 +29,10 @@ class Node3D extends XTObject {
 	public var rotationX(get, set):Float;
 	public var rotationY(get, set):Float;
 	public var rotationZ(get, set):Float;
+	public var scale(null, set):Float;
+	public var scaleX(get, set):Float;
+	public var scaleY(get, set):Float;
+	public var scaleZ(get, set):Float;
 
 
 	// members
@@ -210,8 +214,42 @@ class Node3D extends XTObject {
 		return this._rotationZ;
 	}
 
+	function set_scale(value:Float) {
+		this.setScaleX(value);
+		this.setScaleY(value);
+		this.setScaleZ(value);
+		return value;
+	}
 
-/* --------- Implementation --------- */
+	function get_scaleX():Float {
+		return this._scaleX;
+	}
+
+	function set_scaleX(value:Float) {
+		this.setScaleX(value);
+		return this._scaleX;
+	}
+
+	function get_scaleY():Float {
+		return this._scaleY;
+	}
+
+	function set_scaleY(value:Float) {
+		this.setScaleY(value);
+		return this._scaleY;
+	}
+
+	function get_scaleZ():Float {
+		return this._scaleZ;
+	}
+
+	function set_scaleZ(value:Float) {
+		this.setScaleZ(value);
+		return this._scaleZ;
+	}
+
+
+	/* --------- Implementation --------- */
 
 	public inline function getExcluded():Bool {
 		return this._excluded;
@@ -387,8 +425,24 @@ class Node3D extends XTObject {
 		this._eulerAnglesDirty = false;
 	}
 
+	inline public function setScaleX(value:Float):Void {
+		this._scaleX = value;
+		this._matrixDirty = true;
+	}
 
-/* --------- Matrix Transformations --------- */
+	inline public function setScaleY(value:Float):Void {
+		this._scaleY = value;
+		this._matrixDirty = true;
+	}
+
+	inline public function setScaleZ(value:Float):Void {
+		this._scaleZ = value;
+		this._matrixDirty = true;
+	}
+
+
+
+		/* --------- Matrix Transformations --------- */
 
 	inline public function getWorldPosition() {
 		VectorHelper.set(this._worldPosition, this._worldMatrix[12], this._worldMatrix[13], this._worldMatrix[14], this._worldMatrix[15]);
