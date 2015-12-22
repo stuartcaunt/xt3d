@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.gl.GLExtensionManager;
 import lime.utils.ArrayBufferView;
 import xt3d.gl.GLInfo;
 import lime.math.Rectangle;
@@ -30,6 +31,7 @@ import lime.graphics.opengl.GL;
 class Renderer extends XTObject {
 
 	// properties
+	public var extensionManager(get, null):GLExtensionManager;
 	public var stateManager(get, null):GLStateManager;
 	public var bufferManager(get, null):GLBufferManager;
 	public var attributeManager(get, null):GLAttributeManager;
@@ -43,6 +45,7 @@ class Renderer extends XTObject {
 	// members
 	private var _gl:GLRenderContext;
 	private var _glInfo:GLInfo;
+	private var _extensionManager:GLExtensionManager;
 	private var _stateManager:GLStateManager;
 	private var _bufferManager:GLBufferManager;
 	private var _attributeManager:GLAttributeManager;
@@ -77,6 +80,7 @@ class Renderer extends XTObject {
 		this._gl = gl;
 
 		this._glInfo = GLInfo.create();
+		this._extensionManager = GLExtensionManager.create();
 		this._stateManager = GLStateManager.create();
 		this._bufferManager = GLBufferManager.create();
 		this._attributeManager = GLAttributeManager.create(this._glInfo);
@@ -108,10 +112,11 @@ class Renderer extends XTObject {
 		super();
 	}
 
-
-
 	// Properties
 
+	function get_extensionManager():GLExtensionManager {
+		return this._extensionManager;
+	}
 
 	public inline function get_stateManager():GLStateManager {
 		return this._stateManager;

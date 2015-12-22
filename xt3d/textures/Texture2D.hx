@@ -1,5 +1,8 @@
 package xt3d.textures;
 
+import xt3d.gl.GLExtensionManager;
+import xt3d.utils.errors.XTException;
+import lime.utils.Float32Array;
 import lime.app.Future;
 import xt3d.utils.image.ImageHelper;
 import lime.math.Vector2;
@@ -112,6 +115,16 @@ import lime.Assets;
 		var object = new Texture2D();
 
 		if (object != null && !(object.initFromColor(color, textureOptions))) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createFromFloat32Array(width:Int, height:Int, channels:Int, array:Float32Array, textureOptions:TextureOptions = null):Texture2D {
+		var object = new Texture2D();
+
+		if (object != null && !(object.initFromFloat32Array(width, height, channels, array, textureOptions))) {
 			object = null;
 		}
 
@@ -240,6 +253,59 @@ import lime.Assets;
 			XT.Error("Cannot create image from color \"" + color.toString + "\"");
 			return false;
 		}
+
+		// Handle the image data
+		this.handleImageData(image);
+
+		// Create texture immediately
+		this.uploadTexture();
+
+		this._isReady = true;
+
+		return true;
+	}
+
+	public function initFromFloat32Array(width:Int, height:Int, channels:Int, array:Float32Array, textureOptions:TextureOptions = null):Bool {
+		var textureFloatState = Director.current.renderer.extensionManager.textureFloatState;
+
+		// Verify that we have texture float enabled
+		if (textureFloatState == GLExtensionManager.TEXTURE_FLOAT_DISABLED) {
+			throw new XTException("TextureFloatUnavailable", "Texture Floats have not been enabled or are not available on this platform");
+		}
+
+		this._name = "float32Array-" + width + "x" + height + "-" + this._id;
+
+		// Set texture options
+		this.setTextureOptions(textureOptions);
+
+		// Set floating point pixel format
+		if (channels == 1) {
+			this._pixelFormat = XTGL.Texture2DPixelFormat_Float1;
+
+		} else if (channels == 2) {
+			this._pixelFormat = XTGL.Texture2DPixelFormat_Float2;
+
+		} else if (channels == 3) {
+			this._pixelFormat = XTGL.Texture2DPixelFormat_Float3;
+
+		} else if (channels == 4) {
+			this._pixelFormat = XTGL.Texture2DPixelFormat_Float4;
+		} else {
+			throw new XTException("IncompatibleFloatTextureChannels", "The number of float texture channels must be between 1 and 4");
+		}
+			this._forcePOT = false;
+		this._generateMipMaps = false;
+
+		// Verify if we have texture float linear
+		if (textureFloatState & GLExtensionManager.TEXTURE_FLOAT_LINEAR == 0) {
+			this._minFilter = XTGL.GL_NEAREST;
+			this._magFilter = XTGL.GL_NEAREST;
+		}
+
+
+
+		// Get image data from asset
+		var image = ImageHelper.imageFromFloat32Array(width, height, array);
 
 		// Handle the image data
 		this.handleImageData(image);

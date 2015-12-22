@@ -51,6 +51,11 @@ class XTGL {
 	public static inline var Texture2DPixelFormat_PVRTC4:Int = 8;
 	// 2-bit PVRTC-compressed texture: PVRTC2
 	public static inline var Texture2DPixelFormat_PVRTC2:Int = 9;
+	// 32-bit float
+	public static inline var Texture2DPixelFormat_Float1:Int = 10;
+	public static inline var Texture2DPixelFormat_Float2:Int = 11;
+	public static inline var Texture2DPixelFormat_Float3:Int = 12;
+	public static inline var Texture2DPixelFormat_Float4:Int = 13;
 
 
 	public static inline var DepthStencilFormatNone:Int = 0;

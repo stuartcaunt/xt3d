@@ -1,5 +1,6 @@
 package xt3d.gl;
 
+import lime.utils.Float32Array;
 import xt3d.utils.errors.XTException;
 import lime.graphics.Image;
 import lime.utils.Int16Array;
@@ -200,6 +201,18 @@ class GLTextureManager {
 
 		} else if (pixelFormat == XTGL.Texture2DPixelFormat_AI88) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE_ALPHA, textureWidth, textureHeight, 0, GL.LUMINANCE_ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float1) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE, textureWidth, textureHeight, 0, GL.LUMINANCE, GL.FLOAT, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float2) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.LUMINANCE_ALPHA, textureWidth, textureHeight, 0, GL.LUMINANCE_ALPHA, GL.FLOAT, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float3) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.FLOAT, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float4) {
+			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.FLOAT, formattedDataSource);
 		}
 	}
 
@@ -266,6 +279,17 @@ class GLTextureManager {
 			}
 			return formattedSource;
 
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float1) {
+			return new Float32Array(source.buffer);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float2) {
+			return new Float32Array(source.buffer);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float3) {
+			return new Float32Array(source.buffer);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float4) {
+			return new Float32Array(source.buffer);
 		}
 
 		return source;
@@ -295,6 +319,18 @@ class GLTextureManager {
 
 		} else if (pixelFormat == XTGL.Texture2DPixelFormat_AI88) {
 			return 16;
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float1) {
+			return 8;
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float2) {
+			return 16;
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float3) {
+			return 24;
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float4) {
+			return 32;
 		}
 		return 32;
 	}

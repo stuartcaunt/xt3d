@@ -6,33 +6,33 @@ import lime.graphics.opengl.GL;
 class GLInfo {
 
 	// properties
-	@:isVar public var version(get, null):String;
-	@:isVar public var vendor(get, null):String;
-	@:isVar public var renderer(get, null):String;
-	@:isVar public var shadingLanguageVersion(get, null):String;
+	public var version(get, null):String;
+	public var vendor(get, null):String;
+	public var renderer(get, null):String;
+	public var shadingLanguageVersion(get, null):String;
 
-	@:isVar public var alphaBits(get, null):Int;
-	@:isVar public var redBits(get, null):Int;
-	@:isVar public var greenBits(get, null):Int;
-	@:isVar public var blueBits(get, null):Int;
-	@:isVar public var depthBits(get, null):Int;
-	@:isVar public var stencilBits(get, null):Int;
+	public var alphaBits(get, null):Int;
+	public var redBits(get, null):Int;
+	public var greenBits(get, null):Int;
+	public var blueBits(get, null):Int;
+	public var depthBits(get, null):Int;
+	public var stencilBits(get, null):Int;
 
 	public var maxTextureImageUnits(get, null):Int;
-	@:isVar public var maxVertexTexturesImageUnits(get, null):Int;
-	@:isVar public var maxCombinedTextureImageUnits(get, null):Int;
-	@:isVar public var maxTextureSize(get, null):Int;
-	@:isVar public var maxCubemapTextureSize(get, null):Int;
+	public var maxVertexTexturesImageUnits(get, null):Int;
+	public var maxCombinedTextureImageUnits(get, null):Int;
+	public var maxTextureSize(get, null):Int;
+	public var maxCubemapTextureSize(get, null):Int;
 
-	@:isVar public var maxVertexAttribs(get, null):Int;
-	@:isVar public var maxVaryingVectors(get, null):Int;
-	@:isVar public var maxVertexUniformVectors(get, null):Int;
-	@:isVar public var maxFragmentUniformVectors(get, null):Int;
+	public var maxVertexAttribs(get, null):Int;
+	public var maxVaryingVectors(get, null):Int;
+	public var maxVertexUniformVectors(get, null):Int;
+	public var maxFragmentUniformVectors(get, null):Int;
 
-	@:isVar public var maxRenderbufferSize(get, null):Int;
-	@:isVar public var maxViewportDims(get, null):Array<Int>;
-	@:isVar public var aliasedLineWidthRange(get, null):Array<Int>;
-	@:isVar public var aliasedPointSizeRange(get, null):Array<Int>;
+	public var maxRenderbufferSize(get, null):Int;
+	public var maxViewportDims(get, null):Array<Int>;
+	public var aliasedLineWidthRange(get, null):Array<Int>;
+	public var aliasedPointSizeRange(get, null):Array<Int>;
 
 	public var vertexShaderPrecisionHighpFloat(get, null):GLShaderPrecisionFormat;
 	public var vertexShaderPrecisionMediumpFloat(get, null):GLShaderPrecisionFormat;

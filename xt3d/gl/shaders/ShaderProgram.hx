@@ -438,14 +438,13 @@ class ShaderProgram extends XTObject {
 
 	private function getNextAvailableTextureSlot():Int {
 
-		var nextSlot = 0;
 		for (i in 0 ... this._availableTextureSlots.length) {
 			if (this._availableTextureSlots[i]) {
-				nextSlot = nextSlot < i ? nextSlot : i;
+				return i;
 			}
 		}
 
-		return nextSlot;
+		return this._availableTextureSlots.length;
 	}
 
 	public function use():Void {
