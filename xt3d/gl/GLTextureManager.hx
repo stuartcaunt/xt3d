@@ -7,7 +7,6 @@ import lime.utils.Int16Array;
 import lime.utils.ArrayBufferView;
 import xt3d.utils.XT;
 import xt3d.textures.Texture2D;
-import lime.utils.ByteArray;
 import lime.utils.UInt8Array;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLTexture;
