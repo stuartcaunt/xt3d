@@ -1,3 +1,15 @@
+0.1.9 / 2015-12-24
+===================
+
+ * Update to Lime 2.8.2
+ * Added GLExtensionManager to handle opengl extensions enabling 
+ * Added Floating point texture support (OES_texture_float + OES_texture_float_linear) 
+ * Fix texture slot handling in ShaderProgram
+ * Scale handling in Node3D
+ * Add viewProjection matrix global uniform
+ * Simplify adding and using custom shaders
+ * Fix bug on geometry size test and indexed data length (remove count property)
+
 0.1.8 / 2015-11-30
 ===================
 
