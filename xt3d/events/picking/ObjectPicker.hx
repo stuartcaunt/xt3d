@@ -6,7 +6,7 @@ import lime.utils.UInt8Array;
 import xt3d.core.Director;
 import lime.math.Vector2;
 import lime.graphics.opengl.GL;
-import xt3d.core.View;
+import xt3d.view.View;
 import xt3d.material.Material;
 import xt3d.core.RendererOverrider;
 import xt3d.textures.RenderTexture;

@@ -6,7 +6,7 @@ import xt3d.utils.XT;
 import xt3d.math.MatrixHelper;
 import xt3d.math.VectorHelper;
 import xt3d.math.Vector4;
-import xt3d.core.View;
+import xt3d.view.View;
 import xt3d.math.Matrix4;
 
 import xt3d.node.Node3D;

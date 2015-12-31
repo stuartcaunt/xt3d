@@ -56,4 +56,8 @@ class Size<T> {
 
 	/* --------- Implementation --------- */
 
+	public inline function equals(size:Size<T>):Bool {
+		return this._width == size._width && this._height == size._height;
+	}
+
 }

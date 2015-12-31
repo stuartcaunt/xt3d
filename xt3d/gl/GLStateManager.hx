@@ -1,5 +1,6 @@
 package xt3d.gl;
 
+import xt3d.utils.XT;
 import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
 import lime.graphics.opengl.GL;
@@ -21,6 +22,9 @@ class GLStateManager {
 	// Depth test
 	private var _oldDepthTest = false;
 	private var _oldDepthWrite = false;
+
+	// scissor test
+	private var _oldScissorTest = false;
 
 	// Culling and face direction
 	private var _oldCullFaceEnabled = false;
@@ -68,6 +72,10 @@ class GLStateManager {
 		this._oldDepthWrite = false;
 		this.setDepthWrite(true);
 		GL.clearDepth(1.0);
+
+		// Scissor test
+		this._oldScissorTest = true;
+		this.setScissorTest(false);
 
 		this.setColorMask(true, true, true, false);
 
@@ -184,12 +192,10 @@ class GLStateManager {
 	}
 
 	public inline function setClearColor(color:Color) {
-		// Note: HAVE to set clearColor every frame because opengfl GLRenderer sets this to another value
-		// TODO: remove openfl OpenglView
-		//if (!color.equals(this._clearColor)) {
+		if (!color.equals(this._clearColor)) {
 			GL.clearColor(color.red, color.green, color.blue, color.alpha);
 			this._clearColor = color;
-		//}
+		}
 	}
 
 	public inline function setDepthTest(depthTest) {
@@ -201,6 +207,18 @@ class GLStateManager {
 			}
 
 			this._oldDepthTest = depthTest;
+		}
+	}
+
+	public inline function setScissorTest(scissorTest) {
+		if (this._oldScissorTest != scissorTest) {
+			if (scissorTest) {
+				GL.enable(GL.SCISSOR_TEST);
+			} else {
+				GL.disable(GL.SCISSOR_TEST);
+			}
+
+			this._oldScissorTest = scissorTest;
 		}
 	}
 

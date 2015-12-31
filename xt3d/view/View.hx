@@ -1,8 +1,10 @@
-package xt3d.core;
+package xt3d.view;
 
 import xt3d.utils.XT;
 import lime.math.Rectangle;
-import lime.graphics.opengl.GL;
+import xt3d.core.Director;
+import xt3d.core.EventEmitter;
+import xt3d.core.RendererOverrider;
 import xt3d.math.Vector4;
 import xt3d.utils.errors.XTException;
 import xt3d.node.Node3D;
@@ -14,24 +16,26 @@ import xt3d.node.Scene;
 
 class View extends EventEmitter {
 
-	// Viewport descriptor : {top right bottom left}
-	// can give percentages of full frame or pixel offsets
-	// Negative values are considered to be from opposite side
-	// eg {2px -202px -102px 2px} creates a rectangle of ((2, 2), (200, 100))
-
 	// properties
-	public var displayRect(get, set):Rectangle;
-	public var viewport(get, set):Rectangle;
-	public var viewportInPixels(get, set):Rectangle;
+	public var viewport(get, null):Rectangle;
+	public var viewportInPixels(get, null):Rectangle;
+	public var displaySize(get, set):Size<Int>; // In points
+	public var horizontalConstraint(get, set):HorizontalConstraint;
+	public var verticalConstraint(get, set):VerticalConstraint;
 	public var backgroundColor(get, set):Color;
 	public var scene(get, set):Scene;
 	public var camera(get, set):Camera;
 
 	// members
-	public var _displayRect:Rectangle;
-	public var _viewport:Rectangle;
-	public var _viewportInPixels:Rectangle;
-	public var _backgroundColor:Color = null;
+	private var _viewport:Rectangle;
+	private var _viewportInPixels:Rectangle;
+	private var _displaySize:Size<Int>; // In points
+	private var _horizontalConstraint:HorizontalConstraint = HorizontalConstraint.create();
+	private var _verticalConstraint:VerticalConstraint = VerticalConstraint.create();
+	private var _scissorEnabled:Bool = false;
+
+
+	private var _backgroundColor:Color = null;
 	private var _scene:Scene;
 	private var _camera:Camera;
 
@@ -49,20 +53,10 @@ class View extends EventEmitter {
 		return object;
 	}
 
-	public static function createWithSize(size:Size<Int>):View {
+	public static function createBasic3D():View {
 		var object = new View();
 
-		if (object != null && !(object.initWithSize(size))) {
-			object = null;
-		}
-
-		return object;
-	}
-
-	public static function createBasic3D(size:Size<Int> = null):View {
-		var object = new View();
-
-		if (object != null && !(object.initBasic3D(size))) {
+		if (object != null && !(object.initBasic3D())) {
 			object = null;
 		}
 
@@ -70,26 +64,15 @@ class View extends EventEmitter {
 	}
 
 	public function initView():Bool {
-		// Set default viewport
-		setViewport(new Rectangle(0, 0, 500, 600));
+		// Get current director display size
+		this.setDisplaySize(Director.current.displaySize);
 
 		return true;
 	}
 
-	public function initWithSize(size:Size<Int>):Bool {
-		// Set default viewport
-		setViewport(new Rectangle(0, 0, size.width, size.height));
-
-		return true;
-	}
-
-	public function initBasic3D(size:Size<Int> = null):Bool {
-		if (size == null) {
-			size = Size.createIntSize(500, 600);
-		}
-
-		// Set default viewport
-		setViewport(new Rectangle(0, 0, size.width, size.height));
+	public function initBasic3D():Bool {
+		// Get current director display size
+		this.setDisplaySize(Director.current.displaySize);
 
 		// Create scene
 		this._scene = Scene.create();
@@ -110,21 +93,7 @@ class View extends EventEmitter {
 	/* ----------- Properties ----------- */
 
 
-	public inline function get_displayRect():Rectangle {
-		return this._displayRect;
-	}
-
-	public inline function set_displayRect(value:Rectangle) {
-		this.setDisplayRect(value);
-		return this._displayRect;
-	}
-
 	public inline function get_viewport():Rectangle {
-		return this._viewport;
-	}
-
-	public inline function set_viewport(value:Rectangle) {
-		this.setViewport(value);
 		return this._viewport;
 	}
 
@@ -132,9 +101,31 @@ class View extends EventEmitter {
 		return this._viewportInPixels;
 	}
 
-	public inline function set_viewportInPixels(value:Rectangle) {
-		this.setViewportInPixels(value);
-		return this._viewportInPixels;
+	function get_displaySize():Size<Int> {
+		return this._displaySize;
+	}
+
+	function set_displaySize(value:Size<Int>) {
+		this.setDisplaySize(value);
+		return this._displaySize;
+	}
+
+	function get_horizontalConstraint():HorizontalConstraint {
+		return this._horizontalConstraint;
+	}
+
+	function set_horizontalConstraint(value:HorizontalConstraint) {
+		this.setHorizontalConstraint(value);
+		return this._horizontalConstraint;
+	}
+
+	function get_verticalConstraint():VerticalConstraint {
+		return this._verticalConstraint;
+	}
+
+	function set_verticalConstraint(value:VerticalConstraint) {
+		this.setVerticalConstraint(value);
+		return this._verticalConstraint;
 	}
 
 	public inline function get_backgroundColor():Color {
@@ -211,8 +202,15 @@ class View extends EventEmitter {
 		// Set viewport with full rectangle
 		renderer.setViewport(this._viewport);
 
+		// Set scissor
+		if (this._scissorEnabled) {
+			renderer.enableScissor(this._viewport);
+		} else {
+			renderer.disableScissor();
+		}
+
 		// Clear view
-		renderer.clear(this.backgroundColor);
+		renderer.clear(_backgroundColor);
 
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);
@@ -221,7 +219,6 @@ class View extends EventEmitter {
 	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
 		if (this.scene == null) {
 			throw new XTException("CannotRenderWithNullScene", "Cannot render to texture with a null Scene for the View");
-
 		}
 
 		// Take temporary ownership of the node
@@ -253,9 +250,16 @@ class View extends EventEmitter {
 		// Set viewport for render texture
 		renderer.setViewport(viewport);
 
+		// Set scissor
+		if (this._scissorEnabled) {
+			renderer.enableScissor(viewport);
+		} else {
+			renderer.disableScissor();
+		}
+
 		// Clear and initialise render to texture
 		if (clear) {
-			var color = (clearColor == null) ? this.backgroundColor : clearColor;
+			var color = (clearColor == null) ? _backgroundColor : clearColor;
 			renderer.clear(color, renderTexture.clearFlags);
 		}
 
@@ -263,47 +267,53 @@ class View extends EventEmitter {
 		renderer.render(this._scene, this._camera, rendererOverrider);
 	}
 
+	public function setDisplaySize(displaySize:Size<Int>):Void {
+		if (this._displaySize == null || !displaySize.equals(this._displaySize)) {
+			this._displaySize = displaySize;
 
-
-	public inline function setDisplayRect(displayRect:Rectangle) {
-		this.setViewport(displayRect);
-	}
-
-	public function setViewport(viewport:Rectangle) {
-		//XT.Log("Setting viewport to " + viewport.width + " x " + viewport.height);
-		if (this._viewport == null || !viewport.equals(this._viewport)) {
-			// Update displayrect - do calculation if needed.
-			// Just copy for now
-			this._viewport = viewport;
-			this._displayRect = viewport;
-
-			this._viewportInPixels = new Rectangle(viewport.x * this._contentScaleFactor, viewport.y * this._contentScaleFactor, viewport.width * this._contentScaleFactor, viewport.height * this._contentScaleFactor);
-
-			// Emit event
-			this.emit("viewport_changed");
+			this.updateViewport();
 		}
 	}
 
-	public function setViewportInPixels(viewportInPixels:Rectangle) {
-		if (this._viewportInPixels == null || !viewportInPixels.equals(this._viewportInPixels)) {
-			// Update displayrect - do calculation if needed.
-			// Just copy for now
-			this._viewportInPixels = viewportInPixels;
+	public function setDisplaySizeInPixels(displaySizeInPixels:Size<Int>):Void {
+		// Convert from pixels to points
+		var displaySize = Size.createIntSize(Std.int(displaySizeInPixels.width / this._contentScaleFactor),
+			Std.int(displaySizeInPixels.height / this._contentScaleFactor));
 
-			var viewport = new Rectangle(
-				viewport.x / this._contentScaleFactor,
-				viewport.y / this._contentScaleFactor,
-				viewport.width / this._contentScaleFactor,
-				viewport.height / this._contentScaleFactor);
-
-			this._viewport = viewport;
-			this._displayRect = viewport;
-
-			// Emit event
-			this.emit("viewport_changed");
-		}
+		this.setDisplaySize(displaySize);
 	}
 
+	public function updateViewport():Void {
+
+		// Calculate viewport from constraints applied to display size
+		this._viewport = new Rectangle(
+			this._horizontalConstraint.getLeftInPoints(displaySize.width, this._contentScaleFactor),
+			this._verticalConstraint.getTopInPoints(displaySize.height, this._contentScaleFactor),
+			this._horizontalConstraint.getWidthInPoints(displaySize.width, this._contentScaleFactor),
+			this._verticalConstraint.getHeightInPoints(displaySize.height, this._contentScaleFactor));
+
+		this._viewportInPixels = new Rectangle(viewport.x * this._contentScaleFactor, viewport.y * this._contentScaleFactor, viewport.width * this._contentScaleFactor, viewport.height * this._contentScaleFactor);
+
+		// See if we need scissor test
+		this._scissorEnabled = (
+			this._viewport.x != 0 ||
+			this._viewport.width != displaySize.width ||
+			this._viewport.y != 0 ||
+			this._viewport.height != displaySize.height);
+
+		// Emit event
+		this.emit("viewport_changed");
+	}
+
+	public function setHorizontalConstraint(horizontalConstraint:HorizontalConstraint):Void {
+		this._horizontalConstraint = horizontalConstraint;
+		this.updateViewport();
+	}
+
+	public function setVerticalConstraint(verticalConstraint:VerticalConstraint):Void {
+		this._verticalConstraint = verticalConstraint;
+		this.updateViewport();
+	}
 
 	public override function update(dt:Float):Void {
 		// Method to be overridden to get automatic updates every frame if scheduleUpdate has been called

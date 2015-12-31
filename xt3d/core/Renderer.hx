@@ -56,6 +56,7 @@ class Renderer extends XTObject {
 	private var _shaderManager:ShaderManager;
 
 	private var _viewport:Rectangle;
+	private var _scissor:Rectangle = null;
 	private var _viewProjectionMatrix = new Matrix4();
 
 	private var _currentProgram:ShaderProgram = null;
@@ -174,13 +175,26 @@ class Renderer extends XTObject {
 		}
 	}
 
-	public function setViewport(viewport:Rectangle) {
+	public function setViewport(viewport:Rectangle):Void {
 		// Set the viewport
 		if (_viewport == null || !_viewport.equals(viewport)) {
 			_viewport = viewport;
 			GL.viewport(Std.int (_viewport.x), Std.int (_viewport.y), Std.int (_viewport.width), Std.int (_viewport.height));
 			//XT.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
 		}
+	}
+
+	public function enableScissor(scissor:Rectangle):Void {
+		// Set and enable the scissor
+		if (_scissor == null || !_scissor.equals(scissor)) {
+			_scissor = scissor;
+			GL.scissor(Std.int (_scissor.x), Std.int (_scissor.y), Std.int (_scissor.width), Std.int (_scissor.height));
+		}
+		this._stateManager.setScissorTest(true);
+	}
+
+	public function disableScissor():Void {
+		this._stateManager.setScissorTest(false);
 	}
 
 	public function clear(color:Color, clearFlags:Int = 0) {

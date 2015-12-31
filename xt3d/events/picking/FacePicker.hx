@@ -1,6 +1,6 @@
 package xt3d.events.picking;
 
-import xt3d.core.View;
+import xt3d.view.View;
 import xt3d.node.RenderObject;
 import lime.graphics.opengl.GL;
 import lime.utils.UInt8Array;
