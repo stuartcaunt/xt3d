@@ -16,7 +16,7 @@ class GLStateManager {
 	private var _oldBlendDst:Int = -1;
 	private var _oldBlendingEnabled:Int = -1;
 
-	private var _clearColor:Color = null;
+	private var _clearColor:Color = Color.create();
 	private var _colorMask:UInt = 0;
 
 	// Depth test
@@ -194,7 +194,7 @@ class GLStateManager {
 	public inline function setClearColor(color:Color) {
 		if (!color.equals(this._clearColor)) {
 			GL.clearColor(color.red, color.green, color.blue, color.alpha);
-			this._clearColor = color;
+			this._clearColor.copyFrom(color);
 		}
 	}
 

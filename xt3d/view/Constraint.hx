@@ -20,6 +20,8 @@ class Constraint {
 	private static inline var VALUE_TYPE_PERCENT:Int = 2;
 
 	// properties
+	public var minorMargin(null, set):String;
+	public var majorMargin(null, set):String;
 
 	// members
 	private var _p0:Float;
@@ -29,6 +31,11 @@ class Constraint {
 	private var _l:Float;
 	private var _lType:Int;
 	private var _constraintType:Int = CONSTRAINT_TYPE_P0_L;
+
+	private var _margin0:Float = 0.0;
+	private var _margin0Type:Int = VALUE_TYPE_POINT;
+	private var _margin1:Float = 0.0 ;
+	private var _margin1Type:Int = VALUE_TYPE_POINT;
 
 	public function initConstraint(constraintType:Int = CONSTRAINT_TYPE_P0_L, value1:String = "0pt", value2:String = "100%"):Bool {
 		this._constraintType = constraintType;
@@ -67,35 +74,82 @@ class Constraint {
 
 	/* ----------- Properties ----------- */
 
+	function set_minorMargin(value:String) {
+		this.setMinorMargin(value);
+		return value;
+	}
+
+	function set_majorMargin(value:String) {
+		this.setMajorMargin(value);
+		return value;
+	}
+
+
 	/* --------- Implementation --------- */
 
 
 	public function getOriginInPoints(fullLengthInPoints:Int, contentScaleFactor:Float):Int {
-		if (this._constraintType == CONSTRAINT_TYPE_P0_L || this._constraintType == CONSTRAINT_TYPE_P0_P1) {
-			return this.convertToPoints(this._p0, this._p0Type, fullLengthInPoints, contentScaleFactor);
+		var p0InPoints:Float = 0.0;
+		var lengthInPoints:Float;
+		if (this._constraintType == CONSTRAINT_TYPE_P0_L) {
+			p0InPoints = this.convertToPoints(this._p0, this._p0Type, fullLengthInPoints, contentScaleFactor);
+			lengthInPoints = this.convertToPoints(this._l, this._lType, fullLengthInPoints, contentScaleFactor);
+
+		} else if (this._constraintType == CONSTRAINT_TYPE_P0_P1) {
+			p0InPoints = this.convertToPoints(this._p0, this._p0Type, fullLengthInPoints, contentScaleFactor);
+			var p1InPoints = this.convertToPoints(this._p1, this._p1Type, fullLengthInPoints, contentScaleFactor);
+
+			lengthInPoints = fullLengthInPoints - p0InPoints - p1InPoints;
 
 		} else if (this._constraintType == CONSTRAINT_TYPE_P1_L) {
 			var p1InPoints = this.convertToPoints(this._p1, this._p1Type, fullLengthInPoints, contentScaleFactor);
-			var lInPoints = this.convertToPoints(this._l, this._lType, fullLengthInPoints, contentScaleFactor);
+			lengthInPoints = this.convertToPoints(this._l, this._lType, fullLengthInPoints, contentScaleFactor);
 
-			return fullLengthInPoints - p1InPoints - lInPoints;
+			var p0InPoints = fullLengthInPoints - p1InPoints - lengthInPoints;
+
+		} else {
+			return 0;
 		}
 
-		return 0;
+		// Add on minor margin to origin
+		var margin0InPoints = this.convertToPoints(this._margin0, this._margin0Type, lengthInPoints, contentScaleFactor);
+
+		return Std.int(p0InPoints + margin0InPoints);
 	}
 
 	public function getLengthInPoints(fullLengthInPoints:Int, contentScaleFactor:Float):Int {
+		var constraintLengthInPoints:Float;
 		if (this._constraintType == CONSTRAINT_TYPE_P0_L || this._constraintType == CONSTRAINT_TYPE_P1_L) {
-			return this.convertToPoints(this._l, this._lType, fullLengthInPoints, contentScaleFactor);
+			constraintLengthInPoints = this.convertToPoints(this._l, this._lType, fullLengthInPoints, contentScaleFactor);
 
 		} else if (this._constraintType == CONSTRAINT_TYPE_P0_P1) {
 			var p0InPoints = this.convertToPoints(this._p0, this._p0Type, fullLengthInPoints, contentScaleFactor);
 			var p1InPoints = this.convertToPoints(this._p1, this._p1Type, fullLengthInPoints, contentScaleFactor);
 
-			return fullLengthInPoints - p0InPoints - p1InPoints;
+			constraintLengthInPoints = fullLengthInPoints - p0InPoints - p1InPoints;
+
+		} else {
+			return 0;
 		}
 
-		return 0;
+		// Remove margin from length
+		var margin0InPoints = this.convertToPoints(this._margin0, this._margin0Type, constraintLengthInPoints, contentScaleFactor);
+		var margin1InPoints = this.convertToPoints(this._margin1, this._margin1Type, constraintLengthInPoints, contentScaleFactor);
+		constraintLengthInPoints = constraintLengthInPoints - margin0InPoints - margin1InPoints;
+
+		return Std.int(constraintLengthInPoints);
+	}
+
+	public function setMinorMargin(value:String):Void {
+		var constraintValue:ConstraintValue = parseConstraintValue(value);
+		this._margin0 = constraintValue.value;
+		this._margin0Type = constraintValue.type;
+	}
+
+	public function setMajorMargin(value:String):Void {
+		var constraintValue:ConstraintValue = parseConstraintValue(value);
+		this._margin1 = constraintValue.value;
+		this._margin1Type = constraintValue.type;
 	}
 
 	private function parseConstraintValue(value:String):ConstraintValue {
@@ -128,15 +182,15 @@ class Constraint {
 		};
 	}
 
-	private function convertToPoints(value:Float, valueType:Int, fullLengthInPoints:Int, contentScaleFactor:Float):Int {
+	private function convertToPoints(value:Float, valueType:Int, fullLengthInPoints:Float, contentScaleFactor:Float):Float {
 		if (valueType == VALUE_TYPE_POINT) {
-			return Std.int(value);
+			return value;
 
 		} else if (valueType == VALUE_TYPE_PIXEL) {
-			return Std.int(value / contentScaleFactor);
+			return value / contentScaleFactor;
 
 		} else if (valueType == VALUE_TYPE_PERCENT) {
-			return Std.int(fullLengthInPoints * value / 100.0);
+			return fullLengthInPoints * value / 100.0;
 		}
 
 		return 0;

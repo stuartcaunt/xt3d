@@ -35,7 +35,7 @@ class View extends EventEmitter {
 	private var _scissorEnabled:Bool = false;
 
 
-	private var _backgroundColor:Color = null;
+	private var _backgroundColor:Color = Director.current.backgroundColor;
 	private var _scene:Scene;
 	private var _camera:Camera;
 
@@ -129,10 +129,6 @@ class View extends EventEmitter {
 	}
 
 	public inline function get_backgroundColor():Color {
-		if (this._backgroundColor == null) {
-			this._backgroundColor = Director.current.backgroundColor;
-		}
-
 		return this._backgroundColor;
 	}
 
@@ -161,12 +157,7 @@ class View extends EventEmitter {
 	/* --------- Implementation --------- */
 
 	public function setScene(scene:Scene):Void {
-		if (this._camera != null && this._camera.parent == this._scene) {
-			this._scene.removeChild(this._camera);
-
-			this._scene = scene;
-		}
-
+		this._scene = scene;
 	}
 
 	override public function scheduleUpdate(ignored:Bool = false):Void {
@@ -210,7 +201,7 @@ class View extends EventEmitter {
 		}
 
 		// Clear view
-		renderer.clear(_backgroundColor);
+		renderer.clear(this._backgroundColor);
 
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);
