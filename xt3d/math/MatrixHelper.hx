@@ -2,6 +2,7 @@ package xt3d.math;
 
 import lime.utils.Float32Array;
 
+import xt3d.utils.Types;
 import xt3d.math.Vector4;
 import xt3d.math.Matrix4;
 import xt3d.math.Quaternion;
@@ -93,6 +94,17 @@ class MatrixHelper {
 
 		return raw;
 	}
+
+	public static inline function matrixWithRowMajorArray9(a:Array<Float>):Matrix4 {
+		var raw:Matrix4 = MatrixHelper.RAW_DATA_CONTAINER;
+		raw[0]  = a[0]; raw[1]  = a[3]; raw[2]  = a[6]; raw[3]  = 0.0;
+		raw[4]  = a[1]; raw[5]  = a[4]; raw[6]  = a[7]; raw[7]  = 0.0;
+		raw[8]  = a[2]; raw[9]  = a[5]; raw[10] = a[8]; raw[11] = 0.0;
+		raw[12] =  0.0; raw[13] =  0.0; raw[14] =  0.0; raw[15] = 1.0;
+
+		return raw;
+	}
+
 
 	public function new() {
 	}
@@ -323,10 +335,10 @@ class MatrixHelper {
 	 * @param zoom The zoom factor.
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public static function perspectiveMatrix(fovy:Float, aspect:Float, near:Float, far:Float, zoom:Float /*, orientation:DeviceOrientation */):Matrix4 {
-//		if (orientation == Isgl3dOrientation90Clockwise || orientation == Isgl3dOrientation90CounterClockwise) {
-//			aspect = 1. / aspect;
-//		}
+	public static function perspectiveMatrix(fovy:Float, aspect:Float, near:Float, far:Float, zoom:Float, orientation:XTOrientation):Matrix4 {
+		if (orientation == XTOrientation.Orientation90Clockwise || orientation == XTOrientation.Orientation90CounterClockwise) {
+			aspect = 1.0 / aspect;
+		}
 
 		var top:Float = Math.tan(fovy * Math.PI / 360.0) * near / zoom;
 		var bottom:Float = -top;
@@ -355,24 +367,18 @@ class MatrixHelper {
 		m[14] = -(2.0 * far * near) / (far - near);
 		m[15] = 0;
 
-//		if (orientation == Isgl3dOrientation90Clockwise) {
-//			float orientationArray[9] = {0, -1, 0, 1, 0, 0, 0, 0, 1};
-//			Isgl3dMatrix4 orientationMatrix = im4CreateFromArray9(orientationArray);
-//
-//			im4MultiplyOnLeft3x3(&matrix, &orientationMatrix);
-//
-//		} else if (orientation == Isgl3dOrientation180) {
-//			float orientationArray[9] = {-1, 0, 0, 0, -1, 0, 0, 0, 1};
-//			Isgl3dMatrix4 orientationMatrix = im4CreateFromArray9(orientationArray);
-//
-//			im4MultiplyOnLeft3x3(&matrix, &orientationMatrix);
-//
-//		} else if (orientation == Isgl3dOrientation90CounterClockwise) {
-//			float orientationArray[9] = {0, 1, 0, -1, 0, 0, 0, 0, 1};
-//			Isgl3dMatrix4 orientationMatrix = im4CreateFromArray9(orientationArray);
-//
-//			im4MultiplyOnLeft3x3(&matrix, &orientationMatrix);
-//		}
+		if (orientation == XTOrientation.Orientation90Clockwise) {
+			var orientationMatrix = MatrixHelper.matrixWithRowMajorArray9([0, 1, 0, -1, 0, 0, 0, 0, 1]);
+			append3x3(m, orientationMatrix);
+
+		} else if (orientation == XTOrientation.Orientation180) {
+			var orientationMatrix = MatrixHelper.matrixWithRowMajorArray9([-1, 0, 0, 0, -1, 0, 0, 0, 1]);
+			append3x3(m, orientationMatrix);
+
+		} else if (orientation == XTOrientation.Orientation90CounterClockwise) {
+			var orientationMatrix = MatrixHelper.matrixWithRowMajorArray9([0, -1, 0, 1, 0, 0, 0, 0, 1]);
+			append3x3(m, orientationMatrix);
+		}
 
 		return m;
 	}
@@ -389,7 +395,7 @@ class MatrixHelper {
 	 * @param zoom The zoom factor.
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public static function orthoMatrix(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, zoom:Float /*, orientation:DeviceOrientation*/):Matrix4 {
+	public static function orthoMatrix(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, zoom:Float, orientation:XTOrientation):Matrix4 {
 		var tx:Float = (left + right) / ((right - left) * zoom);
 		var ty:Float = (top + bottom) / ((top - bottom) * zoom);
 		var tz:Float = (far + near) / (far - near);
@@ -398,81 +404,90 @@ class MatrixHelper {
 
 		// THE FOLLOWING INDICES ARE PROBABLY WRONG
 
-//		if (orientation == Isgl3dOrientation0) {
-		m[0] = 2.0 / (right - left);
-		m[1] = 0;
-		m[2] = 0;
-		m[3] = 0;
+		if (orientation == XTOrientation.Orientation0) {
+			m[0] = 2.0 / (right - left);
+			m[1] = 0;
+			m[2] = 0;
+			m[3] = 0;
 
-		m[4] = 0;
-		m[5] = 2.0 / (top - bottom);
-		m[6] = 0;
-		m[7] = 0;
+			m[4] = 0;
+			m[5] = 2.0 / (top - bottom);
+			m[6] = 0;
+			m[7] = 0;
 
-		m[8] = 0;
-		m[9] = 0;
-		m[10] = -2.0 / (far - near);
-		m[11] = 0;
+			m[8] = 0;
+			m[9] = 0;
+			m[10] = -2.0 / (far - near);
+			m[11] = 0;
 
-		m[12]  = -tx;
-		m[13]  = -ty;
-		m[14]  = -tz;
-		m[15]  = 1.0;
+			m[12]  = -tx;
+			m[13]  = -ty;
+			m[14]  = -tz;
+			m[15]  = 1.0;
 
-//		} else if (orientation == Isgl3dOrientation90Clockwise) {
-//			matrix.sxx = 0;
-//			matrix.sxy = -2 / (right - left);
-//			matrix.sxz = 0;
-//			matrix.tx  = tx;
-//			matrix.syx = 2 / (top - bottom);
-//			matrix.syy = 0;
-//			matrix.syz = 0;
-//			matrix.ty  = -ty;
-//			matrix.szx = 0;
-//			matrix.szy = 0;
-//			matrix.szz = -2 / (far - near);
-//			matrix.tz  = -tz;
-//			matrix.swx = 0;
-//			matrix.swy = 0;
-//			matrix.swz = 0;
-//			matrix.tw  = 1;
-//
-//		} else if (orientation == Isgl3dOrientation180) {
-//			matrix.sxx = -2 / (right - left);
-//			matrix.sxy = 0;
-//			matrix.sxz = 0;
-//			matrix.tx  = tx;
-//			matrix.syx = 0;
-//			matrix.syy = -2 / (top - bottom);
-//			matrix.syz = 0;
-//			matrix.ty  = ty;
-//			matrix.szx = 0;
-//			matrix.szy = 0;
-//			matrix.szz = -2 / (far - near);
-//			matrix.tz  = -tz;
-//			matrix.swx = 0;
-//			matrix.swy = 0;
-//			matrix.swz = 0;
-//			matrix.tw  = 1;
-//
-//		} else if (orientation == Isgl3dOrientation90CounterClockwise) {
-//			matrix.sxx = 0;
-//			matrix.sxy = 2 / (right - left);
-//			matrix.sxz = 0;
-//			matrix.tx  = -tx;
-//			matrix.syx = -2 / (top - bottom);
-//			matrix.syy = 0;
-//			matrix.syz = 0;
-//			matrix.ty  = ty;
-//			matrix.szx = 0;
-//			matrix.szy = 0;
-//			matrix.szz = -2 / (far - near);
-//			matrix.tz  = -tz;
-//			matrix.swx = 0;
-//			matrix.swy = 0;
-//			matrix.swz = 0;
-//			matrix.tw  = 1;
-//		}
+		} else if (orientation == XTOrientation.Orientation90Clockwise) {
+			m[0] = 0;
+			m[1] = 2 / (top - bottom);
+			m[2] = 0;
+			m[3] = 0;
+
+			m[4] = -2 / (right - left);
+			m[5] = 0;
+			m[6] = 0;
+			m[7] = 0;
+
+			m[8] = 0;
+			m[9] = 0;
+			m[10] = -2 / (far - near);
+			m[11] = 0;
+
+			m[12]  = tx;
+			m[13]  = -ty;
+			m[14]  = -tz;
+			m[15]  = 1;
+
+		} else if (orientation == XTOrientation.Orientation180) {
+			m[0] = -2 / (right - left);
+			m[1] = 0;
+			m[2] = 0;
+			m[3] = 0;
+
+			m[4] = 0;
+			m[5] = -2 / (top - bottom);
+			m[6] = 0;
+			m[7] = 0;
+
+			m[8] = 0;
+			m[9] = 0;
+			m[10] = -2 / (far - near);
+			m[11] = 0;
+
+			m[12]  = tx;
+			m[13]  = ty;
+			m[14]  = -tz;
+			m[15]  = 1;
+
+		} else if (orientation == XTOrientation.Orientation90CounterClockwise) {
+			m[0] = 0;
+			m[1] = -2 / (top - bottom);
+			m[2] = 0;
+			m[3] = 0;
+
+			m[4] = 2 / (right - left);
+			m[5] = 0;
+			m[6] = 0;
+			m[7] = 0;
+
+			m[8] = 0;
+			m[9] = 0;
+			m[10] = -2 / (far - near);
+			m[11] = 0;
+
+			m[12]  = -tx;
+			m[13]  = ty;
+			m[14]  = -tz;
+			m[15]  = 1;
+		}
 		return m;
 
 	}
@@ -506,6 +521,38 @@ class MatrixHelper {
 		a[0] = x * m[0] + y * m[4] + z * m[8];
 		a[1] = x * m[1] + y * m[5] + z * m[9];
 		a[2] = x * m[2] + y * m[6] + z * m[10];
+	}
+
+	public static inline function append3x3(a:Matrix4, b:Matrix4):Void {
+		var m111:Float = a[0];
+		var m121:Float = a[4];
+		var m131:Float = a[8];
+		var m112:Float = a[1];
+		var m122:Float = a[5];
+		var m132:Float = a[9];
+		var m113:Float = a[2];
+		var m123:Float = a[6];
+		var m133:Float = a[10];
+
+		var m211:Float = b[0];
+		var m221:Float = b[4];
+		var m231:Float = b[8];
+		var m212:Float = b[1];
+		var m222:Float = b[5];
+		var m232:Float = b[9];
+		var m213:Float = b[2];
+		var m223:Float = b[6];
+		var m233:Float = b[10];
+
+		a[0]  = m111 * m211 + m112 * m221 + m113 * m231;
+		a[1]  = m111 * m212 + m112 * m222 + m113 * m232;
+		a[2]  = m111 * m213 + m112 * m223 + m113 * m233;
+		a[4]  = m121 * m211 + m122 * m221 + m123 * m231;
+		a[5]  = m121 * m212 + m122 * m222 + m123 * m232;
+		a[6]  = m121 * m213 + m122 * m223 + m123 * m233;
+		a[8]  = m131 * m211 + m132 * m221 + m133 * m231;
+		a[9]  = m131 * m212 + m132 * m222 + m133 * m232;
+		a[10] = m131 * m213 + m132 * m223 + m133 * m233;
 	}
 
 }

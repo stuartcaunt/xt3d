@@ -1,5 +1,6 @@
 package xt3d.view;
 
+import xt3d.utils.Types;
 import xt3d.utils.XT;
 import lime.math.Rectangle;
 import xt3d.core.Director;
@@ -25,6 +26,7 @@ class View extends EventEmitter {
 	public var backgroundColor(get, set):Color;
 	public var scene(get, set):Scene;
 	public var camera(get, set):Camera;
+	public var orientation(get, set):XTOrientation;
 
 	// members
 	private var _viewport:Rectangle;
@@ -33,6 +35,7 @@ class View extends EventEmitter {
 	private var _horizontalConstraint:HorizontalConstraint = HorizontalConstraint.create();
 	private var _verticalConstraint:VerticalConstraint = VerticalConstraint.create();
 	private var _scissorEnabled:Bool = false;
+	private var _orientation:XTOrientation = XTOrientation.Orientation0;
 
 
 	private var _backgroundColor:Color = Director.current.backgroundColor;
@@ -153,11 +156,28 @@ class View extends EventEmitter {
 		return this._camera = value;
 	}
 
+	function get_orientation():XTOrientation {
+		return this._orientation;
+	}
+
+	function set_orientation(value:XTOrientation) {
+		this.setOrientation(value);
+		return this._orientation;
+	}
+
 
 	/* --------- Implementation --------- */
 
 	public function setScene(scene:Scene):Void {
 		this._scene = scene;
+	}
+
+	public function setOrientation(orientation:XTOrientation):Void {
+		if (orientation != this._orientation) {
+			this._orientation = orientation;
+			// Emit event
+			this.emit("orientation_changed");
+		}
 	}
 
 	override public function scheduleUpdate(ignored:Bool = false):Void {

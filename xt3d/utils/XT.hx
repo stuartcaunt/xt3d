@@ -8,6 +8,10 @@ class XT  {
 	public static inline var SHADER_PRECISION:String = "SHADER_PRECISION";
 	public static inline var DEFAULT_FPS:String = "DEFAULT_FPS";
 
+	public static inline var Orientation0:Int = 0;
+	public static inline var Orientation90Clockwise:Int = 1;
+	public static inline var Orientation180:Int = 2;
+	public static inline var Orientation90CounterClockwise:Int = 3;
 
 	private static var timer:Float = Timer.stamp();
 

@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.utils.Types;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
@@ -162,8 +163,7 @@ class Camera extends Node3D {
 	private var _top:Float;
 	private var _bottom:Float;
 
-	// TODO
-	//private var _orientation:DeviceOrientation;
+	private var _orientation:XTOrientation = XTOrientation.Orientation0;
 
 	private var _width:Float;
 	private var _height:Float;
@@ -182,7 +182,7 @@ class Camera extends Node3D {
 	}
 
 
-/**
+	/**
 	 * Initialises the camera with user-defined geometry.
 	 * Perspective projection is used as default.
 	 * @param view The view used in association with the camera.
@@ -205,8 +205,9 @@ class Camera extends Node3D {
 				lookAt = new Vector4(0.0, 0.0, 0.0);
 			}
 
-// add event listener to view
+			// add event listener to view
 			view.on('viewport_changed', this.onViewportChanged);
+			view.on('orientation_changed', this.onOrientationChanged);
 
 			this.setPosition(position);
 			this._initialPosition = position.clone();
@@ -225,10 +226,12 @@ class Camera extends Node3D {
 			this._width = viewportSize.width;
 			this._height = viewportSize.height;
 
-// Set perspective projection with default values
-			setPerspectiveProjection(45.0, 1.0, 10000);
+			this._orientation = view.orientation;
 
-// Initialise view matrix
+			// Set perspective projection with default values
+			setPerspectiveProjection(45.0, 1.0, 10000, this._orientation);
+
+			// Initialise view matrix
 			this._matrixDirty = true;
 			var identityMatrix = new Matrix4();
 			this.updateWorldMatrix();
@@ -411,8 +414,15 @@ class Camera extends Node3D {
 
 		// Reset the perspective projection if we're using one
 		if (this._isPerspective) {
-			this.setPerspectiveProjection(_fov, _near, _far /*, _orientation*/);
+			this.setPerspectiveProjection(_fov, _near, _far, _orientation);
 		}
+	}
+
+	/**
+	 * Callback when orientation changes
+	 */
+	private function onOrientationChanged():Void {
+		this.setOrientation(this._view.orientation);
 	}
 
 	/**
@@ -432,33 +442,31 @@ class Camera extends Node3D {
 	 * @param far The far value (further than this an objects won't be rendered).
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public function setPerspectiveProjection(fovy:Float, near:Float, far:Float /*, orientation:DeviceOrientation = DeviceOrientation0 */):Void {
+	public function setPerspectiveProjection(fovy:Float, near:Float, far:Float, orientation:XTOrientation):Void {
 		if (this._view == null) {
 			throw new XTException("NoViewForPerspectiveProjection", "Perspective projection requires a view object");
 		}
 
 		_aspect = _width / _height;
 
-		_projectionMatrix = MatrixHelper.perspectiveMatrix(fovy, _aspect, near, far, _zoom /*, orientation */);
+		_projectionMatrix = MatrixHelper.perspectiveMatrix(fovy, _aspect, near, far, _zoom, orientation);
 
 		_fov = fovy;
 		_near = near;
 		_far = far;
 
-		// TODO
-		//_orientation = orientation;
+		_orientation = orientation;
 
 		_top = Math.tan(_fov * Math.PI / 360.0) * _near;
 		_bottom = -_top;
 		_left = _aspect * _bottom;
 		_right = _aspect * _top;
 
-		// TODO
-//		if (_orientation == Isgl3dOrientation90CounterClockwise || _orientation == Isgl3dOrientation90Clockwise) {
-//			_focus = 0.5 * _width / (_zoom * tan(_fov * M_PI / 360.0));
-//		} else {
+		if (_orientation == XTOrientation.Orientation90CounterClockwise || _orientation == XTOrientation.Orientation90Clockwise) {
+			_focus = 0.5 * _width / (_zoom * Math.tan(_fov * Math.PI / 360.0));
+		} else {
 			_focus = 0.5 * _height / (_zoom * Math.tan(_fov * Math.PI / 360.0));
-//		}
+		}
 
 		_isPerspective = true;
 		_isViewProjectionMatrixDirty = true;
@@ -474,9 +482,9 @@ class Camera extends Node3D {
 	 * @param far The far value (further than this an objects won't be rendered).
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public function setOrthoProjection(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float /*, orientation:DeviceOrientation = DeviceOrientation0 */):Void {
+	public function setOrthoProjection(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, orientation:XTOrientation):Void {
 
-		_projectionMatrix = MatrixHelper.orthoMatrix(left, right, bottom, top, near, far, _zoom /*, orientation */);
+		_projectionMatrix = MatrixHelper.orthoMatrix(left, right, bottom, top, near, far, _zoom, orientation);
 
 		_left = left;
 		_right = right;
@@ -485,8 +493,7 @@ class Camera extends Node3D {
 		_near = near;
 		_far = far;
 
-		// TODO
-		//_orientation = orientation;
+		_orientation = orientation;
 
 		_isPerspective = false;
 
@@ -511,21 +518,21 @@ class Camera extends Node3D {
 	 * Sets the orientation (rotation about z) for the projection.
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public function setOrientation(/*orientation:DeviceOrientation*/):Void {
-//		_orientation = orientation;
-//		if (_isPerspective) {
-//			[self setPerspectiveProjection:_fov near:_near far:_far orientation:_orientation];
-//
-//		} else {
-//			[self setOrthoProjection:_left right:_right bottom:_bottom top:_top near:_near far:_far orientation:_orientation];
-//		}
+	public function setOrientation(orientation:XTOrientation):Void {
+		_orientation = orientation;
+		if (_isPerspective) {
+			this.setPerspectiveProjection(_fov, _near, _far, _orientation);
+
+		} else {
+			this.setOrthoProjection(_left, _right, _bottom, _top, _near, _far, _orientation);
+		}
 	}
 
 
 	public function setFov(fov:Float):Void {
 		_fov = fov;
 		if (_isPerspective) {
-			this.setPerspectiveProjection(_fov, _near, _far /*, _orientation*/);
+			this.setPerspectiveProjection(_fov, _near, _far, _orientation);
 		}
 	}
 
@@ -540,12 +547,12 @@ class Camera extends Node3D {
 			if (_isPerspective) {
 				var fov:Float;
 
-//				if (_orientation == Isgl3dOrientation90CounterClockwise) {
-//					fov = (360.0 / Math.PI) * Math.atan2(_width, 2.0 * _zoom * _focus);
-//				} else {
+				if (_orientation == XTOrientation.Orientation90CounterClockwise || _orientation == XTOrientation.Orientation90Clockwise) {
+					fov = (360.0 / Math.PI) * Math.atan2(_width, 2.0 * _zoom * _focus);
+				} else {
 					fov = (360.0 / Math.PI) * Math.atan2(_height, 2.0 * _zoom * _focus);
-//				}
-				this.setPerspectiveProjection(_fov, _near, _far /*, _orientation*/);
+				}
+				this.setPerspectiveProjection(_fov, _near, _far, _orientation);
 			}
 		}
 	}
@@ -561,12 +568,12 @@ class Camera extends Node3D {
 			if (_isPerspective) {
 				var fov:Float;
 
-//				if (_orientation == Isgl3dOrientation90CounterClockwise) {
-//				fov = (360.0 / Math.PI) * Math.atan2(_width, 2.0 * _zoom * _focus);
-//				} else {
+				if (_orientation == XTOrientation.Orientation90CounterClockwise || _orientation == XTOrientation.Orientation90Clockwise) {
+					fov = (360.0 / Math.PI) * Math.atan2(_width, 2.0 * _zoom * _focus);
+				} else {
 					fov = (360.0 / Math.PI) * Math.atan2(_height, 2.0 * _zoom * _focus);
-//				}
-				this.setPerspectiveProjection(_fov, _near, _far /*, _orientation*/);
+				}
+				this.setPerspectiveProjection(_fov, _near, _far, _orientation);
 			}
 		}
 	}
