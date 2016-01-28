@@ -359,6 +359,18 @@ class Node3D extends XTObject {
 		this.pauseScheduler();
 	}
 
+	public function containsChild(node:Node3D):Bool {
+		for (child in this._children) {
+			if (child == node) {
+				return true;
+
+			} else if (child.containsChild(node)) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 
 	/* --------- Transformation manipulation --------- */

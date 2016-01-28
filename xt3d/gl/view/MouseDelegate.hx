@@ -23,15 +23,6 @@ interface MouseDelegate {
 	public function onMouseMove (window:Window, x:Float, y:Float):Void;
 
 	/**
-	 * Called when a mouse move relative event is fired
-	 * @param	window	The window dispatching the event
-	 * @param	x	The x movement of the mouse
-	 * @param	y	The y movement of the mouse
-	 * @param	button	The ID of the mouse button that was pressed
-	 */
-	public function onMouseMoveRelative (window:Window, x:Float, y:Float):Void;
-
-	/**
 	 * Called when a mouse up event is fired
 	 * @param	window	The window dispatching the event
 	 * @param	x	The current x coordinate of the mouse

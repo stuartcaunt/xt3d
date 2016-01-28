@@ -1,5 +1,7 @@
 package xt3d.view;
 
+import lime.math.Vector2;
+import lime.math.Matrix3;
 import xt3d.utils.Types;
 import xt3d.utils.XT;
 import lime.math.Rectangle;
@@ -27,6 +29,7 @@ class View extends EventEmitter {
 	public var scene(get, set):Scene;
 	public var camera(get, set):Camera;
 	public var orientation(get, set):XTOrientation;
+	public var viewTransform(get, set):Matrix3;
 
 	// members
 	private var _viewport:Rectangle;
@@ -36,6 +39,7 @@ class View extends EventEmitter {
 	private var _verticalConstraint:VerticalConstraint = VerticalConstraint.create();
 	private var _scissorEnabled:Bool = false;
 	private var _orientation:XTOrientation = XTOrientation.Orientation0;
+	private var _viewTransform:Matrix3 = new Matrix3();
 
 
 	private var _backgroundColor:Color = Director.current.backgroundColor;
@@ -165,6 +169,14 @@ class View extends EventEmitter {
 		return this._orientation;
 	}
 
+	function get_viewTransform():Matrix3 {
+		return this._viewTransform;
+	}
+
+	function set_viewTransform(value:Matrix3) {
+		return this._viewTransform = value;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -175,6 +187,10 @@ class View extends EventEmitter {
 	public function setOrientation(orientation:XTOrientation):Void {
 		if (orientation != this._orientation) {
 			this._orientation = orientation;
+
+			// Update view transform
+			this.calculateViewTransform();
+
 			// Emit event
 			this.emit("orientation_changed");
 		}
@@ -312,6 +328,9 @@ class View extends EventEmitter {
 			this._viewport.y != 0 ||
 			this._viewport.height != displaySize.height);
 
+		// Update view transform
+		this.calculateViewTransform();
+
 		// Emit event
 		this.emit("viewport_changed");
 	}
@@ -324,6 +343,44 @@ class View extends EventEmitter {
 	public function setVerticalConstraint(verticalConstraint:VerticalConstraint):Void {
 		this._verticalConstraint = verticalConstraint;
 		this.updateViewport();
+	}
+
+	public function containsScreenPosition(x:Float, y:Float):Bool {
+		// Invert y
+		return this._viewport.contains(x, y);
+	}
+
+	public function isNodeInView(node):Bool {
+		if (this._scene != null) {
+			return this._scene.containsChild(node);
+		}
+
+		return false;
+	}
+
+	private function calculateViewTransform():Void {
+		if (this._orientation == XTOrientation.Orientation0) {
+			var ox = -this._viewport.x;
+			var oy = -this._viewport.y;
+			this._viewTransform.setTo(1.0, 0.0, 0.0, 1.0, ox, oy);
+
+		} else if (this._orientation == XTOrientation.Orientation90Clockwise) {
+			var ox = this._viewport.height + this._viewport.y;
+			var oy = -this._viewport.x;
+			this._viewTransform.setTo(0.0, 1.0, -1.0, 0.0, ox, oy);
+
+		} else if (this._orientation == XTOrientation.Orientation90CounterClockwise) {
+			var ox = -this._viewport.y;
+			var oy = this._viewport.x + this._viewport.width;
+			this._viewTransform.setTo(0.0, -1.0, 1.0, 0.0, ox, oy);
+
+		} else if (this._orientation == XTOrientation.Orientation180) {
+			var ox = this._viewport.x + this._viewport.width;
+			var oy = this._viewport.y + this._viewport.height;
+
+			this._viewTransform.setTo(-1.0, 0.0, 0.0, -1.0, ox, oy);
+		}
+
 	}
 
 	public override function update(dt:Float):Void {

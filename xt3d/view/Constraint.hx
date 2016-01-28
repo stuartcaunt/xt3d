@@ -126,7 +126,7 @@ class Constraint {
 			var p0InPoints = this.convertToPoints(this._p0, this._p0Type, fullLengthInPoints, contentScaleFactor);
 			var p1InPoints = this.convertToPoints(this._p1, this._p1Type, fullLengthInPoints, contentScaleFactor);
 
-			constraintLengthInPoints = fullLengthInPoints - (p1InPoints - p0InPoints);
+			constraintLengthInPoints = fullLengthInPoints - (p1InPoints + p0InPoints);
 
 		} else {
 			return 0;

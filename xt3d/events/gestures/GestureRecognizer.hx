@@ -43,10 +43,6 @@ class GestureRecognizer extends Node3D {
 		return false;
 	}
 
-	public function onMouseMoveRelative (x:Float, y:Float):Bool {
-		return false;
-	}
-
 	public function onMouseUp (x:Float, y:Float, button:Int):Bool {
 		return false;
 	}

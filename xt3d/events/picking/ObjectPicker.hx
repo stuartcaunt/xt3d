@@ -116,7 +116,7 @@ class ObjectPicker implements RendererOverriderDelegate {
 	private function getPickingResultAtLocation(location:Vector2, scene:Scene):ObjectPickingResult {
 		// Get pixel color
 		var pixels = new UInt8Array(4);
-		GL.readPixels(Std.int(location.x), Std.int(this._renderTexture.contentSize.height - location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
+		GL.readPixels(Std.int(location.x), Std.int(location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
 
 		// Convert pixel colors to renderedObjectId
 		var renderObjectId = pixels[0] * 256 + pixels[1];

@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import lime.math.Vector2;
 import xt3d.textures.RenderTexture;
 import xt3d.utils.geometry.Size;
 import xt3d.events.GestureDispatcher;
@@ -88,7 +89,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		this._scheduler = Scheduler.create();
 
 		// Create gesture dispatcher
-		this._gestureDispatcher = GestureDispatcher.create();
+		this._gestureDispatcher = GestureDispatcher.create(this);
 
 		// Create touch dispatcher
 		this._touchDispatcher = TouchDispatcher.create(this._gestureDispatcher);
@@ -296,6 +297,19 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 			// deactivate view
 			view.onExit();
 		}
+	}
+
+	public function getViewContainingScreenPosition(x:Float, y:Float):View {
+		// Reverse iterate over views (top first)
+		var i = this._views.length;
+		while (--i >= 0) {
+			var view = this._views[i];
+			if (view.containsScreenPosition(x, y)) {
+				return view;
+			}
+		}
+
+		return null;
 	}
 
 	public inline function pause():Void {

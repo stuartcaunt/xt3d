@@ -256,20 +256,6 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 
 
 	/**
-	 * Called when a mouse move relative event is fired
-	 * @param	window	The window dispatching the event
-	 * @param	x	The x movement of the mouse
-	 * @param	y	The y movement of the mouse
-	 * @param	button	The ID of the mouse button that was pressed
-	 */
-	override public function onMouseMoveRelative (window:Window, x:Float, y:Float):Void {
-		if (this._mouseDelegate != null) {
-			this._mouseDelegate.onMouseMoveRelative(window, x, y);
-		}
-	}
-
-
-	/**
 	 * Called when a mouse up event is fired
 	 * @param	window	The window dispatching the event
 	 * @param	x	The current x coordinate of the mouse

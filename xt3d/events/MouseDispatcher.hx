@@ -126,30 +126,6 @@ class MouseDispatcher implements MouseDelegate {
 	}
 
 	/**
-	 * Called when a mouse move relative event is fired
-	 * @param	window	The window dispatching the event
-	 * @param	x	The x movement of the mouse
-	 * @param	y	The y movement of the mouse
-	 * @param	button	The ID of the mouse button that was pressed
-	 */
-	public function onMouseMoveRelative (window:Window, x:Float, y:Float):Void {
-		// Delegate to gesture dispatcher first
-		this._gestureDispatcher.onMouseMoveRelative(x, y);
-
-		this._locked = true;
-		var iterator = this._handlers.iterator();
-		var isClaimed = false;
-
-		// Iterate over handlers until one claims the mouse event
-		while (iterator.hasNext() && !isClaimed) {
-			var handler = iterator.next();
-			isClaimed = handler.onMouseMoveRelative(x, y);
-		}
-		this._locked = false;
-		this.handleDeferredRequests();
-	}
-
-	/**
 	 * Called when a mouse up event is fired
 	 * @param	window	The window dispatching the event
 	 * @param	x	The current x coordinate of the mouse

@@ -214,7 +214,7 @@ class CameraController extends Node3D implements PanGestureDelegate implements P
 	}
 
 	public function onPan(panEvent:PanEvent):Bool {
-		this._vPhi = -panEvent.delta.y / 4.0;
+		this._vPhi = panEvent.delta.y / 4.0;
 		this._vTheta = panEvent.delta.x / 4.0;
 
 		return false;
