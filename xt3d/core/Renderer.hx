@@ -203,8 +203,10 @@ class Renderer extends XTObject {
 			clearFlags = GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT;
 		}
 
-		// Set clear color
-		this._stateManager.setClearColor(color);
+		if ((clearFlags & GL.COLOR_BUFFER_BIT) != 0 && color != null) {
+			// Set clear color
+			this._stateManager.setClearColor(color);
+		}
 
 		// clear buffer bits
 		GL.clear(clearFlags);

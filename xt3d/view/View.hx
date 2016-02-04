@@ -1,5 +1,6 @@
 package xt3d.view;
 
+import lime.graphics.opengl.GL;
 import lime.math.Vector2;
 import lime.math.Matrix3;
 import xt3d.utils.Types;
@@ -26,6 +27,7 @@ class View extends EventEmitter {
 	public var horizontalConstraint(get, set):HorizontalConstraint;
 	public var verticalConstraint(get, set):VerticalConstraint;
 	public var backgroundColor(get, set):Color;
+	@:isVar public var isOpaque(get, set):Bool;
 	public var scene(get, set):Scene;
 	public var camera(get, set):Camera;
 	public var orientation(get, set):XTOrientation;
@@ -41,8 +43,9 @@ class View extends EventEmitter {
 	private var _orientation:XTOrientation = XTOrientation.Orientation0;
 	private var _viewTransform:Matrix3 = new Matrix3();
 
-
 	private var _backgroundColor:Color = Director.current.backgroundColor;
+	private var _isOpaque:Bool = false;
+
 	private var _scene:Scene;
 	private var _camera:Camera;
 
@@ -143,6 +146,14 @@ class View extends EventEmitter {
 		return this._backgroundColor = value;
 	}
 
+	function get_isOpaque():Bool {
+		return this._isOpaque;
+	}
+
+	function set_isOpaque(value:Bool) {
+		return this._isOpaque = value;
+	}
+
 	public inline function get_scene():Scene {
 		return this._scene;
 	}
@@ -237,7 +248,12 @@ class View extends EventEmitter {
 		}
 
 		// Clear view
-		renderer.clear(this._backgroundColor);
+		if (this._isOpaque) {
+			renderer.clear(this._backgroundColor, GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
+
+		} else {
+			renderer.clear(null, GL.DEPTH_BUFFER_BIT);
+		}
 
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);
