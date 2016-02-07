@@ -42,9 +42,9 @@ class BaseTypedMaterial extends Material {
 	private var _shininess:Float = 1.0;
 
 	// Lighting color attributes
-	private var _ambientColor:Color = Color.createWithRGBHex(0xffffff);
+	private var _ambientColor:Color = Color.createWithRGBAHex(0xffffffff);
 	private var _diffuseColor:Color = Color.createWithRGBAHex(0xffffffff);
-	private var _specularColor:Color = Color.createWithRGBHex(0xffffff);
+	private var _specularColor:Color = Color.createWithRGBAHex(0xffffffff);
 
 	// Alpha culling
 	private var _alphaCullingValue:Float = 0.0;
@@ -247,7 +247,7 @@ class BaseTypedMaterial extends Material {
 	public inline function setAmbientColor(value:Color):Void {
 		this._ambientColor.copyFrom(value);
 		try {
-			this.uniform("material").get("ambientColor").floatArrayValue = value.rgbArray;
+			this.uniform("material").get("ambientColor").floatArrayValue = value.rgbaArray;
 		} catch (e:XTException) {
 		}
 	}
@@ -263,7 +263,7 @@ class BaseTypedMaterial extends Material {
 	public inline function setSpecularColor(value:Color):Void {
 		this._specularColor.copyFrom(value);
 		try {
-			this.uniform("material").get("specularColor").floatArrayValue = value.rgbArray;
+			this.uniform("material").get("specularColor").floatArrayValue = value.rgbaArray;
 		} catch (e:XTException) {
 		}
 	}
@@ -360,9 +360,9 @@ class BaseTypedMaterial extends Material {
 		if (this._lightingEnabled) {
 			if (this._lightingColorAttributesEnabled) {
 				this.uniform("material").get("shininess").floatValue = this._shininess;
-				this.uniform("material").get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
+				this.uniform("material").get("ambientColor").floatArrayValue = this._ambientColor.rgbaArray;
 				this.uniform("material").get("diffuseColor").floatArrayValue = this._diffuseColor.rgbaArray;
-				this.uniform("material").get("specularColor").floatArrayValue = this._specularColor.rgbArray;
+				this.uniform("material").get("specularColor").floatArrayValue = this._specularColor.rgbaArray;
 
 			} else {
 				this.uniform("defaultShininess").floatValue = this._shininess;

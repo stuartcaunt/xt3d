@@ -1,7 +1,7 @@
 
 #if (defined (GOURAUD_LIGHTING) && defined (MAX_LIGHTS))
 
-varying vec3 v_specular;
+varying vec4 v_specular;
 
 vec3 ecPosition3;
 vec3 normal;
@@ -9,9 +9,9 @@ vec3 eye;
 
 
 void gouraudLight(const in Light light,
-				inout vec3 ambient,
-				inout vec3 diffuse,
-				inout vec3 specular,
+				inout vec4 ambient,
+				inout vec4 diffuse,
+				inout vec4 specular,
 				const in float shininess) {
 
 	float nDotVP;
@@ -78,14 +78,13 @@ vec4 doGouraudLighting(const in vec4 vertexPosition,
 						const in vec3 vertexNormal) {
 
 
-	vec3 amb = vec3(0.0);
-	vec3 diff = vec3(0.0);
-	vec3 spec = vec3(0.0);
+	vec4 amb = vec4(0.0);
+	vec4 diff = vec4(0.0);
+	vec4 spec = vec4(0.0);
 
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-	float alpha = 1.0;
+	vec4 ambient;
+	vec4 diffuse;
+	vec4 specular;
 
 	if (u_lightingEnabled) {
 
@@ -114,23 +113,22 @@ vec4 doGouraudLighting(const in vec4 vertexPosition,
 
 	} else {
 		ambient = amb;
-		diffuse = vec3(1.0);
+		diffuse = vec4(1.0);
 		specular = spec;
 	}
 
 
 #ifdef USE_MATERIAL_COLOR
 	ambient *= u_material.ambientColor;
-	diffuse *= u_material.diffuseColor.rgb;
+	diffuse *= u_material.diffuseColor;
 	specular *= u_material.specularColor;
-	alpha *= u_material.diffuseColor.a;
 #endif /* USE_MATERIAL_COLOR */
 
 	// Set specular for fragement shader
 	v_specular = specular;
 
 	// Create combined color
-	vec4 color = vec4(ambient + diffuse, alpha);
+	vec4 color = ambient + diffuse;
 	color = clamp(color, 0.0, 1.0);
 
 	return color;

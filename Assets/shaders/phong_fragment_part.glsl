@@ -6,9 +6,9 @@ varying vec3 v_normal;
 varying vec3 v_eye;
 
 void phongLight(const in Light light,
-				inout vec3 ambient,
-				inout vec3 diffuse,
-				inout vec3 specular,
+				inout vec4 ambient,
+				inout vec4 diffuse,
+				inout vec4 specular,
 				const in float shininess) {
 
 	float nDotVP;
@@ -89,15 +89,14 @@ void phongLight(const in Light light,
 	}
 }
 
-void doPhongLighting(inout vec4 color, inout vec3 specular) {
+void doPhongLighting(inout vec4 color, inout vec4 specular) {
 
-	vec3 ambient;
-	vec3 diffuse;
-	float alpha = 1.0;
+	vec4 ambient;
+	vec4 diffuse;
 
-	vec3 amb = vec3(0.0);
-	vec3 diff = vec3(0.0);
-	vec3 spec = vec3(0.0);
+	vec4 amb = vec4(0.0);
+	vec4 diff = vec4(0.0);
+	vec4 spec = vec4(0.0);
 
 #ifdef USE_MATERIAL_COLOR
 	float shininess = u_material.shininess;
@@ -118,18 +117,17 @@ void doPhongLighting(inout vec4 color, inout vec3 specular) {
 
 	} else {
 		ambient = amb;
-		diffuse = vec3(1.0);
+		diffuse = vec4(1.0);
 	}
 
 #ifdef USE_MATERIAL_COLOR
 	ambient *= u_material.ambientColor;
-	diffuse *= u_material.diffuseColor.rgb;
+	diffuse *= u_material.diffuseColor;
 	specular *= u_material.specularColor;
-	alpha *= u_material.diffuseColor.a;
 #endif /* USE_MATERIAL_COLOR */
 
-	color *= vec4(ambient + diffuse, alpha);
-	specular += spec;
+	color *= ambient + diffuse;
+	specular = spec;
 }
 
 #endif // PHONG_LIGHTING

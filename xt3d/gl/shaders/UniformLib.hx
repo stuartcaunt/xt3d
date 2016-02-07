@@ -58,9 +58,9 @@ class UniformLib {
 					"Light" => [
 						{ type: "vec4", name: "position"},
 						{ type: "bool", name: "enabled", defaultValue: "false" },
-						{ type: "vec3", name: "ambientColor", defaultValue: "[0.0, 0.0, 0.0]" },
-						{ type: "vec3", name: "diffuseColor", defaultValue: "[1.0, 1.0, 1.0]" },
-						{ type: "vec3", name: "specularColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "vec4", name: "ambientColor", defaultValue: "[0.0, 0.0, 0.0, 1.0]" },
+						{ type: "vec4", name: "diffuseColor", defaultValue: "[1.0, 1.0, 1.0, 1.0]" },
+						{ type: "vec4", name: "specularColor", defaultValue: "[1.0, 1.0, 1.0, 1.0]" },
 						{ type: "vec3", name: "attenuation", defaultValue: "[1.0, 0.0, 0.0]" },
 						{ type: "float", name: "spotCutoffAngle", defaultValue: "45.0" },
 						{ type: "vec3", name: "spotDirection", defaultValue: "[0.0, 0.0, -1.0]" },
@@ -73,7 +73,7 @@ class UniformLib {
 				vertexDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],
 				fragmentDefines: ["#define MAX_LIGHTS $MAX_LIGHTS"],
 				uniforms: [
-					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec3", shader: "fv", defaultValue: "[0.3, 0.3, 0.3]", global: true},
+					"sceneAmbientColor" => { name: "u_sceneAmbientColor", type: "vec4", shader: "fv", defaultValue: "[0.3, 0.3, 0.3, 1.0]", global: true},
 					"lights" => { name: "u_lights", type: "Light[$MAX_LIGHTS]", shader: "fv", global: true },
 					"lightingEnabled" => { name: "u_lightingEnabled", type: "bool", shader: "fv", defaultValue: "true", global: true },
 					"defaultShininess" => { name: "u_defaultShininess", type: "float", shader: "fv", defaultValue: "1.0" }
@@ -82,9 +82,9 @@ class UniformLib {
 			"material" => {
 				types: [
 					"Material" => [
-						{ type: "vec3", name: "ambientColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "vec4", name: "ambientColor", defaultValue: "[1.0, 1.0, 1.0, 1.0]" },
 						{ type: "vec4", name: "diffuseColor", defaultValue: "[1.0, 1.0, 1.0, 1.0]" },
-						{ type: "vec3", name: "specularColor", defaultValue: "[1.0, 1.0, 1.0]" },
+						{ type: "vec4", name: "specularColor", defaultValue: "[1.0, 1.0, 1.0, 1.0]" },
 						{ type: "float", name: "shininess", defaultValue: "1.0" }
 					]
 				],

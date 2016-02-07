@@ -183,7 +183,7 @@ class Scene extends Node3D {
 
 		if (this._lightingEnabled) {
 			// Set ambient light
-			uniformLib.uniform("sceneAmbientColor").floatArrayValue = this._ambientLight.rgbArray;
+			uniformLib.uniform("sceneAmbientColor").floatArrayValue = this._ambientLight.rgbaArray;
 
 			// Disable unused lights
 			if (this._lights.length < this._maxLights) {

@@ -314,9 +314,9 @@ class Light extends Node3D {
 		}
 
 		// Colors
-		uniformLib.uniform("lights").at(index).get("ambientColor").floatArrayValue = this._ambientColor.rgbArray;
-		uniformLib.uniform("lights").at(index).get("diffuseColor").floatArrayValue = this._diffuseColor.rgbArray;
-		uniformLib.uniform("lights").at(index).get("specularColor").floatArrayValue = this._specularColor.rgbArray;
+		uniformLib.uniform("lights").at(index).get("ambientColor").floatArrayValue = this._ambientColor.rgbaArray;
+		uniformLib.uniform("lights").at(index).get("diffuseColor").floatArrayValue = this._diffuseColor.rgbaArray;
+		uniformLib.uniform("lights").at(index).get("specularColor").floatArrayValue = this._specularColor.rgbaArray;
 
 		// Spot lights
 		if (this._lightType == XTGL.SpotLight) {
