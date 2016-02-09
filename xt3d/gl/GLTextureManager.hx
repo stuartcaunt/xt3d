@@ -33,7 +33,7 @@ class GLTextureManager {
 	public function init(glInfo:GLInfo):Bool {
 		this._glInfo = glInfo;
 
-		for (i in 0 ... glInfo.maxTextureImageUnits) {
+		for (i in 0 ... glInfo.maxCombinedTextureImageUnits) {
 			_currentTextures.push(null);
 		}
 
@@ -64,7 +64,7 @@ class GLTextureManager {
 		if (texture != null && texture.glTexture != null) {
 			GL.deleteTexture(texture.glTexture);
 
-			for (i in 0 ... this._glInfo.maxTextureImageUnits) {
+			for (i in 0 ... this._glInfo.maxCombinedTextureImageUnits) {
 				if (this._currentTextures[i] == texture) {
 					this.setActiveTextureSlot(i);
 					this.bindTexture(null);
@@ -89,8 +89,8 @@ class GLTextureManager {
 	}
 
 	public function setActiveTextureSlot(textureSlot:Int):Void {
-		if (textureSlot > this._glInfo.maxTextureImageUnits) {
-			XT.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._glInfo.maxTextureImageUnits);
+		if (textureSlot > this._glInfo.maxCombinedTextureImageUnits) {
+			XT.Error("Desired texture slot " + textureSlot + " exceeds maxium allowed " + this._glInfo.maxCombinedTextureImageUnits);
 		} else {
 			if (textureSlot != this._activeTextureSlot) {
 				GL.activeTexture(GL.TEXTURE0 + textureSlot);

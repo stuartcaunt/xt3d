@@ -18,7 +18,7 @@ class ShaderManager {
 	private var _mediumPrecisionAvailable:Bool = true;
 	private var _precisionAvailable:Bool = true;
 	private var _uniformLib:UniformLib;
-	private var _maxTextureSlots:Int;
+	private var _glInfo:GLInfo;
 
 	public static function create(uniformLib:UniformLib, glInfo:GLInfo):ShaderManager {
 		var object = new ShaderManager();
@@ -32,7 +32,7 @@ class ShaderManager {
 
 	private function init(uniformLib:UniformLib, glInfo:GLInfo):Bool {
 		this._uniformLib = uniformLib;
-		this._maxTextureSlots = glInfo.maxTextureImageUnits;
+		this._glInfo = glInfo;
 
 		_programs = new Map<String, ShaderProgram>();
 
@@ -118,7 +118,7 @@ class ShaderManager {
 
 		if (shaderInfo != null) {
 			// Create program for each shader
-			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, this._uniformLib, this._maxTextureSlots);
+			var program = ShaderProgram.create(shaderName, shaderInfo, this._precision, this._uniformLib, this._glInfo);
 
 			// Verify program
 			if (program != null) {

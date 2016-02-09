@@ -42,7 +42,11 @@ class ShaderProgram extends XTObject {
 	private var _globalUniforms:Map<String, Uniform> = new Map<String, Uniform>();
 	private var _updateGlobalUniforms:Bool = true;
 	private var _availableTextureSlots:Array<Bool> = new Array<Bool>();
-	private var _maxTextureSlots:Int;
+	private var _maxCombinedTextureSlots:Int;
+	private var _maxFragmentTextures:Int;
+	private var _maxVertexTextures:Int;
+	private var _numberOfFragmentTextures:Int = 0;
+	private var _numberOfVertexTextures:Int = 0;
 
 	// These are as they appear in prefix_vertex.glsl
 	public static var KFAttributes = XT.jsonToMap({
@@ -74,21 +78,24 @@ class ShaderProgram extends XTObject {
 
 	/* --------- Implementation --------- */
 
-	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String, uniformLib:UniformLib, maxTextureSlots:Int):ShaderProgram {
+	public static function create(shaderName:String, shaderInfo:ShaderInfo, precision:String, uniformLib:UniformLib, glInfo:GLInfo):ShaderProgram {
 		var program = new ShaderProgram();
 		
-		if (program != null && !(program.init(shaderName, shaderInfo, precision, uniformLib, maxTextureSlots))) {
+		if (program != null && !(program.init(shaderName, shaderInfo, precision, uniformLib, glInfo))) {
 			program = null;
 		}
 
 		return program;
 	}
 
-	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String, uniformLib:UniformLib, maxTextureSlots:Int):Bool {
+	public function init(shaderName:String, shaderInfo:ShaderInfo, precision:String, uniformLib:UniformLib, glInfo:GLInfo):Bool {
 		this._name = shaderName;
 
-		this._maxTextureSlots = maxTextureSlots;
-		for (i in 0 ... maxTextureSlots) {
+		this._maxCombinedTextureSlots = glInfo.maxCombinedTextureImageUnits;
+		this._maxFragmentTextures = glInfo.maxTextureImageUnits;
+		this._maxVertexTextures = glInfo.maxVertexTexturesImageUnits;
+
+		for (i in 0 ... this._maxCombinedTextureSlots) {
 			this._availableTextureSlots[i] = true;
 		}
 
@@ -397,6 +404,9 @@ class ShaderProgram extends XTObject {
 
 	private function createUniform(uniformName:String, uniformInfo:UniformInfo, shaderTypes:Map<String, Array<BaseTypeInfo>>):Uniform {
 
+		var isVertexShader = uniformInfo.shader.indexOf("v") != -1;
+		var isFragmentShader = uniformInfo.shader.indexOf("f") != -1;
+
 		var uniform:Uniform = null;
 		var isArray = ShaderUtils.uniformIsArray(uniformInfo);
 		if (isArray && uniformInfo.type == "texture") {
@@ -419,10 +429,22 @@ class ShaderProgram extends XTObject {
 					uniform.textureSlot = textureSlot;
 				}
 
+				this._numberOfFragmentTextures += isFragmentShader ? 1 : 0;
+				this._numberOfVertexTextures += isVertexShader ? 1 : 0;
+
+				if (this._numberOfFragmentTextures > this._maxFragmentTextures) {
+					XT.Error("ERROR: Program " + this._name + " attempting to use too many textures in fragment shader (" + this._maxFragmentTextures + ")");
+					return null;
+
+				} else if (this._numberOfVertexTextures > this._maxVertexTextures) {
+					XT.Error("ERROR: Program " + this._name + " attempting to use too many textures in vertex shader (" + this._maxVertexTextures + ")");
+					return null;
+				}
+
 				// Set the default slot for the texture in case slot is overriden by user value
 				uniform.setDefaultTextureSlot(textureSlot);
 
-				if (textureSlot > this._maxTextureSlots) {
+				if (textureSlot > this._maxCombinedTextureSlots) {
 					XT.Error("ERROR: Maximum number of texture slots has been depassed for shader program " + this._name);
 					return null;
 				}
