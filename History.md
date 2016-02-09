@@ -1,3 +1,24 @@
+0.1.10 / 2016-01-09
+===================
+
+ * Verify for vertex and fragment shaders that the number of textures doesn't exceed max for each.
+ * For max textures active, use max combined texture image units. 
+ * Use 4-component vectors for ambient, diffuse and specular colors (lights and materials) to allow for more control, 
+ *  specifically useful for reducing specular intensity.
+ * Handle opaque/transparent views.
+ * Handle gestures within views: 
+ *   only pass gestures to handlers in view under the mouse; 
+ *   convert screen coordinates to viewport coordinates including different orientations; 
+ *   modify gesture coordinates so the y=0 is at the bottom of the viewport; 
+ *   Remove mouseMoveRelative handling;
+ * Handle different view orientations.
+ * Add margin parameters to viewport constraints.
+ * Fix background/clear color not being initialised correctly. 
+ * Add scissor test to view if viewport smaller than display size.
+ * Add rectangle constraints to view to allow more configuration with display size resizing. 
+ * Refactor core.View to view.View. 
+
+
 0.1.9 / 2015-12-24
 ===================
 
