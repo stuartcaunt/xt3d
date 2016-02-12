@@ -40,6 +40,11 @@ class Camera extends Node3D {
 	public var viewMatrix(get_viewMatrix, null):Matrix4;
 
 	/**
+	 * The current inverse view matrix.
+	 */
+	public var inverseViewMatrix(get_inverseViewMatrix, null):Matrix4;
+
+	/**
 	 * The current projection matrix.
 	 */
 	public var projectionMatrix(get_projectionMatrix, set_projectionMatrix):Matrix4;
@@ -140,6 +145,7 @@ class Camera extends Node3D {
 	// members
 	private var _projectionMatrix:Matrix4;
 	private var _viewMatrix:Matrix4 = new Matrix4();
+	private var _inverseViewMatrix:Matrix4 = new Matrix4();
 	private var _viewProjectionMatrix:Matrix4 = new Matrix4();
 	private var _isViewProjectionMatrixDirty:Bool;
 
@@ -278,6 +284,10 @@ class Camera extends Node3D {
 
 	public inline function get_viewMatrix():Matrix4 {
 		return this._viewMatrix;
+	}
+
+	public inline function get_inverseViewMatrix():Matrix4 {
+		return this._inverseViewMatrix;
 	}
 
 	public inline function get_projectionMatrix():Matrix4 {
@@ -800,10 +810,15 @@ class Camera extends Node3D {
 			// Calculate view matrix from lookat position
 			this._viewMatrix = MatrixHelper.lookAt(cameraPosition, this._lookAt, this._up);
 
+			this._inverseViewMatrix.copyFrom(this._viewMatrix);
+			this._inverseViewMatrix.invert();
+
 		} else {
 			// Calculate view matrix as the inverse of the current world transformation
 			this._viewMatrix.copyFrom(this._worldMatrix);
 			this._viewMatrix.invert();
+
+			this._inverseViewMatrix.copyFrom(this._worldMatrix);
 		}
 
 		this._isViewProjectionMatrixDirty = true;

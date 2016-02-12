@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.node.Camera;
 import lime.math.Vector2;
 import xt3d.textures.RenderTexture;
 import xt3d.utils.geometry.Size;
@@ -39,6 +40,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	public var gestureDispatcher(get, null):GestureDispatcher;
 	public var displaySize(get, null):Size<Int>;
 	public var fpsEnabled(get, set):Bool;
+	@:isVar public var activeCamera(get, null):Camera;
 
 	// members
 	private static var _current:Director = null;
@@ -67,6 +69,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	private var _touchDispatcher:TouchDispatcher = null;
 	private var _mouseDispatcher:MouseDispatcher = null;
 	private var _gestureDispatcher:GestureDispatcher = null;
+
+	private var _activeCamera:Camera = null;
 
 	public static function create(options:Map<String, String> = null):Director {
 		var object = new Director();
@@ -147,43 +151,47 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		return this._backgroundColor = backgroundColor;
 	}
 
-	public function get_paused():Bool {
+	public inline function get_paused():Bool {
 		return this._paused;
 	}
 
-	function set_timeFactor(value:Float) {
+	public inline function set_timeFactor(value:Float) {
 		return this._timeFactor = value;
 	}
 
-	function get_timeFactor():Float {
+	public inline function get_timeFactor():Float {
 		return this._timeFactor;
 	}
 
-	function get_touchDispatcher():TouchDispatcher {
+	public inline function get_touchDispatcher():TouchDispatcher {
 		return this._touchDispatcher;
 	}
 
-	function get_mouseDispatcher():MouseDispatcher {
+	public inline function get_mouseDispatcher():MouseDispatcher {
 		return this._mouseDispatcher;
 	}
 
-	function get_gestureDispatcher():GestureDispatcher {
+	public inline function get_gestureDispatcher():GestureDispatcher {
 		return this._gestureDispatcher;
 	}
 
-	function get_displaySize():Size<Int> {
+	public inline function get_displaySize():Size<Int> {
 		if (this._glView != null) {
 			return this._glView.size;
 		}
 		return Size.createIntSize(0, 0);
 	}
 
-	function set_fpsEnabled(value:Bool) {
+	public inline function set_fpsEnabled(value:Bool) {
 		return this._fpsEnabled = value;
 	}
 
-	function get_fpsEnabled():Bool {
+	public inline function get_fpsEnabled():Bool {
 		return this._fpsEnabled;
+	}
+
+	public inline function get_activeCamera():Camera {
+		return this._activeCamera;
 	}
 
 
@@ -386,6 +394,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 
 		// Iterate over all views
 		for (view in _views) {
+			this._activeCamera = view.camera;
+
 			// Render view
 			view.render(overrider);
 		}
