@@ -1,4 +1,9 @@
-0.1.10 / 2016-01-09
+0.1.11 / 2016-02-12
+===================
+
+ * Fix specular phong lighting.
+
+0.1.10 / 2016-02-09
 ===================
 
  * Verify for vertex and fragment shaders that the number of textures doesn't exceed max for each.
