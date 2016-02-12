@@ -114,10 +114,12 @@ void doPhongLighting(inout vec4 color, inout vec4 specular) {
 
 		ambient = u_sceneAmbientColor + amb,
 		diffuse = diff;
+		specular = spec;
 
 	} else {
 		ambient = amb;
 		diffuse = vec4(1.0);
+		specular = spec;
 	}
 
 #ifdef USE_MATERIAL_COLOR
@@ -127,7 +129,6 @@ void doPhongLighting(inout vec4 color, inout vec4 specular) {
 #endif /* USE_MATERIAL_COLOR */
 
 	color *= ambient + diffuse;
-	specular = spec;
 }
 
 #endif // PHONG_LIGHTING
