@@ -255,7 +255,12 @@ class View extends EventEmitter {
 			renderer.clear(null, GL.DEPTH_BUFFER_BIT);
 		}
 
+		// Prepare for render
+		this._preRenderPhase(rendererOverrider);
+
 		// Render scene with camera
+		// TODO : Change this for a callback: standard callback is as follows, custom one allows for
+		// TODO : additional effects such as shadow depth calculation, post processing.
 		renderer.render(this._scene, this._camera, rendererOverrider);
 	}
 
@@ -284,7 +289,6 @@ class View extends EventEmitter {
 	}
 
 	public function renderToTexture(renderTexture:RenderTexture, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
-
 		var renderer = Director.current.renderer;
 
 		// Bind to render texture frame buffer
@@ -306,8 +310,27 @@ class View extends EventEmitter {
 			renderer.clear(color, renderTexture.clearFlags);
 		}
 
+		// Prepare for render
+		this._preRenderPhase(rendererOverrider);
+
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);
+	}
+
+	private function _preRenderPhase(rendererOverrider:RendererOverrider):Void {
+		// Update world matrices of scene graph
+		this._scene.updateWorldMatrix();
+
+		// Make sure camera matrix is updated even if it has not been added to the scene
+		if (this._camera.parent == null) {
+			this._camera.updateWorldMatrix();
+		}
+
+		// Update objects - anything that needs to be done before rendering
+		this._scene.prepareObjectsForRender(this._scene, rendererOverrider);
+
+		// Emit event
+		this.emit("pre_render");
 	}
 
 	public function setDisplaySize(displaySize:Size<Int>):Void {

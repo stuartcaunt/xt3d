@@ -1,5 +1,6 @@
 package xt3d.events.picking;
 
+import xt3d.node.Camera;
 import xt3d.node.Scene;
 import xt3d.events.picking.FacePicker.FacePickingResult;
 import lime.utils.UInt8Array;
@@ -84,7 +85,7 @@ class ObjectPicker implements RendererOverriderDelegate {
 
 	/* --------- Delegate functions --------- */
 
-	public function prepareRenderer():Void {
+	public function onRenderStart(scene:Scene, camera:Camera):Void {
 		// Nothing to do
 	}
 

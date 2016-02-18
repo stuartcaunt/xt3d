@@ -293,7 +293,7 @@ class Light extends Node3D {
 	}
 
 
-	public function prepareRender(camera:Camera, uniformLib:UniformLib, index:Int):Void {
+	public function prepareCommonRenderUniforms(camera:Camera, uniformLib:UniformLib, index:Int):Void {
 		uniformLib.uniform("lights").at(index).get("enabled").boolValue = this._enabled;
 
 		// Position (depending on point, directional and spot lights

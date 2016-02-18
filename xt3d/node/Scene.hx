@@ -170,7 +170,7 @@ class Scene extends Node3D {
 		}
 	}
 
-	public function prepareRender(camera:Camera, uniformLib:UniformLib):Void {
+	public function prepareCommonRenderUniforms(camera:Camera, uniformLib:UniformLib):Void {
 
 		var numberOfLights:Int = Std.int(Math.min(this._lights.length, this._maxLights));
 		if (numberOfLights < this._lights.length && this._lights.length != this._lastNumberOfLights) {
@@ -194,7 +194,7 @@ class Scene extends Node3D {
 
 			// Set parameters for used lights
 			for (i in 0 ... numberOfLights) {
-				lights[i].prepareRender(camera, uniformLib, i);
+				lights[i].prepareCommonRenderUniforms(camera, uniformLib, i);
 			}
 		}
 	}

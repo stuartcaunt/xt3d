@@ -18,12 +18,11 @@ import xt3d.core.Configuration;
 import xt3d.utils.XT;
 import xt3d.core.Scheduler;
 import xt3d.textures.TextureCache;
-import xt3d.core.EventEmitter;
 import xt3d.view.View;
 import xt3d.core.Renderer;
 import xt3d.utils.color.Color;
 
-class Director extends EventEmitter implements Xt3dGLViewListener {
+class Director implements Xt3dGLViewListener {
 
 	// properties
 	public static var current(get, null):Director;
@@ -108,7 +107,6 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 	}
 
 	public function new() {
-		super();
 	}
 
 
@@ -360,17 +358,8 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		// Make current
 		this.makeCurrent();
 
-		// Render (always needed even if paused to perform screen refreshes
-
-		// send pre-render event (custom updates before rendering)
-		this.emit("pre_render");
-
 		// Perform render
 		this.render(this._backgroundColor);
-
-		// send pre-render event (custom updates before rendering)
-		this.emit("post_render");
-
 	}
 
 	public function render(backgroundColor:Color, renderTarget:RenderTexture = null, overrider:RendererOverrider = null) {

@@ -1,5 +1,6 @@
 package xt3d.core;
 
+import xt3d.view.View;
 import xt3d.gl.GLExtensionManager;
 import lime.utils.ArrayBufferView;
 import xt3d.gl.GLInfo;
@@ -212,81 +213,72 @@ class Renderer extends XTObject {
 		GL.clear(clearFlags);
 	}
 
-
 	public function render(scene:Scene, camera:Camera, overrider:RendererOverrider = null) {
 
-		if (scene != null && camera != null) {
-
-			// Update world matrices of scene graph
-			scene.updateWorldMatrix();
-
-			// Make sure camera matrix is updated even if it has not been added to the scene
-			if (camera.parent == null) {
-				camera.updateWorldMatrix();
-			}
-
-			// Get view projection matrix
-			this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
-
-			// Update objects - anything that needs to be done before rendering
-			scene.prepareObjectsForRender(scene, overrider);
-
-			// Set global uniforms for camera
-			camera.prepareRender(this._uniformLib);
-
-			// Set global uniforms for scene
-			scene.prepareRender(camera, this._uniformLib);
-
-			// Initialise overrider
-			if (overrider != null) {
-				overrider.prepareRenderer();
-			}
-
-			// Sort objects
-			var sortingEnabled = this._sortingEnabled;
-			if (overrider != null) {
-				sortingEnabled = overrider.sortingEnabled;
-			}
-			if (sortingEnabled) {
-
-				if (scene.zSortingStrategy & XTGL.ZSortingOpaque > 0) {
-					// Project transparent objects if we want to sort them in z
-					for (renderObject in scene.opaqueObjects) {
-						renderObject.calculateRenderZ(this._viewProjectionMatrix);
-					}
-
-					// Sort opaque objects by z
-					scene.opaqueObjects.sort(this.reversePainterSortStable);
-				} else {
-					// Sort opaque objects by material Id (avoid swapping shaders often)
-					scene.opaqueObjects.sort(this.materialSortStable);
-				}
-
-				if (scene.zSortingStrategy & XTGL.ZSortingTransparent > 0) {
-					// Project transparent objects if we want to sort them in z
-					for (renderObject in scene.transparentObjects) {
-						renderObject.calculateRenderZ(this._viewProjectionMatrix);
-					}
-
-					// Sort transparent objects by z
-					scene.transparentObjects.sort(this.painterSortStable);
-				} else {
-					// Sort transparent obejcts by material/object id (group by shader)
-					scene.transparentObjects.sort(this.materialSortStable);
-				}
-
-			}
-
-			// Render opaque objects
-			_stateManager.setBlending(XTGL.NoBlending);
-			this.renderObjects(scene.opaqueObjects, camera, false, overrider);
-
-			// Render transparent objects
-			this.renderObjects(scene.transparentObjects, camera, true, overrider);
-
-			// Prepare all common uniforms
-			this._uniformLib.prepareUniforms();
+		// Start of rendering callback to overrider
+		if (overrider != null) {
+			overrider.onRenderStart(scene, camera);
 		}
+
+		// Get view projection matrix
+		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
+
+		// Set global uniforms for camera
+		camera.prepareCommonRenderUniforms(this._uniformLib);
+
+		// Set global uniforms for scene
+		scene.prepareCommonRenderUniforms(camera, this._uniformLib);
+
+		// Sort objects
+		var sortingEnabled = this._sortingEnabled;
+		if (overrider != null) {
+			sortingEnabled = overrider.sortingEnabled;
+		}
+		if (sortingEnabled) {
+
+			if (scene.zSortingStrategy & XTGL.ZSortingOpaque > 0) {
+				// Project transparent objects if we want to sort them in z
+				for (renderObject in scene.opaqueObjects) {
+					renderObject.calculateRenderZ(this._viewProjectionMatrix);
+				}
+
+				// Sort opaque objects by z
+				scene.opaqueObjects.sort(this.reversePainterSortStable);
+			} else {
+				// Sort opaque objects by material Id (avoid swapping shaders often)
+				scene.opaqueObjects.sort(this.materialSortStable);
+			}
+
+			if (scene.zSortingStrategy & XTGL.ZSortingTransparent > 0) {
+				// Project transparent objects if we want to sort them in z
+				for (renderObject in scene.transparentObjects) {
+					renderObject.calculateRenderZ(this._viewProjectionMatrix);
+				}
+
+				// Sort transparent objects by z
+				scene.transparentObjects.sort(this.painterSortStable);
+			} else {
+				// Sort transparent obejcts by material/object id (group by shader)
+				scene.transparentObjects.sort(this.materialSortStable);
+			}
+
+		}
+
+		// Render opaque objects
+		_stateManager.setBlending(XTGL.NoBlending);
+		this.renderObjects(scene.opaqueObjects, camera, false, overrider);
+
+
+		var blendingEnabled = true;
+		if (overrider != null) {
+			blendingEnabled = overrider.blendingEnabled;
+		}
+
+		// Render transparent objects (if overrider allows for blending)
+		this.renderObjects(scene.transparentObjects, camera, blendingEnabled, overrider);
+
+		// Prepare all common uniforms
+		this._uniformLib.prepareUniforms();
 	}
 
 	/**

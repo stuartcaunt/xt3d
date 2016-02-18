@@ -1,5 +1,7 @@
 package xt3d.core;
 
+import xt3d.node.Scene;
+import xt3d.node.Camera;
 import xt3d.node.RenderObject;
 import xt3d.material.Material;
 
@@ -11,7 +13,7 @@ enum GeometryBlendType {
 
 
 interface RendererOverriderDelegate {
-	public function prepareRenderer():Void;
+	public function onRenderStart(scene:Scene, camera:Camera):Void;
 	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void;
 }
 
@@ -22,13 +24,15 @@ class RendererOverrider {
 	public var geometry(get, set):Geometry;
 	public var geometryBlend(get, set):GeometryBlendType;
 	public var sortingEnabled(get, set):Bool;
-	@:isVar public var delegate(get, set):RendererOverriderDelegate;
+	public var blendingEnabled(get, set):Bool;
+	public var delegate(get, set):RendererOverriderDelegate;
 
 	// members
 	private var _material:Material;
 	private var _geometry:Geometry;
 	private var _geometryBlend:GeometryBlendType = GeometryBlendType.GeometryBlendTypeReplace;
 	private var _sortingEnabled:Bool = true;
+	private var _blendingEnabled:Bool = true;
 
 	private var _delegate:RendererOverriderDelegate = null;
 
@@ -141,6 +145,14 @@ class RendererOverrider {
 		return this._sortingEnabled = value;
 	}
 
+	inline function get_blendingEnabled():Bool {
+		return this._blendingEnabled;
+	}
+
+	inline function set_blendingEnabled(value:Bool) {
+		return this._blendingEnabled = value;
+	}
+
 	inline function get_delegate():RendererOverriderDelegate {
 		return this._delegate;
 	}
@@ -153,9 +165,9 @@ class RendererOverrider {
 	/* --------- Implementation --------- */
 
 
-	public function prepareRenderer():Void {
+	public function onRenderStart(scene:Scene, camera:Camera):Void {
 		if (this._delegate != null) {
-			this._delegate.prepareRenderer();
+			this._delegate.onRenderStart(scene, camera);
 		}
 	}
 
