@@ -22,8 +22,6 @@ class RenderTexture extends Texture2D {
 	public var frameBuffer(get, null):GLFramebuffer;
 	public var clearFlags(get, null):Int;
 	public var backgroundColor(get, set):Color;
-	public var camera(get, set):Camera;
-	public var view(get, set):View;
 
 	// members
 	private var _frameBuffer:GLFramebuffer = null;
@@ -32,6 +30,7 @@ class RenderTexture extends Texture2D {
 
 	private var _view:View = View.create();
 	private var _viewport:Rectangle;
+	private var _backgroundColor:Color = Color.createWithRGBAHex(0x00000000);
 
 	public static function create(size:Size<Int>, textureOptions:TextureOptions = null):RenderTexture {
 		var object = new RenderTexture();
@@ -68,15 +67,6 @@ class RenderTexture extends Texture2D {
 
 		}
 
-		// Create scene
-		this._view.scene = Scene.create();
-
-		// Create camera (by default already with perspective projection)
-		this._view.camera = Camera.create(this._view);
-
-
-		this._view.displaySize = Size.createIntSize(this._contentSize.width, this._contentSize.height);
-
 		return retval;
 	}
 
@@ -108,29 +98,12 @@ class RenderTexture extends Texture2D {
 	}
 
 	public inline function get_backgroundColor():Color {
-		return this._view.backgroundColor;
+		return this._backgroundColor;
 	}
 
 	public inline function set_backgroundColor(value:Color) {
-		return this._view.backgroundColor = value;
+		return this._backgroundColor = value;
 	}
-
-	function get_camera():Camera {
-		return this._view.camera;
-	}
-
-	function set_camera(value:Camera) {
-		return this._view.camera = value;
-	}
-
-	public inline function get_view():View {
-		return this._view;
-	}
-
-	public inline function set_view(value:View) {
-		return this._view = value;
-	}
-
 
 	/* --------- Implementation --------- */
 
@@ -188,23 +161,7 @@ class RenderTexture extends Texture2D {
 	}
 
 
-	public function render(node:Node3D, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
-		var scene = this._view.scene;
-
-		// Make of copy of original position
-		var originalPosition = node.position;
-
-		if (Type.getClass(node) == Scene) {
-			this._view.scene = cast node;
-
-		} else {
-			// Set node matrix to identity matrix
-			node.position = new Vector4();
-
-			// Take temporary ownership of the node
-			scene.borrowChild(node);
-		}
-
+	public function render(view:View, rendererOverrider:RendererOverrider = null):Void {
 		var renderer = Director.current.renderer;
 
 		// Get old render target
@@ -213,22 +170,23 @@ class RenderTexture extends Texture2D {
 		// Bind to render texture frame buffer
 		renderer.renderTarget = this;
 
-		// Set clear flags
-		this._view.clearFlags = this.clearFlags;
+		// Copy old clear flags and colour
+		var oldClearFlags = view.clearFlags;
+		var oldBackgroundColor = view.backgroundColor;
+
+		// Set clear flags and color
+		view.clearFlags = this.clearFlags;
+		view.backgroundColor = this._backgroundColor;
 
 		// Render the view
-		this._view.render();
+		view.render();
 
 		// Put back old render target
 		renderer.renderTarget = oldRenderTarget;
 
-		if (scene != node) {
-			// Replace node in original heirarchy
-			this._view.scene.returnBorrowedChild(node);
-
-			// Put back origin matrix
-			node.position = originalPosition;
-		}
+		// Put back old clear flags and color
+		view.clearFlags = oldClearFlags;
+		view.backgroundColor = oldBackgroundColor;
 	}
 
 }
