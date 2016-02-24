@@ -41,7 +41,7 @@ class Renderer extends XTObject {
 	public var shaderManager(get, null):ShaderManager;
 
 	public var sortingEnabled(get, set):Bool;
-
+	@:isVar public var renderTarget(get, set):RenderTexture;
 
 	// members
 	private var _gl:GLRenderContext;
@@ -64,9 +64,10 @@ class Renderer extends XTObject {
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;
 	private var _sortingEnabled:Bool = true;
 
-	var _screenFrameBuffer:GLFramebuffer = null;
+	private var _screenFrameBuffer:GLFramebuffer = null;
+	private var _renderTarget:RenderTexture = null;
 
-	var _globalTime:Float = 0.0;
+	private var _globalTime:Float = 0.0;
 
 	public static function create(gl:GLRenderContext):Renderer {
 		var object = new Renderer();
@@ -152,6 +153,14 @@ class Renderer extends XTObject {
 		return this._sortingEnabled = value;
 	}
 
+	function get_renderTarget():RenderTexture {
+		return this._renderTarget;
+	}
+
+	function set_renderTarget(value:RenderTexture) {
+		this.setRenderTarget(value);
+		return this._renderTarget;
+	}
 
 	// Implementation
 
@@ -174,6 +183,8 @@ class Renderer extends XTObject {
 			this._stateManager.setColorMask(true, true, true, true);
 			this._frameBufferManager.setFrameBuffer(renderTarget.frameBuffer);
 		}
+
+		this._renderTarget = renderTarget;
 	}
 
 	public function setViewport(viewport:Rectangle):Void {
@@ -211,6 +222,19 @@ class Renderer extends XTObject {
 
 		// clear buffer bits
 		GL.clear(clearFlags);
+	}
+
+	public function updateScene(scene:Scene, camera:Camera, rendererOverrider:RendererOverrider) {
+		// Update world matrices of scene graph
+		scene.updateWorldMatrix();
+
+		// Make sure camera matrix is updated even if it has not been added to the scene
+		if (camera.parent == null) {
+			camera.updateWorldMatrix();
+		}
+
+		// Update objects - anything that needs to be done before rendering
+		scene.prepareObjectsForRender(scene, rendererOverrider);
 	}
 
 	public function render(scene:Scene, camera:Camera, overrider:RendererOverrider = null) {

@@ -1,5 +1,13 @@
 package xt3d.textures;
 
+import xt3d.view.View;
+import lime.math.Rectangle;
+import xt3d.node.Camera;
+import xt3d.math.Vector4;
+import xt3d.core.RendererOverrider;
+import xt3d.utils.color.Color;
+import xt3d.node.Scene;
+import xt3d.node.Node3D;
 import xt3d.gl.XTGL;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLFramebuffer;
@@ -13,11 +21,17 @@ class RenderTexture extends Texture2D {
 	// properties
 	public var frameBuffer(get, null):GLFramebuffer;
 	public var clearFlags(get, null):Int;
+	public var backgroundColor(get, set):Color;
+	public var camera(get, set):Camera;
+	public var view(get, set):View;
 
 	// members
 	private var _frameBuffer:GLFramebuffer = null;
 	private var _depthStencilRenderBuffer:GLRenderbuffer = null;
 	private var _depthStencilFormat:Int;
+
+	private var _view:View = View.create();
+	private var _viewport:Rectangle;
 
 	public static function create(size:Size<Int>, textureOptions:TextureOptions = null):RenderTexture {
 		var object = new RenderTexture();
@@ -54,6 +68,15 @@ class RenderTexture extends Texture2D {
 
 		}
 
+		// Create scene
+		this._view.scene = Scene.create();
+
+		// Create camera (by default already with perspective projection)
+		this._view.camera = Camera.create(this._view);
+
+
+		this._view.displaySize = Size.createIntSize(this._contentSize.width, this._contentSize.height);
+
 		return retval;
 	}
 
@@ -65,11 +88,11 @@ class RenderTexture extends Texture2D {
 
 	/* ----------- Properties ----------- */
 
-	public function get_frameBuffer():GLFramebuffer {
+	public inline function get_frameBuffer():GLFramebuffer {
 		return this._frameBuffer;
 	}
 
-	public function get_clearFlags():Int {
+	public inline function get_clearFlags():Int {
 		var clearFlags = GL.COLOR_BUFFER_BIT;
 		if (this._depthStencilFormat == XTGL.DepthStencilFormatDepth) {
 			clearFlags |= GL.DEPTH_BUFFER_BIT;
@@ -84,6 +107,29 @@ class RenderTexture extends Texture2D {
 		return clearFlags;
 	}
 
+	public inline function get_backgroundColor():Color {
+		return this._view.backgroundColor;
+	}
+
+	public inline function set_backgroundColor(value:Color) {
+		return this._view.backgroundColor = value;
+	}
+
+	function get_camera():Camera {
+		return this._view.camera;
+	}
+
+	function set_camera(value:Camera) {
+		return this._view.camera = value;
+	}
+
+	public inline function get_view():View {
+		return this._view;
+	}
+
+	public inline function set_view(value:View) {
+		return this._view = value;
+	}
 
 
 	/* --------- Implementation --------- */
@@ -138,6 +184,50 @@ class RenderTexture extends Texture2D {
 		var frameBufferStatus = GL.checkFramebufferStatus(GL.FRAMEBUFFER);
 		if (frameBufferStatus != GL.FRAMEBUFFER_COMPLETE) {
 			XT.Error("Could not create complete framebuffer object with render texture");
+		}
+	}
+
+
+	public function render(node:Node3D, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
+		var scene = this._view.scene;
+
+		// Make of copy of original position
+		var originalPosition = node.position;
+
+		if (Type.getClass(node) == Scene) {
+			this._view.scene = cast node;
+
+		} else {
+			// Set node matrix to identity matrix
+			node.position = new Vector4();
+
+			// Take temporary ownership of the node
+			scene.borrowChild(node);
+		}
+
+		var renderer = Director.current.renderer;
+
+		// Get old render target
+		var oldRenderTarget = renderer.renderTarget;
+
+		// Bind to render texture frame buffer
+		renderer.renderTarget = this;
+
+		// Set clear flags
+		this._view.clearFlags = this.clearFlags;
+
+		// Render the view
+		this._view.render();
+
+		// Put back old render target
+		renderer.renderTarget = oldRenderTarget;
+
+		if (scene != node) {
+			// Replace node in original heirarchy
+			this._view.scene.returnBorrowedChild(node);
+
+			// Put back origin matrix
+			node.position = originalPosition;
 		}
 	}
 

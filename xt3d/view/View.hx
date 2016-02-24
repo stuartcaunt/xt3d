@@ -27,7 +27,8 @@ class View extends EventEmitter {
 	public var horizontalConstraint(get, set):HorizontalConstraint;
 	public var verticalConstraint(get, set):VerticalConstraint;
 	public var backgroundColor(get, set):Color;
-	@:isVar public var isOpaque(get, set):Bool;
+	public var isOpaque(get, set):Bool;
+	public var clearFlags(get, set):Int;
 	public var scene(get, set):Scene;
 	public var camera(get, set):Camera;
 	public var orientation(get, set):XTOrientation;
@@ -52,6 +53,8 @@ class View extends EventEmitter {
 	private var _contentScaleFactor = 1.0;
 
 	private var _running:Bool = false;
+
+	private var _clearFlags:Int = GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT;
 
 	public static function create():View {
 		var object = new View();
@@ -146,12 +149,27 @@ class View extends EventEmitter {
 		return this._backgroundColor = value;
 	}
 
-	function get_isOpaque():Bool {
+	public inline function get_isOpaque():Bool {
 		return this._isOpaque;
 	}
 
-	function set_isOpaque(value:Bool) {
-		return this._isOpaque = value;
+	public inline function set_isOpaque(isOpaque:Bool) {
+		// Update clear flags
+		if (isOpaque) {
+			this._clearFlags |= GL.COLOR_BUFFER_BIT;
+		} else {
+			this._clearFlags &= ~GL.COLOR_BUFFER_BIT;
+		}
+
+		return this._isOpaque = isOpaque;
+	}
+
+	public inline function get_clearFlags():Int {
+		return this._clearFlags;
+	}
+
+	public inline function set_clearFlags(value:Int) {
+		return this._clearFlags = value;
 	}
 
 	public inline function get_scene():Scene {
@@ -247,90 +265,41 @@ class View extends EventEmitter {
 			renderer.disableScissor();
 		}
 
+		// Prepare for render
+		renderer.updateScene(this._scene, this._camera, rendererOverrider);
+
+		// TODO Render using current render processor (eg SSAO)
+		//this._renderProcessor.render(this, renderer, rendererOverrider);
+
 		// Clear view
-		if (this._isOpaque) {
-			renderer.clear(this._backgroundColor, GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT);
-
-		} else {
-			renderer.clear(null, GL.DEPTH_BUFFER_BIT);
-		}
-
-		// Prepare for render
-		this._preRenderPhase(rendererOverrider);
-
-		// Render scene with camera
-		// TODO : Change this for a callback: standard callback is as follows, custom one allows for
-		// TODO : additional effects such as shadow depth calculation, post processing.
-		renderer.render(this._scene, this._camera, rendererOverrider);
-	}
-
-	public function renderNodeToTexture(node:Node3D, renderTexture:RenderTexture, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
-		if (this.scene == null) {
-			throw new XTException("CannotRenderWithNullScene", "Cannot render to texture with a null Scene for the View");
-		}
-
-		// Take temporary ownership of the node
-		this.scene.borrowChild(node);
-
-		// Make of copy of original position
-		var originalPosition = node.position;
-
-		// Set node matrix to identity matrix
-		node.position = new Vector4();
-
-		// Render node and children to texture
-		this.renderToTexture(renderTexture, clear, clearColor, rendererOverrider);
-
-		// Replace node in original heirarchy
-		this.scene.returnBorrowedChild(node);
-
-		// Put back origin matrix
-		node.position = originalPosition;
-	}
-
-	public function renderToTexture(renderTexture:RenderTexture, clear:Bool = true, clearColor:Color = null, rendererOverrider:RendererOverrider = null):Void {
-		var renderer = Director.current.renderer;
-
-		// Bind to render texture frame buffer
-		renderer.setRenderTarget(renderTexture);
-
-		// Set viewport for render texture
-		renderer.setViewport(viewport);
-
-		// Set scissor
-		if (this._scissorEnabled) {
-			renderer.enableScissor(viewport);
-		} else {
-			renderer.disableScissor();
-		}
-
-		// Clear and initialise render to texture
-		if (clear) {
-			var color = (clearColor == null) ? _backgroundColor : clearColor;
-			renderer.clear(color, renderTexture.clearFlags);
-		}
-
-		// Prepare for render
-		this._preRenderPhase(rendererOverrider);
+		renderer.clear(this._backgroundColor, this._clearFlags);
 
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);
-	}
 
-	private function _preRenderPhase(rendererOverrider:RendererOverrider):Void {
-		// Update world matrices of scene graph
-		this._scene.updateWorldMatrix();
+		// END TODO
+//
+//		renderPipeline: {
+//			phase1: {
+//				setRenderTarget:
+//				renderContent: {
+//					phase2: {
+//						setRenderTarget:
+//						renderContent: {
+//							phase3: main scene
+//							or SSAO
+//							drawRender
+//						}
+//						draw renderTarget
+//					}
+//				}
+//				draw renderTarget
+//			}
+//		}
+//
+//		renderPhase (or filter) is a self contained scene/node with single quadMesh:
+//		  quad mesh renderes the render target texture.
 
-		// Make sure camera matrix is updated even if it has not been added to the scene
-		if (this._camera.parent == null) {
-			this._camera.updateWorldMatrix();
-		}
-
-		// Update objects - anything that needs to be done before rendering
-		this._scene.prepareObjectsForRender(this._scene, rendererOverrider);
-
-		// Emit event
-		this.emit("pre_render");
 	}
 
 	public function setDisplaySize(displaySize:Size<Int>):Void {
