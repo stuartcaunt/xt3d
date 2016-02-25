@@ -385,6 +385,9 @@ class Director implements Xt3dGLViewListener {
 		for (view in _views) {
 			this._activeCamera = view.camera;
 
+			// Clear view
+			view.clear();
+
 			// Render view
 			view.render(overrider);
 		}

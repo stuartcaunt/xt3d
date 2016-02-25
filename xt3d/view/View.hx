@@ -251,8 +251,7 @@ class View extends EventEmitter {
 		this.pauseScheduler();
 	}
 
-
-	public function render(rendererOverrider:RendererOverrider = null):Void {
+	public function clear(clearColor:Color = null, clearFlags:Int = null):Void {
 		var renderer = Director.current.renderer;
 
 		// Set viewport with full rectangle
@@ -265,14 +264,26 @@ class View extends EventEmitter {
 			renderer.disableScissor();
 		}
 
+		if (clearColor == null) {
+			clearColor = this._backgroundColor;
+		}
+
+		if (clearFlags == null) {
+			clearFlags = this._clearFlags;
+		}
+
+		// Clear view
+		renderer.clear(clearColor, clearFlags);
+	}
+
+	public function render(rendererOverrider:RendererOverrider = null):Void {
+		var renderer = Director.current.renderer;
+
 		// Prepare for render
 		renderer.updateScene(this._scene, this._camera, rendererOverrider);
 
 		// TODO Render using current render processor (eg SSAO)
 		//this._renderProcessor.render(this, renderer, rendererOverrider);
-
-		// Clear view
-		renderer.clear(this._backgroundColor, this._clearFlags);
 
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);

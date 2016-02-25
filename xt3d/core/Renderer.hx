@@ -41,7 +41,7 @@ class Renderer extends XTObject {
 	public var shaderManager(get, null):ShaderManager;
 
 	public var sortingEnabled(get, set):Bool;
-	@:isVar public var renderTarget(get, set):RenderTexture;
+	public var renderTarget(get, set):RenderTexture;
 
 	// members
 	private var _gl:GLRenderContext;
@@ -117,7 +117,7 @@ class Renderer extends XTObject {
 
 	// Properties
 
-	function get_extensionManager():GLExtensionManager {
+	public inline function get_extensionManager():GLExtensionManager {
 		return this._extensionManager;
 	}
 
@@ -164,7 +164,7 @@ class Renderer extends XTObject {
 
 	// Implementation
 
-	public function updateGlobalTime(deltaTime:Float):Void {
+	public inline function updateGlobalTime(deltaTime:Float):Void {
 		this._globalTime += deltaTime;
 		this._uniformLib.uniform("time").floatValue = this._globalTime;
 	}
@@ -205,7 +205,7 @@ class Renderer extends XTObject {
 		this._stateManager.setScissorTest(true);
 	}
 
-	public function disableScissor():Void {
+	public inline function disableScissor():Void {
 		this._stateManager.setScissorTest(false);
 	}
 
