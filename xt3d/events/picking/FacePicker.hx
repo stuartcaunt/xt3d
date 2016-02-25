@@ -83,22 +83,29 @@ class FacePicker implements RendererOverriderDelegate {
 	/* --------- Implementation --------- */
 
 	public function findPickedFace(view:View, location:Vector2):FacePickingResult {
-		// Render scene
-		this.renderForPicking(view);
-
-		// Get picking result
-		return this.getPickingResultAtLocation(location, view.scene);
+		return this.findPickedFaces(view, [location])[0];
 	}
 
 	public function findPickedFaces(view:View, locations:Array<Vector2>):Array<FacePickingResult> {
-		// Render scene
-		this.renderForPicking(view);
+		// Set up render texture
+		var displaySize = Director.current.displaySize;
+		if (this._renderTexture == null || this._renderTexture.contentSize.width != displaySize.width || this._renderTexture.contentSize.height != displaySize.height) {
+			this._renderTexture = RenderTexture.create(displaySize);
+		}
+
+		// Clear the render texture
+		this._renderTexture.beginWithClear(this._clearColor);
+
+		// Render view (using overrider) to render texture
+		this._renderTexture.render(view, this._rendererOverrider);
 
 		// Get picking results at all the locations
 		var results:Array<FacePickingResult> = new Array<FacePickingResult>();
 		for (location in locations) {
 			results.push(this.getPickingResultAtLocation(location, view.scene));
 		}
+
+		this._renderTexture.end();
 
 		return results;
 	}
@@ -122,18 +129,6 @@ class FacePicker implements RendererOverriderDelegate {
 
 
 	/* --------- Private functions --------- */
-
-
-	private function renderForPicking(view:View) {
-		// Set up render texture
-		var displaySize = Director.current.displaySize;
-		if (this._renderTexture == null || this._renderTexture.contentSize.width != displaySize.width || this._renderTexture.contentSize.height != displaySize.height) {
-			this._renderTexture = RenderTexture.create(displaySize);
-		}
-
-		// Render scene (using overrider) to render texture
-		view.renderToTexture(this._renderTexture, true, this._clearColor, this._rendererOverrider);
-	}
 
 	private function getPickingResultAtLocation(location:Vector2, scene:Scene):FacePickingResult {
 		// Get pixel color

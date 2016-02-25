@@ -21,7 +21,7 @@ class RenderTexture extends Texture2D {
 	// properties
 	public var frameBuffer(get, null):GLFramebuffer;
 	public var clearFlags(get, null):Int;
-	public var backgroundColor(get, set):Color;
+	public var clearColor(get, set):Color;
 
 	// members
 	private var _frameBuffer:GLFramebuffer = null;
@@ -30,12 +30,13 @@ class RenderTexture extends Texture2D {
 
 	private var _view:View = View.create();
 	private var _viewport:Rectangle;
-	private var _backgroundColor:Color = Color.createWithRGBAHex(0x00000000);
+	private var _clearColor:Color = Color.createWithRGBAHex(0x00000000);
+	private var _oldRenderTarget:RenderTexture = null;
 
-	public static function create(size:Size<Int>, textureOptions:TextureOptions = null):RenderTexture {
+	public static function create(size:Size<Int>, textureOptions:TextureOptions = null, depthStencilFormat:Int = XTGL.DepthStencilFormatDepth):RenderTexture {
 		var object = new RenderTexture();
 
-		if (object != null && !(object.init(size, textureOptions))) {
+		if (object != null && !(object.init(size, textureOptions, depthStencilFormat))) {
 			object = null;
 		}
 
@@ -65,6 +66,7 @@ class RenderTexture extends Texture2D {
 			this._uvOffsetY = (1.0 - this._uvOffsetY) * this._uvScaleY;
 			this._uvScaleY *= -1.0;
 
+			this._viewport = new Rectangle(0.0, 0.0, size.width, size.height);
 		}
 
 		return retval;
@@ -97,12 +99,12 @@ class RenderTexture extends Texture2D {
 		return clearFlags;
 	}
 
-	public inline function get_backgroundColor():Color {
-		return this._backgroundColor;
+	public inline function get_clearColor():Color {
+		return this._clearColor;
 	}
 
-	public inline function set_backgroundColor(value:Color) {
-		return this._backgroundColor = value;
+	public inline function set_clearColor(value:Color) {
+		return this._clearColor = value;
 	}
 
 	/* --------- Implementation --------- */
@@ -160,33 +162,44 @@ class RenderTexture extends Texture2D {
 		}
 	}
 
+	public function beginWithClear(clearColor:Color = null):Void {
+		var renderer = Director.current.renderer;
 
-	public function render(view:View, rendererOverrider:RendererOverrider = null):Void {
+		this.begin();
+
+		if (clearColor == null) {
+			clearColor = this._clearColor;
+		}
+
+		// Clear render target
+		renderer.clear(clearColor, this.clearFlags);
+	}
+
+	public function begin():Void {
 		var renderer = Director.current.renderer;
 
 		// Get old render target
-		var oldRenderTarget = renderer.renderTarget;
+		this._oldRenderTarget = renderer.renderTarget;
 
 		// Bind to render texture frame buffer
 		renderer.renderTarget = this;
 
-		// Copy old clear flags and colour
-		var oldClearFlags = view.clearFlags;
-		var oldBackgroundColor = view.backgroundColor;
+		// Set viewport with full rectangle
+		renderer.setViewport(this._viewport);
+	}
 
-		// Set clear flags and color
-		view.clearFlags = this.clearFlags;
-		view.backgroundColor = this._backgroundColor;
+	public function render(view:View, rendererOverrider:RendererOverrider = null):Void {
+		var renderer = Director.current.renderer;
 
 		// Render the view
-		view.render();
+		view.render(rendererOverrider);
+	}
+
+	public function end():Void {
+		var renderer = Director.current.renderer;
 
 		// Put back old render target
-		renderer.renderTarget = oldRenderTarget;
-
-		// Put back old clear flags and color
-		view.clearFlags = oldClearFlags;
-		view.backgroundColor = oldBackgroundColor;
+		renderer.renderTarget = this._oldRenderTarget;
 	}
 
 }
