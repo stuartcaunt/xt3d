@@ -46,6 +46,7 @@ class View extends EventEmitter {
 
 	private var _backgroundColor:Color = Director.current.backgroundColor;
 	private var _isOpaque:Bool = false;
+	private var _clearFlags:Int = GL.DEPTH_BUFFER_BIT; // Default for transparent view
 
 	private var _scene:Scene;
 	private var _camera:Camera;
@@ -54,7 +55,6 @@ class View extends EventEmitter {
 
 	private var _running:Bool = false;
 
-	private var _clearFlags:Int = GL.COLOR_BUFFER_BIT | GL.DEPTH_BUFFER_BIT;
 
 	public static function create():View {
 		var object = new View();
@@ -276,11 +276,15 @@ class View extends EventEmitter {
 		renderer.clear(clearColor, clearFlags);
 	}
 
-	public function render(rendererOverrider:RendererOverrider = null):Void {
+	public function updateView(rendererOverrider:RendererOverrider = null):Void {
 		var renderer = Director.current.renderer;
 
 		// Prepare for render
 		renderer.updateScene(this._scene, this._camera, rendererOverrider);
+	}
+
+	public function render(rendererOverrider:RendererOverrider = null):Void {
+		var renderer = Director.current.renderer;
 
 		// TODO Render using current render processor (eg SSAO)
 		//this._renderProcessor.render(this, renderer, rendererOverrider);

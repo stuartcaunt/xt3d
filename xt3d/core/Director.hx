@@ -39,7 +39,7 @@ class Director implements Xt3dGLViewListener {
 	public var gestureDispatcher(get, null):GestureDispatcher;
 	public var displaySize(get, null):Size<Int>;
 	public var fpsEnabled(get, set):Bool;
-	@:isVar public var activeCamera(get, null):Camera;
+	public var activeCamera(get, null):Camera;
 
 	// members
 	private static var _current:Director = null;
@@ -384,6 +384,9 @@ class Director implements Xt3dGLViewListener {
 		// Iterate over all views
 		for (view in _views) {
 			this._activeCamera = view.camera;
+
+			// Update view
+			view.updateView(overrider);
 
 			// Clear view
 			view.clear();
