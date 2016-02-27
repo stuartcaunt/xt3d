@@ -1,5 +1,6 @@
 package xt3d.view;
 
+import xt3d.utils.Types;
 import xt3d.material.TextureMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.core.Director;
@@ -7,7 +8,6 @@ import lime.math.Rectangle;
 import xt3d.utils.color.Color;
 import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;
-import xt3d.material.ColorMaterial;
 import xt3d.primitives.Plane;
 import xt3d.node.MeshNode;
 import xt3d.node.Camera;
@@ -53,8 +53,8 @@ class ViewFilter extends View {
 		// Create camera and use an orthographic projection
 		this._camera = Camera.create(this);
 
-		// Plane geometry
-		var plane = Plane.create(2.0, 2.0, 2, 2);
+		// Plane unit geometry
+		var plane = Plane.create(1.0, 1.0, 2, 2);
 
 		// Create the plance mesh node that we'll fix the render texture to
 		this._planeNode = MeshNode.create(plane, this._material);
@@ -99,6 +99,9 @@ class ViewFilter extends View {
 		// Update filtered view
 		this._filteredView.updateView();
 
+		// Verify render texture is coherent with view
+		this.updateRenderTexture();
+
 		// clear render texture
 		if (this._filteredView.isOpaque) {
 			// Opaque fill
@@ -138,7 +141,9 @@ class ViewFilter extends View {
 		this._clearFlags = this._filteredView.clearFlags;
 
 		// Todo : handle orientation ?
+	}
 
+	private function updateRenderTexture():Void {
 		// TODO : check for clear color changes
 		// Create render texture if necessary
 		if (this._renderTexture == null || this._renderTexture.contentSize.width != this._viewportInPixels.width || this._renderTexture.contentSize.height != this._viewportInPixels.height) {
@@ -156,10 +161,16 @@ class ViewFilter extends View {
 			this._material.texture = this._renderTexture;
 
 			// Store the viewport for the texture
-			this._renderTextureViewport = new Rectangle(0.0, 0.0, this._viewport.width, this._viewport.height);
+			var width = this._viewport.width;
+			var height = this._viewport.height;
+			this._renderTextureViewport = new Rectangle(0.0, 0.0, width, height);
 
-			// TODO : update material
+			// Scale the render node to be the same size as the render texure
+			this._planeNode.scaleX = width;
+			this._planeNode.scaleY = height;
 
+			// Change the camera ortho projection to show all the texture
+			this._camera.setOrthoProjection(-0.5 * width, 0.5 * width, -0.5 * height, 0.5 * height, 1.0, 10000.0, XTOrientation.Orientation0);
 		}
 	}
 
