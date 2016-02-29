@@ -2,12 +2,8 @@ package xt3d.textures;
 
 import xt3d.view.View;
 import lime.math.Rectangle;
-import xt3d.node.Camera;
-import xt3d.math.Vector4;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.color.Color;
-import xt3d.node.Scene;
-import xt3d.node.Node3D;
 import xt3d.gl.XTGL;
 import lime.graphics.opengl.GL;
 import lime.graphics.opengl.GLFramebuffer;
@@ -28,7 +24,6 @@ class RenderTexture extends Texture2D {
 	private var _depthStencilRenderBuffer:GLRenderbuffer = null;
 	private var _depthStencilFormat:Int;
 
-	private var _view:View = View.create();
 	private var _viewport:Rectangle;
 	private var _clearColor:Color = Color.createWithRGBAHex(0x00000000);
 	private var _oldRenderTarget:RenderTexture = null;
