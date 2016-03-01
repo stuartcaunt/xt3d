@@ -139,13 +139,13 @@ class ViewFilter extends View {
 		this._planeNode.scaleY = height;
 
 		// Change the camera ortho projection to show all the texture
-		this._camera.setOrthoProjection(-0.5 * width, 0.5 * width, -0.5 * height, 0.5 * height, 1.0, 10000.0, XTOrientation.Orientation0);
-
-		// Update view/model matrices
-		super.updateView();
+		this._camera.setOrthoProjection(-0.5 * width, 0.5 * width, -0.5 * height, 0.5 * height, 1.0, 10.0, XTOrientation.Orientation0);
 
 		// Emit event
 		this.emit("viewport_changed");
+
+		// Update view/model matrices
+		super.updateView();
 
 		// Todo : handle orientation ?
 	}

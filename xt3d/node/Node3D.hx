@@ -438,18 +438,33 @@ class Node3D extends XTObject {
 	}
 
 	inline public function setScaleX(value:Float):Void {
-		this._scaleX = value;
-		this._matrixDirty = true;
+		if (this._scaleX != value) {
+			this._scaleX = value;
+
+			// Set rotation dirty to redo the full 9-component matrix
+			this._rotationMatrixDirty = true;
+			this._matrixDirty = true;
+		}
 	}
 
 	inline public function setScaleY(value:Float):Void {
-		this._scaleY = value;
-		this._matrixDirty = true;
+		if (this._scaleY != value) {
+			this._scaleY = value;
+
+			// Set rotation dirty to redo the full 9-component matrix
+			this._rotationMatrixDirty = true;
+			this._matrixDirty = true;
+		}
 	}
 
 	inline public function setScaleZ(value:Float):Void {
-		this._scaleZ = value;
-		this._matrixDirty = true;
+		if (this._scaleZ != value) {
+			this._scaleZ = value;
+
+			// Set rotation dirty to redo the full 9-component matrix
+			this._rotationMatrixDirty = true;
+			this._matrixDirty = true;
+		}
 	}
 
 
