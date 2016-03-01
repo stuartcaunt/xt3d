@@ -183,9 +183,12 @@ class RenderTexture extends Texture2D {
 		renderer.setViewport(this._viewport);
 	}
 
-	public function render(view:View, rendererOverrider:RendererOverrider = null):Void {
-		var renderer = Director.current.renderer;
+	public function updateView(view:View, rendererOverrider:RendererOverrider = null):Void {
+		// Render the view
+		view.updateView(rendererOverrider);
+	}
 
+	public function render(view:View, rendererOverrider:RendererOverrider = null):Void {
 		// Render the view
 		view.render(rendererOverrider);
 	}

@@ -24,6 +24,7 @@ class View extends EventEmitter {
 	public var viewport(get, null):Rectangle;
 	public var viewportInPixels(get, null):Rectangle;
 	public var displaySize(get, set):Size<Int>; // In points
+	public var scissorEnabled(get, null):Bool;
 	public var horizontalConstraint(get, set):HorizontalConstraint;
 	public var verticalConstraint(get, set):VerticalConstraint;
 	public var backgroundColor(get, set):Color;
@@ -121,6 +122,10 @@ class View extends EventEmitter {
 	function set_displaySize(value:Size<Int>) {
 		this.setDisplaySize(value);
 		return this._displaySize;
+	}
+
+	function get_scissorEnabled():Bool {
+		return this._scissorEnabled;
 	}
 
 	function get_horizontalConstraint():HorizontalConstraint {
@@ -291,30 +296,6 @@ class View extends EventEmitter {
 
 		// Render scene with camera
 		renderer.render(this._scene, this._camera, rendererOverrider);
-
-		// END TODO
-//
-//		renderPipeline: {
-//			phase1: {
-//				setRenderTarget:
-//				renderContent: {
-//					phase2: {
-//						setRenderTarget:
-//						renderContent: {
-//							phase3: main scene
-//							or SSAO
-//							drawRender
-//						}
-//						draw renderTarget
-//					}
-//				}
-//				draw renderTarget
-//			}
-//		}
-//
-//		renderPhase (or filter) is a self contained scene/node with single quadMesh:
-//		  quad mesh renderes the render target texture.
-
 	}
 
 	public function setDisplaySize(displaySize:Size<Int>):Void {

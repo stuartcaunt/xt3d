@@ -141,35 +141,6 @@ class Scene extends Node3D {
 		this._lights.splice(0, this._lights.length);
 	}
 
-	inline public function borrowChild(child:Node3D):Void {
-		// Keep reference to original parent
-		this._borrowedChildren.set(child, child.parent);
-
-		// Nullify parent
-		child.parent = null;
-
-		// Set parent to this
-		this.addChild(child);
-	}
-
-	inline public function returnBorrowedChild(child:Node3D):Void {
-		if (this._borrowedChildren.exists(child)) {
-			var parent = this._borrowedChildren.get(child);
-
-			// Remove child from scene graph
-			this.removeChild(child);
-
-			// Remove child from borrow children
-			this._borrowedChildren.remove(child);
-
-			// Replace original parent
-			child.parent = parent;
-
-		} else {
-			XT.Log("Borrowed child node did not exist in scene");
-		}
-	}
-
 	public function prepareCommonRenderUniforms(camera:Camera, uniformLib:UniformLib):Void {
 
 		var numberOfLights:Int = Std.int(Math.min(this._lights.length, this._maxLights));

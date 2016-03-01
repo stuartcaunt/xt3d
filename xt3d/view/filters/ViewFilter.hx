@@ -1,5 +1,7 @@
 package xt3d.view.filters;
 
+import lime.graphics.opengl.GL;
+import xt3d.gl.XTGL;
 import xt3d.material.Material;
 import xt3d.utils.Types;
 import xt3d.core.RendererOverrider;
@@ -33,6 +35,7 @@ class ViewFilter extends View {
 
 		// Create scene
 		this._scene = Scene.create();
+		this._scene.zSortingStrategy = XTGL.ZSortingNone;
 
 		// Create camera and use an orthographic projection
 		this._camera = Camera.create(this);
@@ -120,15 +123,11 @@ class ViewFilter extends View {
 		// Copy all viewport characteristics from filtered viewport
 		this._viewport = this._filteredView.viewport;
 		this._viewportInPixels = this._filteredView.viewportInPixels;
-
-		this._scissorEnabled = (
-			this._viewport.x != 0 ||
-			this._viewport.width != displaySize.width ||
-			this._viewport.y != 0 ||
-			this._viewport.height != displaySize.height);
+		this._scissorEnabled = this._filteredView.scissorEnabled;
 
 		this._backgroundColor = this._filteredView.backgroundColor;
-		this._clearFlags = this._filteredView.clearFlags;
+		this._clearFlags = GL.COLOR_BUFFER_BIT; // or 0 ?
+		//this._clearFlags = this._filteredView.clearFlags;
 
 		// Store the viewport for the texture
 		var width = this._viewport.width;

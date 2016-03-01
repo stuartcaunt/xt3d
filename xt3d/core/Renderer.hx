@@ -40,7 +40,6 @@ class Renderer extends XTObject {
 	public var frameBufferManager(get, null):GLFrameBufferManager;
 	public var shaderManager(get, null):ShaderManager;
 
-	public var sortingEnabled(get, set):Bool;
 	public var renderTarget(get, set):RenderTexture;
 
 	// members
@@ -62,7 +61,6 @@ class Renderer extends XTObject {
 
 	private var _currentProgram:ShaderProgram = null;
 	private var _renderPassShaders:Map<String, ShaderProgram> = null;
-	private var _sortingEnabled:Bool = true;
 
 	private var _screenFrameBuffer:GLFramebuffer = null;
 	private var _renderTarget:RenderTexture = null;
@@ -143,14 +141,6 @@ class Renderer extends XTObject {
 
 	public inline function get_shaderManager():ShaderManager {
 		return this._shaderManager;
-	}
-
-	public inline function get_sortingEnabled():Bool {
-		return this._sortingEnabled;
-	}
-
-	public inline function set_sortingEnabled(value:Bool) {
-		return this._sortingEnabled = value;
 	}
 
 	function get_renderTarget():RenderTexture {
@@ -255,7 +245,7 @@ class Renderer extends XTObject {
 		scene.prepareCommonRenderUniforms(camera, this._uniformLib);
 
 		// Sort objects
-		var sortingEnabled = this._sortingEnabled;
+		var sortingEnabled = (scene.zSortingStrategy != XTGL.ZSortingNone);
 		if (overrider != null) {
 			sortingEnabled = overrider.sortingEnabled;
 		}
