@@ -83,16 +83,18 @@ class BlurMaterial extends Material {
 	private static function initialiseShaderLib():Void {
 		if (!_shaderLibInitialised) {
 
+			var blurFactor = 15;
+
 			var shaderConfig:Map<String, ShaderInfo> = [
 				"blurX" => {
-					vertexProgram: "blur9_vertex",
-					fragmentProgram: "blur9_fragment",
+					vertexProgram: "blur" + blurFactor + "_vertex",
+					fragmentProgram: "blur" + blurFactor + "_fragment",
 					commonUniformGroups: ["matrixCommon", "texture", "viewport"],
 					vertexDefines: ["#define BLUR_X"]
 				},
 				"blurY" => {
-					vertexProgram: "blur9_vertex",
-					fragmentProgram: "blur9_fragment",
+					vertexProgram: "blur" + blurFactor + "_vertex",
+					fragmentProgram: "blur" + blurFactor + "_fragment",
 					commonUniformGroups: ["matrixCommon", "texture", "viewport"],
 					vertexDefines: ["#define BLUR_Y"]
 				}

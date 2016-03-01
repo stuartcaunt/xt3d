@@ -7,7 +7,7 @@ void main() {
 	v_uv = a_uv * u_uvScaleOffset.xy + u_uvScaleOffset.zw;
 
 	// Spread: equals the pixel spacing for the sampling
-	float spread = 2.0;
+	float spread = 1.0;
 
 #ifdef BLUR_X
 	float pixelSpacing = spread / u_viewport.z;
