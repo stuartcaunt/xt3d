@@ -85,23 +85,15 @@ class BlurMaterial extends Material {
 
 			var shaderConfig:Map<String, ShaderInfo> = [
 				"blurX" => {
-					vertexProgram: "blur_vertex",
-					fragmentProgram: "blur_fragment",
-					commonUniformGroups: ["matrixCommon"],
-					uniforms: [
-						"texture" => { name: "u_texture", type: "texture", shader: "f" },
-						"uvScaleOffset" => { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
-					],
+					vertexProgram: "blur9_vertex",
+					fragmentProgram: "blur9_fragment",
+					commonUniformGroups: ["matrixCommon", "texture", "viewport"],
 					vertexDefines: ["#define BLUR_X"]
 				},
 				"blurY" => {
-					vertexProgram: "blur_vertex",
-					fragmentProgram: "blur_fragment",
-					commonUniformGroups: ["matrixCommon"],
-					uniforms: [
-						"texture" => { name: "u_texture", type: "texture", shader: "f" },
-						"uvScaleOffset" => { name: "u_uvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
-					],
+					vertexProgram: "blur9_vertex",
+					fragmentProgram: "blur9_fragment",
+					commonUniformGroups: ["matrixCommon", "texture", "viewport"],
 					vertexDefines: ["#define BLUR_Y"]
 				}
 			];
