@@ -328,17 +328,19 @@ class ShaderProgram extends XTObject {
 		}
 
 		// Handle uniforms
-		for (uniformName in uniforms.keys()) {
-			var uniformInfo = uniforms.get(uniformName);
+		if  (uniforms != null) {
+			for (uniformName in uniforms.keys()) {
+				var uniformInfo = uniforms.get(uniformName);
 
-			// Create uniform
-			var uniform = this.createUniform(uniformName, uniformInfo, dataTypes);
-			if (uniform == null) {
-				return false;
+				// Create uniform
+				var uniform = this.createUniform(uniformName, uniformInfo, dataTypes);
+				if (uniform == null) {
+					return false;
+				}
+
+				// Add to all uniforms
+				_uniforms.set(uniformName, uniform);
 			}
-
-			// Add to all uniforms
-			_uniforms.set(uniformName, uniform);
 		}
 
 		// Handle common uniforms

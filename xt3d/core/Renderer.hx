@@ -193,6 +193,7 @@ class Renderer extends XTObject {
 			_viewport = viewport;
 			GL.viewport(Std.int (_viewport.x), Std.int (_viewport.y), Std.int (_viewport.width), Std.int (_viewport.height));
 			//XT.Log("Setting viewport to " + Std.int (_viewport.x) + ", " + Std.int (_viewport.y) + ", " + Std.int (_viewport.width) + ", " + Std.int (_viewport.height));
+			this._uniformLib.uniform("viewport").floatArrayValue = [_viewport.x, _viewport.y, _viewport.width, _viewport.height];
 		}
 	}
 

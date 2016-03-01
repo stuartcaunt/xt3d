@@ -42,6 +42,11 @@ class UniformLib {
 					"time" => { name: "u_time", type: "float", shader: "fv", defaultValue: "0.0", global: true}
 				]
 			},
+			"viewport" => {
+				uniforms: [
+					"viewport" => { name: "u_viewport", type: "vec4", shader: "fv", defaultValue: "[0.0, 0.0, 1.0, 1.0]", global: true}
+				]
+			},
 			"texture" => {
 				uniforms: [
 					"texture" => { name: "u_texture", type: "texture", shader: "f" },
