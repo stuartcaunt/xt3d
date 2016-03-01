@@ -12,20 +12,9 @@ class BasicViewFilter extends ViewFilter {
 	// properties
 
 	// members
-	private var _filterMaterial:TextureMaterial;
 	private var _renderTexture:RenderTexture;
 
-	public static function create(filteredView:View):BasicViewFilter {
-		var object = new BasicViewFilter();
-
-		if (object != null && !(object.init(filteredView))) {
-			object = null;
-		}
-
-		return object;
-	}
-
-	public function init(filteredView:View):Bool {
+	public function initBasicViewFilter(filteredView:View):Bool {
 		var ok;
 		if ((ok = super.initViewFilter(filteredView))) {
 		}
@@ -78,22 +67,4 @@ class BasicViewFilter extends ViewFilter {
 		// End render to texture
 		this._renderTexture.end();
 	}
-
-	override private function updateRenderMaterials():Void {
-		// Override in all Filters
-
-		// Set the texture in the material
-		this._filterMaterial.texture = this._renderTexture;
-	}
-
-	override private function createRenderNodeMaterial():Material {
-		// Override in all filters
-
-		this._filterMaterial = TextureMaterial.createWithColor(Color.createWithRGBHex(0xffffff));
-
-		return this._filterMaterial;
-	}
-
-
-
 }

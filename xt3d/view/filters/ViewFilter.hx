@@ -102,10 +102,6 @@ class ViewFilter extends View {
 		// Make any changes to render target, taking into account potential changes to render texture size
 	}
 
-	private function updateRenderMaterials():Void {
-		// Make any changes to material uniforms
-	}
-
 	private function renderToRenderTargets():Void {
 		// Override me
 	}
@@ -113,6 +109,11 @@ class ViewFilter extends View {
 	private function createRenderNodeMaterial():Material {
 		// Override me
 		return null;
+	}
+
+	private function updateRenderMaterials():Void {
+		// Override me
+		// Make any changes to material uniforms
 	}
 
 	private function onFilteredViewSizeChanged():Void {
