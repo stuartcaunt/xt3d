@@ -143,6 +143,11 @@ import lime.Assets;
 			this._pixelsHeight = this.getNextPOT(this._contentSize.height);
 			this._uvScaleX = this._contentSize.width / this._pixelsWidth;
 			this._uvScaleY = this._contentSize.height / this._pixelsHeight;
+		} else {
+			this._pixelsWidth = this._contentSize.width;
+			this._pixelsHeight = this._contentSize.height;
+			this._uvScaleX = 1.0;
+			this._uvScaleY = 1.0;
 		}
 
 		// Create texture immediately
@@ -298,8 +303,6 @@ import lime.Assets;
 			this._minFilter = XTGL.GL_NEAREST;
 			this._magFilter = XTGL.GL_NEAREST;
 		}
-
-
 
 		// Get image data from asset
 		var image = ImageHelper.imageFromFloat32Array(width, height, array);

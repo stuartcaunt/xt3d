@@ -48,6 +48,11 @@ class RenderTexture extends Texture2D {
 			textureOptions.magFilter = XTGL.GL_NEAREST;
 			textureOptions.wrapS = XTGL.GL_REPEAT;
 			textureOptions.wrapT = XTGL.GL_REPEAT;
+//			textureOptions.forcePOT = false;
+//			textureOptions.minFilter = XTGL.GL_LINEAR;
+//			textureOptions.magFilter = XTGL.GL_LINEAR;
+//			textureOptions.wrapS = XTGL.GL_CLAMP_TO_EDGE;
+//			textureOptions.wrapT = XTGL.GL_CLAMP_TO_EDGE;
 			textureOptions.generateMipMaps = false;
 		}
 
