@@ -88,14 +88,20 @@ class BlurMaterial extends Material {
 				"blurX" => {
 					vertexProgram: "blur" + blurFactor + "_vertex",
 					fragmentProgram: "blur" + blurFactor + "_fragment",
-					commonUniformGroups: ["matrixCommon", "texture", "viewport"],
-					vertexDefines: ["#define BLUR_X"]
+					commonUniformGroups: ["matrixCommon", "texture"],
+					vertexDefines: ["#define BLUR_X"],
+					uniforms: [
+						"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
+					]
 				},
 				"blurY" => {
 					vertexProgram: "blur" + blurFactor + "_vertex",
 					fragmentProgram: "blur" + blurFactor + "_fragment",
-					commonUniformGroups: ["matrixCommon", "texture", "viewport"],
-					vertexDefines: ["#define BLUR_Y"]
+					commonUniformGroups: ["matrixCommon", "texture"],
+					vertexDefines: ["#define BLUR_Y"],
+					uniforms: [
+						"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
+					]
 				}
 			];
 
@@ -148,6 +154,13 @@ class BlurMaterial extends Material {
 
 			var textureUvScaleOffset = this._texture.uvScaleOffset;
 			this.setUvScaleOffset(textureUvScaleOffset[0], textureUvScaleOffset[1], textureUvScaleOffset[2], textureUvScaleOffset[3]);
+
+			if (this._isHorizontal) {
+				this.uniform("textureWidth").floatValue = this._texture.pixelsWidth;
+
+			} else {
+				this.uniform("textureHeight").floatValue = this._texture.pixelsHeight;
+			}
 
 		} else {
 			this.uniform("texture").texture = null;

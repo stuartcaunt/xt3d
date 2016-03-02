@@ -10,7 +10,7 @@ void main() {
 	float spread = 1.0;
 
 #ifdef BLUR_X
-	float pixelSpacing = spread / u_viewport.z;
+	float pixelSpacing = spread / u_textureWidth;
 
 	v_uvBlur[ 0] = v_uv + vec2(-7.0 * pixelSpacing, 0.0);
 	v_uvBlur[ 1] = v_uv + vec2(-6.0 * pixelSpacing, 0.0);
@@ -29,7 +29,7 @@ void main() {
 #endif
 
 #ifdef BLUR_Y
-	float pixelSpacing = spread / u_viewport.w;
+	float pixelSpacing = spread / u_textureHeight;
 
 	v_uvBlur[ 0] = v_uv + vec2(0.0, -7.0 * pixelSpacing);
 	v_uvBlur[ 1] = v_uv + vec2(0.0, -6.0 * pixelSpacing);
