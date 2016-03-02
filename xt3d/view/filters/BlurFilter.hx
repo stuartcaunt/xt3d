@@ -3,7 +3,6 @@ package xt3d.view.filters;
 import xt3d.textures.Texture2D;
 import xt3d.gl.shaders.ShaderLib;
 import xt3d.gl.shaders.ShaderTypedefs;
-import xt3d.material.TextureMaterial;
 import xt3d.material.Material;
 
 class BlurFilter extends BasicViewFilter {
