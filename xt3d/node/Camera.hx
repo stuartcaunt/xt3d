@@ -351,7 +351,8 @@ class Camera extends Node3D {
 	}
 
 	public inline function set_near(value:Float) {
-		return this._near = value;
+		this.setNear(value);
+		return this._near;
 	}
 
 	public inline function get_far():Float {
@@ -359,7 +360,8 @@ class Camera extends Node3D {
 	}
 
 	public inline function set_far(value:Float) {
-		return this._far = value;
+		this.setFar(value);
+		return this._far;
 	}
 
 	public inline function get_left():Float {
@@ -590,6 +592,20 @@ class Camera extends Node3D {
 
 	public inline function getZoom():Float {
 		return _zoom;
+	}
+
+	public function setNear(near:Float):Void {
+		this._near = near;
+		if (_isPerspective) {
+			this.setPerspectiveProjection(_fov, _near, _far, _orientation);
+		}
+	}
+
+	public function setFar(far:Float):Void {
+		this._far = far;
+		if (_isPerspective) {
+			this.setPerspectiveProjection(_fov, _near, _far, _orientation);
+		}
 	}
 
 	/**
@@ -838,6 +854,9 @@ class Camera extends Node3D {
 		uniformLib.uniform("viewMatrix").matrixValue = this._viewMatrix;
 		uniformLib.uniform("viewProjectionMatrix").matrixValue = this._viewProjectionMatrix;
 		uniformLib.uniform("projectionMatrix").matrixValue = this._projectionMatrix;
+		uniformLib.uniform("near").floatValue = this._near;
+		uniformLib.uniform("far").floatValue = this._far;
+		uniformLib.uniform("nearFarFactor").floatValue = 2.0 / Math.log(this._far / this._near);
 	}
 
 }

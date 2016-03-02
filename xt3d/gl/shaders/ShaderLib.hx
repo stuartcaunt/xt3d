@@ -58,6 +58,16 @@ class ShaderLib  {
 				uniforms: [
 					"objectId" => { name: "u_objectId", type: "vec2", shader: "f", defaultValue: "[0.0, 0.0]" }
 				]
+			},
+			"depth" => {
+				vertexProgram: "depth_vertex",
+				fragmentProgram: "depth_fragment",
+				commonUniformGroups: ["matrixCommon", "depth"]
+			},
+			"depth_debug" => {
+				vertexProgram: "depth_debug_vertex",
+				fragmentProgram: "depth_debug_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"]
 			}
 		];
 
