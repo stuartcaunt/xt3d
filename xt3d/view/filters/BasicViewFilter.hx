@@ -2,10 +2,6 @@ package xt3d.view.filters;
 
 import lime.graphics.opengl.GL;
 import xt3d.gl.XTGL;
-import xt3d.gl.XTGL;
-import xt3d.material.TextureMaterial;
-import xt3d.material.Material;
-import xt3d.core.Director;
 import xt3d.utils.color.Color;
 import xt3d.textures.RenderTexture;
 import xt3d.utils.geometry.Size;
@@ -60,10 +56,6 @@ class BasicViewFilter extends ViewFilter {
 	}
 
 	override private function renderToRenderTargets():Void {
-		// Override in Basic Filter
-
-		var renderer = Director.current.renderer;
-
 		// clear render texture
 		if (this._filteredView.isOpaque) {
 			// Opaque fill
@@ -73,9 +65,6 @@ class BasicViewFilter extends ViewFilter {
 			// Transparent fill
 			this._renderTexture.beginWithClear();
 		}
-
-		// Set the viewport to render to the texture
-		renderer.setViewport(this._renderTextureViewport);
 
 		// Render filtered view to render texture
 		this._renderTexture.render(this._filteredView);

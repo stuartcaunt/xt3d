@@ -21,7 +21,6 @@ class ViewFilter extends View {
 	private var _filteredView:View;
 	private var _planeNode:MeshNode;
 	private var _material:Material;
-	private var _renderTextureViewport:Rectangle;
 
 	public function initViewFilter(filteredView:View):Bool {
 		// Store filtered view
@@ -129,10 +128,9 @@ class ViewFilter extends View {
 		this._clearFlags = GL.COLOR_BUFFER_BIT; // or 0 ?
 		//this._clearFlags = this._filteredView.clearFlags;
 
-		// Store the viewport for the texture
+		// Setup node scale and camera for width and height
 		var width = this._viewport.width;
 		var height = this._viewport.height;
-		this._renderTextureViewport = new Rectangle(0.0, 0.0, width, height);
 
 		// Scale the render node to be the same size as the render texure
 		this._planeNode.scaleX = width;
