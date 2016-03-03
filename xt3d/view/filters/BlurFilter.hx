@@ -11,39 +11,39 @@ class BlurFilter extends BasicViewFilter {
 	private var _blurMaterial:BlurMaterial;
 	private var _isHorizontal:Bool;
 
-	public static function create(filteredView:View):BlurFilter {
-		var horizontalBlur = BlurFilter.createHorizontal(filteredView);
+	public static function create(filteredView:View, scale:Float = 1.0):BlurFilter {
+		var horizontalBlur = BlurFilter.createHorizontal(filteredView, scale);
 		if (horizontalBlur != null) {
-			return BlurFilter.createVertical(horizontalBlur);
+			return BlurFilter.createVertical(horizontalBlur, scale);
 		}
 
 		return null;
 	}
 
-	public static function createHorizontal(filteredView:View):BlurFilter {
+	public static function createHorizontal(filteredView:View, scale:Float = 1.0):BlurFilter {
 		var object = new BlurFilter();
 
-		if (object != null && !(object.init(filteredView, true))) {
+		if (object != null && !(object.init(filteredView, scale, true))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createVertical(filteredView:View):BlurFilter {
+	public static function createVertical(filteredView:View, scale:Float = 1.0):BlurFilter {
 		var object = new BlurFilter();
 
-		if (object != null && !(object.init(filteredView, false))) {
+		if (object != null && !(object.init(filteredView, scale, false))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(filteredView:View, isHorizontal:Bool):Bool {
+	public function init(filteredView:View, scale:Float = 1.0, isHorizontal:Bool):Bool {
 		this._isHorizontal = isHorizontal;
 		var ok;
-		if ((ok = super.initBasicViewFilter(filteredView))) {
+		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 		}
 
 		return ok;

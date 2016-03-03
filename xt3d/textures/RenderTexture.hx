@@ -42,18 +42,8 @@ class RenderTexture extends Texture2D {
 		var retval;
 
 		if (textureOptions  == null) {
-			textureOptions = new TextureOptions();
-			textureOptions.forcePOT = true;
-			textureOptions.minFilter = XTGL.GL_NEAREST;
-			textureOptions.magFilter = XTGL.GL_NEAREST;
-			textureOptions.wrapS = XTGL.GL_REPEAT;
-			textureOptions.wrapT = XTGL.GL_REPEAT;
-//			textureOptions.forcePOT = false;
-//			textureOptions.minFilter = XTGL.GL_LINEAR;
-//			textureOptions.magFilter = XTGL.GL_LINEAR;
-//			textureOptions.wrapS = XTGL.GL_CLAMP_TO_EDGE;
-//			textureOptions.wrapT = XTGL.GL_CLAMP_TO_EDGE;
-			textureOptions.generateMipMaps = false;
+			textureOptions = TextureOptions.NEAREST_REPEAT_POT;
+			//textureOptions = TextureOptions.NEAREST_CLAMP;
 		}
 
 		if ((retval = super.initEmpty(size.width, size.height, textureOptions))) {

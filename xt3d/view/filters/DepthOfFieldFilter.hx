@@ -1,5 +1,6 @@
 package xt3d.view.filters;
 
+import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
 import xt3d.material.DepthMaterial;
 import xt3d.material.DepthOfFieldMaterial;
@@ -26,19 +27,19 @@ class DepthOfFieldFilter extends BasicViewFilter {
 	// Depth renderer overrider
 	private var _depthRendererOverrider:RendererOverrider;
 
-	public static function create(filteredView:View):DepthOfFieldFilter {
+	public static function create(filteredView:View, scale:Float = 1.0):DepthOfFieldFilter {
 		var object = new DepthOfFieldFilter();
 
-		if (object != null && !(object.init(filteredView))) {
+		if (object != null && !(object.init(filteredView, scale))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(filteredView:View):Bool {
+	public function init(filteredView:View, scale:Float = 1.0):Bool {
 		var ok;
-		if ((ok = super.initBasicViewFilter(filteredView))) {
+		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 
 			// Create depth render material
 			var depthMaterial = DepthMaterial.create();
@@ -60,14 +61,17 @@ class DepthOfFieldFilter extends BasicViewFilter {
 		super.updateRenderTargets();
 
 		// Create depth render texture
-		if (this._depthTexture == null || this._depthTexture.contentSize.width != this._viewportInPixels.width || this._depthTexture.contentSize.height != this._viewportInPixels.height) {
+		var desiredWidth = Math.ceil(this._scale * this._viewportInPixels.width);
+		var desiredHeight = Math.ceil(this._scale * this._viewportInPixels.height);
+		if (this._depthTexture == null || this._depthTexture.contentSize.width != desiredWidth || this._depthTexture.contentSize.height != desiredHeight) {
 			if (this._depthTexture != null) {
 				this._depthTexture.dispose();
 				this._depthTexture = null;
 			}
 
 			// Create render texture with only color render buffer
-			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(this._viewportInPixels.width), Std.int(this._viewportInPixels.height)), null, XTGL.DepthStencilFormatDepth);
+			var textureOptions = (this._scale != 1.0) ? TextureOptions.NEAREST_REPEAT_POT : null;
+			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), null, XTGL.DepthStencilFormatDepth);
 			this._depthTexture.clearColor = Color.createWithRGBAHex(0x00000000);
 		}
 	}

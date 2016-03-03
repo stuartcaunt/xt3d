@@ -1,5 +1,6 @@
 package xt3d.view.filters;
 
+import xt3d.textures.TextureOptions;
 import lime.graphics.opengl.GL;
 import xt3d.gl.XTGL;
 import xt3d.utils.color.Color;
@@ -12,10 +13,12 @@ class BasicViewFilter extends ViewFilter {
 
 	// members
 	private var _renderTexture:RenderTexture;
+	private var _scale:Float = 1.0;
 
-	public function initBasicViewFilter(filteredView:View):Bool {
+	public function initBasicViewFilter(filteredView:View, scale:Float = 1.0):Bool {
 		var ok;
 		if ((ok = super.initViewFilter(filteredView))) {
+			this._scale = scale;
 		}
 
 		return ok;
@@ -29,7 +32,9 @@ class BasicViewFilter extends ViewFilter {
 	override private function updateRenderTargets():Void {
 		// TODO : check for clear color changes
 		// Create render texture if necessary
-		if (this._renderTexture == null || this._renderTexture.contentSize.width != this._viewportInPixels.width || this._renderTexture.contentSize.height != this._viewportInPixels.height) {
+		var desiredWidth = Math.ceil(this._scale * this._viewportInPixels.width);
+		var desiredHeight = Math.ceil(this._scale * this._viewportInPixels.height);
+		if (this._renderTexture == null || this._renderTexture.contentSize.width != desiredWidth || this._renderTexture.contentSize.height != desiredHeight) {
 			if (this._renderTexture != null) {
 				this._renderTexture.dispose();
 				this._renderTexture = null;
@@ -48,7 +53,9 @@ class BasicViewFilter extends ViewFilter {
 				depthStencilFormat = XTGL.DepthStencilFormatStencil;
 			}
 
-			this._renderTexture = RenderTexture.create(Size.createIntSize(Std.int(this._viewportInPixels.width), Std.int(this._viewportInPixels.height)), null, depthStencilFormat);
+			// If scaling then use linear interp with texture
+			var textureOptions = (this._scale != 1.0) ? TextureOptions.LINEAR_REPEAT_POT : null;
+			this._renderTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), textureOptions, depthStencilFormat);
 			this._renderTexture.clearColor = Color.createWithRGBAHex(0x00000000);
 
 			// TODO set stencilEnabled here ?
