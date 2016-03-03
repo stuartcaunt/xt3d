@@ -1,10 +1,8 @@
 package xt3d.view.filters;
 
-import xt3d.gl.shaders.ShaderLib;
-import xt3d.textures.Texture2D;
 import xt3d.gl.XTGL;
 import xt3d.material.DepthMaterial;
-import xt3d.material.DepthDebugMaterial;
+import xt3d.material.DepthOfFieldMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.color.Color;
 import xt3d.utils.geometry.Size;
@@ -109,113 +107,4 @@ class DepthOfFieldFilter extends BasicViewFilter {
 }
 
 
-
-class DepthOfFieldMaterial extends Material {
-
-	private static var _shaderLibInitialised:Bool = false;
-
-	private var _renderedTexture:Texture2D;
-	private var _depthTexture:Texture2D;
-	private var _uvScaleOffset:Array<Float> = new Array<Float>();
-	private var _focalDepth:Float;
-
-	private static function initialiseShaderLib():Void {
-		if (!_shaderLibInitialised) {
-
-			var blurFactor = 15;
-
-			var shaderConfig:Map<String, ShaderInfo> = [
-				"depthOfField" => {
-					vertexProgram: "depthOfField_vertex",
-					fragmentProgram: "depthOfField_fragment",
-					commonUniformGroups: ["matrixCommon", "texture"],
-					uniforms: [
-						"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
-						"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
-						"textureWidth" => { name: "u_textureWidth", type: "float", shader: "f", defaultValue: "1" },
-						"textureHeight" => { name: "u_textureHeight", type: "float", shader: "f", defaultValue: "1" }
-					]
-				}
-			];
-
-			ShaderLib.instance().addShaderConfigs(shaderConfig);
-
-			_shaderLibInitialised = true;
-		}
-	}
-
-	public static function create():DepthOfFieldMaterial {
-		var object = new DepthOfFieldMaterial();
-
-		if (object != null && !(object.init())) {
-			object = null;
-		}
-
-		return object;
-	}
-
-	public function init():Bool {
-		initialiseShaderLib();
-
-		var isOk;
-		if ((isOk = super.initMaterial("depthOfField"))) {
-		}
-
-		return isOk;
-	}
-
-	public function setRenderedTexture(value:Texture2D):Void {
-		if (this._renderedTexture != null) {
-			this._renderedTexture.release();
-		}
-
-		if (value != null) {
-			this._renderedTexture = value;
-			this._renderedTexture.retain();
-
-			this.uniform("texture").texture = this._renderedTexture;
-
-			var textureUvScaleOffset = this._renderedTexture.uvScaleOffset;
-			this.setUvScaleOffset(textureUvScaleOffset[0], textureUvScaleOffset[1], textureUvScaleOffset[2], textureUvScaleOffset[3]);
-
-			this.uniform("textureWidth").floatValue = this._renderedTexture.pixelsWidth;
-			this.uniform("textureHeight").floatValue = this._renderedTexture.pixelsHeight;
-
-		} else {
-			this.uniform("texture").texture = null;
-		}
-	}
-
-	public function setDepthTexture(value:Texture2D):Void {
-		if (this._depthTexture != null) {
-			this._depthTexture.release();
-		}
-
-		if (value != null) {
-			this._depthTexture = value;
-			this._depthTexture.retain();
-
-			this.uniform("depthTexture").texture = this._depthTexture;
-
-		} else {
-			this.uniform("texture").texture = null;
-		}
-	}
-
-	public function setUvScaleOffset(uvScaleX:Float, uvScaleY:Float, uvOffsetX:Float, uvOffsetY:Float):Void {
-		this._uvScaleOffset[0] = uvScaleX;
-		this._uvScaleOffset[1] = uvScaleY;
-		this._uvScaleOffset[2] = uvOffsetX;
-		this._uvScaleOffset[3] = uvOffsetY;
-
-		this.uniform("uvScaleOffset").floatArrayValue = this._uvScaleOffset;
-	}
-
-	public function setFocalDepth(focalDepth:Float):Void {
-		this._focalDepth = focalDepth;
-
-		this.uniform("focalDepth").floatValue = this._focalDepth;
-	}
-
-}
 

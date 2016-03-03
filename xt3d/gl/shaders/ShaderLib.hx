@@ -68,6 +68,53 @@ class ShaderLib  {
 				vertexProgram: "depth_debug_vertex",
 				fragmentProgram: "depth_debug_fragment",
 				commonUniformGroups: ["matrixCommon", "texture"]
+			},
+			"blurX9" => {
+				vertexProgram: "blur9_vertex",
+				fragmentProgram: "blur9_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				vertexDefines: ["#define BLUR_X"],
+				uniforms: [
+					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
+				]
+			},
+			"blurY9" => {
+				vertexProgram: "blur9_vertex",
+				fragmentProgram: "blur9_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				vertexDefines: ["#define BLUR_Y"],
+				uniforms: [
+					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
+				]
+			},
+			"blurX15" => {
+				vertexProgram: "blur15_vertex",
+				fragmentProgram: "blur15_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				vertexDefines: ["#define BLUR_X"],
+				uniforms: [
+					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
+				]
+			},
+			"blurY15" => {
+				vertexProgram: "blur15_vertex",
+				fragmentProgram: "blur15_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				vertexDefines: ["#define BLUR_Y"],
+				uniforms: [
+					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
+				]
+			},
+			"depthOfFieldBokeh" => {
+				vertexProgram: "depthOfFieldBokeh_vertex",
+				fragmentProgram: "depthOfFieldBokeh_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				uniforms: [
+					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
+					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
+					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "f", defaultValue: "1" },
+					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "f", defaultValue: "1" }
+				]
 			}
 		];
 
