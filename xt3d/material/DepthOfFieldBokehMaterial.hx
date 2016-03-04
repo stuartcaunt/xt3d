@@ -2,15 +2,15 @@ package xt3d.material;
 
 import xt3d.textures.Texture2D;
 
-class DepthOfFieldMaterial extends Material {
+class DepthOfFieldBokehMaterial extends Material {
 
 	private var _renderedTexture:Texture2D;
 	private var _depthTexture:Texture2D;
 	private var _uvScaleOffset:Array<Float> = new Array<Float>();
 	private var _focalDepth:Float;
 
-	public static function create():DepthOfFieldMaterial {
-		var object = new DepthOfFieldMaterial();
+	public static function create():DepthOfFieldBokehMaterial {
+		var object = new DepthOfFieldBokehMaterial();
 
 		if (object != null && !(object.init())) {
 			object = null;

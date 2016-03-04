@@ -3,7 +3,7 @@ package xt3d.view.filters;
 import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
 import xt3d.material.DepthMaterial;
-import xt3d.material.DepthOfFieldMaterial;
+import xt3d.material.DepthOfFieldBokehMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.color.Color;
 import xt3d.utils.geometry.Size;
@@ -11,7 +11,7 @@ import xt3d.textures.RenderTexture;
 import xt3d.material.Material;
 import xt3d.gl.shaders.ShaderTypedefs;
 
-class DepthOfFieldFilter extends BasicViewFilter {
+class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 	// properties
 
@@ -19,7 +19,7 @@ class DepthOfFieldFilter extends BasicViewFilter {
 	private var _depthTexture:RenderTexture;
 
 	// Material with depth of field shader
-	private var _depthOfFieldMaterial:DepthOfFieldMaterial;
+	private var _depthOfFieldMaterial:DepthOfFieldBokehMaterial;
 
 	// Material with depth shader
 	private var _depthMaterial:Material;
@@ -27,8 +27,8 @@ class DepthOfFieldFilter extends BasicViewFilter {
 	// Depth renderer overrider
 	private var _depthRendererOverrider:RendererOverrider;
 
-	public static function create(filteredView:View, scale:Float = 1.0):DepthOfFieldFilter {
-		var object = new DepthOfFieldFilter();
+	public static function create(filteredView:View, scale:Float = 1.0):DepthOfFieldBokehFilter {
+		var object = new DepthOfFieldBokehFilter();
 
 		if (object != null && !(object.init(filteredView, scale))) {
 			object = null;
@@ -94,7 +94,7 @@ class DepthOfFieldFilter extends BasicViewFilter {
 
 	override private function createRenderNodeMaterial():Material {
 		// Create the depth of field material
-		this._depthOfFieldMaterial = DepthOfFieldMaterial.create();
+		this._depthOfFieldMaterial = DepthOfFieldBokehMaterial.create();
 
 		// Create debug depth material
 //		var depthDebugMaterial = DepthDebugMaterial.create();

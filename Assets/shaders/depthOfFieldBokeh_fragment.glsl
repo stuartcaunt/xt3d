@@ -5,7 +5,7 @@ varying vec2 v_uv;
 
 #define PI  3.14159265
 
-const int samples = 5; //samples on the first ring
+const int samples = 3; //samples on the first ring
 const int rings = 5; //ring count
 
 float range = 0.2; //focal range
@@ -27,16 +27,16 @@ vec2 texel = vec2(1.0 / width, 1.0 / height);
 
 //processing the sample
 vec3 color(vec2 coords,float blur)  {
-//	vec3 col = vec3(0.0);
-//
-//	col.r = texture2D(u_texture, coords + vec2(0.0,1.0) * texel * fringe * blur).r;
-//	col.g = texture2D(u_texture, coords + vec2(-0.866,-0.5) * texel * fringe * blur).g;
-//	col.b = texture2D(u_texture, coords + vec2(0.866,-0.5) * texel * fringe * blur).b;
-//
-//	vec3 lumcoeff = vec3(0.299,0.587,0.114);
-//	float lum = dot(col.rgb, lumcoeff);
-//	float thresh = max((lum-threshold)*gain, 0.0);
-//	return col+mix(vec3(0.0),col,thresh*blur);
+	vec3 col = vec3(0.0);
+
+	col.r = texture2D(u_texture, coords + vec2(0.0,1.0) * texel * fringe * blur).r;
+	col.g = texture2D(u_texture, coords + vec2(-0.866,-0.5) * texel * fringe * blur).g;
+	col.b = texture2D(u_texture, coords + vec2(0.866,-0.5) * texel * fringe * blur).b;
+
+	vec3 lumcoeff = vec3(0.299,0.587,0.114);
+	float lum = dot(col.rgb, lumcoeff);
+	float thresh = max((lum-threshold)*gain, 0.0);
+	return col+mix(vec3(0.0),col,thresh*blur);
 
 
 	return texture2D(u_texture, coords).rgb;
@@ -73,10 +73,12 @@ void main() {
 	int ringsamples;
 
 	for (int i = 1; i <= rings; i += 1) {
-		//ringsamples = i * samples;
+		ringsamples = i * samples;
 
-		for (int j = 0 ; j < samples ; j += 1) {
-			float step = PI * 2.0 / float(samples);
+		for (int j = 0 ; j < ringsamples ; j += 1) {
+			float step = PI * 2.0 / float(ringsamples);
+		//for (int j = 0 ; j < samples ; j += 1) {
+			//float step = PI * 2.0 / float(samples);
 			float pw = (cos(float(j) * step) * float(i));
 			float ph = (sin(float(j) * step) * float(i));
 			float p = 1.0;
