@@ -11,19 +11,19 @@ class TestFilter extends BasicViewFilter {
 	// members
 	private var _filterMaterial:TextureMaterial;
 
-	public static function create(filteredView:View):TestFilter {
+	public static function create(filteredView:View, scale:Float):TestFilter {
 		var object = new TestFilter();
 
-		if (object != null && !(object.init(filteredView))) {
+		if (object != null && !(object.init(filteredView, scale))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(filteredView:View):Bool {
+	public function init(filteredView:View, scale:Float):Bool {
 		var ok;
-		if ((ok = super.initBasicViewFilter(filteredView))) {
+		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 		}
 
 		return ok;
