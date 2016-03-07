@@ -3,7 +3,8 @@
 
 varying vec2 v_uv;
 
-#define PI  3.14159265
+#define PI  3.1415926
+#define MAX_RING_SAMPLES 18
 
 const int samples = 3; //samples on the first ring
 const int rings = 5; //ring count
@@ -20,14 +21,11 @@ float fringe = 0.5; //bokeh chromatic aberration/fringing
 bool noise = true; //use noise instead of pattern for sample dithering
 float namount = 0.0001; //dither amount
 
-float width = u_textureWidth;
-float height = u_textureHeight;
-vec2 texel = vec2(1.0 / width, 1.0 / height);
-
-
 //processing the sample
 vec3 color(vec2 coords,float blur)  {
 	vec3 col = vec3(0.0);
+
+	vec2 texel = vec2(1.0 / u_textureWidth, 1.0 / u_textureHeight);
 
 	col.r = texture2D(u_texture, coords + vec2(0.0,1.0) * texel * fringe * blur).r;
 	col.g = texture2D(u_texture, coords + vec2(-0.866,-0.5) * texel * fringe * blur).g;
@@ -44,8 +42,8 @@ vec3 color(vec2 coords,float blur)  {
 
 //generating noise/pattern texture for dithering
 vec2 rand(in vec2 coord)  {
-	float noiseX = ((fract(1.0 - coord.s * (width / 2.0)) * 0.25) + (fract(coord.t * (height / 2.0)) * 0.75)) * 2.0 - 1.0;
-	float noiseY = ((fract(1.0 - coord.s * (width / 2.0)) * 0.75) + (fract(coord.t * (height / 2.0)) * 0.25)) * 2.0 - 1.0;
+	float noiseX = ((fract(1.0 - coord.s * (u_textureWidth / 2.0)) * 0.25) + (fract(coord.t * (u_textureHeight / 2.0)) * 0.75)) * 2.0 - 1.0;
+	float noiseY = ((fract(1.0 - coord.s * (u_textureWidth / 2.0)) * 0.75) + (fract(coord.t * (u_textureHeight / 2.0)) * 0.25)) * 2.0 - 1.0;
 
 	if (noise) {
 		noiseX = clamp(fract(sin(dot(coord, vec2(12.9898, 78.233))) * 43758.5453), 0.0, 1.0) * 2.0 - 1.0;
@@ -64,6 +62,7 @@ void main() {
 
 	vec2 noise = rand(v_uv) * namount * blur;
 
+	vec2 texel = vec2(1.0 / u_textureWidth, 1.0 / u_textureHeight);
 	float w = texel.x * blur + noise.x;
 	float h = texel.y * blur + noise.y;
 
@@ -72,13 +71,15 @@ void main() {
 
 	int ringsamples;
 
-	for (int i = 1; i <= rings; i += 1) {
+	for (int i = 1; i <= 5; i++) {
 		ringsamples = i * samples;
 
-		for (int j = 0 ; j < ringsamples ; j += 1) {
+		for (int j = 0 ; j < MAX_RING_SAMPLES ; j++) {
+			if (j >= ringsamples) {
+				break;
+			}
+
 			float step = PI * 2.0 / float(ringsamples);
-		//for (int j = 0 ; j < samples ; j += 1) {
-			//float step = PI * 2.0 / float(samples);
 			float pw = (cos(float(j) * step) * float(i));
 			float ph = (sin(float(j) * step) * float(i));
 			float p = 1.0;
