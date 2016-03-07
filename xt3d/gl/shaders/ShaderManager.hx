@@ -158,13 +158,7 @@ class ShaderManager {
 		if (program == null) {
 
 			// If it doesn't exist create the shader (if possible)
-			try {
-				program = this.createShaderProgram(name);
-
-			} catch (error:XTException) {
-				throw new XTException("NoProgramExistsForKey", "No shader program exists with the name \"" + name + "\"");
-			}
-
+			program = this.createShaderProgram(name);
 		}
 
 		return program;

@@ -40,6 +40,7 @@ class BlurMaterial extends Material {
 	public function setTexture(value:Texture2D):Void {
 		if (this._texture != null) {
 			this._texture.release();
+			this._texture = null;
 		}
 
 		if (value != null) {

@@ -30,6 +30,7 @@ class DepthOfFieldBokehMaterial extends Material {
 	public function setRenderedTexture(value:Texture2D):Void {
 		if (this._renderedTexture != null) {
 			this._renderedTexture.release();
+			this._renderedTexture = null;
 		}
 
 		if (value != null) {
@@ -52,6 +53,7 @@ class DepthOfFieldBokehMaterial extends Material {
 	public function setDepthTexture(value:Texture2D):Void {
 		if (this._depthTexture != null) {
 			this._depthTexture.release();
+			this._depthTexture = null;
 		}
 
 		if (value != null) {

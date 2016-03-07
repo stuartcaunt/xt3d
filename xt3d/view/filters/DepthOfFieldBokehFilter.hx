@@ -70,7 +70,7 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 			}
 
 			// Create render texture with only color render buffer
-			var textureOptions = (this._scale != 1.0) ? TextureOptions.NEAREST_REPEAT_POT : null;
+			var textureOptions = (this._scale != 1.0) ? TextureOptions.LINEAR_REPEAT_POT : null;
 			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), null, XTGL.DepthStencilFormatDepth);
 			this._depthTexture.clearColor = Color.createWithRGBAHex(0x00000000);
 		}

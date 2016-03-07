@@ -56,7 +56,6 @@ class BasicViewFilter extends ViewFilter {
 			// If scaling then use linear interp with texture
 			var textureOptions = (this._scale != 1.0) ? TextureOptions.LINEAR_REPEAT_POT : null;
 			this._renderTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), textureOptions, depthStencilFormat);
-			this._renderTexture.clearColor = Color.createWithRGBAHex(0x00000000);
 
 			// TODO set stencilEnabled here ?
 		}
