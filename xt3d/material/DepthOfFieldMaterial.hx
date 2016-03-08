@@ -4,11 +4,19 @@ import xt3d.textures.Texture2D;
 
 class DepthOfFieldMaterial extends Material {
 
+	// Properties
+	public var renderedTexture(get, set):Texture2D;
+	public var depthTexture(get, set):Texture2D;
+	public var focalDepth(get, set):Float;
+	public var focalRange(get, set):Float;
+
+	// Members
 	private var _isHorizontal:Bool;
 	private var _renderedTexture:Texture2D;
 	private var _depthTexture:Texture2D;
 	private var _uvScaleOffset:Array<Float> = new Array<Float>();
 	private var _focalDepth:Float;
+	private var _focalRange:Float;
 
 	public static function create(isHorizontal:Bool):DepthOfFieldMaterial {
 		var object = new DepthOfFieldMaterial();
@@ -37,6 +45,48 @@ class DepthOfFieldMaterial extends Material {
 
 		return isOk;
 	}
+
+
+	/* ----------- Properties ----------- */
+
+	public inline function get_renderedTexture():Texture2D {
+		return this._renderedTexture;
+	}
+
+	public inline function set_renderedTexture(value:Texture2D) {
+		this.setRenderedTexture(value);
+		return this._renderedTexture;
+	}
+
+	public inline function get_depthTexture():Texture2D {
+		return this._depthTexture;
+	}
+
+	public inline function set_depthTexture(value:Texture2D) {
+		this.setDepthTexture(value);
+		return this._depthTexture;
+	}
+
+	inline function get_focalDepth():Float {
+		return this._focalDepth;
+	}
+
+	inline function set_focalDepth(value:Float) {
+		this.setFocalDepth(value);
+		return this._focalDepth;
+	}
+
+	inline function get_focalRange():Float {
+		return this._focalRange;
+	}
+
+	inline function set_focalRange(value:Float) {
+		this.setFocalRange(value);
+		return this._focalRange;
+	}
+
+
+	/* --------- Implementation --------- */
 
 	public function setRenderedTexture(value:Texture2D):Void {
 		if (this._renderedTexture != null) {
@@ -95,5 +145,11 @@ class DepthOfFieldMaterial extends Material {
 		this._focalDepth = focalDepth;
 
 		this.uniform("focalDepth").floatValue = this._focalDepth;
+	}
+
+	public function setFocalRange(focalRange:Float):Void {
+		this._focalRange = focalRange;
+
+		this.uniform("focalRange").floatValue = this._focalRange;
 	}
 }

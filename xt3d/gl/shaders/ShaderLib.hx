@@ -113,6 +113,7 @@ class ShaderLib  {
 				uniforms: [
 					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
 					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
+					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "0.2" },
 					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},
@@ -124,6 +125,7 @@ class ShaderLib  {
 				uniforms: [
 					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
 					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
+					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "0.2" },
 					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},

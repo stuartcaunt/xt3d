@@ -1,13 +1,12 @@
 varying vec2 v_uv;
 varying vec2 v_uvBlur[14];
 
-float range = 0.2; //focal range
 float maxblur = 2.0; //clamp value of max blur
 
 void main() {
 	float depth = vec4ToFloat(texture2D(u_depthTexture, v_uv));
 
-	float blur = clamp((abs(depth - u_focalDepth) / range), 0.0, maxblur);
+	float blur = clamp((abs(depth - u_focalDepth) / u_focalRange), 0.0, maxblur);
 
 	// Damp blurring on back plane: could be optional, or we could try blurring the depth texture too
 	if (depth == 0.0) {

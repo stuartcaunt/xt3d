@@ -13,6 +13,9 @@ import xt3d.material.Material;
 class DepthOfFieldFilter extends BasicViewFilter {
 
 	// properties
+	public var focalDepth(get, set):Float;
+	public var focalRange(get, set):Float;
+
 
 	// members
 	private static var DEPTH_TEXTURE_NAME:String = "DoF_depthTexture";
@@ -27,39 +30,44 @@ class DepthOfFieldFilter extends BasicViewFilter {
 	private var _depthRendererOverrider:RendererOverrider;
 
 	private var _isHorizontal:Bool;
+	private var _firstPass:DepthOfFieldFilter;
+	private var _focalDepth:Float = 0.5;
+	private var _focalRange:Float = 0.2;
+	private var _focalsDirty:Bool = true;
 
 
 	public static function create(filteredView:View, scale:Float = 1.0):DepthOfFieldFilter {
 		var horizontalDoF = DepthOfFieldFilter.createHorizontal(filteredView, scale);
 		if (horizontalDoF != null) {
-			return DepthOfFieldFilter.createVertical(horizontalDoF, scale);
+			return DepthOfFieldFilter.createVertical(horizontalDoF, scale, horizontalDoF);
 		}
 
 		return null;
 	}
 
-	public static function createHorizontal(filteredView:View, scale:Float = 1.0):DepthOfFieldFilter {
+	public static function createHorizontal(filteredView:View, scale:Float = 1.0, firstPass:DepthOfFieldFilter = null):DepthOfFieldFilter {
 		var object = new DepthOfFieldFilter();
 
-		if (object != null && !(object.init(filteredView, scale, true))) {
+		if (object != null && !(object.init(filteredView, scale, true, firstPass))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createVertical(filteredView:View, scale:Float = 1.0):DepthOfFieldFilter {
+	public static function createVertical(filteredView:View, scale:Float = 1.0, firstPass:DepthOfFieldFilter = null):DepthOfFieldFilter {
 		var object = new DepthOfFieldFilter();
 
-		if (object != null && !(object.init(filteredView, scale, false))) {
+		if (object != null && !(object.init(filteredView, scale, false, firstPass))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(filteredView:View, scale:Float = 1.0, isHorizontal:Bool):Bool {
+	public function init(filteredView:View, scale:Float = 1.0, isHorizontal:Bool, firstPass:DepthOfFieldFilter = null):Bool {
 		this._isHorizontal = isHorizontal;
+		this._firstPass = firstPass;
 		var ok;
 		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 
@@ -75,6 +83,36 @@ class DepthOfFieldFilter extends BasicViewFilter {
 
 
 	/* ----------- Properties ----------- */
+
+
+	inline function get_focalDepth():Float {
+		return this._focalDepth;
+	}
+
+	inline function set_focalDepth(value:Float) {
+		if (this._firstPass != null) {
+			this._firstPass.focalDepth = value;
+		}
+
+		this._focalsDirty = true;
+
+		return this._focalDepth = value;
+	}
+
+	inline function get_focalRange():Float {
+		return this._focalRange;
+	}
+
+	inline function set_focalRange(value:Float) {
+		if (this._firstPass != null) {
+			this._firstPass.focalRange = value;
+		}
+
+		this._focalsDirty = true;
+
+		return this._focalRange = value;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -116,13 +154,18 @@ class DepthOfFieldFilter extends BasicViewFilter {
 
 	override private function updateRenderMaterials():Void {
 		// Set the texture in the material
-		this._depthOfFieldMaterial.setRenderedTexture(this._renderTexture);
+		this._depthOfFieldMaterial.renderedTexture = this._renderTexture;
 
 		// Set shared depth texture
 		var depthTexture = this.getSharedRenderTexture(DEPTH_TEXTURE_NAME);
-		this._depthOfFieldMaterial.setDepthTexture(depthTexture);
+		this._depthOfFieldMaterial.depthTexture = depthTexture;
 
-		this._depthOfFieldMaterial.setFocalDepth(0.6);
+		if (this._focalsDirty) {
+			this._depthOfFieldMaterial.focalDepth = this._focalDepth;
+			this._depthOfFieldMaterial.focalRange = this._focalRange;
+
+			this._focalsDirty = false;
+		}
 	}
 }
 
