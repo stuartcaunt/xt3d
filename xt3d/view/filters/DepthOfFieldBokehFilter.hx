@@ -71,8 +71,7 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 			// Create render texture with only color render buffer
 			var textureOptions = (this._scale != 1.0) ? TextureOptions.LINEAR_REPEAT_POT : null;
-			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), null, XTGL.DepthStencilFormatDepth);
-			this._depthTexture.clearColor = Color.createWithRGBAHex(0x00000000);
+			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), textureOptions, XTGL.DepthStencilFormatDepth);
 		}
 	}
 
@@ -82,14 +81,8 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 		// Render to the depth texture
 
-		// Transparent fill
-		this._depthTexture.beginWithClear();
-
 		// Render depth using the overrider
-		this._depthTexture.render(this._filteredView, this._depthRendererOverrider);
-
-		// End render to texture
-		this._depthTexture.end();
+		this._depthTexture.renderWithClear(this._filteredView, this._depthRendererOverrider);
 	}
 
 	override private function createRenderNodeMaterial():Material {

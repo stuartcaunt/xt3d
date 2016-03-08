@@ -105,6 +105,28 @@ class ShaderLib  {
 					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},
+			"depthOfFieldX" => {
+				vertexProgram: "depthOfField_vertex",
+				fragmentProgram: "depthOfField_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				vertexDefines: ["#define DoF_X"],
+				uniforms: [
+					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
+					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
+					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
+				]
+			},
+			"depthOfFieldY" => {
+				vertexProgram: "depthOfField_vertex",
+				fragmentProgram: "depthOfField_fragment",
+				commonUniformGroups: ["matrixCommon", "texture"],
+				vertexDefines: ["#define DoF_Y"],
+				uniforms: [
+					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
+					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
+					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
+				]
+			},
 			"depthOfFieldBokeh" => {
 				vertexProgram: "depthOfFieldBokeh_vertex",
 				fragmentProgram: "depthOfFieldBokeh_fragment",

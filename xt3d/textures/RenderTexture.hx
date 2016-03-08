@@ -179,7 +179,7 @@ class RenderTexture extends Texture2D {
 	}
 
 	public function updateView(view:View, rendererOverrider:RendererOverrider = null):Void {
-		// Render the view
+		// Update the view
 		view.updateView(rendererOverrider);
 	}
 
@@ -193,6 +193,17 @@ class RenderTexture extends Texture2D {
 
 		// Put back old render target
 		renderer.renderTarget = this._oldRenderTarget;
+	}
+
+	public function renderWithClear(view:View, rendererOverrider:RendererOverrider = null, clearColor:Color = null):Void {
+		// Clear and set viewport
+		this.beginWithClear(clearColor);
+
+		// Render
+		this.render(view, rendererOverrider);
+
+		// End
+		this.end();
 	}
 
 }

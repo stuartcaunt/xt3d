@@ -1,5 +1,7 @@
 package xt3d.view.filters;
 
+import xt3d.textures.RenderTexture;
+import xt3d.textures.TextureOptions;
 import lime.graphics.opengl.GL;
 import xt3d.gl.XTGL;
 import xt3d.material.Material;
@@ -16,11 +18,15 @@ import xt3d.node.Scene;
 class ViewFilter extends View {
 
 	// properties
+	private var renderTargetStore(get, null):RenderTargetStore;
 
 	// members
 	private var _filteredView:View;
 	private var _planeNode:MeshNode;
 	private var _material:Material;
+
+	private var _renderTargetStore:RenderTargetStore;
+
 
 	public function initViewFilter(filteredView:View):Bool {
 		// Store filtered view
@@ -57,16 +63,42 @@ class ViewFilter extends View {
 		return true;
 	}
 
+	function get_renderTargetStore():RenderTargetStore {
+		if (this._renderTargetStore != null) {
+			return this._renderTargetStore;
+
+		} else {
+			var viewFilter = cast(this._filteredView, ViewFilter);
+			return viewFilter.renderTargetStore;
+		}
+	}
+
 
 	/* ----------- Properties ----------- */
 
 	/* --------- Implementation --------- */
 
 	override public function onEnter():Void {
+		super.onEnter();
+
+		// Create render texture store if filteredView is not a ViewFilter
+		if (!Std.is(this._filteredView, ViewFilter)) {
+			this._renderTargetStore = RenderTargetStore.create();
+		}
+
 		this._filteredView.onEnter();
 	}
 
 	override public function onExit():Void {
+		super.onExit();
+
+		// Create render texture store if filteredView is not a ViewFilter
+		if (this._renderTargetStore != null) {
+			this._renderTargetStore.dispose();
+
+			this._renderTargetStore = null;
+		}
+
 		this._filteredView.onExit();
 	}
 
@@ -94,6 +126,11 @@ class ViewFilter extends View {
 
 		// Update render material
 		this.updateRenderMaterials();
+
+		// Render shared render targets
+		if (this._renderTargetStore != null) {
+			_renderTargetStore.renderToRenderTargets();
+		}
 
 		// Render view to targets
 		this.renderToRenderTargets();
@@ -148,5 +185,21 @@ class ViewFilter extends View {
 		// Todo : handle orientation ?
 	}
 
+
+	private function registerSharedRenderTarget(targetName, targetRenderer:RenderTexture -> Void):Void {
+		this.renderTargetStore.registerRenderTarget(targetName, targetRenderer);
+	}
+
+	private function unregisterSharedRenderTarget(targetName):Void {
+		this.renderTargetStore.unregisterRenderTarget(targetName);
+	}
+
+	private function updateSharedRenderTarget(targetName:String, size:Size<Int>, textureOptions:TextureOptions = null, depthStencilFormat:Int = XTGL.DepthStencilFormatDepth):Void {
+		this.renderTargetStore.updateRenderTarget(targetName, size, textureOptions, depthStencilFormat);
+	}
+
+	private function getSharedRenderTexture(targetName:String):RenderTexture {
+		return this.renderTargetStore.getRenderTexture(targetName);
+	}
 
 }

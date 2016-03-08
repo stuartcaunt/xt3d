@@ -81,7 +81,7 @@ class DepthOfFieldBasicFilter extends BasicViewFilter {
 			}
 
 			// Create render texture with only color render buffer
-			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), null, XTGL.DepthStencilFormatDepth);
+			this._depthTexture = RenderTexture.create(Size.createIntSize(Std.int(desiredWidth), Std.int(desiredHeight)), textureOptions, XTGL.DepthStencilFormatDepth);
 		}
 	}
 
@@ -94,26 +94,13 @@ class DepthOfFieldBasicFilter extends BasicViewFilter {
 
 		// Render to blur render target
 
-
-		// clear render texture
-		this._blurredTexture.beginWithClear();
-
 		// Render filtered view to render texture
-		this._blurredTexture.render(this._blurFilter);
-
-		// End render to texture
-		this._blurredTexture.end();
+		this._blurredTexture.renderWithClear(this._blurFilter);
 
 		// Render to the depth texture
 
-		// Transparent fill
-		this._depthTexture.beginWithClear();
-
-		// Render depth using the overrider
-		this._depthTexture.render(this._filteredView, this._depthRendererOverrider);
-
-		// End render to texture
-		this._depthTexture.end();
+		// Render depth
+		this._depthTexture.renderWithClear(this._filteredView, this._depthRendererOverrider);
 	}
 
 	override private function createRenderNodeMaterial():Material {

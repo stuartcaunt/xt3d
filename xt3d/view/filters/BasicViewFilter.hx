@@ -62,20 +62,10 @@ class BasicViewFilter extends ViewFilter {
 	}
 
 	override private function renderToRenderTargets():Void {
+		// Opaque or transparent fill
+		var clearColor:Color = this._filteredView.isOpaque ? this._filteredView.backgroundColor : null;
+
 		// clear render texture
-		if (this._filteredView.isOpaque) {
-			// Opaque fill
-			this._renderTexture.beginWithClear(this._filteredView.backgroundColor);
-
-		} else {
-			// Transparent fill
-			this._renderTexture.beginWithClear();
-		}
-
-		// Render filtered view to render texture
-		this._renderTexture.render(this._filteredView);
-
-		// End render to texture
-		this._renderTexture.end();
+		this._renderTexture.renderWithClear(this._filteredView, null, clearColor);
 	}
 }
