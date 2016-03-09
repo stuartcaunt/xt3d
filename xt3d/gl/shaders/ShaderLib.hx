@@ -136,6 +136,12 @@ class ShaderLib  {
 				uniforms: [
 					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
 					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
+					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "0.2" },
+					"highlightThreshold" => { name: "u_highlightThreshold", type: "float", shader: "f", defaultValue: "0.5" },
+					"highlightGain" => { name: "u_highlightGain", type: "float", shader: "f", defaultValue: "5.0" },
+					"chromaticFringe" => { name: "u_chromaticFringe", type: "float", shader: "f", defaultValue: "0.5" },
+					"edgeBias" => { name: "u_edgeBias", type: "float", shader: "f", defaultValue: "0.4" },
+					"dither" => { name: "u_dither", type: "float", shader: "f", defaultValue: "0.0001" },
 					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "f", defaultValue: "1" },
 					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "f", defaultValue: "1" }
 				]

@@ -14,6 +14,13 @@ import xt3d.gl.shaders.ShaderTypedefs;
 class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 	// properties
+	public var focalDepth(get, set):Float;
+	public var focalRange(get, set):Float;
+	public var highlightThreshold(get, set):Float;
+	public var highlightGain(get, set):Float;
+	public var chromaticFringe(get, set):Float;
+	public var edgeBias(get, set):Float;
+	public var dither(get, set):Float;
 
 	// members
 	private var _depthTexture:RenderTexture;
@@ -26,6 +33,15 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 	// Depth renderer overrider
 	private var _depthRendererOverrider:RendererOverrider;
+
+	private var _uniformsDirty:Bool = false;
+	private var _focalDepth:Float = 0.5;
+	private var _focalRange:Float = 0.2;
+	private var _highlightThreshold:Float = 0.5; // highlight threshold;
+	private var _highlightGain:Float = 5.0; // highlight gain;
+	private var _chromaticFringe:Float = 0.5; // bokeh chromatic aberration/fringing
+	private var _edgeBias:Float = 0.4; // bokeh edge bias
+	private var _dither:Float = 0.0001; // dither amount
 
 	public static function create(filteredView:View, scale:Float = 1.0):DepthOfFieldBokehFilter {
 		var object = new DepthOfFieldBokehFilter();
@@ -53,6 +69,71 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 
 	/* ----------- Properties ----------- */
+
+
+	inline function get_focalDepth():Float {
+		return this._focalDepth;
+	}
+
+	inline function set_focalDepth(value:Float) {
+		this._uniformsDirty = true;
+		return this._focalDepth = value;
+	}
+
+	inline function get_focalRange():Float {
+		return this._focalRange;
+	}
+
+	inline function set_focalRange(value:Float) {
+		this._uniformsDirty = true;
+		return this._focalRange = value;
+	}
+
+	inline function get_highlightThreshold():Float {
+		return this._highlightThreshold;
+	}
+
+	inline function set_highlightThreshold(value:Float) {
+		this._uniformsDirty = true;
+		return this._highlightThreshold = value;
+	}
+
+	inline function get_highlightGain():Float {
+		return this._highlightGain;
+	}
+
+	inline function set_highlightGain(value:Float) {
+		this._uniformsDirty = true;
+		return this._highlightGain = value;
+	}
+
+	inline function get_chromaticFringe():Float {
+		return this._chromaticFringe;
+	}
+
+	inline function set_chromaticFringe(value:Float) {
+		this._uniformsDirty = true;
+		return this._chromaticFringe = value;
+	}
+
+	inline function get_edgeBias():Float {
+		return this._edgeBias;
+	}
+
+	inline function set_edgeBias(value:Float) {
+		this._uniformsDirty = true;
+		return this._edgeBias = value;
+	}
+
+	inline function get_dither():Float {
+		return this._dither;
+	}
+
+	inline function set_dither(value:Float) {
+		this._uniformsDirty = true;
+		return this._dither = value;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -98,8 +179,20 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 	override private function updateRenderMaterials():Void {
 		// Set the texture in the material
-		this._depthOfFieldMaterial.setRenderedTexture(this._renderTexture);
-		this._depthOfFieldMaterial.setDepthTexture(this._depthTexture);
+		this._depthOfFieldMaterial.renderedTexture = this._renderTexture;
+		this._depthOfFieldMaterial.depthTexture = this._depthTexture;
+
+		if (this._uniformsDirty) {
+			this._depthOfFieldMaterial.focalDepth = this._focalDepth;
+			this._depthOfFieldMaterial.focalRange = this._focalRange;
+			this._depthOfFieldMaterial.highlightThreshold = this._highlightThreshold;
+			this._depthOfFieldMaterial.highlightGain = this._highlightGain;
+			this._depthOfFieldMaterial.chromaticFringe = this._chromaticFringe;
+			this._depthOfFieldMaterial.edgeBias = this._edgeBias;
+			this._depthOfFieldMaterial.dither = this._dither;
+
+			this._uniformsDirty = false;
+		}
 	}
 }
 

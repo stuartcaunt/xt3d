@@ -8,36 +8,27 @@ varying vec2 v_uv;
 
 const int samples = 3; //samples on the first ring
 const int rings = 5; //ring count
-
-float range = 0.2; //focal range
 float maxblur = 1.25; //clamp value of max blur
 
-float threshold = 0.5; //highlight threshold;
-float gain = 10.0; //highlight gain;
-
-float bias = 0.4; //bokeh edge bias
-float fringe = 0.5; //bokeh chromatic aberration/fringing
-
 bool noise = true; //use noise instead of pattern for sample dithering
-float namount = 0.0001; //dither amount
 
-//processing the sample
-vec3 color(vec2 coords,float blur)  {
-	vec3 col = vec3(0.0);
+vec4 color(vec2 coords,float blur)  {
+	vec4 col = vec4(0.0);
 
 	vec2 texel = vec2(1.0 / u_textureWidth, 1.0 / u_textureHeight);
 
-	col.r = texture2D(u_texture, coords + vec2(0.0,1.0) * texel * fringe * blur).r;
-	col.g = texture2D(u_texture, coords + vec2(-0.866,-0.5) * texel * fringe * blur).g;
-	col.b = texture2D(u_texture, coords + vec2(0.866,-0.5) * texel * fringe * blur).b;
+	col.r = texture2D(u_texture, coords + vec2( 0.0,   1.0) * texel * u_chromaticFringe * blur).r;
+	col.g = texture2D(u_texture, coords + vec2(-0.866,-0.5) * texel * u_chromaticFringe * blur).g;
+	col.b = texture2D(u_texture, coords + vec2( 0.866,-0.5) * texel * u_chromaticFringe * blur).b;
+	col.a = texture2D(u_texture, coords).a;
 
-	vec3 lumcoeff = vec3(0.299,0.587,0.114);
-	float lum = dot(col.rgb, lumcoeff);
-	float thresh = max((lum-threshold)*gain, 0.0);
-	return col+mix(vec3(0.0),col,thresh*blur);
+	vec4 lumcoeff = vec4(0.299, 0.587, 0.114, 0.0);
+	float lum = dot(col, lumcoeff);
+	float thresh = max((lum - u_highlightThreshold) * u_highlightGain, 0.0);
 
+	return col + mix(vec4(0.0), col, thresh * blur);
 
-	return texture2D(u_texture, coords).rgb;
+//	return texture2D(u_texture, coords);
 }
 
 //generating noise/pattern texture for dithering
@@ -50,7 +41,7 @@ vec2 rand(in vec2 coord)  {
 		noiseY = clamp(fract(sin(dot(coord, vec2(12.9898, 78.233) * 2.0)) * 43758.5453), 0.0, 1.0) * 2.0 - 1.0;
 	}
 
-	return vec2(noiseX,noiseY);
+	return vec2(noiseX, noiseY);
 }
 
 void main() {
@@ -58,42 +49,48 @@ void main() {
 	float depth = vec4ToFloat(texture2D(u_depthTexture, v_uv));
 	float blur = 0.0;
 
-	blur = clamp((abs(depth - u_focalDepth) / range), -maxblur, maxblur);
+	blur = clamp((abs(depth - u_focalDepth) / u_focalRange), -maxblur, maxblur);
 
-	vec2 noise = rand(v_uv) * namount * blur;
+	// Damp blurring on back plane: could be optional, or we could try blurring the depth texture too
+//	if (depth == 0.0) {
+//		blur = 0.2 * maxblur;
+//	}
+
+	vec2 noise = rand(v_uv) * u_dither * blur;
 
 	vec2 texel = vec2(1.0 / u_textureWidth, 1.0 / u_textureHeight);
 	float w = texel.x * blur + noise.x;
 	float h = texel.y * blur + noise.y;
 
-	vec3 col = texture2D(u_texture, v_uv).rgb;
+	vec4 col = texture2D(u_texture, v_uv);
 	float s = 1.0;
 
 	int ringsamples;
+	float mixFactor;
+	float step;
+	float pw, ph;
+	int i, j;
 
-	for (int i = 1; i <= 5; i++) {
+	for (i = 1; i <= 5; i++) {
 		ringsamples = i * samples;
+		mixFactor = mix(1.0, (float(i)) / (float(rings)), u_edgeBias);
 
-		for (int j = 0 ; j < MAX_RING_SAMPLES ; j++) {
+		for (j = 0 ; j < MAX_RING_SAMPLES ; j++) {
 			if (j >= ringsamples) {
 				break;
 			}
 
-			float step = PI * 2.0 / float(ringsamples);
-			float pw = (cos(float(j) * step) * float(i));
-			float ph = (sin(float(j) * step) * float(i));
-			float p = 1.0;
+			step = PI * 2.0 / float(ringsamples);
+			pw = (cos(float(j) * step) * float(i));
+			ph = (sin(float(j) * step) * float(i));
 
-			col += color(v_uv + vec2(pw * w, ph * h), blur) * mix(1.0, (float(i)) / (float(rings)), bias) * p;
-			s += 1.0 * mix(1.0, (float(i)) / (float(rings)), bias) * p;
+			col += color(v_uv + vec2(pw * w, ph * h), blur) * mixFactor;
+			s += mixFactor;
 		}
 	}
 
 	col /= s;
 
-	gl_FragColor.rgb = col;
-	gl_FragColor.a = 1.0;
-
-	//gl_FragColor = texture2D(u_texture, v_uv);
+	gl_FragColor = col;
 }
 
