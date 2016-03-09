@@ -1,3 +1,18 @@
+0.2.0 / 2016-03-09
+===================
+
+ * DepthOfField with two-pass blur function.
+ * DepthOfField using blur/sharp image blurring.
+ * DepthOfField with Bokeh filter.
+ * Allow ViewFilters to be scaled from original (used in BlurFilter).
+ * Depth rendering shader.
+ * Fixed Node3D scaling issues.
+ * BlurViewFilter added.
+ * Added ViewFilter to provide post-processing functionalities
+ * Simplification of RenderTexture to render View objects.
+ * Refactoring render stage to allow for customisations.
+ * Added billboard node.
+
 0.1.11 / 2016-02-12
 ===================
 
