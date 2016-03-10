@@ -4,7 +4,7 @@ import xt3d.material.DepthMaterial;
 import xt3d.utils.XT;
 import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
-import xt3d.material.DepthOfFieldMaterial;
+import xt3d.material.filter.DepthOfFieldMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;
@@ -133,8 +133,8 @@ class DepthOfFieldFilter extends BasicViewFilter {
 		// Create standard render texture
 		super.updateRenderTargets();
 
-		var desiredWidth = Math.ceil(this._scale * this._viewportInPixels.width);
-		var desiredHeight = Math.ceil(this._scale * this._viewportInPixels.height);
+		var desiredWidth = Math.ceil(this._scale * this._viewportInPixels.width) * 0.5;
+		var desiredHeight = Math.ceil(this._scale * this._viewportInPixels.height) * 0.5;
 		var textureOptions = (this._scale != 1.0) ? TextureOptions.LINEAR_REPEAT_POT : null;
 
 		// Update shared depth texture

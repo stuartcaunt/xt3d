@@ -1,6 +1,6 @@
 package xt3d.view.filters;
 
-import xt3d.material.BlurMaterial;
+import xt3d.material.filter.BlurMaterial;
 import xt3d.material.Material;
 
 class BlurFilter extends BasicViewFilter {

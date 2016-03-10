@@ -10,9 +10,9 @@ void main() {
 	float blur = clamp((abs(depth - u_focalDepth) / u_focalRange), 0.0, maxblur);
 
 	// Damp blurring on back plane: could be optional, or we could try blurring the depth texture too
-	if (depth == 0.0) {
-		blur = 0.2 * maxblur;
-	}
+//	if (depth == 0.0) {
+//		blur = 0.2 * maxblur;
+//	}
 
 	gl_FragColor = vec4(0.0);
 	gl_FragColor += texture2D(u_texture, v_uv + v_uvBlur[ 0] * blur) * 0.0044299121055113265;

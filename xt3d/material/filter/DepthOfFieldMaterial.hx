@@ -1,4 +1,4 @@
-package xt3d.material;
+package xt3d.material.filter;
 
 import xt3d.textures.Texture2D;
 

@@ -3,7 +3,7 @@ package xt3d.view.filters;
 import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
 import xt3d.material.DepthMaterial;
-import xt3d.material.DepthOfFieldBokehMaterial;
+import xt3d.material.filter.DepthOfFieldBokehMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;
@@ -140,8 +140,8 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 		super.updateRenderTargets();
 
 		// Create depth render texture
-		var desiredWidth = Math.ceil(this._scale * this._viewportInPixels.width);
-		var desiredHeight = Math.ceil(this._scale * this._viewportInPixels.height);
+		var desiredWidth = Math.ceil(this._scale * this._viewportInPixels.width) * 0.5;
+		var desiredHeight = Math.ceil(this._scale * this._viewportInPixels.height) * 0.5;
 		if (this._depthTexture == null || this._depthTexture.contentSize.width != desiredWidth || this._depthTexture.contentSize.height != desiredHeight) {
 			if (this._depthTexture != null) {
 				this._depthTexture.dispose();
