@@ -8,7 +8,7 @@ varying vec2 v_uv;
 
 const int samples = 3; //samples on the first ring
 const int rings = 5; //ring count
-float maxblur = 1.25; //clamp value of max blur
+const float maxblur = 1.25; //clamp value of max blur
 
 bool noise = true; //use noise instead of pattern for sample dithering
 
@@ -46,10 +46,10 @@ vec2 rand(in vec2 coord)  {
 
 void main() {
 
-	float depth = vec4ToFloat(texture2D(u_depthTexture, v_uv));
+	float depth = getDepth(u_depthTexture, v_uv);
 	float blur = 0.0;
 
-	blur = clamp((abs(depth - u_focalDepth) / u_focalRange), -maxblur, maxblur);
+	blur = clamp((abs(depth - u_focalDepth) / u_focalRange), 0.0, maxblur);
 
 	// Damp blurring on back plane: could be optional, or we could try blurring the depth texture too
 //	if (depth == 0.0) {

@@ -5,11 +5,9 @@ import xt3d.gl.XTGL;
 import xt3d.material.DepthMaterial;
 import xt3d.material.DepthOfFieldBokehMaterial;
 import xt3d.core.RendererOverrider;
-import xt3d.utils.color.Color;
 import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;
 import xt3d.material.Material;
-import xt3d.gl.shaders.ShaderTypedefs;
 
 class DepthOfFieldBokehFilter extends BasicViewFilter {
 
@@ -29,14 +27,14 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 	private var _depthOfFieldMaterial:DepthOfFieldBokehMaterial;
 
 	// Material with depth shader
-	private var _depthMaterial:Material;
+	private var _depthMaterial:DepthMaterial;
 
 	// Depth renderer overrider
 	private var _depthRendererOverrider:RendererOverrider;
 
-	private var _uniformsDirty:Bool = false;
-	private var _focalDepth:Float = 0.5;
-	private var _focalRange:Float = 0.2;
+	private var _uniformsDirty:Bool = true;
+	private var _focalDepth:Float = 15.0;
+	private var _focalRange:Float = 10.0;
 	private var _highlightThreshold:Float = 0.5; // highlight threshold;
 	private var _highlightGain:Float = 5.0; // highlight gain;
 	private var _chromaticFringe:Float = 0.5; // bokeh chromatic aberration/fringing
@@ -58,10 +56,10 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 
 			// Create depth render material
-			var depthMaterial = DepthMaterial.create();
+			this._depthMaterial = DepthMaterial.create();
 
 			// Create renderer overrider with depth material
-			this._depthRendererOverrider = RendererOverrider.createWithMaterial(depthMaterial);
+			this._depthRendererOverrider = RendererOverrider.createWithMaterial(this._depthMaterial);
 		}
 
 		return ok;
@@ -170,17 +168,17 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 		// Create the depth of field material
 		this._depthOfFieldMaterial = DepthOfFieldBokehMaterial.create();
 
-		// Create debug depth material
-//		var depthDebugMaterial = DepthDebugMaterial.create();
-//		this._depthOfFieldMaterial = depthDebugMaterial;
-
 		return this._depthOfFieldMaterial;
 	}
 
 	override private function updateRenderMaterials():Void {
 		// Set the texture in the material
 		this._depthOfFieldMaterial.renderedTexture = this._renderTexture;
+
+		// Set depth texture and parameters to convert back to world z
 		this._depthOfFieldMaterial.depthTexture = this._depthTexture;
+		this._depthOfFieldMaterial.depthNear = this._depthMaterial.near;
+		this._depthOfFieldMaterial.depthFar = this._depthMaterial.far;
 
 		if (this._uniformsDirty) {
 			this._depthOfFieldMaterial.focalDepth = this._focalDepth;

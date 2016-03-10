@@ -7,6 +7,8 @@ class DepthOfFieldBokehMaterial extends Material {
 	// Properties
 	public var renderedTexture(get, set):Texture2D;
 	public var depthTexture(get, set):Texture2D;
+	public var depthNear(get, set):Float;
+	public var depthFar(get, set):Float;
 	public var focalDepth(get, set):Float;
 	public var focalRange(get, set):Float;
 	public var highlightThreshold(get, set):Float;
@@ -20,6 +22,9 @@ class DepthOfFieldBokehMaterial extends Material {
 	private var _renderedTexture:Texture2D;
 	private var _depthTexture:Texture2D;
 	private var _uvScaleOffset:Array<Float> = new Array<Float>();
+
+	private var _depthNear:Float;
+	private var _depthFar:Float;
 
 	private var _focalDepth:Float;
 	private var _focalRange:Float;
@@ -67,6 +72,24 @@ class DepthOfFieldBokehMaterial extends Material {
 	public inline function set_depthTexture(value:Texture2D) {
 		this.setDepthTexture(value);
 		return this._depthTexture;
+	}
+
+	inline function get_depthNear():Float {
+		return this._depthNear;
+	}
+
+	inline function set_depthNear(value:Float) {
+		this.setDepthNear(value);
+		return this.depthNear;
+	}
+
+	inline function get_depthFar():Float {
+		return this._depthFar;
+	}
+
+	inline function set_depthFar(value:Float) {
+		this.setDepthFar(value);
+		return this.depthFar;
 	}
 
 	inline function get_focalDepth():Float {
@@ -182,6 +205,16 @@ class DepthOfFieldBokehMaterial extends Material {
 		this._uvScaleOffset[3] = uvOffsetY;
 
 		this.uniform("uvScaleOffset").floatArrayValue = this._uvScaleOffset;
+	}
+
+	public function setDepthNear(depthNear:Float):Void {
+		this._depthNear = depthNear;
+		this.uniform("depthNear").floatValue = this._depthNear;
+	}
+
+	public function setDepthFar(depthFar:Float):Void {
+		this._depthFar = depthFar;
+		this.uniform("depthFar").floatValue = this._depthFar;
 	}
 
 	public function setFocalDepth(focalDepth:Float):Void {
