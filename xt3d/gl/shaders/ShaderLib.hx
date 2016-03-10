@@ -64,6 +64,11 @@ class ShaderLib  {
 				fragmentProgram: "depth_fragment",
 				commonUniformGroups: ["matrixCommon", "depth"]
 			},
+			"logDepth" => {
+				vertexProgram: "logDepth_vertex",
+				fragmentProgram: "logDepth_fragment",
+				commonUniformGroups: ["matrixCommon", "depth"]
+			},
 			"depth_debug" => {
 				vertexProgram: "depth_debug_vertex",
 				fragmentProgram: "depth_debug_fragment",
@@ -133,10 +138,13 @@ class ShaderLib  {
 				vertexProgram: "depthOfFieldBokeh_vertex",
 				fragmentProgram: "depthOfFieldBokeh_fragment",
 				commonUniformGroups: ["matrixCommon", "texture"],
+				fragmentIncludes: ["getDepth_fragment_part"],
 				uniforms: [
 					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
-					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
-					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "0.2" },
+					"depthNear" => { name: "u_depthNear", type: "float", shader: "f", defaultValue: "1.0" },
+					"depthFar" => { name: "u_depthFar", type: "float", shader: "f", defaultValue: "1000.0" },
+					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "15.0" },
+					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "4.0" },
 					"highlightThreshold" => { name: "u_highlightThreshold", type: "float", shader: "f", defaultValue: "0.5" },
 					"highlightGain" => { name: "u_highlightGain", type: "float", shader: "f", defaultValue: "5.0" },
 					"chromaticFringe" => { name: "u_chromaticFringe", type: "float", shader: "f", defaultValue: "0.5" },

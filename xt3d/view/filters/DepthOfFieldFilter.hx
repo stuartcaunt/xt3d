@@ -3,7 +3,7 @@ package xt3d.view.filters;
 import xt3d.utils.XT;
 import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
-import xt3d.material.DepthMaterial;
+import xt3d.material.LogDepthMaterial;
 import xt3d.material.DepthOfFieldMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.geometry.Size;
@@ -72,7 +72,7 @@ class DepthOfFieldFilter extends BasicViewFilter {
 		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 
 			// Create depth render material
-			var depthMaterial = DepthMaterial.create();
+			var depthMaterial = LogDepthMaterial.create();
 
 			// Create renderer overrider with depth material
 			this._depthRendererOverrider = RendererOverrider.createWithMaterial(depthMaterial);

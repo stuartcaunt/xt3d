@@ -100,9 +100,9 @@ class UniformLib {
 			},
 			"depth" => {
 				uniforms: [
-					"near" => { name: "u_near", type: "float", shader: "v", defaultValue: "1.0", global: true },
-					"far" => { name: "u_far", type: "float", shader: "v", defaultValue: "10.0", global: true },
-					"nearFarFactor" => { name: "u_nearFarFactor", type: "float", shader: "v", defaultValue: "1.0", global: true }
+					"near" => { name: "u_near", type: "float", shader: "fv", defaultValue: "1.0", global: true },
+					"far" => { name: "u_far", type: "float", shader: "fv", defaultValue: "10.0", global: true },
+					"nearFarFactor" => { name: "u_nearFarFactor", type: "float", shader: "fv", defaultValue: "1.0", global: true }
 				]
 			}
 		];
