@@ -69,13 +69,12 @@ void main() {
 	float mixFactor;
 	float step;
 	float pw, ph;
-	int i, j;
 
-	for (i = 1; i <= 5; i++) {
+	for (int i = 1; i <= 5; i++) {
 		ringsamples = i * samples;
 		mixFactor = mix(1.0, (float(i)) / (float(rings)), u_edgeBias);
 
-		for (j = 0 ; j < MAX_RING_SAMPLES ; j++) {
+		for (int j = 0 ; j < MAX_RING_SAMPLES ; j++) {
 			if (j >= ringsamples) {
 				break;
 			}
