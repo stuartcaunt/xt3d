@@ -4,7 +4,8 @@ varying vec2 v_uvBlur[14];
 float maxblur = 2.0; //clamp value of max blur
 
 void main() {
-	float depth = vec4ToFloat(texture2D(u_depthTexture, v_uv));
+//	float depth = vec4ToFloat(texture2D(u_depthTexture, v_uv));
+	float depth = getDepth(u_depthTexture, v_uv);
 
 	float blur = clamp((abs(depth - u_focalDepth) / u_focalRange), 0.0, maxblur);
 

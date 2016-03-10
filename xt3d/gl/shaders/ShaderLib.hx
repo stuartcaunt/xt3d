@@ -115,8 +115,11 @@ class ShaderLib  {
 				fragmentProgram: "depthOfField_fragment",
 				commonUniformGroups: ["matrixCommon", "texture"],
 				vertexDefines: ["#define DoF_X"],
+				fragmentIncludes: ["getDepth_fragment_part"],
 				uniforms: [
 					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
+					"depthNear" => { name: "u_depthNear", type: "float", shader: "f", defaultValue: "1.0" },
+					"depthFar" => { name: "u_depthFar", type: "float", shader: "f", defaultValue: "1000.0" },
 					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
 					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "0.2" },
 					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
@@ -127,8 +130,11 @@ class ShaderLib  {
 				fragmentProgram: "depthOfField_fragment",
 				commonUniformGroups: ["matrixCommon", "texture"],
 				vertexDefines: ["#define DoF_Y"],
+				fragmentIncludes: ["getDepth_fragment_part"],
 				uniforms: [
 					"depthTexture" => { name: "u_depthTexture", type: "texture", shader: "f" },
+					"depthNear" => { name: "u_depthNear", type: "float", shader: "f", defaultValue: "1.0" },
+					"depthFar" => { name: "u_depthFar", type: "float", shader: "f", defaultValue: "1000.0" },
 					"focalDepth" => { name: "u_focalDepth", type: "float", shader: "f", defaultValue: "0.5" },
 					"focalRange" => { name: "u_focalRange", type: "float", shader: "f", defaultValue: "0.2" },
 					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }

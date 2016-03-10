@@ -1,9 +1,9 @@
 package xt3d.view.filters;
 
+import xt3d.material.DepthMaterial;
 import xt3d.utils.XT;
 import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
-import xt3d.material.LogDepthMaterial;
 import xt3d.material.DepthOfFieldMaterial;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.geometry.Size;
@@ -24,15 +24,15 @@ class DepthOfFieldFilter extends BasicViewFilter {
 	private var _depthOfFieldMaterial:DepthOfFieldMaterial;
 
 	// Material with depth shader
-	private var _depthMaterial:Material;
+	private var _depthMaterial:DepthMaterial;
 
 	// Depth renderer overrider
 	private var _depthRendererOverrider:RendererOverrider;
 
 	private var _isHorizontal:Bool;
 	private var _firstPass:DepthOfFieldFilter;
-	private var _focalDepth:Float = 0.5;
-	private var _focalRange:Float = 0.2;
+	private var _focalDepth:Float = 15.0;
+	private var _focalRange:Float = 12.0;
 	private var _focalsDirty:Bool = true;
 
 
@@ -72,10 +72,10 @@ class DepthOfFieldFilter extends BasicViewFilter {
 		if ((ok = super.initBasicViewFilter(filteredView, scale))) {
 
 			// Create depth render material
-			var depthMaterial = LogDepthMaterial.create();
+			this._depthMaterial = DepthMaterial.create();
 
 			// Create renderer overrider with depth material
-			this._depthRendererOverrider = RendererOverrider.createWithMaterial(depthMaterial);
+			this._depthRendererOverrider = RendererOverrider.createWithMaterial(this._depthMaterial);
 		}
 
 		return ok;
@@ -159,6 +159,17 @@ class DepthOfFieldFilter extends BasicViewFilter {
 		// Set shared depth texture
 		var depthTexture = this.getSharedRenderTexture(DEPTH_TEXTURE_NAME);
 		this._depthOfFieldMaterial.depthTexture = depthTexture;
+
+		// Set depth parameters to convert back to world z
+		if (this._firstPass != null) {
+			this._depthOfFieldMaterial.depthNear = this._firstPass._depthMaterial.near;
+			this._depthOfFieldMaterial.depthFar = this._firstPass._depthMaterial.far;
+
+		} else {
+			this._depthOfFieldMaterial.depthNear = this._depthMaterial.near;
+			this._depthOfFieldMaterial.depthFar = this._depthMaterial.far;
+
+		}
 
 		if (this._focalsDirty) {
 			this._depthOfFieldMaterial.focalDepth = this._focalDepth;
