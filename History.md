@@ -1,3 +1,11 @@
+0.2.1 / 2016-03-10
+===================
+
+ * Fix DepthOfFieldBokeh shader for webGL.
+ * Use true depth in DepthOfField and DepthOfFieldBokeh filter/material/shaders.
+ * Added 'true' DepthMaterial/shader and conversion function to obtain world space z (distance from camera).
+ * Move DepthMaterial to LogDepthMaterial (and shaders).
+ 
 0.2.0 / 2016-03-09
 ===================
 
