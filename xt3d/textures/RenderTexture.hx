@@ -176,6 +176,9 @@ class RenderTexture extends Texture2D {
 
 		// Set viewport with full rectangle
 		renderer.setViewport(this._viewport);
+
+		// Disable scissor tests
+		renderer.disableScissor();
 	}
 
 	public function updateView(view:View, rendererOverrider:RendererOverrider = null):Void {
