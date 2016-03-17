@@ -6,6 +6,7 @@ class TextureOptions {
 	public static var NEAREST_REPEAT_POT:TextureOptions = createNEAREST_REPEAT_POT();
 	public static var NEAREST_CLAMP:TextureOptions = createNEAREST_CLAMP();
 	public static var LINEAR_REPEAT_POT:TextureOptions = createLINEAR_REPEAT_POT();
+	public static var LINEAR_CLAMP_POT:TextureOptions = createLINEAR_CLAMP_POT();
 	public static var LINEAR_REPEAT_POT_MIPMAP_LINEAR:TextureOptions = createLINEAR_REPEAT_POT_MIPMAP_LINEAR();
 
 	// properties
@@ -74,6 +75,18 @@ class TextureOptions {
 		textureOptions.magFilter = XTGL.GL_LINEAR;
 		textureOptions.wrapS = XTGL.GL_REPEAT;
 		textureOptions.wrapT = XTGL.GL_REPEAT;
+		textureOptions.generateMipMaps = false;
+
+		return textureOptions;
+	}
+
+	public static function createLINEAR_CLAMP_POT():TextureOptions {
+		var textureOptions = new TextureOptions();
+		textureOptions.forcePOT = true;
+		textureOptions.minFilter = XTGL.GL_LINEAR;
+		textureOptions.magFilter = XTGL.GL_LINEAR;
+		textureOptions.wrapS = XTGL.GL_CLAMP_TO_EDGE;
+		textureOptions.wrapT = XTGL.GL_CLAMP_TO_EDGE;
 		textureOptions.generateMipMaps = false;
 
 		return textureOptions;

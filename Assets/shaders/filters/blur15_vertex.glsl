@@ -6,11 +6,10 @@ void main() {
 	// Set uv
 	v_uv = a_uv * u_uvScaleOffset.xy + u_uvScaleOffset.zw;
 
-	// Spread: equals the pixel spacing for the sampling
-	float spread = 1.0;
 
 #ifdef BLUR_X
-	float pixelSpacing = spread / u_textureWidth;
+	// Spread: equals the pixel spacing for the sampling
+	float pixelSpacing = u_spread / u_textureWidth;
 
 	v_uvBlur[ 0] = v_uv + vec2(-7.0 * pixelSpacing, 0.0);
 	v_uvBlur[ 1] = v_uv + vec2(-6.0 * pixelSpacing, 0.0);
@@ -29,7 +28,8 @@ void main() {
 #endif
 
 #ifdef BLUR_Y
-	float pixelSpacing = spread / u_textureHeight;
+	// Spread: equals the pixel spacing for the sampling
+	float pixelSpacing = u_spread / u_textureHeight;
 
 	v_uvBlur[ 0] = v_uv + vec2(0.0, -7.0 * pixelSpacing);
 	v_uvBlur[ 1] = v_uv + vec2(0.0, -6.0 * pixelSpacing);

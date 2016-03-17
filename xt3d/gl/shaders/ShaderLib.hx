@@ -80,6 +80,7 @@ class ShaderLib  {
 				commonUniformGroups: ["matrixCommon", "texture"],
 				vertexDefines: ["#define BLUR_X"],
 				uniforms: [
+					"spread" => { name: "u_spread", type: "float", shader: "v", defaultValue: "1.0" },
 					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},
@@ -89,6 +90,7 @@ class ShaderLib  {
 				commonUniformGroups: ["matrixCommon", "texture"],
 				vertexDefines: ["#define BLUR_Y"],
 				uniforms: [
+					"spread" => { name: "u_spread", type: "float", shader: "v", defaultValue: "1.0" },
 					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},
@@ -98,6 +100,7 @@ class ShaderLib  {
 				commonUniformGroups: ["matrixCommon", "texture"],
 				vertexDefines: ["#define BLUR_X"],
 				uniforms: [
+					"spread" => { name: "u_spread", type: "float", shader: "v", defaultValue: "1.0" },
 					"textureWidth" => { name: "u_textureWidth", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},
@@ -107,6 +110,7 @@ class ShaderLib  {
 				commonUniformGroups: ["matrixCommon", "texture"],
 				vertexDefines: ["#define BLUR_Y"],
 				uniforms: [
+					"spread" => { name: "u_spread", type: "float", shader: "v", defaultValue: "1.0" },
 					"textureHeight" => { name: "u_textureHeight", type: "float", shader: "v", defaultValue: "1" }
 				]
 			},
