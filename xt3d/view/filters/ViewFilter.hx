@@ -1,5 +1,6 @@
 package xt3d.view.filters;
 
+import lime.math.Matrix3;
 import xt3d.textures.RenderTexture;
 import xt3d.textures.TextureOptions;
 import lime.graphics.opengl.GL;
@@ -76,6 +77,14 @@ class ViewFilter extends View {
 
 	/* ----------- Properties ----------- */
 
+	override function get_viewTransform():Matrix3 {
+		return this._filteredView.viewTransform;
+	}
+
+	override function set_viewTransform(value:Matrix3):Matrix3 {
+		return this._filteredView.viewTransform = value;
+	}
+
 	/* --------- Implementation --------- */
 
 	override public function onEnter():Void {
@@ -134,6 +143,17 @@ class ViewFilter extends View {
 
 		// Render view to targets
 		this.renderToRenderTargets();
+
+		// Material transparent or not
+		if (!this._filteredView.isOpaque || this._filteredView.backgroundColor.a < 1.0) {
+			this._material.transparent = true;
+
+		} else {
+			this._material.transparent = false;
+		}
+
+		// Perform update of scene in view filter
+		super.updateView(rendererOverrider);
 	}
 
 	private function updateRenderTargets():Void {
@@ -162,8 +182,7 @@ class ViewFilter extends View {
 		this._scissorEnabled = this._filteredView.scissorEnabled;
 
 		this._backgroundColor = this._filteredView.backgroundColor;
-		this._clearFlags = GL.COLOR_BUFFER_BIT; // or 0 ?
-		//this._clearFlags = this._filteredView.clearFlags;
+		this._clearFlags = this._filteredView.clearFlags;
 
 		// Setup node scale and camera for width and height
 		var width = this._viewport.width;

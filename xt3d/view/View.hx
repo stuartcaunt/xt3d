@@ -207,7 +207,7 @@ class View extends EventEmitter {
 		return this._viewTransform;
 	}
 
-	function set_viewTransform(value:Matrix3) {
+	function set_viewTransform(value:Matrix3):Matrix3 {
 		return this._viewTransform = value;
 	}
 
