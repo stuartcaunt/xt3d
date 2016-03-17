@@ -193,7 +193,7 @@ class GLStateManager {
 
 	public inline function setClearColor(color:Color) {
 		if (!color.equals(this._clearColor)) {
-			GL.clearColor(color.red, color.green, color.blue, color.alpha);
+			GL.clearColor(color.r, color.g, color.b, color.a);
 			this._clearColor.copyFrom(color);
 		}
 	}

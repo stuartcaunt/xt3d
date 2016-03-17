@@ -136,7 +136,7 @@ class TextureMaterial extends BaseTypedMaterial {
 			var texture:Texture2D = Director.current.textureCache.addTextureFromColor(color, textureOptions);
 			this.setTexture(texture);
 
-			if (color.alpha < 1.0) {
+			if (color.a < 1.0) {
 				this.transparent = true;
 			}
 		}

@@ -6,12 +6,18 @@ class Color  {
 
 	public static var black:Color = Color.createWithRGBHex(0x000000);
 	public static var white:Color = Color.createWithRGBHex(0xffffff);
+	public static var red:Color = Color.createWithRGBHex(0xff0000);
+	public static var green:Color = Color.createWithRGBHex(0x00ff00);
+	public static var blue:Color = Color.createWithRGBHex(0x0000ff);
+	public static var yellow:Color = Color.createWithRGBHex(0xffff00);
+	public static var cyan:Color = Color.createWithRGBHex(0x00ffff);
+	public static var magenta:Color = Color.createWithRGBHex(0xff00ff);
 
 	// properties
-	public var red(get, set):Float;
-	public var green(get, set):Float;
-	public var blue(get, set):Float;
-	public var alpha(get, set):Float;
+	public var r(get, set):Float;
+	public var g(get, set):Float;
+	public var b(get, set):Float;
+	public var a(get, set):Float;
 	public var rgbaArray(get, null):Array<Float>;
 	public var rgbArray(get, null):Array<Float>;
 
@@ -59,28 +65,28 @@ class Color  {
 	}
 
 	public function initWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0):Bool {
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
-		this.alpha = alpha;
+		this.r = red;
+		this.g = green;
+		this.b = blue;
+		this.a = alpha;
 
 		return true;
 	}
 
 	public function initWithRGBHex(hex:UInt):Bool {
-		this.red   = ((hex >> 16) & 0xFF) / 255.0;
-		this.green = ((hex >>  8) & 0xFF) / 255.0;
-		this.blue  = ((hex >>  0) & 0xFF) / 255.0;
-		this.alpha = 1.0;
+		this.r   = ((hex >> 16) & 0xFF) / 255.0;
+		this.g = ((hex >>  8) & 0xFF) / 255.0;
+		this.b  = ((hex >>  0) & 0xFF) / 255.0;
+		this.a = 1.0;
 
 		return true;
 	}
 
 	public function initWithRGBAHex(hex:UInt):Bool {
-		this.red   = ((hex >> 24) & 0xFF) / 255.0;
-		this.green = ((hex >> 16) & 0xFF) / 255.0;
-		this.blue  = ((hex >>  8) & 0xFF) / 255.0;
-		this.alpha = ((hex >>  0) & 0xFF) / 255.0;
+		this.r   = ((hex >> 24) & 0xFF) / 255.0;
+		this.g = ((hex >> 16) & 0xFF) / 255.0;
+		this.b = ((hex >>  8) & 0xFF) / 255.0;
+		this.a = ((hex >>  0) & 0xFF) / 255.0;
 
 		return true;
 	}
@@ -90,38 +96,38 @@ class Color  {
 
 	/* ----------- Properties ----------- */
 
-	public inline function get_red():Float {
+	public inline function get_r():Float {
 		return this._colorArray[0];
 	}
 
-	public inline function set_red(value:Float) {
+	public inline function set_r(value:Float) {
 		this._colorArray[0] = value;
 		return value;
 	}
 
-	public inline function get_green():Float {
+	public inline function get_g():Float {
 		return this._colorArray[1];
 	}
 
-	public inline function set_green(value:Float) {
+	public inline function set_g(value:Float) {
 		this._colorArray[1] = value;
 		return value;
 	}
 
-	public inline function get_blue():Float {
+	public inline function get_b():Float {
 		return this._colorArray[2];
 	}
 
-	public inline function set_blue(value:Float) {
+	public inline function set_b(value:Float) {
 		this._colorArray[2] = value;
 		return value;
 	}
 
-	public inline function get_alpha():Float {
+	public inline function get_a():Float {
 		return this._colorArray[3];
 	}
 
-	public inline function set_alpha(value:Float) {
+	public inline function set_a(value:Float) {
 		this._colorArray[3] = value;
 		return value;
 	}
@@ -143,11 +149,11 @@ class Color  {
 	/* --------- Implementation --------- */
 
 	public function intValue():UInt {
-		return Std.int(this.red * 255) << 24 | Std.int(this.green * 255) << 16 | Std.int(this.blue * 255) << 8 | Std.int(this.alpha * 255) << 0;
+		return Std.int(this.r * 255) << 24 | Std.int(this.g * 255) << 16 | Std.int(this.b * 255) << 8 | Std.int(this.a * 255) << 0;
 	}
 
 	public function toString():String {
-		return "#" + StringTools.hex(Std.int(this.red * 255)) + StringTools.hex(Std.int(this.green * 255)) + StringTools.hex(Std.int(this.blue * 255)) + StringTools.hex(Std.int(this.alpha * 255));
+		return "#" + StringTools.hex(Std.int(this.r * 255)) + StringTools.hex(Std.int(this.g * 255)) + StringTools.hex(Std.int(this.b * 255)) + StringTools.hex(Std.int(this.a * 255));
 	}
 
 	public function equals(color:Color):Bool {
@@ -155,7 +161,7 @@ class Color  {
 			return false;
 		}
 
-		return color.red == this.red && color.green == this.green && color.blue == this.blue && color.alpha == this.alpha;
+		return color.r == this.r && color.g == this.g && color.b == this.b && color.a == this.a;
 	}
 
 }

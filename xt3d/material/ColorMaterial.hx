@@ -67,7 +67,7 @@ class ColorMaterial extends BaseTypedMaterial {
 				// Set color value
 				this.setColor(color);
 
-				if (color.alpha < 1.0) {
+				if (color.a < 1.0) {
 					this.transparent = true;
 				}
 
