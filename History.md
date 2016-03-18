@@ -1,3 +1,12 @@
+0.2.2 / 2016-03-18
+===================
+
+ * Configurable blur shader/material/filter.
+ * Correctly render transparent filtered views.
+ * Various bug fixes for filters and render textures.
+ * Refactoring locations of filter materials and shaders.
+ * Improved performance of DoF filters by using 50% scaled depth texture.
+
 0.2.1 / 2016-03-10
 ===================
 
