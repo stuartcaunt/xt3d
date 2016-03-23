@@ -184,6 +184,7 @@ class Node3D extends XTObject {
 	}
 
 	public inline function set_matrixDirty(isDirty:Bool):Bool {
+		this._worldMatrixDirty = isDirty;
 		return this._matrixDirty = isDirty;
 	}
 
@@ -382,7 +383,8 @@ class Node3D extends XTObject {
 	}
 
 	inline public function setPosition(position:Vector4):Void {
-		this._matrix.position = position;
+		this._position.copyFrom(position);
+		this._matrixDirty = true;
 		this._worldMatrixDirty = true;
 	}
 
@@ -511,7 +513,8 @@ class Node3D extends XTObject {
 
 	public function updateMatrix():Void {
 		if (this._matrixDirty) {
-			// Translation already set...
+			// Copy position
+			this._matrix.position = this._position;
 
 			// Convert rotation matrix into euler angles if necessary
 			if (_rotationMatrixDirty) {

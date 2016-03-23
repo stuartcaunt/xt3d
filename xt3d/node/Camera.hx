@@ -494,7 +494,9 @@ class Camera extends Node3D {
 	 * @param far The far value (further than this an objects won't be rendered).
 	 * @param orientation indicates the rotation (about z) for the projection.
 	 */
-	public function setOrthoProjection(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, orientation:XTOrientation):Void {
+	public function setOrthoProjection(left:Float, right:Float, bottom:Float, top:Float, near:Float, far:Float, orientation:XTOrientation = null):Void {
+
+		orientation = (orientation == null) ? XTOrientation.Orientation0 : orientation;
 
 		_projectionMatrix = MatrixHelper.orthoMatrix(left, right, bottom, top, near, far, _zoom, orientation);
 

@@ -77,6 +77,16 @@ class View extends EventEmitter {
 		return object;
 	}
 
+	public static function createBasic2D():View {
+		var object = new View();
+
+		if (object != null && !(object.initBasic2D())) {
+			object = null;
+		}
+
+		return object;
+	}
+
 	public function initView():Bool {
 		// Get current director display size
 		this.setDisplaySize(Director.current.displaySize);
@@ -93,6 +103,24 @@ class View extends EventEmitter {
 
 		// Create camera (by default already with perspective projection)
 		this._camera = Camera.create(this);
+
+		// Add camera to scene
+		this._scene.addChild(this._camera);
+
+		return true;
+	}
+
+	public function initBasic2D():Bool {
+		// Get current director display size
+		var size = Director.current.displaySize;
+		this.setDisplaySize(size);
+
+		// Create scene
+		this._scene = Scene.create();
+
+		// Create camera and set ortho projection
+		this._camera = Camera.create(this);
+		this._camera.setOrthoProjection(0, size.width, 0, size.height, 1.0, 1000.0);
 
 		// Add camera to scene
 		this._scene.addChild(this._camera);
