@@ -1,3 +1,8 @@
+0.2.3 / 2016-03-23
+===================
+
+ * Added Basic2DView initialiser to View (ortho projection). Improved setting of position in Node3D.
+
 0.2.2 / 2016-03-18
 ===================
 
