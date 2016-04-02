@@ -1,3 +1,9 @@
+0.2.4 / 2016-04-02
+===================
+
+ * Default number of vertices for cube.
+ * Separate alpha blending from color blending to fix alpha problems with view filters.
+
 0.2.3 / 2016-03-23
 ===================
 
