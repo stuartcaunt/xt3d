@@ -89,9 +89,14 @@ class XTGL {
 	public static inline var CustomBlending:Int = 5;
 
 	// Blend equations
-	public static inline var GL_FUNC_ADD:Int = 0x0000;
-	public static inline var GL_FUNC_SUBTRACT:Int = 0x0001;
-	public static inline var GL_FUNC_REVERSE_SUBTRACT:Int = 0x0002;
+	public static inline var GL_FUNC_NONE:Int = 0x0000;
+	public static inline var GL_FUNC_ADD:Int = 0x0001;
+	public static inline var GL_FUNC_SUBTRACT:Int = 0x0002;
+	public static inline var GL_FUNC_REVERSE_SUBTRACT:Int = 0x0004;
+	public static inline var GL_FUNC_SEPARATE:Int = 0x0010;
+	public static inline var GL_FUNC_ADD_ALPHA:Int = 0x0011;
+	public static inline var GL_FUNC_ADD_SUBTRACT_ALPHA:Int = 0x0012;
+	public static inline var GL_FUNC_ADD_REVERSE_SUBTRACT_ALPHA:Int = 0x0014;
 	//public static inline var GL_MIN:Int = 0x0003;
 	//public static inline var GL_MAX:Int = 0x0004;
 

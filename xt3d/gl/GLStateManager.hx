@@ -14,6 +14,9 @@ class GLStateManager {
 	private var _oldBlendEquation:Int = -1;
 	private var _oldBlendSrc:Int = -1;
 	private var _oldBlendDst:Int = -1;
+	private var _oldBlendEquationAlpha:Int = -1;
+	private var _oldBlendSrcAlpha:Int = -1;
+	private var _oldBlendDstAlpha:Int = -1;
 	private var _oldBlendingEnabled:Int = -1;
 
 	private var _clearColor:Color = Color.create();
@@ -95,7 +98,7 @@ class GLStateManager {
 	}
 
 
-	public function setBlending(blending:Int, blendEquation:Int = XTGL.GL_FUNC_ADD, blendSrc:Int = XTGL.GL_SRC_ALPHA, blendDst:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA) {
+	public function setBlending(blending:Int, blendEquation:Int = XTGL.GL_FUNC_ADD, blendSrc:Int = XTGL.GL_SRC_ALPHA, blendDst:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA, blendEquationAlpha:Int = XTGL.GL_FUNC_ADD_ALPHA, blendSrcAlpha:Int = XTGL.GL_ONE, blendDstAlpha:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA) {
 		if (blending != this._oldBlending || blending == XTGL.CustomBlending) {
 
 			if (blending == XTGL.NoBlending) {
@@ -115,44 +118,65 @@ class GLStateManager {
 					this._oldBlendEquation = -1;
 					this._oldBlendSrc = -1;
 					this._oldBlendDst = -1;
+					this._oldBlendEquationAlpha = -1;
+					this._oldBlendSrcAlpha = -1;
+					this._oldBlendDstAlpha = -1;
 				}
 
 				// Determine blend equation and parameters
 				if (blending == XTGL.AdditiveBlending) {
 					blendEquation = XTGL.GL_FUNC_ADD;
+					blendEquationAlpha = XTGL.GL_FUNC_NONE;
 					blendSrc = XTGL.GL_SRC_ALPHA;
 					blendDst = XTGL.GL_ONE;
 
 				} else if (blending == XTGL.SubtractiveBlending) {
 					blendEquation = XTGL.GL_FUNC_ADD;
+					blendEquationAlpha = XTGL.GL_FUNC_NONE;
 					blendSrc = XTGL.GL_ZERO;
 					blendDst = XTGL.GL_ONE_MINUS_SRC_COLOR;
 
 				} else if (blending == XTGL.MultiplyBlending) {
 					blendEquation = XTGL.GL_FUNC_ADD;
+					blendEquationAlpha = XTGL.GL_FUNC_NONE;
 					blendSrc = XTGL.GL_ZERO;
 					blendDst = XTGL.GL_SRC_COLOR;
 
 				} else if (blending == XTGL.CustomBlending) {
 //					blendEquation = blendEquation;
+//					blendEquationAlpha = blendEquationAlpha;
 //					blendSrc = blendSrc;
 //					blendDst = blendDst;
 
 				} else /* XTGL.NormalBlending */ {
 					blendEquation = XTGL.GL_FUNC_ADD;
+					blendEquationAlpha = XTGL.GL_FUNC_ADD;
 					blendSrc = XTGL.GL_SRC_ALPHA;
 					blendDst = XTGL.GL_ONE_MINUS_SRC_ALPHA;
+					blendSrcAlpha = XTGL.GL_ONE;
+					blendDstAlpha = XTGL.GL_ONE_MINUS_SRC_ALPHA;
 				}
 
 				// Update blend equation
-				if (blendEquation != this._oldBlendEquation) {
-					GL.blendEquation(XTGL.toGLParam(blendEquation));
+				if (blendEquation != this._oldBlendEquation || blendEquationAlpha != this._oldBlendEquationAlpha) {
+					if (blendEquationAlpha != 0) {
+						GL.blendEquationSeparate(XTGL.toGLParam(blendEquation), XTGL.toGLParam(blendEquationAlpha));
+
+					} else {
+						GL.blendEquation(XTGL.toGLParam(blendEquation));
+					}
 					this._oldBlendEquation = blendEquation;
+					this._oldBlendEquationAlpha = blendEquationAlpha;
 				}
 
 				// Update blend parameters
-				if (blendSrc != this._oldBlendSrc || blendDst != this._oldBlendDst) {
-					GL.blendFunc(XTGL.toGLParam(blendSrc), XTGL.toGLParam(blendDst));
+				if (blendSrc != this._oldBlendSrc || blendDst != this._oldBlendDst || blendSrcAlpha != this._oldBlendSrcAlpha || blendDstAlpha != this._oldBlendDstAlpha) {
+					if (blendEquationAlpha != 0) {
+						GL.blendFuncSeparate(XTGL.toGLParam(blendSrc), XTGL.toGLParam(blendDst), XTGL.toGLParam(blendSrcAlpha), XTGL.toGLParam(blendDstAlpha));
+
+					} else {
+						GL.blendFunc(XTGL.toGLParam(blendSrc), XTGL.toGLParam(blendDst));
+					}
 					this._oldBlendSrc = blendSrc;
 					this._oldBlendDst = blendDst;
 				}

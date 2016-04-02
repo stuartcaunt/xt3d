@@ -23,6 +23,9 @@ class Material extends XTObject {
 	public var blendEquation(get, set):Int;
 	public var blendSrc(get, set):Int;
 	public var blendDst(get, set):Int;
+	public var blendEquationAlpha(get, set):Int;
+	public var blendSrcAlpha(get, set):Int;
+	public var blendDstAlpha(get, set):Int;
 	public var depthTest(get, set):Bool;
 	public var depthWrite(get, set):Bool;
 	public var polygonOffset(get, set):Bool;
@@ -44,9 +47,12 @@ class Material extends XTObject {
 	private var _transparent:Bool = false;
 
 	private var _blending:Int = XTGL.NormalBlending;
-	private var _blendSrc:Int = XTGL.GL_ONE;
+	private var _blendSrc:Int = XTGL.GL_SRC_ALPHA;
 	private var _blendDst:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA;
 	private var _blendEquation:Int = XTGL.GL_FUNC_ADD;
+	private var _blendSrcAlpha:Int = XTGL.GL_ONE;
+	private var _blendDstAlpha:Int = XTGL.GL_ONE_MINUS_SRC_ALPHA;
+	private var _blendEquationAlpha:Int = XTGL.GL_FUNC_ADD;
 
 	private var _depthTest:Bool = true;
 	private var _depthWrite:Bool = true;
@@ -143,6 +149,30 @@ class Material extends XTObject {
 
 	public inline function set_blendEquation(value:Int) {
 		return this._blendEquation = value;
+	}
+
+	public inline function get_blendSrcAlpha():Int {
+		return _blendSrcAlpha;
+	}
+
+	public inline function set_blendSrcAlpha(value:Int) {
+		return this._blendSrcAlpha = value;
+	}
+
+	public inline function get_blendDstAlpha():Int {
+		return _blendDstAlpha;
+	}
+
+	public inline function set_blendDstAlpha(value:Int) {
+		return this._blendDstAlpha = value;
+	}
+
+	public inline function get_blendEquationAlpha():Int {
+		return _blendEquationAlpha;
+	}
+
+	public inline function set_blendEquationAlpha(value:Int) {
+		return this._blendEquationAlpha = value;
 	}
 
 	public inline function get_depthTest():Bool {

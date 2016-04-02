@@ -331,7 +331,7 @@ class Renderer extends XTObject {
 
 			// Set blending
 			if (useBlending) {
-				_stateManager.setBlending(material.blending, material.blendEquation, material.blendSrc, material.blendDst);
+				_stateManager.setBlending(material.blending, material.blendEquation, material.blendSrc, material.blendDst, material.blendEquationAlpha, material.blendSrcAlpha, material.blendDstAlpha);
 			}
 
 			// Depth
