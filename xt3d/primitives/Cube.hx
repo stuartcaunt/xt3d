@@ -14,7 +14,7 @@ class Cube extends Geometry {
 	private var _ny:Int;
 	private var _nz:Int;
 
-	public static function create(width:Float, height:Float, depth:Float, nx:Int, ny:Int, nz:Int):Cube {
+	public static function create(width:Float, height:Float, depth:Float, nx:Int = 2, ny:Int = 2, nz:Int = 2):Cube {
 		var object = new Cube();
 
 		if (object != null && !(object.initWithGeometry(width, height, depth, nx, ny, nz))) {
@@ -24,7 +24,7 @@ class Cube extends Geometry {
 		return object;
 	}
 
-	public function initWithGeometry(width:Float, height:Float, depth:Float, nx:Int, ny:Int, nz:Int):Bool {
+	public function initWithGeometry(width:Float, height:Float, depth:Float, nx:Int = 2, ny:Int = 2, nz:Int = 2):Bool {
 		var retval;
 		if ((retval = super.initGeometry())) {
 			this._width = width;
