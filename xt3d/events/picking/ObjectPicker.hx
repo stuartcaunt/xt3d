@@ -46,6 +46,7 @@ class ObjectPicker implements RendererOverriderDelegate {
 		// Create a renderer overrider
 		this._rendererOverrider = RendererOverrider.createWithMaterial(this._objectPickerMaterial);
 		this._rendererOverrider.delegate = this;
+		this._rendererOverrider.blendingEnabled = false;
 
 		return true;
 	}

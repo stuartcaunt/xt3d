@@ -68,6 +68,7 @@ class FacePicker implements RendererOverriderDelegate {
 		this._rendererOverrider = RendererOverrider.createWithMaterialAndGeometry(this._facePickerMaterial, this._facePickerGeometry);
 		this._rendererOverrider.delegate = this;
 		this._rendererOverrider.geometryBlend = GeometryBlendType.GeometryBlendTypeMix;
+		this._rendererOverrider.blendingEnabled = false;
 
 		return true;
 	}
