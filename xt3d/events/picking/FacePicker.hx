@@ -1,5 +1,6 @@
 package xt3d.events.picking;
 
+import xt3d.gl.XTGL;
 import xt3d.node.Camera;
 import xt3d.view.View;
 import xt3d.node.RenderObject;
@@ -63,12 +64,12 @@ class FacePicker implements RendererOverriderDelegate {
 
 		// Create the material we want to use for the face picking
 		this._facePickerMaterial = Material.createMaterial("picking+facePicking");
+		this._facePickerMaterial.blending = XTGL.NoBlending;
 
 		// Create a renderer overrider
 		this._rendererOverrider = RendererOverrider.createWithMaterialAndGeometry(this._facePickerMaterial, this._facePickerGeometry);
 		this._rendererOverrider.delegate = this;
 		this._rendererOverrider.geometryBlend = GeometryBlendType.GeometryBlendTypeMix;
-		this._rendererOverrider.blendingEnabled = false;
 
 		return true;
 	}

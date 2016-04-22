@@ -1,5 +1,6 @@
 package xt3d.events.picking;
 
+import xt3d.gl.XTGL;
 import xt3d.node.Camera;
 import xt3d.node.Scene;
 import xt3d.events.picking.FacePicker.FacePickingResult;
@@ -42,11 +43,11 @@ class ObjectPicker implements RendererOverriderDelegate {
 	public function init():Bool {
 		// Create the material we want to use for the object picking
 		this._objectPickerMaterial = Material.createMaterial("picking");
+		this._objectPickerMaterial.blending = XTGL.NoBlending;
 
 		// Create a renderer overrider
 		this._rendererOverrider = RendererOverrider.createWithMaterial(this._objectPickerMaterial);
 		this._rendererOverrider.delegate = this;
-		this._rendererOverrider.blendingEnabled = false;
 
 		return true;
 	}
