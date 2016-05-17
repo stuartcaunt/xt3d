@@ -11,6 +11,7 @@ class BaseTypedMaterial extends Material {
 	public var lightingColorAttributesEnabled(get, set):Bool;
 	public var alphaCullingEnabled(get, set):Bool;
 	public var vertexColorsEnabled(get, set):Bool;
+	public var dot3BumpExtension(get, set):Dot3BumpMaterialExtension;
 
 	// Generic
 	public var color(get, set):Color;
@@ -33,6 +34,7 @@ class BaseTypedMaterial extends Material {
 	private var _lightingColorAttributesEnabled:Bool = false;
 	private var _alphaCullingEnabled:Bool = false;
 	private var _vertexColorsEnabled:Bool = false;
+	private var _dot3BumpExtension:Dot3BumpMaterialExtension = null;
 
 	// Generic
 	private var _color:Color = Color.createWithRGBAHex(0xffffffff);
@@ -58,6 +60,7 @@ class BaseTypedMaterial extends Material {
 			this._lightingColorAttributesEnabled = materialOptions.lightingColorAttributesEnabled != null ? materialOptions.lightingColorAttributesEnabled : false;
 			this._alphaCullingEnabled = materialOptions.alphaCullingEnabled != null ? materialOptions.alphaCullingEnabled : false;
 			this._vertexColorsEnabled = materialOptions.vertexColorsEnabled != null ? materialOptions.vertexColorsEnabled : false;
+			this._dot3BumpExtension = materialOptions.dot3BumpExtension != null ? materialOptions.dot3BumpExtension : null;
 		}
 
 		var materialName = this.constructMaterialName();
@@ -120,7 +123,16 @@ class BaseTypedMaterial extends Material {
 
 	public inline function set_vertexColorsEnabled(value:Bool) {
 		this.setVertexColorsEnabled(value);
-		return this.vertexColorsEnabled;
+		return this._vertexColorsEnabled;
+	}
+
+	function get_dot3BumpExtension():Dot3BumpMaterialExtension {
+		return this._dot3BumpExtension;
+	}
+
+	function set_dot3BumpExtension(value:Dot3BumpMaterialExtension) {
+		this.setDot3BumpExtension(value);
+		return this._dot3BumpExtension;
 	}
 
 	function get_color():Color {
@@ -223,6 +235,13 @@ class BaseTypedMaterial extends Material {
 
 	public inline function setVertexColorsEnabled(value:Bool) {
 		this._vertexColorsEnabled = value;
+
+		// Rebuild material
+		this.constructMaterial();
+	}
+
+	public inline function setDot3BumpExtension(value:Dot3BumpMaterialExtension) {
+		this._dot3BumpExtension = value;
 
 		// Rebuild material
 		this.constructMaterial();
@@ -339,6 +358,11 @@ class BaseTypedMaterial extends Material {
 			materialName += "+alphaCulling";
 		}
 
+		// Dot3 Bump mapping
+		if (this._dot3BumpExtension != null) {
+			materialName += "+normalMapping";
+		}
+
 		// Any additional extensions
 		materialName += this.getTypedMaterialExtensions();
 
@@ -372,6 +396,12 @@ class BaseTypedMaterial extends Material {
 		// Alpha culling
 		if (this._alphaCullingEnabled) {
 			this.uniform("alphaCullingValue").floatValue = this._alphaCullingValue;
+		}
+
+		// Alpha culling
+		if (this._dot3BumpExtension != null) {
+			this.uniform("normalMapTexture").texture = this._dot3BumpExtension.texture;
+			this.uniform("normalMapUvScaleOffset").floatArrayValue = this._dot3BumpExtension.uvScaleOffset;
 		}
 
 		// Typed material uniforms

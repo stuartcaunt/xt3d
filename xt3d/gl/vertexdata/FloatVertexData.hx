@@ -10,7 +10,7 @@ class FloatVertexData extends PrimitiveVertexData {
 
 	// properties
 	public var float32Array(get, null):Float32Array;
-	public var arrayLength(get, set):Int;
+//	public var arrayLength(get, set):Int;
 
 	// members
 	private var _f32Array:Float32Array = null;
@@ -87,13 +87,13 @@ class FloatVertexData extends PrimitiveVertexData {
 		return this._f32Array;
 	}
 
-	function get_arrayLength():Int {
-		return this._length;
-	}
-
-	function set_arrayLength(value:Int) {
-		return this._length = value;
-	}
+//	function get_arrayLength():Int {
+//		return this._length;
+//	}
+//
+//	function set_arrayLength(value:Int) {
+//		return this._length = value;
+//	}
 
 	/* --------- Implementation --------- */
 
@@ -180,8 +180,8 @@ class FloatVertexData extends PrimitiveVertexData {
 		if (index >= this._fixedCapacity) {
 			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
-		if (updateNextIndex && index > this._length) {
-			this._length = index;
+		if (updateNextIndex && index > (this._length - 1)) {
+			this._length = index + 1;
 		}
 	}
 

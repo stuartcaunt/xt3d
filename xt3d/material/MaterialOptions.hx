@@ -5,5 +5,6 @@ typedef MaterialOptions = {
 	?isHighQualityLighting:Bool,
 	?lightingColorAttributesEnabled:Bool,
 	?alphaCullingEnabled:Bool,
-	?vertexColorsEnabled:Bool
+	?vertexColorsEnabled:Bool,
+	?dot3BumpExtension:Dot3BumpMaterialExtension
 }

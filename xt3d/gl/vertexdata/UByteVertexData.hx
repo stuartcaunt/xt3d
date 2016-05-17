@@ -175,8 +175,8 @@ class UByteVertexData extends PrimitiveVertexData {
 		if (index >= this._fixedCapacity) {
 			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
-		if (updateNextIndex && index > this._length) {
-			this._length = index;
+		if (updateNextIndex && index > (this._length - 1)) {
+			this._length = index + 1;
 		}
 	}
 

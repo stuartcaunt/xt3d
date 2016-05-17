@@ -52,6 +52,7 @@ class ShaderProgram extends XTObject {
 	public static var KFAttributes = XT.jsonToMap({
 		position: "a_position",
 		normal: "a_normal",
+		tangent: "a_tangent",
 		color: "a_color",
 		uv: "a_uv"
 	});

@@ -53,19 +53,13 @@ class QuadFacePickerGeometry extends Geometry {
 	private function createGeometry():Void {
 		// Create a geometry where we change value every 4 vertices
 		var faceInfo = super.createCustomByteData("faceId", 2, this._nVertices * 2);
-		faceInfo.arrayLength = this._nVertices * 2;
-		var faceInfoArray = faceInfo.uint8Array;
 
 		var index:Int;
 		for (high in 0 ... 64) {
 			for (low in 0 ... 256) {
 				for (i in 0 ... 4) {
 					index = 2 * ((high * 256 + low) * 4 + i);
-
-					faceInfoArray[index + 0] = high;
-					faceInfoArray[index + 1] = low;
 				}
-
 			}
 		}
 

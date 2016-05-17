@@ -50,14 +50,15 @@ class Sphere extends Geometry {
 		var nIndices = this._lats * this._lons * 6;
 
 		// Create vertex data
-		var vertexData = super.createInterleavedVertexData(8, null, nVertices * 8);
+		// Note if adding tangents to interleaved data:
+		//    attributes size = 11 (3 + 3 + 2 +3) but force stride to be 12 to keep aligned to 32 bits
+		var stride = 8;
+		var vertexData = super.createInterleavedVertexData(stride, null, nVertices * stride);
 		vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
 		vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
 		vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
+		//vertexData.setAttributeOffset(Geometry.bufferNames.tangent, 8);
 
-//		var positions = super.createPositionData();
-//		var normals = super.createNormalData();
-//		var uvs = super.createUVData();
 		var colors = super.createByteColorData(nVertices * 4);
 		var indices = super.createIndexData(nIndices);
 
@@ -75,6 +76,7 @@ class Sphere extends Geometry {
 		var colorFrequency:Float = 2.0 * Math.PI;
 		var colorWidth:Float = 95;
 		var colorCenter:Float = 160;
+		var index = 0;
 
 
 		// Calculate vertex data attributes
@@ -94,27 +96,18 @@ class Sphere extends Geometry {
 				u = 1.0 - (1.0 * iLon / this._lons);
 				v = 1.0 * iLat / this._lats;
 
-				vertexData.push(this._radius * x);
-				vertexData.push(this._radius * y);
-				vertexData.push(this._radius * z);
+				index = ((iLat * (this._lons + 1)) + iLon) * stride;
 
-				vertexData.push(x);
-				vertexData.push(y);
-				vertexData.push(z);
+				vertexData.set(index + 0, this._radius * x);
+				vertexData.set(index + 1, this._radius * y);
+				vertexData.set(index + 2, this._radius * z);
 
-				vertexData.push(u);
-				vertexData.push(v);
+				vertexData.set(index + 3, x);
+				vertexData.set(index + 4, y);
+				vertexData.set(index + 5, z);
 
-//				positions.push(this._radius * x);
-//				positions.push(this._radius * y);
-//				positions.push(this._radius * z);
-//
-//				normals.push(x);
-//				normals.push(y);
-//				normals.push(z);
-//
-//				uvs.push(u);
-//				uvs.push(v);
+				vertexData.set(index + 6, u);
+				vertexData.set(index + 7, v);
 
 				// Color as function of y
 				// http://krazydad.com/tutorials/makecolors.php
@@ -154,5 +147,7 @@ class Sphere extends Geometry {
 			}
 		}
 
+		// Calculate tangent data
+		this.calculateTangents(false);
 	}
 }

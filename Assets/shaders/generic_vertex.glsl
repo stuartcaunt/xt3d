@@ -10,13 +10,21 @@ varying vec2 v_uv;
 varying vec3 v_ecPosition3;
 varying vec3 v_normal;
 varying vec3 v_eye;
+#ifdef NORMAL_MAPPING
+varying vec3 v_tangent;
+varying vec2 v_uvNormalMap;
+#endif
 
-void doPhongLightingPrepare(const in vec4 vertexPosition,
-						const in vec3 vertexNormal) {
-
+void doPhongLightingPrepare(const in vec4 vertexPosition) {
 	v_ecPosition3 = vec3(u_modelViewMatrix * vertexPosition);
 	v_eye = -normalize(v_ecPosition3);
-	v_normal = normalize(u_normalMatrix * vertexNormal);
+	v_normal = normalize(u_normalMatrix * a_normal);
+
+#ifdef NORMAL_MAPPING
+	v_tangent = normalize(u_normalMatrix * a_tangent);;
+	// Set uv
+	v_uvNormalMap = a_uv * u_normalMapUvScaleOffset.xy + u_normalMapUvScaleOffset.zw;
+#endif
 }
 
 #endif // PHONG_LIGHTING
@@ -49,7 +57,7 @@ void main(void) {
 	v_color = color;
 
 #ifdef PHONG_LIGHTING
-	doPhongLightingPrepare(position, a_normal);
+	doPhongLightingPrepare(position);
 #endif
 
 //	vec4 mvPosition = u_modelViewMatrix * a_position;

@@ -211,6 +211,15 @@ class ShaderLib  {
 				uniforms: [
 					"alphaCullingValue" => { name: "u_alphaCullingValue", type: "float", shader: "f", slot: "0.0" }
 				]
+			},
+
+			"normalMapping" => {
+				vertexDefines: ["#define NORMAL_MAPPING"],
+				fragmentDefines: ["#define NORMAL_MAPPING"],
+				uniforms: [
+					"normalMapTexture" => { name: "u_normalMapTexture", type: "texture", shader: "f" },
+					"normalMapUvScaleOffset" => { name: "u_normalMapUvScaleOffset", type: "vec4", shader: "v", defaultValue: "[1.0, 1.0, 0.0, 0.0]" }
+				]
 			}
 		];
 	}

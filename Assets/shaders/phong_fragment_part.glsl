@@ -4,8 +4,13 @@
 varying vec3 v_ecPosition3;
 varying vec3 v_normal;
 varying vec3 v_eye;
+#ifdef NORMAL_MAPPING
+varying vec3 v_tangent;
+varying vec2 v_uvNormalMap;
+#endif
 
 void phongLight(const in Light light,
+				inout vec3 normal,
 				inout vec4 ambient,
 				inout vec4 diffuse,
 				inout vec4 specular,
@@ -71,14 +76,14 @@ void phongLight(const in Light light,
 	}
 
 	// angle between normal and light-vertex vector
-	nDotVP = max(0.0, dot(VP, v_normal));
+	nDotVP = max(0.0, dot(VP, normal));
 
  	ambient += light.ambientColor * attenuation;
 	if (nDotVP > 0.0) {
 		diffuse += light.diffuseColor * (nDotVP * attenuation);
 
 		// reflected vector
-		reflectVector = normalize(reflect(-VP, v_normal));
+		reflectVector = normalize(reflect(-VP, normal));
 
 		// angle between eye and reflected vector
 		eDotRV = max(0.0, dot(v_eye, reflectVector));
@@ -106,9 +111,25 @@ void doPhongLighting(inout vec4 color, inout vec4 specular) {
 
 	if (u_lightingEnabled) {
 
+#ifdef NORMAL_MAPPING
+		vec3 normal = normalize(v_normal);
+		vec3 tangent = normalize(v_tangent);
+		tangent = normalize(tangent - dot(tangent, normal) * normal);
+		vec3 bitangent = cross(tangent, normal);
+
+		vec3 bumpMapNormal = texture2D(u_normalMapTexture, v_uvNormalMap).xyz;
+		bumpMapNormal = 2.0 * bumpMapNormal - vec3(1.0, 1.0, 1.0);
+		mat3 tbn = mat3(tangent, bitangent, normal);
+
+		normal = tbn * bumpMapNormal;
+		normal = normalize(normal);
+#else
+		vec3 normal = v_normal;
+#endif
+
 		for (int i = 0; i < MAX_LIGHTS; i++) {
 			if (u_lights[i].enabled) {
-				phongLight(u_lights[i], amb, diff, spec, shininess);
+				phongLight(u_lights[i], normal, amb, diff, spec, shininess);
 			}
 		}
 
