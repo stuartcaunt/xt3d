@@ -1,3 +1,11 @@
+0.2.6 / 2016-05-20
+===================
+
+ * Tangent Space Normal Mapping in generic shader. 
+ * Added Tangent Data to Geometries (with calculator from positions and UV data). 
+ * Refactoring of InterleavedVertexData into FloatVertexData subclass. 
+ * Bug fix on vertex data index calculations.
+
 0.2.5 / 2016-05-02
 ===================
 
