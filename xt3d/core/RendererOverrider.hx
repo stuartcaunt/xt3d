@@ -4,6 +4,7 @@ import xt3d.node.Scene;
 import xt3d.node.Camera;
 import xt3d.node.RenderObject;
 import xt3d.material.Material;
+import xt3d.geometry.Geometry;
 
 
 enum GeometryBlendType {

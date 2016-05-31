@@ -1,5 +1,6 @@
-package xt3d.core;
+package xt3d.geometry;
 
+import xt3d.gl.XTGL;
 import xt3d.utils.XTObject;
 import xt3d.gl.vertexdata.UByteVertexData;
 import xt3d.gl.vertexdata.PrimitiveVertexData;
@@ -55,6 +56,7 @@ class Geometry extends XTObject {
 	public var isIndexed(get, null):Bool;
 	public var vertexCount(get, set):Int;
 	public var indexCount(get, set):Int;
+	public var drawMode(get, set):Int;
 
 	// members
 	private var _vertexData:Map<String, PrimitiveVertexData> = new Map<String, PrimitiveVertexData>(); // attribute name, raw data
@@ -64,18 +66,23 @@ class Geometry extends XTObject {
 	private var _inferredVertexCount:Int = 0;
 	private var _indexCount:Int = -1;
 	private var _inferredIndexCount:Int = 0;
+	private var _drawMode:Int = XTGL.GL_TRIANGLES;
 
-	public static function create():Geometry {
+	public static function create(drawMode:Int = 0):Geometry {
 		var object = new Geometry();
 
-		if (object != null && !(object.initGeometry())) {
+		if (object != null && !(object.initGeometry(drawMode))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initGeometry():Bool {
+	public function initGeometry(drawMode:Int = 0):Bool {
+		if (drawMode == 0) {
+			drawMode = XTGL.GL_TRIANGLES;
+		}
+		this._drawMode = drawMode;
 
 		return true;
 	}
@@ -205,6 +212,14 @@ class Geometry extends XTObject {
 
 	public inline function set_indexCount(value:Int) {
 		return this._indexCount = value;
+	}
+
+	function get_drawMode():Int {
+		return this._drawMode;
+	}
+
+	function set_drawMode(value:Int) {
+		return this._drawMode = value;
 	}
 
 

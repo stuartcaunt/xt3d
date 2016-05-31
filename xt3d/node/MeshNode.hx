@@ -1,9 +1,8 @@
 package xt3d.node;
 
 
-import lime.graphics.opengl.GL;
 import xt3d.node.RenderObject;
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 import xt3d.material.Material;
 
 class MeshNode extends RenderObject {
@@ -24,7 +23,7 @@ class MeshNode extends RenderObject {
 
 	public function initMesh(geometry:Geometry, material:Material):Bool {
 		var retval;
-		if ((retval = super.initRenderObject(geometry, material, GL.TRIANGLES))) {
+		if ((retval = super.initRenderObject(geometry, material))) {
 
 		}
 

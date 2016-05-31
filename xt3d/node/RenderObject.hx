@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.gl.XTGL;
 import xt3d.core.RendererOverrider;
 import xt3d.math.Vector4;
 import xt3d.math.VectorHelper;
@@ -8,7 +9,7 @@ import xt3d.gl.shaders.ShaderProgram;
 import xt3d.utils.errors.XTException;
 import xt3d.gl.GLAttributeManager;
 import lime.graphics.opengl.GL;
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 import xt3d.math.Matrix4;
 import xt3d.material.Material;
 import xt3d.core.Director;
@@ -30,7 +31,6 @@ class RenderObject extends Node3D {
 	// members
 	private var _material:Material;
 	private var _geometry:Geometry;
-	private var _drawMode:UInt;
 	private var _modelViewMatrix:Matrix4 = new Matrix4();
 	private var _modelViewProjectionMatrix:Matrix4 = new Matrix4();
 	private var _normalMatrix:Matrix4 = new Matrix4();
@@ -43,13 +43,11 @@ class RenderObject extends Node3D {
 
 	private var _renderZ:Float = 0.0;
 
-	public function initRenderObject(geometry:Geometry, material:Material, drawMode:Int):Bool {
+	public function initRenderObject(geometry:Geometry, material:Material):Bool {
 		var retval;
 		if ((retval = super.init())) {
 			this._geometry = geometry;
 			this._material = material;
-			this._drawMode = drawMode;
-
 		}
 
 		return retval;
@@ -227,13 +225,13 @@ class RenderObject extends Node3D {
 
 
 			// Draw the indexed vertices
-			GL.drawElements(this._drawMode, elementCount, indices.type, elementOffset);
+			GL.drawElements(XTGL.toGLParam(geometry.drawMode), elementCount, indices.type, elementOffset);
 
 		} else {
 			var elementOffset = (this._renderElementsOffset != -1) ? this._renderElementsOffset : 0;
 			var elementCount = (this._renderElementsCount != -1) ? this._renderElementsCount : geometry.vertexCount;
 
-			GL.drawArrays(this._drawMode, elementOffset, elementCount);
+			GL.drawArrays(XTGL.toGLParam(geometry.drawMode), elementOffset, elementCount);
 		}
 	}
 

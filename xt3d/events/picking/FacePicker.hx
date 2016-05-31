@@ -14,7 +14,7 @@ import xt3d.node.Scene;
 import xt3d.core.Director;
 import lime.math.Vector2;
 import xt3d.core.RendererOverrider;
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 
 typedef FacePickingResult = {
 	var renderObject:RenderObject;

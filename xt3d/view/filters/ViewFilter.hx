@@ -11,7 +11,7 @@ import xt3d.core.RendererOverrider;
 import lime.math.Rectangle;
 import xt3d.utils.color.Color;
 import xt3d.utils.geometry.Size;
-import xt3d.primitives.Plane;
+import xt3d.geometry.primitives.Plane;
 import xt3d.node.MeshNode;
 import xt3d.node.Camera;
 import xt3d.node.Scene;

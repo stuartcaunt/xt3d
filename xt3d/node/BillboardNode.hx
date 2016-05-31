@@ -6,7 +6,7 @@ import xt3d.core.Director;
 import xt3d.core.Director;
 import lime.graphics.opengl.GL;
 import xt3d.node.RenderObject;
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 import xt3d.material.Material;
 
 class BillboardNode extends Node3D {

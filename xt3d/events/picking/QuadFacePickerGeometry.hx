@@ -1,7 +1,7 @@
 package xt3d.events.picking;
 
 import xt3d.utils.XT;
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 
 /**
  * Picker used when we know that the geometry is based on quads where two triangles in a quad are made up of

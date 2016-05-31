@@ -1,6 +1,6 @@
-package xt3d.primitives;
+package xt3d.geometry.primitives;
 
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 
 class Sphere extends Geometry {
 

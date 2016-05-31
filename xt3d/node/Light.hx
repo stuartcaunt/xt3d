@@ -3,7 +3,7 @@ package xt3d.node;
 
 import xt3d.material.ColorMaterial;
 import xt3d.core.RendererOverrider;
-import xt3d.primitives.Sphere;
+import xt3d.geometry.primitives.Sphere;
 import xt3d.utils.XT;
 import xt3d.math.MatrixHelper;
 import xt3d.gl.shaders.UniformLib;

@@ -136,6 +136,11 @@ class XTGL {
 	public static inline var GL_LINEAR_MIPMAP_NEAREST = 0x0404;
 	public static inline var GL_LINEAR_MIPMAP_LINEAR = 0x0405;
 
+	// Draw modes
+	public static inline var GL_TRIANGLES = 0x0500;
+	public static inline var GL_LINES = 0x0501;
+
+
 
 	public static inline function toGLParam(param):Int {
 		if (param == GL_FUNC_ADD) return GL.FUNC_ADD;
@@ -172,6 +177,9 @@ class XTGL {
 		if (param == GL_LINEAR) return GL.LINEAR;
 		if (param == GL_LINEAR_MIPMAP_NEAREST) return GL.LINEAR_MIPMAP_NEAREST;
 		if (param == GL_LINEAR_MIPMAP_LINEAR) return GL.LINEAR_MIPMAP_LINEAR;
+
+		if (param == GL_TRIANGLES) return GL.TRIANGLES;
+		if (param == GL_LINES) return GL.LINES;
 
 		return 0;
 	}

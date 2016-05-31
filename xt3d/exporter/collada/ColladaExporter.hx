@@ -5,7 +5,7 @@ import xt3d.utils.XT;
 import xt3d.material.Material;
 import xt3d.node.RenderObject;
 import xt3d.node.Node3D;
-import xt3d.core.Geometry;
+import xt3d.geometry.Geometry;
 import xt3d.view.View;
 
 class ColladaExporter {
