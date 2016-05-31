@@ -83,6 +83,24 @@ class FloatVertexData extends PrimitiveVertexData {
 
 	/* ----------- Properties ----------- */
 
+	override public function clone():VertexData {
+		var clone = FloatVertexData.create(this._attributeName, this._vertexSize);
+
+		clone._fixedCapacity = this._fixedCapacity;
+		clone._length = this._length;
+		clone._isDirty = this.getLength() > 0;
+
+		if (this._f32Array != null) {
+			clone._f32Array = new Float32Array(this._f32Array);
+		}
+
+		if (this._array != null) {
+			clone._array = this._array.copy();
+		}
+
+		return clone;
+	}
+
 	function get_float32Array():Float32Array {
 		return this._f32Array;
 	}

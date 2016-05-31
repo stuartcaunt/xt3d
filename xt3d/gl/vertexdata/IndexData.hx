@@ -122,6 +122,24 @@ class IndexData {
 		}
 	}
 
+	public function clone():IndexData {
+		var clone = IndexData.create();
+
+		clone._fixedCapacity = this._fixedCapacity;
+		clone._length = this._length;
+		clone._isDirty = this.getLength() > 0;
+
+		if (this._ui16Array != null) {
+			clone._ui16Array = new UInt16Array(this._ui16Array);
+		}
+
+		if (this._array != null) {
+			clone._array = this._array.copy();
+		}
+
+		return clone;
+	}
+
 	// Number of elements
 	public inline function getLength():Int {
 		if (this._ui16Array != null) {

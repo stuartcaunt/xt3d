@@ -85,6 +85,28 @@ class InterleavedVertexData extends FloatVertexData {
 
 	/* --------- Implementation --------- */
 
+	override public function clone():VertexData {
+		// Clone structure
+		var clonedStructure = new Map<String, VertexInfo>();
+		for (attributeName in this._interleavedDataStructure.keys()) {
+			clonedStructure.set(attributeName, this._interleavedDataStructure.get(attributeName));
+		}
+
+		var clone = InterleavedVertexData.create(this._stride, clonedStructure);
+		clone._fixedCapacity = this._fixedCapacity;
+		clone._length = this._length;
+		clone._isDirty = this.getLength() > 0;
+
+		if (this._f32Array != null) {
+			clone._f32Array = new Float32Array(this._f32Array);
+		}
+
+		if (this._array != null) {
+			clone._array = this._array.copy();
+		}
+
+		return clone;
+	}
 
 	override public function getVertexCount():Int {
 		return Std.int(this.getLength() / this._stride);

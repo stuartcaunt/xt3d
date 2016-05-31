@@ -97,6 +97,24 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	/* --------- Implementation --------- */
 
+	override public function clone():VertexData {
+		var clone = UByteVertexData.create(this._attributeName, this._vertexSize);
+
+		clone._fixedCapacity = this._fixedCapacity;
+		clone._length = this._length;
+		clone._isDirty = this.getLength() > 0;
+
+		if (this._ui8Array != null) {
+			clone._ui8Array = new UInt8Array(this._ui8Array);
+		}
+
+		if (this._array != null) {
+			clone._array = this._array.copy();
+		}
+
+		return clone;
+	}
+
 	// Number of elements
 	override public function getLength():Int {
 		if (this._ui8Array != null) {

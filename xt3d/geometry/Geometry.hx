@@ -91,21 +91,6 @@ class Geometry extends XTObject {
 	}
 
 
-	/**
-	 * Dispose of any opengl objects
-	 */
-	public function dispose():Void {
-		// Dispose of vertex buffers
-		for (vertexData in this._vertexData) {
-			vertexData.dispose();
-		}
-
-		// Dispose of index buffer
-		if (this._indexData != null) {
-			this._indexData.dispose();
-		}
-
-	}
 
 	/* ----------- Properties ----------- */
 
@@ -224,6 +209,21 @@ class Geometry extends XTObject {
 
 	/* --------- Implementation --------- */
 
+	/**
+	 * Dispose of any opengl objects
+	 */
+	public function dispose():Void {
+		// Dispose of vertex buffers
+		for (vertexData in this._vertexData) {
+			vertexData.dispose();
+		}
+
+		// Dispose of index buffer
+		if (this._indexData != null) {
+			this._indexData.dispose();
+		}
+
+	}
 
 	public inline function cloneDefaultInterleavedStructure():Map<String, VertexInfo> {
 		var clone = new Map<String, VertexInfo>();
@@ -554,4 +554,32 @@ class Geometry extends XTObject {
 		return isEmpty;
 	}
 
+	public function clone():Geometry {
+		var clone = Geometry.create(this._drawMode);
+
+		// Clone individual vertex data attibutes
+		var clonedVertexData = new Map<String, PrimitiveVertexData>();
+		for (attributeName in this._vertexData.keys()) {
+			clonedVertexData.set(attributeName, cast(this._vertexData.get(attributeName).clone(), PrimitiveVertexData));
+		}
+		clone._vertexData = clonedVertexData;
+
+		// Clone interleaved vertex data
+		if (this._interleavedVertexData != null) {
+			clone._interleavedVertexData = cast(this._interleavedVertexData.clone(), InterleavedVertexData);
+		}
+
+		// Clone index data
+		if (this._indexData != null) {
+			clone._indexData = this._indexData.clone();
+		}
+
+		// Other params
+		clone._vertexCount = this._vertexCount;
+		clone._inferredVertexCount = this._inferredVertexCount;
+		clone._indexCount = this._indexCount;
+		clone._inferredIndexCount = this._inferredIndexCount;
+
+		return clone;
+	}
 }

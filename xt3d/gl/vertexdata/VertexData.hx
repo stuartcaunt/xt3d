@@ -54,6 +54,11 @@ class VertexData {
 		}
 	}
 
+	public function clone():VertexData {
+		// Override me
+		return null;
+	}
+
 	public function getLength():Int {
 		throw new XTAbstractMethodError();
 	}
