@@ -1,6 +1,7 @@
 package xt3d.geometry.primitives;
 
 import xt3d.geometry.Geometry;
+import xt3d.geometry.GeometryUtils;
 
 class Sphere extends Geometry {
 
@@ -148,6 +149,6 @@ class Sphere extends Geometry {
 		}
 
 		// Calculate tangent data
-		this.calculateTangents(false);
+		GeometryUtils.generateTangents(this, false);
 	}
 }
