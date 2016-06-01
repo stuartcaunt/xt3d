@@ -1,5 +1,6 @@
 package xt3d.geometry;
 
+import xt3d.gl.XTGL;
 import xt3d.gl.vertexdata.FloatVertexData;
 import xt3d.utils.errors.XTException;
 
@@ -155,6 +156,51 @@ class GeometryUtils {
 			tangentVertexData.set(index0 * tangentStride + tangentOffset + 1, ty0);
 			tangentVertexData.set(index0 * tangentStride + tangentOffset + 2, tz0);
 		}
+	}
+
+	public static function convertToLineGeometry(geometry:Geometry):Geometry {
+		var lineGeometry = geometry.clone();
+		lineGeometry.drawMode = XTGL.GL_LINES;
+
+		var positionVertexData:FloatVertexData = null;
+		var positionStride = 3;
+		if (geometry.interleavedVertexData != null) {
+			var interleavedVertexData = geometry.interleavedVertexData;
+
+			positionStride = interleavedVertexData.stride;
+			positionVertexData = interleavedVertexData;
+
+		} else {
+			positionVertexData = geometry.positions;
+		}
+
+		var nVertices = Std.int(positionVertexData.length / positionStride);
+		var nTriangles = Std.int(nVertices / 3);
+		var indexData = geometry.indices;
+		if (indexData != null) {
+			nTriangles = Std.int(indexData.length / 3);
+		}
+
+		var nLines = Std.int(nTriangles * 3);
+		var nLineIndices = nLines * 2;
+		var linesIndices = lineGeometry.createIndexData(nLineIndices);
+		var triangleIndices = geometry.indices;
+		var useIndices = (triangleIndices != null);
+
+		for (i in 0 ... nTriangles) {
+			var i0 = useIndices ? triangleIndices.get(i * 3 + 0) : i * 3 + 0;
+			var i1 = useIndices ? triangleIndices.get(i * 3 + 1) : i * 3 + 1;
+			var i2 = useIndices ? triangleIndices.get(i * 3 + 2) : i * 3 + 2;
+
+			linesIndices.set(i * 6 + 0, i0);
+			linesIndices.set(i * 6 + 1, i1);
+			linesIndices.set(i * 6 + 2, i1);
+			linesIndices.set(i * 6 + 3, i2);
+			linesIndices.set(i * 6 + 4, i2);
+			linesIndices.set(i * 6 + 5, i0);
+		}
+
+		return lineGeometry;
 	}
 
 }
