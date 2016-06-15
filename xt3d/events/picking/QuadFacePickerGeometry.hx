@@ -59,6 +59,8 @@ class QuadFacePickerGeometry extends Geometry {
 			for (low in 0 ... 256) {
 				for (i in 0 ... 4) {
 					index = 2 * ((high * 256 + low) * 4 + i);
+					faceInfo.set(index + 0, high);
+					faceInfo.set(index + 1, low);
 				}
 			}
 		}
