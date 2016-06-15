@@ -1,3 +1,15 @@
+0.2.8 / 2016-06-15
+===================
+
+ * Fix quad face picker.
+ * Add utility function to convert triangle geometry to lines.
+ * Cloning of Geometries (including VertexData (types) and IndexData).
+ * Creation of GeometryUtils to remove some of the work from Geometry.
+ * Move drawMode to Geometry from RenderObject. 
+ * Refactor core.Geometry to geometry.Geometry. 
+ * Refactor primitives to geometry.primitives.
+ 
+
 0.2.7 / 2016-05-20
 ===================
 
