@@ -20,6 +20,8 @@ class Color  {
 	public var a(get, set):Float;
 	public var rgbaArray(get, null):Array<Float>;
 	public var rgbArray(get, null):Array<Float>;
+	public var rgbaByteArray(get, null):Array<Int>;
+	public var rgbByteArray(get, null):Array<Int>;
 
 	// members
 	private var _colorArray = [0.0, 0.0, 0.0, 1.0];
@@ -64,6 +66,26 @@ class Color  {
 		return object;
 	}
 
+	public static function createWithRandomRGB():Color {
+		var object = new Color();
+
+		if (object != null && !(object.initWithRandomRGB())) {
+			object = null;
+		}
+
+		return object;
+	}
+
+	public static function createWithRandomRGBA():Color {
+		var object = new Color();
+
+		if (object != null && !(object.initWithRandomRGBA())) {
+			object = null;
+		}
+
+		return object;
+	}
+
 	public function initWithComponents(red:Float = 0.0, green:Float = 0.0, blue:Float = 0.0, alpha:Float = 1.0):Bool {
 		this.r = red;
 		this.g = green;
@@ -87,6 +109,24 @@ class Color  {
 		this.g = ((hex >> 16) & 0xFF) / 255.0;
 		this.b = ((hex >>  8) & 0xFF) / 255.0;
 		this.a = ((hex >>  0) & 0xFF) / 255.0;
+
+		return true;
+	}
+
+	public function initWithRandomRGB():Bool {
+		this.r = Math.random();
+		this.g = Math.random();
+		this.b = Math.random();
+		this.a = 1.0;
+
+		return true;
+	}
+
+	public function initWithRandomRGBA():Bool {
+		this.r = Math.random();
+		this.g = Math.random();
+		this.b = Math.random();
+		this.a = Math.random();
 
 		return true;
 	}
@@ -138,6 +178,16 @@ class Color  {
 
 	public inline function get_rgbArray():Array<Float> {
 		return this._colorArray.slice(0, 3);
+	}
+
+	public inline function get_rgbaByteArray():Array<Int> {
+		var intArray = [Std.int(this.r * 255), Std.int(this.g * 255), Std.int(this.b * 255), Std.int(this.a * 255)];
+		return intArray;
+	}
+
+	public inline function get_rgbByteArray():Array<Int> {
+		var intArray = [Std.int(this.r * 255), Std.int(this.g * 255), Std.int(this.b * 255)];
+		return intArray;
 	}
 
 	public inline function copyFrom(color:Color):Void {
