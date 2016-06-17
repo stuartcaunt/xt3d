@@ -260,7 +260,7 @@ class IndexData {
 			throw new XTException("IndexOutOfBounds", "The index " + index + " is outside the fixed capacity of " + this._fixedCapacity);
 		}
 		if (updateNextIndex && index > this._length) {
-			this._length = index;
+			this._length = index + 1;
 		}
 	}
 
