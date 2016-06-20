@@ -4,7 +4,7 @@
   "license": "MIT",
   "tags": [ "xt3d", "3d", "engine", "cross", "opengl", "game" ],
   "description": "An open-source, cross-platform, 3D graphics and game-development framework",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "releasenote": "See History.md",
   "contributors": [ "stuartcaunt" ],
   "dependencies": {

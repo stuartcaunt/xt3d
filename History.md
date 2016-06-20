@@ -1,3 +1,9 @@
+0.2.9 / 2016-06-20
+===================
+
+ * Add Lines primitive type using array of polygon data.
+ * Fix bug of IndexData length being incorrectly set.
+
 0.2.8 / 2016-06-15
 ===================
 
