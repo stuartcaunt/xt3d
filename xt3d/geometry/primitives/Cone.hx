@@ -109,7 +109,7 @@ class Cone extends Geometry {
 				var theta:Float = s * 2 * Math.PI / this._ns;
 
 				vertexData.push(radius * Math.sin(theta));
-				vertexData.push(-(this._height / 2) + (t * this._height / _nt));
+				vertexData.push(-(this._height / 2) + (t * this._height / this._nt));
 				vertexData.push(radius * Math.cos(theta));
 
 				vertexData.push(Math.sin(theta) * this._height / length);
