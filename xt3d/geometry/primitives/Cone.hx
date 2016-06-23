@@ -134,7 +134,7 @@ class Cone extends Geometry {
 				vertexData.push(0.0);
 
 				vertexData.push(1.0 * s / this._ns);
-				vertexData.push(1.0);
+				vertexData.push(0.0);
 			}
 		}
 
