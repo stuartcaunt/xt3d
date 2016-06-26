@@ -388,6 +388,14 @@ class Node3D extends XTObject {
 		this._worldMatrixDirty = true;
 	}
 
+	inline public function setPositionValues(x:Float, y:Float, z:Float):Void {
+		this._position.x = x;
+		this._position.y = y;
+		this._position.z = z;
+		this._matrixDirty = true;
+		this._worldMatrixDirty = true;
+	}
+
 	inline public function getRotationX():Float {
 		if (this._eulerAnglesDirty) {
 			this.updateEulerAngles();
