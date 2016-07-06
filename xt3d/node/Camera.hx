@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.math.Vector2;
 import xt3d.utils.Types;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.utils.errors.XTException;
@@ -859,6 +860,16 @@ class Camera extends Node3D {
 		uniformLib.uniform("near").floatValue = this._near;
 		uniformLib.uniform("far").floatValue = this._far;
 		uniformLib.uniform("nearFarFactor").floatValue = 2.0 / Math.log(this._far / this._near);
+	}
+
+	public function getProjectedPosition(worldPosition:Vector4):Vector2 {
+		var viewProjectionMatrix = this.viewProjectionMatrix;
+		var projectedPosition = MatrixHelper.transformVector(viewProjectionMatrix, worldPosition);
+
+		var x = 0.5 + (0.5 * projectedPosition.x / projectedPosition.w);
+		var y = 0.5 + (0.5 * projectedPosition.y / projectedPosition.w);
+
+		return new Vector2(x, y);
 	}
 
 }

@@ -34,6 +34,7 @@ class View extends EventEmitter {
 	public var camera(get, set):Camera;
 	public var orientation(get, set):XTOrientation;
 	public var viewTransform(get, set):Matrix3;
+	public var gesturesEnabled(get, set):Bool;
 
 	// members
 	private var _viewport:Rectangle;
@@ -44,6 +45,7 @@ class View extends EventEmitter {
 	private var _scissorEnabled:Bool = false;
 	private var _orientation:XTOrientation = XTOrientation.Orientation0;
 	private var _viewTransform:Matrix3 = new Matrix3();
+	private var _gesturesEnabled:Bool = true;
 
 	private var _backgroundColor:Color = Director.current.backgroundColor;
 	private var _isOpaque:Bool = false;
@@ -121,6 +123,7 @@ class View extends EventEmitter {
 		// Create camera and set ortho projection
 		this._camera = Camera.create(this);
 		this._camera.setOrthoProjection(0, size.width, 0, size.height, 1.0, 1000.0);
+		this._camera.position = new Vector4(0.0, 0.0, 500.0);
 
 		// Add camera to scene
 		this._scene.addChild(this._camera);
@@ -239,6 +242,13 @@ class View extends EventEmitter {
 		return this._viewTransform = value;
 	}
 
+	function get_gesturesEnabled():Bool {
+		return this._gesturesEnabled;
+	}
+
+	function set_gesturesEnabled(value:Bool) {
+		return this._gesturesEnabled = value;
+	}
 
 	/* --------- Implementation --------- */
 
@@ -388,6 +398,21 @@ class View extends EventEmitter {
 		}
 
 		return false;
+	}
+
+	public function convertToView2DPosition(position:Vector4):Vector2 {
+		var projectedPosition = this._camera.getProjectedPosition(position);
+
+		return new Vector2(this._viewport.width * projectedPosition.x, this._viewport.height * projectedPosition.y);
+	}
+
+	public function convertToScreen2DPosition(position:Vector4):Vector2 {
+		var view2DPosition = this.convertToView2DPosition(position);
+
+		view2DPosition.x += this._viewport.x;
+		view2DPosition.y += this._viewport.y;
+
+		return view2DPosition;
 	}
 
 	private function calculateViewTransform():Void {

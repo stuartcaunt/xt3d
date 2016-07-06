@@ -305,12 +305,12 @@ class Director implements Xt3dGLViewListener {
 		}
 	}
 
-	public function getViewContainingScreenPosition(x:Float, y:Float):View {
+	public function getViewForGestureScreenPosition(x:Float, y:Float):View {
 		// Reverse iterate over views (top first)
 		var i = this._views.length;
 		while (--i >= 0) {
 			var view = this._views[i];
-			if (view.containsScreenPosition(x, y)) {
+			if (view.containsScreenPosition(x, y) && view.gesturesEnabled) {
 				return view;
 			}
 		}

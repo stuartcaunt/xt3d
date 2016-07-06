@@ -249,7 +249,7 @@ class GestureDispatcher implements MouseHandler implements TouchHandler {
 	}
 
 	private function getViewForScreenPosition(x:Float, y:Float):View {
-		return this._director.getViewContainingScreenPosition(x, this._director.displaySize.height - y);
+		return this._director.getViewForGestureScreenPosition(x, this._director.displaySize.height - y);
 	}
 
 	private function getTouchInView(touch:Touch):Touch {
