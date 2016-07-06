@@ -1,3 +1,12 @@
+0.2.10 / 2016-07-06
+===================
+
+ * Add screen projection functionality to allow 3D positions to be converted to 2D screen positions.
+ * Allow Views to be gesture enabled/disabled - allows for non-interactive Views above interactive ones. 
+ * setPositionValues method for Node3D
+ * Add Torus, Cone, Cylinder and Arrow primitives
+ * Lime 2.9.1
+
 0.2.9 / 2016-06-20
 ===================
 
