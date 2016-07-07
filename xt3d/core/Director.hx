@@ -295,6 +295,49 @@ class Director implements Xt3dGLViewListener {
 		view.onEnter();
 	}
 
+	public inline function addViewAbove(view:View, viewBelow:View = null):Void {
+		if (viewBelow == null) {
+			this.addView(view);
+
+		} else {
+			var index = this._views.indexOf(viewBelow);
+			if (index >= 0) {
+				// Insert above the given viewBelow
+				_views.insert(index + 1, view);
+
+				// Update the display rect (does nothing if not changed)
+				view.setDisplaySize(_glView.size);
+
+				// activate view
+				view.onEnter();
+
+			} else {
+				XT.Warn("Could not find view to move during addViewAbove");
+				this.addView(view);
+			}
+		}
+	}
+
+	public inline function addViewBelow(view:View, viewAbove:View = null):Void {
+		var index = 0;
+		if (viewAbove != null) {
+			var index = this._views.indexOf(viewAbove);
+
+			if (index < 0) {
+				XT.Warn("Could not find view to move during addViewBelow");
+				index = 0;
+			}
+		}
+		// Insert below the given viewBelow (ie same index)
+		_views.insert(index, view);
+
+		// Update the display rect (does nothing if not changed)
+		view.setDisplaySize(_glView.size);
+
+		// activate view
+		view.onEnter();
+	}
+
 	public inline function removeView(view:View):Void {
 		var viewIndex = this._views.indexOf(view);
 		if (viewIndex >= 0) {
