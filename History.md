@@ -1,3 +1,10 @@
+0.2.12 / 2016-07-12
+====================
+ * Add commit, tag and push functionality to packaging script
+ * Update package script to automatically update version number and split multi-sentence commit messages.
+ * Added script to manage updating versions/packaging.
+ * Add addViewAbove and addViewBelow to Director.
+
 0.2.11 / 2016-07-06
 ===================
 
