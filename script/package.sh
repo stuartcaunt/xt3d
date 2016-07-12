@@ -44,14 +44,14 @@ sed -i.bkup "/$XT_VERSION_TEXT/c\\
 	\	$XT_VERSION_TEXT = \"$NEW_VERSION\";
 	" $XT_FILE
 rm $XT_FILE.bkup
-echo "Updated XT version"
+echo "\n... updated XT version"
 
 # replace haxelib version
 sed -i.bkup "/$HX_VERSION_TEXT/c\\
 	\  $HX_VERSION_TEXT: \"$NEW_VERSION\",
 	" $HX_FILE
 rm $HX_FILE.bkup
-echo "Updated haxelib version"
+echo "\n... updated haxelib version"
 
 # Format version and date
 HISTORY_TITLE="$NEW_VERSION / `date +%Y-%m-%d`"
@@ -72,10 +72,17 @@ do
 	LOG_ENTRY=$LOG_ENTRY" * $LOG\n"
 done
 
+# interactive edit of history
+echo "$LOG_ENTRY" > history.tmp
+vi history.tmp
+LOG_ENTRY=$(cat history.tmp)"\n"
+rm history.tmp
+
 # update history file
-echo $LOG_ENTRY | cat - $HISTORY_FILE > temp && mv temp $HISTORY_FILE
-echo "Updated history file:"
-echo $LOG_ENTRY
+echo "$LOG_ENTRY" | cat - $HISTORY_FILE > temp && mv temp $HISTORY_FILE
+
+echo "\n... updated history file :\n"
+echo "$LOG_ENTRY"
 
 # commit and tag
 askForConfirmation "Commit modifications and tag as version $NEW_VERSION? [Y/N] "
