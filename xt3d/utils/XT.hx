@@ -4,6 +4,7 @@ import haxe.Timer;
 
 class XT  {
 
+	public static inline var VERSION:String = "0.2.11";
 	public static inline var MAX_LIGHTS:String = "MAX_LIGHTS";
 	public static inline var SHADER_PRECISION:String = "SHADER_PRECISION";
 	public static inline var DEFAULT_FPS:String = "DEFAULT_FPS";
@@ -21,7 +22,7 @@ class XT  {
 		haxe.Log.trace(DateTools.format(Date.now(), "%d/%m/%Y %H:%M:%S") + "." + ms + ": " + v, info);
 #else
 		// Do nothing
-#end		
+#end
 	}
 
 	public static function Warn(v:Dynamic, ?info:haxe.PosInfos):Void {
