@@ -6,7 +6,6 @@ XT_FILE='../xt3d/utils/XT.hx'
 XT_VERSION_TEXT="public static inline var VERSION:String"
 HX_FILE='../haxelib.json'
 HX_VERSION_TEXT="\"version\""
-GIT_LAST_TAG=`git describe --abbrev=0`
 
 
 askForConfirmation () {
@@ -25,10 +24,12 @@ askForConfirmation () {
 }
 
 # Check for any git modifications
-git fetch origin master --quiet
+git fetch origin master --tags --quiet
 if ! git diff --quiet; then
 	askForConfirmation "There are uncommitted files. Do you want to continue? [Y/N] "
 fi
+
+GIT_LAST_TAG=`git describe --abbrev=0`
 
 # Check for git modifications and calculate new version
 echo "Previous version was $GIT_LAST_TAG"
@@ -96,6 +97,6 @@ REMOTES=`git remote`
 for REMOTE in $REMOTES
 do
 	echo "Pushing to $REMOTE"
-	git push $REMOTE master
+	git push $REMOTE master --tags
 done
 
