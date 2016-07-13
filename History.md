@@ -1,3 +1,9 @@
+0.2.13 / 2016-07-13
+====================
+ * Update to Lime 3.0.0.
+ * Make sure all tags are received and pushed during packaging script.
+ * Open vi to edit history log message after generating it from git logs.
+
 0.2.12 / 2016-07-12
 ====================
  * Add commit, tag and push functionality to packaging script
