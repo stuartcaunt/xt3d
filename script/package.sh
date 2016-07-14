@@ -89,7 +89,7 @@ echo "$LOG_ENTRY"
 askForConfirmation "Commit modifications and tag as version $NEW_VERSION? [Y/N] "
 git add $HISTORY_FILE $XT_FILE $HX_FILE
 git commit -m "$NEW_VERSION"
-git tag $NEW_VERSION
+git tag -a $NEW_VERSION -m "$NEW_VERSION"
 
 # push to remotes
 askForConfirmation "Push to all remotes? [Y/N] "
