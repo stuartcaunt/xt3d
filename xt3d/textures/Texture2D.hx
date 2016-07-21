@@ -1,5 +1,7 @@
 package xt3d.textures;
 
+import lime.utils.UInt8Array;
+import lime.graphics.ImageBuffer;
 import xt3d.gl.GLExtensionManager;
 import xt3d.utils.errors.XTException;
 import lime.utils.Float32Array;
@@ -460,7 +462,10 @@ import lime.Assets;
 
 		// Create power-of-two image
 		if (this._forcePOT && !image.powerOfTwo) {
-			var potImage = image.clone();
+			var imageData = image.data;
+			var imageBuffer = new ImageBuffer(imageData, image.width, image.height);
+			var potImage = new Image(imageBuffer);
+
 			potImage.powerOfTwo = true;
 
 			image = potImage;
