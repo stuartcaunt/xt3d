@@ -151,9 +151,21 @@ class BMFontLabel extends RenderObject {
 			}
 		}
 
-		this._geometry.indexCount = nChars * 6;
+		// Remove unused vertex values
+		var vertexCount = nChars * 4 * this._vertexData.stride;
+		if (this._vertexData.getLength() > vertexCount) {
+			var rawVertexArray = this._vertexData.array;
+			rawVertexArray.splice(vertexCount, rawVertexArray.length - vertexCount);
+			this._vertexData.isDirty = true;
+		}
 
-		// Todo : remove unused indices/vertices
+		// Remove unused index values
+		var indexCount = nChars * 6;
+		if (this._indexData.getLength() > indexCount) {
+			var rawIndexArray = this._indexData.array;
+			rawIndexArray.splice(indexCount, rawIndexArray.length - indexCount);
+			this._indexData.isDirty = true;
+		}
 	}
 
 	private function addQuad(vertexOffset:Int, indexOffset:Int, posRect:Rectangle, uvRect:Rectangle):Void {
