@@ -16,6 +16,7 @@ class IndexData {
 
 	// properties
 	public var uint16Array(get, null):UInt16Array;
+	public var array(get, null):Array<UInt>;
 	public var length(get, null):Int;
 	public var isDirty(get, set):Bool;
 	public var buffer(get, null):GLBuffer;
@@ -90,6 +91,10 @@ class IndexData {
 
 	function get_uint16Array():UInt16Array {
 		return this._ui16Array;
+	}
+
+	function get_array():Array<UInt> {
+		return this._array;
 	}
 
 	function get_length():Int {

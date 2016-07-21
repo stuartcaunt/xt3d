@@ -10,7 +10,7 @@ class UByteVertexData extends PrimitiveVertexData {
 
 	// properties
 	public var uint8Array(get, null):UInt8Array;
-	public var arrayLength(get, set):Int;
+	public var array(get, null):Array<UInt>;
 
 	// members
 	private var _ui8Array:UInt8Array = null;
@@ -87,12 +87,8 @@ class UByteVertexData extends PrimitiveVertexData {
 		return this._ui8Array;
 	}
 
-	function get_arrayLength():Int {
-		return this._length;
-	}
-
-	function set_arrayLength(value:Int) {
-		return this._length = value;
+	function get_array():Array<UInt> {
+		return this._array;
 	}
 
 	/* --------- Implementation --------- */
