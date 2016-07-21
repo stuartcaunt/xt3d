@@ -66,8 +66,10 @@ class BMFontLabel extends RenderObject {
 			// Create texture
 			var textureFileName = this._bmFontConfiguration.imageFileName;
 			this._texture = Texture2D.createFromImageAsset(textureFileName, TextureOptions.createLINEAR_CLAMP_POT_MIPMAP_LINEAR());
-			this._material = TextureMaterial.createWithTexture(this._texture);
-			this._material.transparent = true;
+			var textureMaterial = TextureMaterial.createWithTexture(this._texture, { alphaCullingEnabled: true} );
+			textureMaterial.transparent = true;
+			textureMaterial.alphaCullingValue = 0.1;
+			this._material = textureMaterial;
 
 			this.createGeometry();
 		}
