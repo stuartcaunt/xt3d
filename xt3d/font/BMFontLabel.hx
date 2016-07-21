@@ -28,6 +28,11 @@ typedef BMFontLabelLine = {
 	var chars:Array<BMFontLabelCharacter>;
 };
 
+enum TextAlignment {
+	TextAlignmentLeft;
+	TextAlignmentRight;
+	TextAlignmentCenter;
+}
 
 class BMFontLabel extends RenderObject {
 
@@ -40,22 +45,22 @@ class BMFontLabel extends RenderObject {
 	private var _texture:Texture2D;
 	private var _vertexData:InterleavedVertexData;
 	private var _indexData:IndexData;
+	private var _alignment:TextAlignment = TextAlignment.TextAlignmentLeft;
 
-	private var _chars:Array<BMFontLabelCharacter> = new Array<BMFontLabelCharacter>();
 	private var _lines:Array<BMFontLabelLine> = new Array<BMFontLabelLine>();
 	private var _contentSize:Size<Int> = Size.createIntSize(0, 0);
 
-	public static function createWithString(text:String, fntFileName:String):BMFontLabel {
+	public static function createWithText(text:String, fntFileName:String):BMFontLabel {
 		var object = new BMFontLabel();
 
-		if (object != null && !(object.initWithString(text, fntFileName))) {
+		if (object != null && !(object.initWithText(text, fntFileName))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initWithString(text:String, fntFileName:String):Bool {
+	public function initWithText(text:String, fntFileName:String):Bool {
 		var retval;
 		if ((retval = super.initRenderObject(null, null))) {
 			this._text = text;
@@ -71,7 +76,11 @@ class BMFontLabel extends RenderObject {
 			textureMaterial.alphaCullingValue = 0.1;
 			this._material = textureMaterial;
 
+			// Create the geometry
 			this.createGeometry();
+
+			// update the text
+			this.updateText();
 		}
 
 		return retval;
@@ -87,23 +96,45 @@ class BMFontLabel extends RenderObject {
 
 	/* --------- Implementation --------- */
 
+	public function setText(text:String):Void {
+		this._text = text;
+
+		this.updateText();
+	}
+
+	public function setAlignment(alignment:TextAlignment):Void {
+		this._alignment = alignment;
+
+		// Update character positions
+		this.updateCharacterPositions();
+
+		// Update the geometry
+		this.updateGeometry();
+	}
+
+	private function updateText():Void {
+		// update the character data
+		this.updateCharacterData();
+
+		// Update the geometry
+		this.updateGeometry();
+	}
+
 	private function createGeometry():Void {
-
-		this.buildFontLabelData();
-
 		// Create geometry
 		this._geometry = Geometry.create();
 
 		// Create vertex data
 		var stride = 8;
-		if (this._vertexData == null) {
-			this._vertexData = this._geometry.createInterleavedVertexData(stride, null);
-			this._vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
-			this._vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
-			this._vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
+		this._vertexData = this._geometry.createInterleavedVertexData(stride, null);
+		this._vertexData.setAttributeOffset(Geometry.bufferNames.position, 0);
+		this._vertexData.setAttributeOffset(Geometry.bufferNames.normal, 3);
+		this._vertexData.setAttributeOffset(Geometry.bufferNames.uv, 6);
 
-			this._indexData = this._geometry.createIndexData();
-		}
+		this._indexData = this._geometry.createIndexData();
+	}
+
+	private function updateGeometry():Void {
 
 		var nChars = 0;
 		var vertexOffset;
@@ -114,7 +145,7 @@ class BMFontLabel extends RenderObject {
 				indexOffset = nChars * 6;
 
 				// Create or reuse vertex data
-				this.addQuad(vertexOffset, indexOffset, stride, char.posRect, char.uvRect);
+				this.addQuad(vertexOffset, indexOffset, char.posRect, char.uvRect);
 
 				nChars++;
 			}
@@ -125,7 +156,7 @@ class BMFontLabel extends RenderObject {
 		// Todo : remove unused indices/vertices
 	}
 
-	private function addQuad(vertexOffset:Int, indexOffset:Int, stride:Int, posRect:Rectangle, uvRect:Rectangle):Void {
+	private function addQuad(vertexOffset:Int, indexOffset:Int, posRect:Rectangle, uvRect:Rectangle):Void {
 		var x0 = posRect.x;
 		var y0 = posRect.y;
 		var x1 = posRect.x + posRect.width;
@@ -142,6 +173,8 @@ class BMFontLabel extends RenderObject {
 			[x0, y1, u0, v1],
 			[x1, y1, u1, v1]
 		];
+
+		var stride = this._vertexData.stride;
 
 		// Modify existing or create vertex data
 		for (i in 0 ... 4) {
@@ -176,7 +209,7 @@ class BMFontLabel extends RenderObject {
 
 	}
 
-	private function buildFontLabelData():Void {
+	private function updateCharacterData():Void {
 		var nextFontPositionX:Int = 0;
 		var nextFontPositionY:Int = 0;
 
@@ -185,6 +218,9 @@ class BMFontLabel extends RenderObject {
 		var quantityOfLines:Int = 1;
 		var previousCharCode = -1;
 		var lineNumber = 0;
+
+		// Initialise lines
+		this._lines = [];
 
 		var stringLen = this._text.length;
 		if (stringLen == 0) {
@@ -237,8 +273,8 @@ class BMFontLabel extends RenderObject {
 			var rect:Rectangle = fontDef.rect;
 
 			var xOffset = nextFontPositionX + fontDef.xOffset + kerningAmount;
-			var yOffset = nextFontPositionY + this._bmFontConfiguration.lineHeight - fontDef.yOffset;
-			var position = new Vector2(xOffset, yOffset - rect.height);
+			var yOffset = nextFontPositionY + this._bmFontConfiguration.lineHeight - fontDef.yOffset - Std.int(rect.height);
+			var position = new Vector2(xOffset, yOffset);
 
 			var textureWidth = this._texture.pixelsWidth;
 			var textureHeight = this._texture.pixelsHeight;
@@ -269,6 +305,27 @@ class BMFontLabel extends RenderObject {
 		// Get content size
 		this._contentSize.width = longestLine;
 		this._contentSize.height = totalHeight;
+
+		// update character position
+		this.updateCharacterPositions();
+	}
+
+	private function updateCharacterPositions():Void {
+		var alignmentOffset = 0.0;
+
+		for (line in this._lines) {
+			if (this._alignment == TextAlignment.TextAlignmentRight) {
+				alignmentOffset = this._contentSize.width - line.length;
+
+			} else if (this._alignment == TextAlignment.TextAlignmentCenter) {
+				alignmentOffset = 0.5 * (this._contentSize.width - line.length);
+			}
+
+			for (char in line.chars) {
+				var xOffset = char.xOffset;
+				char.posRect.x = xOffset + alignmentOffset;
+			}
+		}
 	}
 
 }
