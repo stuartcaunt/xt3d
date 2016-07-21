@@ -10,7 +10,6 @@ class FloatVertexData extends PrimitiveVertexData {
 
 	// properties
 	public var float32Array(get, null):Float32Array;
-//	public var arrayLength(get, set):Int;
 
 	// members
 	private var _f32Array:Float32Array = null;
@@ -104,14 +103,6 @@ class FloatVertexData extends PrimitiveVertexData {
 	function get_float32Array():Float32Array {
 		return this._f32Array;
 	}
-
-//	function get_arrayLength():Int {
-//		return this._length;
-//	}
-//
-//	function set_arrayLength(value:Int) {
-//		return this._length = value;
-//	}
 
 	/* --------- Implementation --------- */
 

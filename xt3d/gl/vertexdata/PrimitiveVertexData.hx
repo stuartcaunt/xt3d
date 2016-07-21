@@ -9,6 +9,7 @@ class PrimitiveVertexData extends VertexData {
 	// properties
 	public var attributeName(get, null):String;
 	public var vertexSize(get, null):Int;
+	public var numberOfVertices(get, null):Int;
 
 	// members
 	private var _attributeName:String;
@@ -36,6 +37,10 @@ class PrimitiveVertexData extends VertexData {
 
 	public inline function get_vertexSize():Int {
 		return this._vertexSize;
+	}
+
+	public inline function get_numberOfVertices():Int {
+		return Std.int(this.getLength() / this._vertexSize);
 	}
 
 

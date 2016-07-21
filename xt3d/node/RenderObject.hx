@@ -1,5 +1,6 @@
 package xt3d.node;
 
+import xt3d.utils.XT;
 import xt3d.gl.XTGL;
 import xt3d.core.RendererOverrider;
 import xt3d.math.Vector4;
@@ -276,6 +277,10 @@ class RenderObject extends Node3D {
 	/* --------- Scene graph --------- */
 
 	override public function prepareObjectForRender(scene:Scene, overrider:RendererOverrider = null):Void {
+		if (this._geometry == null || this._material == null) {
+			return;
+		}
+
 		super.prepareObjectForRender(scene, overrider);
 
 		if (this._visible) {
