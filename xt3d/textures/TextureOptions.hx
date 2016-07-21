@@ -1,6 +1,7 @@
 package xt3d.textures;
 
 import xt3d.gl.XTGL;
+
 class TextureOptions {
 
 	public static var NEAREST_REPEAT_POT:TextureOptions = createNEAREST_REPEAT_POT();
@@ -21,7 +22,7 @@ class TextureOptions {
 	// members
 	private var _forcePOT:Bool = true;
 	private var _generateMipMaps:Bool = true;
-	private var _minFilter:Int = XTGL.GL_LINEAR;
+	private var _minFilter:Int = XTGL.GL_LINEAR_MIPMAP_LINEAR;
 	private var _magFilter:Int = XTGL.GL_LINEAR;
 	private var _wrapS:Int = XTGL.GL_REPEAT;
 	private var _wrapT:Int = XTGL.GL_REPEAT;
@@ -60,9 +61,21 @@ class TextureOptions {
 		var textureOptions = new TextureOptions();
 		textureOptions.forcePOT = true;
 		textureOptions.minFilter = XTGL.GL_LINEAR_MIPMAP_LINEAR;
-		textureOptions.magFilter = XTGL.GL_LINEAR_MIPMAP_LINEAR;
+		textureOptions.magFilter = XTGL.GL_LINEAR;
 		textureOptions.wrapS = XTGL.GL_REPEAT;
 		textureOptions.wrapT = XTGL.GL_REPEAT;
+		textureOptions.generateMipMaps = true;
+
+		return textureOptions;
+	}
+
+	public static function createLINEAR_CLAMP_POT_MIPMAP_LINEAR():TextureOptions {
+		var textureOptions = new TextureOptions();
+		textureOptions.forcePOT = true;
+		textureOptions.minFilter = XTGL.GL_LINEAR_MIPMAP_LINEAR;
+		textureOptions.magFilter = XTGL.GL_LINEAR;
+		textureOptions.wrapS = XTGL.GL_CLAMP_TO_EDGE;
+		textureOptions.wrapT = XTGL.GL_CLAMP_TO_EDGE;
 		textureOptions.generateMipMaps = true;
 
 		return textureOptions;

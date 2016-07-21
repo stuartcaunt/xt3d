@@ -139,8 +139,8 @@ class GLTextureManager {
 	}
 
 	private function handleTextureParams(texture:Texture2D):Void {
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, XTGL.toGLParam(texture.minFilter));
-		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, XTGL.toGLParam(texture.magFilter));
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, XTGL.toGLParam(texture.magFilter));
+		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, XTGL.toGLParam(texture.minFilter));
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, XTGL.toGLParam(texture.wrapS));
 		GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, XTGL.toGLParam(texture.wrapT));
 	}
