@@ -1,0 +1,21 @@
+info face="HVD Comic Serif Pro" size=32 bold=0 italic=0 charset="" unicode=0 stretchH=100 smooth=1 aa=1 padding=0,0,0,0 spacing=2,2
+common lineHeight=44 base=33 scaleW=128 scaleH=128 pages=1 packed=0
+page id=0 file="fps.png"
+chars count=12
+char id=32     x=70    y=70    width=0     height=0     xoffset=0     yoffset=36    xadvance=14    page=0 chnl=0 letter="space"
+char id=46     x=53    y=70    width=15    height=15    xoffset=-0    yoffset=21    xadvance=10    page=0 chnl=0 letter="."
+char id=48     x=30    y=2     width=26    height=32    xoffset=-1    yoffset=5     xadvance=19    page=0 chnl=0 letter="0"
+char id=49     x=2     y=70    width=23    height=32    xoffset=-1    yoffset=4     xadvance=16    page=0 chnl=0 letter="1"
+char id=50     x=27    y=70    width=24    height=31    xoffset=-1    yoffset=5     xadvance=17    page=0 chnl=0 letter="2"
+char id=51     x=85    y=2     width=24    height=32    xoffset=-1    yoffset=4     xadvance=17    page=0 chnl=0 letter="3"
+char id=52     x=2     y=36    width=24    height=32    xoffset=-1    yoffset=4     xadvance=18    page=0 chnl=0 letter="4"
+char id=53     x=28    y=36    width=24    height=32    xoffset=-2    yoffset=4     xadvance=16    page=0 chnl=0 letter="5"
+char id=54     x=54    y=36    width=24    height=32    xoffset=-1    yoffset=4     xadvance=17    page=0 chnl=0 letter="6"
+char id=55     x=2     y=2     width=26    height=32    xoffset=-2    yoffset=5     xadvance=19    page=0 chnl=0 letter="7"
+char id=56     x=58    y=2     width=25    height=32    xoffset=-1    yoffset=4     xadvance=19    page=0 chnl=0 letter="8"
+char id=57     x=80    y=36    width=24    height=32    xoffset=-1    yoffset=5     xadvance=17    page=0 chnl=0 letter="9"
+kernings count=4
+kerning first=52 second=55 amount=-1
+kerning first=54 second=55 amount=-1
+kerning first=54 second=57 amount=-1
+kerning first=55 second=54 amount=-1
