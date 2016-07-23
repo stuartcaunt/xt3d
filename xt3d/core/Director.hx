@@ -100,9 +100,6 @@ class Director implements Xt3dGLViewListener {
 		// Create mouse dispatcher
 		this._mouseDispatcher = MouseDispatcher.create(this._gestureDispatcher);
 
-		// Create fps calculator
-		this._fpsCalculator = FPSCalculator.create();
-
 		return true;
 	}
 
@@ -219,6 +216,9 @@ class Director implements Xt3dGLViewListener {
 
 		// Initialise frame rate
 		this.setFrameRate(60.0);
+
+		// Create fps calculator
+		this._fpsCalculator = FPSCalculator.create();
 
 		this._isReady = true;
 		this.notifyReadyListeners();
@@ -383,26 +383,31 @@ class Director implements Xt3dGLViewListener {
 	private function updateDeltaTime(dt:Float):Void {
 		//XT.Log("fps = " + 1000.0 / dt);
 
-		// Calculate dt
-		this.calculateDeltaTime(dt);
+		if (this._isReady) {
 
-		// If not paused then update animations
-		if (!this._paused) {
-			this._scheduler.update(this._timeFactor * this._deltaTime);
-		}
+			// Calculate dt
+			this.calculateDeltaTime(dt);
 
-		// Update fps calculator
-		if (this._fpsEnabled) {
-			this._fpsCalculator.update(dt);
+			// If not paused then update animations
+			if (!this._paused) {
+				this._scheduler.update(this._timeFactor * this._deltaTime);
+			}
+
+			// Update fps calculator
+			if (this._fpsEnabled) {
+				this._fpsCalculator.update(dt);
+			}
 		}
 	}
 
 	private function renderLoop():Void {
-		// Make current
-		this.makeCurrent();
+		if (this._isReady) {
+			// Make current
+			this.makeCurrent();
 
-		// Perform render
-		this.render(this._backgroundColor);
+			// Perform render
+			this.render(this._backgroundColor);
+		}
 	}
 
 	public function render(backgroundColor:Color, renderTarget:RenderTexture = null, overrider:RendererOverrider = null) {
@@ -438,6 +443,18 @@ class Director implements Xt3dGLViewListener {
 			view.render(overrider);
 		}
 
+
+		// Display fps
+		if (this._fpsEnabled) {
+			// Set the fullscreen viewport
+			_renderer.setViewport(viewport);
+
+			// Disable scissor test
+			_renderer.disableScissor();
+
+			// render fps
+			this._fpsCalculator.render();
+		}
 	}
 
 	private function calculateDeltaTime(dt:Float = 0.0):Void {

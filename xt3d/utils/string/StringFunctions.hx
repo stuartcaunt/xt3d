@@ -52,7 +52,14 @@ class StringFunctions {
 	public static function floatToStringNumberOfDp(n:Float, decPlaces:Int){
 		if (decPlaces >= 0) {
 			var temp:Float = Math.pow(10, decPlaces);
-			return "" + Math.round(n * temp) / temp;
+			var retVal = "" + Math.round(n * temp) / temp;
+			if (retVal.indexOf(".") < 0) {
+				retVal += ".";
+				for (i in 0 ... decPlaces) {
+					retVal += "0";
+				}
+			}
+			return retVal;
 		}
 		return "" + n;
 	}
