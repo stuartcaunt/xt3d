@@ -4,7 +4,7 @@ import haxe.Timer;
 
 class XT  {
 
-	public static inline var VERSION:String = "0.2.13";
+	public static inline var VERSION:String = "0.2.14";
 	public static inline var MAX_LIGHTS:String = "MAX_LIGHTS";
 	public static inline var SHADER_PRECISION:String = "SHADER_PRECISION";
 	public static inline var DEFAULT_FPS:String = "DEFAULT_FPS";

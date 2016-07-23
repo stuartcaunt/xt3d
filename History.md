@@ -1,3 +1,16 @@
+0.2.14 / 2016-07-23
+====================
+ * Render fps using BMFontLabel.
+ * Provide access to raw untyped arrays in VertexData types.
+ * Fix POT texture creation from non-POT textures.
+ * Added BMFontLabel to read BMFont data (.fnt files) for text rendering: dynamic text and alignment supported
+ * Do not render objects that have neither a geometry nor a material.
+ * Add accessor to number of vertices in a PrimitiveVertexData.
+ * Modify default min_filter texture option to use mipmap_linear.
+ * Fix mag filter values in texture option creators.
+ * Fix setting min/mag filters in TextureManager.
+ * package with annotated tags (to ensure that version is correctly updated with git-describe)
+
 0.2.13 / 2016-07-13
 ====================
  * Update to Lime 3.0.0.
