@@ -37,6 +37,7 @@ enum TextAlignment {
 class BMFontLabel extends RenderObject {
 
 	// properties
+	public var contentSize(get, null):Size<Int>;
 
 	// members
 	private var _text:String;
@@ -93,6 +94,10 @@ class BMFontLabel extends RenderObject {
 
 
 	/* ----------- Properties ----------- */
+
+	function get_contentSize():Size<Int> {
+		return this._contentSize;
+	}
 
 	/* --------- Implementation --------- */
 
