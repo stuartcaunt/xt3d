@@ -8,6 +8,6 @@
   "releasenote": "See History.md",
   "contributors": [ "stuartcaunt" ],
   "dependencies": {
-    "lime": "3.0.0"
+    "lime": "3.0.3"
   }
 }
