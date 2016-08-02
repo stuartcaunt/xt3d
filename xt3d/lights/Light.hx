@@ -1,4 +1,4 @@
-package xt3d.node;
+package xt3d.lights;
 
 
 import xt3d.material.ColorMaterial;
@@ -9,6 +9,8 @@ import xt3d.math.MatrixHelper;
 import xt3d.gl.shaders.UniformLib;
 import xt3d.node.Scene;
 import xt3d.node.Node3D;
+import xt3d.node.Camera;
+import xt3d.node.MeshNode;
 import xt3d.math.Vector4;
 import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
@@ -32,6 +34,7 @@ class Light extends Node3D {
 	public var enabled(get, set):Bool;
 
 	public var renderLight(get, set):Bool;
+	public var isShadowCasting(get, set):Bool;
 
 	// members
 	private var _lightType:Int = XTGL.PointLight;
@@ -42,6 +45,7 @@ class Light extends Node3D {
 	private var _attenuation = [1.0, 0.0, 0.0];
 
 	private var _direction:Vector4 = new Vector4();
+	private var _lastDirection:Vector4 = new Vector4();
 
 	private var _spotCutoffAngle:Float = -1.0;
 	private var _spotFalloffExponent:Float = 1.0;
@@ -53,6 +57,8 @@ class Light extends Node3D {
 
 	private var _renderLight:Bool = false;
 	private var _renderedLight:Node3D = null;
+
+	private var _isShadowCasting:Bool = false;
 
 	public static function createPointLight(ambient:Int = 0x000000, diffuse:Int = 0xFFFFFF, specular:Int = 0xFFFFFF, attenuation:Float = 0.0):Light {
 		var object = new Light();
@@ -159,7 +165,12 @@ class Light extends Node3D {
 	}
 
 	public inline function set_lightType(value:Int) {
-		return this._lightType = value;
+		this._lightType = value;
+
+		// Update shadow casting
+		this.setIsShadowCasting(this._isShadowCasting);
+
+		return this._lightType;
 	}
 
 	public inline function get_ambientColor():Color {
@@ -235,11 +246,11 @@ class Light extends Node3D {
 		return this._spotFalloffExponent = value;
 	}
 
-	public function get_enabled():Bool {
+	public inline function get_enabled():Bool {
 		return this._enabled;
 	}
 
-	public function set_enabled(value:Bool) {
+	public inline function set_enabled(value:Bool) {
 		return this._enabled = value;
 	}
 
@@ -248,9 +259,19 @@ class Light extends Node3D {
 		return this._renderLight;
 	}
 
-	function get_renderLight():Bool {
+	public inline function get_renderLight():Bool {
 		return this._renderLight;
 	}
+
+	public inline function get_isShadowCasting():Bool {
+		return this._isShadowCasting;
+	}
+
+	public inline function set_isShadowCasting(value:Bool) {
+		this.setIsShadowCasting(value);
+		return this._isShadowCasting;
+	}
+
 
 
 	/* --------- Implementation --------- */
@@ -265,6 +286,14 @@ class Light extends Node3D {
 	override public function prepareObjectForRender(scene:Scene, overrider:RendererOverrider = null):Void {
 		if (this._enabled) {
 			scene.addLight(this);
+		}
+
+		// Determine if changes have occurred
+		if (this._isShadowCasting) {
+			if (!this._direction.equals(this._lastDirection)) {
+				this._lastDirection.copyFrom(this._direction);
+				this.isNodeUpdated = true;
+			}
 		}
 	}
 
@@ -292,6 +321,19 @@ class Light extends Node3D {
 		}
 	}
 
+	public function setIsShadowCasting(value:Bool) {
+		if (value) {
+			if (this._lightType == XTGL.DirectionalLight) {
+				this._isShadowCasting = value;
+
+				return;
+
+			} else {
+				XT.Error("Shadow casting is not available for this type of light");
+			}
+		}
+		this._isShadowCasting = false;
+	}
 
 	public function prepareCommonRenderUniforms(camera:Camera, uniformLib:UniformLib, index:Int):Void {
 		uniformLib.uniform("lights").at(index).get("enabled").boolValue = this._enabled;

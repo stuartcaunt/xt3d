@@ -1,5 +1,6 @@
 package xt3d.events.picking;
 
+import xt3d.core.RendererOverrider.RendererOverriderGeometryDelegate;
 import xt3d.gl.XTGL;
 import xt3d.node.Camera;
 import xt3d.view.View;
@@ -27,7 +28,7 @@ enum FacePickerGeometryType {
 	FacePickerGeometryTypeCustom;
 }
 
-class FacePicker implements RendererOverriderDelegate {
+class FacePicker implements RendererOverriderMaterialDelegate implements RendererOverriderGeometryDelegate {
 
 	// properties
 
@@ -67,8 +68,7 @@ class FacePicker implements RendererOverriderDelegate {
 		this._facePickerMaterial.blending = XTGL.NoBlending;
 
 		// Create a renderer overrider
-		this._rendererOverrider = RendererOverrider.createWithMaterialAndGeometry(this._facePickerMaterial, this._facePickerGeometry);
-		this._rendererOverrider.delegate = this;
+		this._rendererOverrider = RendererOverrider.create(this, this);
 		this._rendererOverrider.geometryBlend = GeometryBlendType.GeometryBlendTypeMix;
 
 		return true;
@@ -115,18 +115,20 @@ class FacePicker implements RendererOverriderDelegate {
 
 	/* --------- Delegate functions --------- */
 
-	public function onRenderStart(scene:Scene, camera:Camera):Void {
-		// Nothing to do
-	}
-
-	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void {
+	public function getMaterialOverride(renderObject:RenderObject, originalMaterial:Material):Material {
 		// Set render object id in material uniforms
 		var renderIdHigh = Std.int(renderObject.renderId / 256);
 		var renderIdLow = renderObject.renderId % 256;
 		this._facePickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 256, renderIdLow / 256];
 
 		// Set picking material sided-ness to match original material
-		this._facePickerMaterial.side = renderObject.material.side;
+		this._facePickerMaterial.side = originalMaterial.side;
+
+		return this._facePickerMaterial;
+	}
+
+	public function getGeometryOverride(renderObject:RenderObject, geometry:Geometry):Geometry {
+		return this._facePickerGeometry;
 	}
 
 

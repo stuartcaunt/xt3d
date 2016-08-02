@@ -6,6 +6,7 @@ import xt3d.utils.color.Color;
 import xt3d.utils.XT;
 import xt3d.gl.XTGL;
 import xt3d.node.Node3D;
+import xt3d.lights.Light;
 import xt3d.core.Director;
 
 class Scene extends Node3D {
@@ -18,6 +19,7 @@ class Scene extends Node3D {
 	public var zSortingStrategy(get, set):Int;
 	public var lightingEnabled(get, set):Bool;
 	public var ambientLight(get, set):Color;
+	public var shadowCaster(get, null):Light;
 
 	private var _opaqueObjects:Array<RenderObject> = new Array<RenderObject>();
 	private var _transparentObjects:Array<RenderObject> = new Array<RenderObject>();
@@ -31,6 +33,9 @@ class Scene extends Node3D {
 	private var _borrowedChildren:Map<Node3D, Node3D> = new Map<Node3D, Node3D>();
 	private var _maxLights:Int;
 	private var _lastNumberOfLights:Int = 0;
+	private var _numberOfShadowCastingLights:Int = 0;
+	private var _lastNumberOfShadowCastingLights:Int = 0;
+	private var _shadowCaster:Light = null;
 
 	// members
 	public static function create():Scene {
@@ -94,6 +99,9 @@ class Scene extends Node3D {
 		return this._ambientLight = value;
 	}
 
+	function get_shadowCaster():Light {
+		return this._shadowCaster;
+	}
 
 	/* --------- Implementation --------- */
 
@@ -128,6 +136,13 @@ class Scene extends Node3D {
 
 	inline public function addLight(light:Light):Void {
 		this._lights.push(light);
+		if (light.isShadowCasting) {
+			if (this._numberOfShadowCastingLights == 0) {
+				this._shadowCaster = light;
+			}
+
+			this._numberOfShadowCastingLights++;
+		}
 	}
 
 
@@ -139,6 +154,8 @@ class Scene extends Node3D {
 		this._transparentObjects.splice(0, this._transparentObjects.length);
 		this._allRenderedObjects.splice(0, this._allRenderedObjects.length);
 		this._lights.splice(0, this._lights.length);
+		this._numberOfShadowCastingLights = 0;
+		this._shadowCaster = null;
 	}
 
 	public function prepareCommonRenderUniforms(camera:Camera, uniformLib:UniformLib):Void {
@@ -148,6 +165,11 @@ class Scene extends Node3D {
 			XT.Warn("Number of lights in the scene (" + this._lights.length + ") exceeds maximum: only using " + this._maxLights);
 		}
 		this._lastNumberOfLights = this._lights.length;
+
+		if (this._numberOfShadowCastingLights > 1 && this._numberOfShadowCastingLights != this._lastNumberOfShadowCastingLights) {
+			XT.Warn("Only one shadow casting light is allowed in the scene: currently have " + this._numberOfShadowCastingLights);
+		}
+		this._lastNumberOfShadowCastingLights = this._numberOfShadowCastingLights;
 
 		// Enable/disable lighting
 		uniformLib.uniform("lightingEnabled").boolValue = this._lightingEnabled;
