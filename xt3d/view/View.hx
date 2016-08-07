@@ -1,5 +1,6 @@
 package xt3d.view;
 
+import xt3d.lights.ShadowEngine;
 import lime.graphics.opengl.GL;
 import lime.math.Vector2;
 import lime.math.Matrix3;
@@ -35,6 +36,8 @@ class View extends EventEmitter {
 	public var orientation(get, set):XTOrientation;
 	public var viewTransform(get, set):Matrix3;
 	public var gesturesEnabled(get, set):Bool;
+	public var shadowsEnabled(get, set):Bool;
+	public var shadowEngine(get, set):ShadowEngine;
 
 	// members
 	private var _viewport:Rectangle;
@@ -50,6 +53,9 @@ class View extends EventEmitter {
 	private var _backgroundColor:Color = Director.current.backgroundColor;
 	private var _isOpaque:Bool = false;
 	private var _clearFlags:Int = GL.DEPTH_BUFFER_BIT; // Default for transparent view
+
+	private var _shadowsEnabled:Bool = false;
+	private var _shadowEngine:ShadowEngine = null;
 
 	private var _scene:Scene;
 	private var _camera:Camera;
@@ -225,30 +231,47 @@ class View extends EventEmitter {
 		return this._camera = value;
 	}
 
-	function get_orientation():XTOrientation {
+	public inline function get_orientation():XTOrientation {
 		return this._orientation;
 	}
 
-	function set_orientation(value:XTOrientation) {
+	public inline function set_orientation(value:XTOrientation) {
 		this.setOrientation(value);
 		return this._orientation;
 	}
 
-	function get_viewTransform():Matrix3 {
+	public function get_viewTransform():Matrix3 {
 		return this._viewTransform;
 	}
 
-	function set_viewTransform(value:Matrix3):Matrix3 {
+	public function set_viewTransform(value:Matrix3):Matrix3 {
 		return this._viewTransform = value;
 	}
 
-	function get_gesturesEnabled():Bool {
+	public inline function get_gesturesEnabled():Bool {
 		return this._gesturesEnabled;
 	}
 
-	function set_gesturesEnabled(value:Bool) {
+	public inline function set_gesturesEnabled(value:Bool) {
 		return this._gesturesEnabled = value;
 	}
+
+	public inline function set_shadowsEnabled(value:Bool) {
+		return this._shadowsEnabled = value;
+	}
+
+	public inline function get_shadowsEnabled():Bool {
+		return this._shadowsEnabled;
+	}
+
+	public inline function get_shadowEngine():ShadowEngine {
+		return this._shadowEngine;
+	}
+
+	public inline function set_shadowEngine(value:ShadowEngine) {
+		return this._shadowEngine = value;
+	}
+
 
 	/* --------- Implementation --------- */
 
@@ -294,6 +317,24 @@ class View extends EventEmitter {
 		this.pauseScheduler();
 	}
 
+	public function updateView(rendererOverrider:RendererOverrider = null):Void {
+		var renderer = Director.current.renderer;
+
+		// Prepare for render
+		renderer.updateScene(this._scene, this._camera, rendererOverrider);
+
+		// Prepare shadow maps if shadows are enabled and scene contains shadow casters
+		if (this._shadowsEnabled && this._scene.shadowCaster != null && this._shadowEngine != null && this._scene.isNodeUpdated) {
+			this._shadowEngine.updateShadows(this, this._scene.shadowCaster);
+		}
+	}
+
+	public function clearAndRender(clearColor:Color = null, clearFlags:Int = null, rendererOverrider:RendererOverrider = null):Void {
+		this.clear(clearColor, clearFlags);
+
+		this.render(rendererOverrider);
+	}
+
 	public function clear(clearColor:Color = null, clearFlags:Int = null):Void {
 		var renderer = Director.current.renderer;
 
@@ -317,13 +358,6 @@ class View extends EventEmitter {
 
 		// Clear view
 		renderer.clear(clearColor, clearFlags);
-	}
-
-	public function updateView(rendererOverrider:RendererOverrider = null):Void {
-		var renderer = Director.current.renderer;
-
-		// Prepare for render
-		renderer.updateScene(this._scene, this._camera, rendererOverrider);
 	}
 
 	public function render(rendererOverrider:RendererOverrider = null):Void {

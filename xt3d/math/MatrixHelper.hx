@@ -555,14 +555,34 @@ class MatrixHelper {
 		a[10] = m131 * m213 + m132 * m223 + m133 * m233;
 	}
 
-	public static inline function transformVector(m:Matrix4, v:Vector4):Vector4 {
+	public static inline function transformVector3(m:Matrix4, v:Vector4):Vector4 {
 		var projectedVector = new Vector4(
 			(v.x * m[0] + v.y * m[4] + v.z * m[8 ] + m[12]),
 			(v.x * m[1] + v.y * m[5] + v.z * m[9 ] + m[13]),
 			(v.x * m[2] + v.y * m[6] + v.z * m[10] + m[14]),
 			(v.x * m[3] + v.y * m[7] + v.z * m[11] + m[15]));
 
+		projectedVector.x /= projectedVector.w;
+		projectedVector.y /= projectedVector.w;
+		projectedVector.z /= projectedVector.w;
+		projectedVector.w = 1.0;
+
 		return projectedVector;
+	}
+
+	public static inline function transformVector3Inline(m:Matrix4, v1:Vector4, v2:Vector4):Void {
+		var x = v1.x;
+		var y = v1.y;
+		var z = v1.z;
+		v2.x = x * m[0] + y * m[4] + z * m[8 ] + m[12];
+		v2.y = x * m[1] + y * m[5] + z * m[9 ] + m[13];
+		v2.z = x * m[2] + y * m[6] + z * m[10] + m[14];
+		v2.w = x * m[3] + y * m[7] + z * m[11] + m[15];
+
+		v2.x /= v2.w;
+		v2.y /= v2.w;
+		v2.z /= v2.w;
+		v2.w = 1.0;
 	}
 
 }

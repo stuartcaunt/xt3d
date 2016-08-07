@@ -436,11 +436,8 @@ class Director implements Xt3dGLViewListener {
 			// Update view
 			view.updateView(overrider);
 
-			// Clear view
-			view.clear();
-
-			// Render view
-			view.render(overrider);
+			// Clear and render view
+			view.clearAndRender(overrider);
 		}
 
 

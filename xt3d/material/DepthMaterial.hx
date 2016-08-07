@@ -2,6 +2,7 @@ package xt3d.material;
 
 import xt3d.gl.XTGL;
 import xt3d.gl.shaders.UniformLib;
+
 class DepthMaterial extends Material {
 
 	public var near(get, null):Float;

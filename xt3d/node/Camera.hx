@@ -866,10 +866,10 @@ class Camera extends Node3D {
 
 	public function getProjectedPosition(worldPosition:Vector4):Vector2 {
 		var viewProjectionMatrix = this.viewProjectionMatrix;
-		var projectedPosition = MatrixHelper.transformVector(viewProjectionMatrix, worldPosition);
+		var projectedPosition = MatrixHelper.transformVector3(viewProjectionMatrix, worldPosition);
 
-		var x = 0.5 + (0.5 * projectedPosition.x / projectedPosition.w);
-		var y = 0.5 + (0.5 * projectedPosition.y / projectedPosition.w);
+		var x = 0.5 + (0.5 * projectedPosition.x);
+		var y = 0.5 + (0.5 * projectedPosition.y);
 
 		return new Vector2(x, y);
 	}

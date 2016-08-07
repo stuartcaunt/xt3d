@@ -104,6 +104,14 @@ class UniformLib {
 					"far" => { name: "u_far", type: "float", shader: "fv", defaultValue: "10.0", global: true },
 					"nearFarFactor" => { name: "u_nearFarFactor", type: "float", shader: "fv", defaultValue: "1.0", global: true }
 				]
+			},
+			"shadow" => {
+				uniforms: [
+					"shadowMatrix" => { name: "u_shadowMatrix", type: "mat4", shader: "v", global: true },
+					"shadowTexture" => { name: "u_shadowTexture", type: "texture", shader: "f", global: true },
+					"shadowColor" => { name: "u_shadowColor", type: "vec3", shader: "f", defaultValue: "[0.5, 0.5, 0.5]", global: true },
+					"shadowBias" => { name: "u_shadowBias", type: "float", shader: "f", defaultValue: "0.0005", global: true }
+				]
 			}
 		];
 

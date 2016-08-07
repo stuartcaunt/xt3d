@@ -39,6 +39,7 @@ class Renderer extends XTObject {
 	public var textureManager(get, null):GLTextureManager;
 	public var frameBufferManager(get, null):GLFrameBufferManager;
 	public var shaderManager(get, null):ShaderManager;
+	public var uniformLib(get, null):UniformLib;
 
 	public var renderTarget(get, set):RenderTexture;
 
@@ -143,11 +144,15 @@ class Renderer extends XTObject {
 		return this._shaderManager;
 	}
 
-	function get_renderTarget():RenderTexture {
+	public inline function get_uniformLib():UniformLib {
+		return this._uniformLib;
+	}
+
+	public inline function get_renderTarget():RenderTexture {
 		return this._renderTarget;
 	}
 
-	function set_renderTarget(value:RenderTexture) {
+	public inline function set_renderTarget(value:RenderTexture) {
 		this.setRenderTarget(value);
 		return this._renderTarget;
 	}
