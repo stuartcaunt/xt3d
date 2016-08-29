@@ -20,7 +20,7 @@ class DepthDebugMaterial extends Material {
 
 	public function init():Bool {
 		var isOk;
-		if ((isOk = super.initMaterial("depth_debug"))) {
+		if ((isOk = super.initMaterial("depthDebug"))) {
 		}
 
 		return isOk;
