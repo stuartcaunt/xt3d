@@ -69,7 +69,7 @@ class ShaderLib  {
 				fragmentProgram: "logDepth_fragment",
 				commonUniformGroups: ["matrixCommon", "depth"]
 			},
-			"depth_debug" => {
+			"depthDebug" => {
 				vertexProgram: "depth_debug_vertex",
 				fragmentProgram: "depth_debug_fragment",
 				commonUniformGroups: ["matrixCommon", "texture"]

@@ -1,5 +1,7 @@
 package xt3d.lights;
 
+import lime.math.Rectangle;
+import xt3d.utils.textures.TextureViewer;
 import xt3d.material.Material;
 import xt3d.node.RenderObject;
 import xt3d.math.VectorHelper;
@@ -51,24 +53,27 @@ class BasicShadowEngine extends ShadowEngine implements RendererOverriderMateria
 	private var _frustumCenter:Vector4 = new Vector4();
 	private var _nearExtend:Float = 100.0;
 
-	public static function createBasicShadowEngine(shadowMapSize:Int = 2048):BasicShadowEngine {
+	private var _debug:Bool = false;
+	private var _textureViewer:TextureViewer = null;
+
+	public static function createBasicShadowEngine(shadowMapSize:Int = 2048, debug:Bool = false):BasicShadowEngine {
 		var object = new BasicShadowEngine();
 
-		if (object != null && !(object.initBasicShadowEngine(shadowMapSize))) {
+		if (object != null && !(object.initBasicShadowEngine(shadowMapSize, debug))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function initBasicShadowEngine(shadowMapSize:Int = 2048):Bool {
+	public function initBasicShadowEngine(shadowMapSize:Int = 2048, debug:Bool = false):Bool {
 		var retval;
 		if ((retval = super.init())) {
 			this._shadowMapSize = shadowMapSize;
+			this._debug = debug;
 
 			// Create render texture
-			this._renderTexture = RenderTexture.create(Size.createIntSize(shadowMapSize, shadowMapSize),TextureOptions.LINEAR_CLAMP , XTGL.DepthStencilFormatNone);
-			this._renderTexture.clearColor = Color.white;
+			this.createRenderTarget();
 
 			// Create depth render material
 			this._depthMaterial = DepthMaterial.create();
@@ -86,21 +91,38 @@ class BasicShadowEngine extends ShadowEngine implements RendererOverriderMateria
 			for (i in 0 ... 8) {
 				this._frustumPoints.push(new Vector4());
 			}
-
 		}
 
 		return retval;
 	}
 
-
-	public function new() {
-		super();
-	}
-
-
 	/* ----------- Properties ----------- */
 
 	/* --------- Implementation --------- */
+
+	public override function getDebug():Bool {
+		return this._debug;
+	}
+
+	public override function setDebug(value:Bool) {
+		if (value && !this._debug) {
+			// Create texture viewer
+			this._textureViewer = TextureViewer.createTextureViewer();
+
+			var rect:Rectangle = new Rectangle(32, 32, 256, 256);
+			var materialConfig:MaterialConfig = {
+				materialName: "depthDebug",
+				textureUniformName: "texture"
+			};
+			this._textureViewer.addTexture("shadowMap", this._renderTexture, rect, materialConfig);
+
+		} else if (!value && this._debug) {
+			this._textureViewer.dispose();
+			this._textureViewer = null;
+		}
+
+		return this._debug = value;
+	}
 
 	public override function dispose():Void {
 		// Dispose of render texture
@@ -135,9 +157,17 @@ class BasicShadowEngine extends ShadowEngine implements RendererOverriderMateria
 		// Set the scene in the view
 		this._shadowView.scene = scene;
 
+		// Update view of render texture
+		this._renderTexture.updateView(this._shadowView, this._rendererOverrider);
+
 		// Render scene to render texture
 		this._renderTexture.renderWithClear(this._shadowView, this._rendererOverrider);
 
+	}
+
+	public function createRenderTarget():Void {
+		this._renderTexture = RenderTexture.create(Size.createIntSize(this._shadowMapSize, this._shadowMapSize), TextureOptions.LINEAR_CLAMP , XTGL.DepthStencilFormatNone);
+		this._renderTexture.clearColor = Color.white;
 	}
 
 	private function calculateFrustumPoints(camera:Camera):Void {

@@ -19,6 +19,16 @@ class EventEmitter extends XTObject {
 		callbacks.push(callback);
 	}
 
+	public function removeListener(event:String, callback:Void->Void) {
+		var callbacks = _listeners.get(event);
+
+		// Remove callback in array
+		var index = callbacks.indexOf(callback);
+		if (index >= 0) {
+			callbacks.splice(index, 1);
+		}
+	}
+
 
 	private function emit(event:String) {
 		var callbacks = _listeners.get(event);

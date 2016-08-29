@@ -22,7 +22,7 @@ import xt3d.view.View;
 import xt3d.core.Renderer;
 import xt3d.utils.color.Color;
 
-class Director implements Xt3dGLViewListener {
+class Director extends EventEmitter implements Xt3dGLViewListener {
 
 	// properties
 	public static var current(get, null):Director;
@@ -104,6 +104,7 @@ class Director implements Xt3dGLViewListener {
 	}
 
 	public function new() {
+		super();
 	}
 
 
@@ -240,6 +241,9 @@ class Director implements Xt3dGLViewListener {
 				// Update the display size in the views (does nothing if not changed)
 				view.setDisplaySize(_glView.size);
 			}
+
+			// send resize event
+			this.emit("resize");
 		}
 	}
 
@@ -405,8 +409,14 @@ class Director implements Xt3dGLViewListener {
 			// Make current
 			this.makeCurrent();
 
+			// send pre-render event (custom updates before rendering)
+			this.emit("pre_render");
+
 			// Perform render
 			this.render(this._backgroundColor);
+
+			// send pre-render event (custom updates before rendering)
+			this.emit("post_render");
 		}
 	}
 

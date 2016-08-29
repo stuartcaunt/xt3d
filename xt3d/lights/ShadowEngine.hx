@@ -5,6 +5,7 @@ import xt3d.view.View;
 class ShadowEngine {
 
 	// properties
+	public var debug(get, set):Bool;
 
 	// members
 
@@ -31,7 +32,24 @@ class ShadowEngine {
 
 	/* ----------- Properties ----------- */
 
+	public inline function set_debug(value:Bool):Bool {
+		return this.setDebug(value);
+	}
+
+	public inline function get_debug():Bool {
+		return this.getDebug();
+	}
 	/* --------- Implementation --------- */
+
+	public function getDebug():Bool {
+		// Override me
+		return null;
+	}
+
+	public function setDebug(value:Bool):Bool {
+		// Override me
+		return null;
+	}
 
 	public function dispose():Void {
 		// Override me
