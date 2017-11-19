@@ -53,14 +53,11 @@ class ImageLoader {
 	private function onComplete(data):Void {
 		XT.Log("Got image");
 
-		try {
-			Image.fromBytes(data, function (image) {
-				// Call callback with bitmap data
-				this._successCbk(image);
-			});
-
-		} catch (error:Dynamic) {
-			handleError("invalid response data: " + error);
+		var image = Image.fromBytes(data);
+		if (image != null) {
+			this._successCbk(image);
+		} else {
+			handleError("invalid response data");
 		}
 	}
 

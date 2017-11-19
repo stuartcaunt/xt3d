@@ -15,10 +15,9 @@ class BasicApplication extends Application {
 
 	public function new () {
 		super();
+	}
 
-		// Enable depth buffer in the Application
-		ApplicationMain.config.windows[0].depthBuffer = true;
-
+	private function launch() {
 		// Create opengl view and as it as a child
 		var glView = Xt3dGLViewFactory.instance().buildView(this);
 
