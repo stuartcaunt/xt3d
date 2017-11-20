@@ -815,7 +815,7 @@ class Uniform  {
 					defaultValue = "[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]";
 				}
 				var floatArray:Array<Float> = haxe.Json.parse(defaultValue);
-				this._defaultMatrixValue.copythisFrom(new Float32Array(floatArray));
+				this._defaultMatrixValue = new Matrix4(new Float32Array(floatArray));
 			}
 			setMatrixValue(this._defaultMatrixValue);
 
