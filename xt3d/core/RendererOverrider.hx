@@ -10,125 +10,58 @@ import xt3d.geometry.Geometry;
 enum GeometryBlendType {
 	GeometryBlendTypeReplace;
 	GeometryBlendTypeMix;
+	GeometryBlendTypeNone;
 }
 
 
-interface RendererOverriderDelegate {
-	public function onRenderStart(scene:Scene, camera:Camera):Void;
-	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void;
+interface RendererOverriderMaterialDelegate {
+	public function getMaterialOverride(renderObject:RenderObject, material:Material):Material;
+}
+
+interface RendererOverriderGeometryDelegate {
+	public function getGeometryOverride(renderObject:RenderObject, geometry:Geometry):Geometry;
 }
 
 class RendererOverrider {
 
 	// properties
-	public var material(get, set):Material;
-	public var geometry(get, set):Geometry;
 	public var geometryBlend(get, set):GeometryBlendType;
 	public var sortingEnabled(get, set):Bool;
 	public var blendingEnabled(get, set):Bool;
-	public var delegate(get, set):RendererOverriderDelegate;
+	public var materialDelegate(get, set):RendererOverriderMaterialDelegate;
+	public var geometryDelegate(get, set):RendererOverriderGeometryDelegate;
 
 	// members
-	private var _material:Material;
-	private var _geometry:Geometry;
-	private var _geometryBlend:GeometryBlendType = GeometryBlendType.GeometryBlendTypeReplace;
+	private var _geometryBlend:GeometryBlendType = GeometryBlendType.GeometryBlendTypeNone;
 	private var _sortingEnabled:Bool = true;
 	private var _blendingEnabled:Bool = true;
 
-	private var _delegate:RendererOverriderDelegate = null;
+	private var _materialDelegate:RendererOverriderMaterialDelegate = null;
+	private var _geometryDelegate:RendererOverriderGeometryDelegate = null;
 
 
-	public static function create():RendererOverrider {
+	public static function create(materialDelegate:RendererOverriderMaterialDelegate = null, geometryDelegate:RendererOverriderGeometryDelegate = null):RendererOverrider {
 		var object = new RendererOverrider();
 
-		if (object != null && !(object.init())) {
+		if (object != null && !(object.init(materialDelegate, geometryDelegate))) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public static function createWithMaterial(material:Material):RendererOverrider {
-		var object = new RendererOverrider();
-
-		if (object != null && !(object.initWithMaterial(material))) {
-			object = null;
-		}
-
-		return object;
-	}
-
-	public static function createWithGeometry(geometry:Geometry):RendererOverrider {
-		var object = new RendererOverrider();
-
-		if (object != null && !(object.initWithGeometry(geometry))) {
-			object = null;
-		}
-
-		return object;
-	}
-
-	public static function createWithMaterialAndGeometry(material:Material, geometry:Geometry):RendererOverrider {
-		var object = new RendererOverrider();
-
-		if (object != null && !(object.initWithMaterialAndGeometry(material, geometry))) {
-			object = null;
-		}
-
-		return object;
-	}
-
-	public function init():Bool {
-		this._material = null;
-		this._geometry = null;
+	public function init(materialDelegate:RendererOverriderMaterialDelegate = null, geometryDelegate:RendererOverriderGeometryDelegate = null):Bool {
+		this._materialDelegate = materialDelegate;
+		this._geometryDelegate = geometryDelegate;
 
 		return true;
 	}
-
-	public function initWithMaterial(material:Material):Bool {
-		this._material = material;
-		this._geometry = null;
-
-		return true;
-	}
-
-	public function initWithGeometry(geometry:Geometry):Bool {
-		this._material = null;
-		this._geometry = geometry;
-
-		return true;
-	}
-
-	public function initWithMaterialAndGeometry(material:Material, geometry:Geometry):Bool {
-		this._material = material;
-		this._geometry = geometry;
-
-		return true;
-	}
-
 
 	public function new() {
-
 	}
 
 
 	/* ----------- Properties ----------- */
-
-	inline function get_material():Material {
-		return this._material;
-	}
-
-	inline	function set_material(value:Material) {
-		return this._material = value;
-	}
-
-	inline function get_geometry():Geometry {
-		return this._geometry;
-	}
-
-	inline function set_geometry(value:Geometry) {
-		return this._geometry = value;
-	}
 
 	inline function get_geometryBlend() {
 		return this._geometryBlend;
@@ -154,28 +87,38 @@ class RendererOverrider {
 		return this._blendingEnabled = value;
 	}
 
-	inline function get_delegate():RendererOverriderDelegate {
-		return this._delegate;
+	public inline function get_materialDelegate():RendererOverriderMaterialDelegate {
+		return this._materialDelegate;
 	}
 
-	inline function set_delegate(value:RendererOverriderDelegate) {
-		return this._delegate = value;
+	public inline function set_materialDelegate(value:RendererOverriderMaterialDelegate) {
+		return this._materialDelegate = value;
+	}
+
+	public inline function get_geometryDelegate():RendererOverriderGeometryDelegate {
+		return this._geometryDelegate;
+	}
+
+	public inline function set_geometryDelegate(value:RendererOverriderGeometryDelegate) {
+		return this._geometryDelegate = value;
 	}
 
 
 	/* --------- Implementation --------- */
 
 
-	public function onRenderStart(scene:Scene, camera:Camera):Void {
-		if (this._delegate != null) {
-			this._delegate.onRenderStart(scene, camera);
+	public function getMaterialOverride(renderObject:RenderObject, originalMaterial:Material):Material {
+		if (this._materialDelegate != null) {
+			return this._materialDelegate.getMaterialOverride(renderObject, originalMaterial);
 		}
+		return originalMaterial;
 	}
 
-	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void {
-		if (this._delegate != null) {
-			this._delegate.prepareRenderObject(renderObject, material);
+	public function getGeometryOverride(renderObject:RenderObject, originalGeometry:Geometry):Geometry {
+		if (this._geometryDelegate != null) {
+			return this._geometryDelegate.getGeometryOverride(renderObject, originalGeometry);
 		}
+		return originalGeometry;
 	}
 
 }

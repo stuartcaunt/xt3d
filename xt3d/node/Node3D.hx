@@ -25,6 +25,7 @@ class Node3D extends XTObject {
 	public var matrixDirty(get, set):Bool;
 	public var worldMatrix(get, set):Matrix4;
 	public var worldMatrixDirty(get, set):Bool;
+	public var isNodeUpdated(get, set):Bool;
 
 	public var rotationX(get, set):Float;
 	public var rotationY(get, set):Float;
@@ -53,6 +54,7 @@ class Node3D extends XTObject {
 	private var _worldMatrixDirty:Bool = false;
 	private var _rotationMatrixDirty:Bool = false;
 	private var _eulerAnglesDirty:Bool = false;
+	private var _isNodeUpdated:Bool = false;
 
 	private var _rotationX:Float = 0.0;
 	private var _rotationY:Float = 0.0;
@@ -215,38 +217,53 @@ class Node3D extends XTObject {
 		return this._rotationZ;
 	}
 
-	function set_scale(value:Float) {
+	inline public function set_scale(value:Float) {
 		this.setScaleX(value);
 		this.setScaleY(value);
 		this.setScaleZ(value);
 		return value;
 	}
 
-	function get_scaleX():Float {
+	inline public function get_scaleX():Float {
 		return this._scaleX;
 	}
 
-	function set_scaleX(value:Float) {
+	inline public function set_scaleX(value:Float) {
 		this.setScaleX(value);
 		return this._scaleX;
 	}
 
-	function get_scaleY():Float {
+	inline public function get_scaleY():Float {
 		return this._scaleY;
 	}
 
-	function set_scaleY(value:Float) {
+	inline public function set_scaleY(value:Float) {
 		this.setScaleY(value);
 		return this._scaleY;
 	}
 
-	function get_scaleZ():Float {
+	inline public function get_scaleZ():Float {
 		return this._scaleZ;
 	}
 
-	function set_scaleZ(value:Float) {
+	inline public function set_scaleZ(value:Float) {
 		this.setScaleZ(value);
 		return this._scaleZ;
+	}
+
+	inline public function set_isNodeUpdated(value:Bool) {
+		this._isNodeUpdated = (this._isNodeUpdated || value);
+
+		// Propagate the node change
+		if (this._parent != null) {
+			this._parent.isNodeUpdated = this._isNodeUpdated;
+		}
+
+		return this._isNodeUpdated;
+	}
+
+	inline public function get_isNodeUpdated():Bool {
+		return this._isNodeUpdated;
 	}
 
 
@@ -550,13 +567,15 @@ class Node3D extends XTObject {
 	/*
 	 * Updates the world transformation of the object given the parent's world transformation.
 	 * Note that this intended to be called internally.
+	 * Returns true if any matrix was dirty
 	 */
-	public function updateWorldMatrix():Void {
+	public function updateWorldMatrix():Bool {
 
 		// Recalculate local transformation if necessary
-		if (this._matrixDirty) {
-			this.updateMatrix();
-		}
+		this.updateMatrix();
+
+		// Keep flag of whether any world matrix in currently heirarchy has changed
+		this._isNodeUpdated = this._worldMatrixDirty;
 
 		// Update transformation matrices if needed
 		if (this._worldMatrixDirty) {
@@ -581,8 +600,12 @@ class Node3D extends XTObject {
 
 		// Update all children transformations
 		for (child in this._children) {
-			child.updateWorldMatrix();
+			var childNodeUpdated = child.updateWorldMatrix();
+
+			this._isNodeUpdated = this._isNodeUpdated || childNodeUpdated;
 		}
+
+		return this._isNodeUpdated;
 	}
 
 	// --------- Scheduling ---------

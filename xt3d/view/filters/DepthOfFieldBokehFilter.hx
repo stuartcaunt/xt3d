@@ -1,5 +1,6 @@
 package xt3d.view.filters;
 
+import xt3d.node.RenderObject;
 import xt3d.textures.TextureOptions;
 import xt3d.gl.XTGL;
 import xt3d.material.DepthMaterial;
@@ -9,7 +10,7 @@ import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;
 import xt3d.material.Material;
 
-class DepthOfFieldBokehFilter extends BasicViewFilter {
+class DepthOfFieldBokehFilter extends BasicViewFilter implements RendererOverriderMaterialDelegate {
 
 	// properties
 	public var focalDepth(get, set):Float;
@@ -59,7 +60,7 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 			this._depthMaterial = DepthMaterial.create();
 
 			// Create renderer overrider with depth material
-			this._depthRendererOverrider = RendererOverrider.createWithMaterial(this._depthMaterial);
+			this._depthRendererOverrider = RendererOverrider.create(this);
 		}
 
 		return ok;
@@ -191,6 +192,14 @@ class DepthOfFieldBokehFilter extends BasicViewFilter {
 
 			this._uniformsDirty = false;
 		}
+	}
+
+	/* --------- Delegate functions --------- */
+
+	public function getMaterialOverride(renderObject:RenderObject, originalMaterial:Material):Material {
+		// TODO : depth material should change according to original material/object (eg skinning)
+
+		return this._depthMaterial;
 	}
 }
 
