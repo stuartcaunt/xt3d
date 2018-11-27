@@ -1,5 +1,6 @@
 package xt3d.utils.image;
 
+import haxe.io.Bytes;
 import haxe.io.Error;
 import lime.net.HTTPRequest;
 import lime.graphics.Image;
@@ -28,7 +29,7 @@ class ImageLoader {
 		this._successCbk = successCbk;
 		this._errorCbk = errorCbk;
 
-		var loader:HTTPRequest = new HTTPRequest();
+		var loader:HTTPRequest<Bytes> = new HTTPRequest<Bytes>();
 		var future = loader.load(url);
 
 		future.onComplete(this.onComplete);
@@ -52,20 +53,17 @@ class ImageLoader {
 	private function onComplete(data):Void {
 		XT.Log("Got image");
 
-		try {
-			Image.fromBytes(data, function (image) {
-				// Call callback with bitmap data
-				this._successCbk(image);
-			});
-
-		} catch (error:Dynamic) {
-			handleError("invalid response data: " + error);
+		var image = Image.fromBytes(data);
+		if (image != null) {
+			this._successCbk(image);
+		} else {
+			handleError("invalid response data");
 		}
 	}
 
-	private inline function onProgress(progress:Float):Void {
+	private inline function onProgress(progress:Int, total:Int):Void {
 		// Progress between 0 and 1 ?
-		this._progress = progress;
+		this._progress = progress / total;
 
 		XT.Log("loading " + Math.round(this._progress * 100) + "%");
 	}
