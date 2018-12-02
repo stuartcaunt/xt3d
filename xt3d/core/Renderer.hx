@@ -22,7 +22,7 @@ import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
 import xt3d.gl.shaders.ShaderManager;
 import xt3d.node.Camera;
-import xt3d.node.Light;
+import xt3d.lights.Light;
 import xt3d.material.Material;
 import xt3d.node.Scene;
 import xt3d.node.RenderObject;
@@ -230,11 +230,6 @@ class Renderer extends XTObject {
 
 	public function render(scene:Scene, camera:Camera, overrider:RendererOverrider = null) {
 
-		// Start of rendering callback to overrider
-		if (overrider != null) {
-			overrider.onRenderStart(scene, camera);
-		}
-
 		// Get view projection matrix
 		this._viewProjectionMatrix.copyFrom(camera.viewProjectionMatrix);
 
@@ -320,13 +315,8 @@ class Renderer extends XTObject {
 			// Update shader program (overrider if necessary)
 			var material = renderObject.material;
 			if (overrider != null) {
-				// Override material if desired
-				if (overrider.material != null) {
-					material = overrider.material;
-				}
-
-				// Custom stuff before rendering the object
-				overrider.prepareRenderObject(renderObject, material);
+				// Customise material before rendering the object
+				material = overrider.getMaterialOverride(renderObject, material);
 			}
 
 			// Set blending

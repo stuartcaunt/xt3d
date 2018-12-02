@@ -74,7 +74,11 @@ class GLStateManager {
 		// Depth write
 		this._oldDepthWrite = false;
 		this.setDepthWrite(true);
+#if (js && html5)
 		GL.clearDepth(1.0);
+#else
+		GL.clearDepthf(1.0);
+#end
 
 		// Scissor test
 		this._oldScissorTest = true;

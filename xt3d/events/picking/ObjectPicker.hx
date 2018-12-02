@@ -20,7 +20,7 @@ typedef ObjectPickingResult = {
 };
 
 
-class ObjectPicker implements RendererOverriderDelegate {
+class ObjectPicker implements RendererOverriderMaterialDelegate {
 
 	// properties
 
@@ -46,8 +46,7 @@ class ObjectPicker implements RendererOverriderDelegate {
 		this._objectPickerMaterial.blending = XTGL.NoBlending;
 
 		// Create a renderer overrider
-		this._rendererOverrider = RendererOverrider.createWithMaterial(this._objectPickerMaterial);
-		this._rendererOverrider.delegate = this;
+		this._rendererOverrider = RendererOverrider.create(this);
 
 		return true;
 	}
@@ -94,18 +93,16 @@ class ObjectPicker implements RendererOverriderDelegate {
 
 	/* --------- Delegate functions --------- */
 
-	public function onRenderStart(scene:Scene, camera:Camera):Void {
-		// Nothing to do
-	}
-
-	public function prepareRenderObject(renderObject:RenderObject, material:Material):Void {
+	public function getMaterialOverride(renderObject:RenderObject, originalMaterial:Material):Material {
 		// Set render object id in material uniforms
 		var renderIdHigh = Std.int(renderObject.renderId / 256);
 		var renderIdLow = renderObject.renderId % 256;
 		this._objectPickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 256, renderIdLow / 256];
 
 		// Set picking material sided-ness to match original material
-		this._objectPickerMaterial.side = renderObject.material.side;
+		this._objectPickerMaterial.side = originalMaterial.side;
+
+		return this._objectPickerMaterial;
 	}
 
 

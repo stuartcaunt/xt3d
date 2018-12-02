@@ -176,8 +176,8 @@ class RenderObject extends Node3D {
 		var bufferManager = renderer.bufferManager;
 
 		var geometry = this._geometry;
-		if (overrider != null && overrider.geometry != null && overrider.geometryBlend == GeometryBlendType.GeometryBlendTypeReplace) {
-			geometry = overrider.geometry;
+		if (overrider != null && overrider.geometryBlend == GeometryBlendType.GeometryBlendTypeReplace) {
+			geometry = overrider.getGeometryOverride(this, geometry);
 		}
 
 		// Verify that geometry has something to render before continuing
@@ -200,8 +200,9 @@ class RenderObject extends Node3D {
 		this.bindVertexBuffersToProgramAttributes(geometry, programAttributes);
 
 		// Add extra buffer data from overrider geometry for custom render pass
-		if (overrider != null && overrider.geometry != null && overrider.geometryBlend == GeometryBlendType.GeometryBlendTypeMix) {
-			this.bindVertexBuffersToProgramAttributes(overrider.geometry, programAttributes);
+		if (overrider != null && overrider.geometryBlend == GeometryBlendType.GeometryBlendTypeMix) {
+			var geometryOverride = overrider.getGeometryOverride(this, this._geometry);
+			this.bindVertexBuffersToProgramAttributes(geometryOverride, programAttributes);
 		}
 
 		// Disable unused attributes
@@ -285,8 +286,8 @@ class RenderObject extends Node3D {
 
 		if (this._visible) {
 			var material = this._material;
-			if (overrider != null && overrider.material != null) {
-				material = overrider.material;
+			if (overrider != null) {
+				material = overrider.getMaterialOverride(this, material);
 			}
 
 			// Add object to opaque or transparent list

@@ -810,14 +810,16 @@ class Camera extends Node3D {
 
 	}
 
-	override public function updateWorldMatrix():Void {
+	override public function updateWorldMatrix():Bool {
 
 		var calculateViewMatrix:Bool = (this._matrixDirty || this._worldMatrixDirty);
-		super.updateWorldMatrix();
+		var isNodeUpdated = super.updateWorldMatrix();
 
 		if (calculateViewMatrix) {
 			this.calculateViewMatrix();
 		}
+
+		return isNodeUpdated;
 	}
 
 

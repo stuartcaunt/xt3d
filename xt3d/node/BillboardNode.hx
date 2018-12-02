@@ -46,7 +46,7 @@ class BillboardNode extends Node3D {
 
 	/* --------- Implementation --------- */
 
-	public override function updateWorldMatrix():Void {
+	public override function updateWorldMatrix():Bool {
 
 		// Update transformation but don't update children yet
 		super.updateMatrix();
@@ -91,6 +91,8 @@ class BillboardNode extends Node3D {
 				child.updateWorldMatrix();
 			}
 		}
+
+		return changed;
 	}
 
 }
