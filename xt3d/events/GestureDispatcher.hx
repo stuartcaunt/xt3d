@@ -253,8 +253,12 @@ class GestureDispatcher implements MouseHandler implements TouchHandler {
 	}
 
 	private function getTouchInView(touch:Touch):Touch {
-		var p = this.transformScreenPositionToViewPosition(touch.x, touch.y);
-		this._vector.setTo(touch.dx, -touch.dy);
+		var p = this.transformScreenPositionToViewPosition(
+			touch.x * this._director.displaySize.width,
+			touch.y * this._director.displaySize.height);
+		this._vector.setTo(
+			touch.dx * this._director.displaySize.width,
+			-touch.dy * this._director.displaySize.height);
 		var dp = this._activeView.viewTransform.deltaTransformVector2(this._vector);
 
 		var touchInView = new Touch(p.x, p.y, touch.id, dp.x, dp.y, touch.pressure, touch.device);
