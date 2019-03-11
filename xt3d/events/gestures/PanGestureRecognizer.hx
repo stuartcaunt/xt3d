@@ -133,7 +133,7 @@ class PanGestureRecognizer extends GestureRecognizer {
 	}
 
 	override public function onTouchMove (touch:Touch):Bool {
-		return this.panMove(touch.dx, touch.dy);
+		return this.panMove(touch.x, touch.y);
 	}
 
 	/* --------- Private methods --------- */
