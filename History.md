@@ -1,3 +1,14 @@
+0.2.16 / 2019-03-16
+===================
+ * Update to Lime 6.4.0
+ * Fix image loading from URL that now only works asynchronously with Lime 6.4.0
+ * Fix PanGestureRecognizer onTouchMove that must pass the touch position as panMove parameter, not the delta position
+ * Fix GestureDispatch getTouchInView that must generate a touch with point coordinates, not percentage coordinates. 
+
+0.2.15 / 2017-11-20
+===================
+ * Update to Lime 5.5.0
+ 
 0.2.14 / 2016-07-23
 ====================
  * Render fps using BMFontLabel.
