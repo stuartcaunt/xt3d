@@ -87,7 +87,7 @@ class ScreenCapture {
 		}
 
 		// Read pixels from texture
-		GL.readPixels(0, 0, width, height, GL.RGBA, GL.UNSIGNED_BYTE, this._pixels);
+		GL.readPixelsWEBGL(0, 0, width, height, GL.RGBA, GL.UNSIGNED_BYTE, this._pixels);
 
 #if js
 		// Flip pixels vertically and save in context image data

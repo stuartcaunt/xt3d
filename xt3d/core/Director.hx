@@ -480,7 +480,7 @@ class Director implements Xt3dGLViewListener {
 		this._frameRate = frameRate;
 
 		// Set the framerate
-		Application.current.frameRate = this._frameRate;
+		Application.current.window.frameRate = this._frameRate;
 	}
 
 }

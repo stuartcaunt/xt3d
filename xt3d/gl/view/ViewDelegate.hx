@@ -1,6 +1,6 @@
 package xt3d.gl.view;
 
-import lime.graphics.Renderer;
+import lime.graphics.RenderContext;
 import lime.ui.Window;
 interface ViewDelegate {
 
@@ -8,7 +8,7 @@ interface ViewDelegate {
 	 * Called when a render event is fired
 	 * @param	context	The current render context
 	 */
-	inline public function render(renderer:Renderer):Void;
+	inline public function render(renderContext:RenderContext):Void;
 
 	/**
 	 * Called when an update event is fired

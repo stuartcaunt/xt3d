@@ -9,18 +9,18 @@ import openfl.Lib;
 import openfl._internal.renderer.opengl.GLRenderer;
 import openfl._internal.renderer.AbstractRenderer;
 import xt3d.utils.errors.XTException;
-import lime.graphics.GLRenderContext;
+import lime.graphics.WebGLRenderContext;
 import openfl.events.Event;
 import openfl.display.Sprite;
 
 class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 
 	// properties
-	public var gl(get, null):GLRenderContext;
+	public var gl(get, null):WebGLRenderContext;
 	public var size(get, null):Size<Int>;
 
 	// members
-	private var _gl:GLRenderContext = null;
+	private var _gl:WebGLRenderContext = null;
 	private var _listeners:Array<Xt3dGLViewListener> = new Array<Xt3dGLViewListener>();
 	private var _width:Int = 0;
 	private var _height:Int = 0;
@@ -55,7 +55,7 @@ class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 
 	/* ----------- Xt3dGLView Properties ----------- */
 
-	public function get_gl():GLRenderContext {
+	public function get_gl():WebGLRenderContext {
 		return this._gl;
 	}
 
@@ -77,7 +77,7 @@ class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 		}
 	}
 
-	private inline function onUpdate(dt:Float):Void {
+	private inline function onUpdateEvent(dt:Float):Void {
 		for (listener in this._listeners) {
 			listener.onUpdate(this, dt);
 		}
@@ -134,7 +134,7 @@ class Xt3dOpenFLGLView extends OpenGLView implements Xt3dGLView {
 		this._lastUpdateTime = now;
 
 		// Notify all listeners of update
-		this.onUpdate(deltaTimeMs);
+		this.onUpdateEvent(deltaTimeMs);
 
 		// Notify all listeners
 		this.onRender();

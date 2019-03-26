@@ -416,7 +416,11 @@ class Uniform  {
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
 					var count = Std.int(this._float32ArrayValue.length / 2);
+				#if lime_webgl
+					GL.uniform2fvWEBGL(this._location, this._float32ArrayValue);
+				#else
 					GL.uniform2fv(this._location, count, this._float32ArrayValue);
+				#end
 
 				} else if (type == "vec3") {
 					#if js
@@ -425,7 +429,11 @@ class Uniform  {
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
 					var count = Std.int(this._float32ArrayValue.length / 3);
+				#if lime_webgl
+					GL.uniform3fvWEBGL(this._location, this._float32ArrayValue);
+				#else
 					GL.uniform3fv(this._location, count, this._float32ArrayValue);
+				#end
 
 				} else if (type == "vec4") {
 					#if js
@@ -434,7 +442,11 @@ class Uniform  {
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
 					var count = Std.int(this._float32ArrayValue.length / 4);
+				#if lime_webgl
+					GL.uniform4fvWEBGL(this._location, this._float32ArrayValue);
+				#else
 					GL.uniform4fv(this._location, count, this._float32ArrayValue);
+				#end
 
 				} else if (type == "ivec2") {
 					#if js
@@ -443,7 +455,11 @@ class Uniform  {
 					this._int32ArrayValue.set(this._intArrayValue);
 					#end
 					var count = Std.int(this._int32ArrayValue.length / 2);
+				#if lime_webgl
+					GL.uniform2ivWEBGL(this._location, this._int32ArrayValue);
+				#else
 					GL.uniform2iv(this._location, count, this._int32ArrayValue);
+				#end
 
 				} else if (type == "ivec3") {
 					#if js
@@ -452,7 +468,11 @@ class Uniform  {
 					this._int32ArrayValue.set(this._intArrayValue);
 					#end
 					var count = Std.int(this._int32ArrayValue.length / 3);
+				#if lime_webgl
+					GL.uniform3ivWEBGL(this._location, this._int32ArrayValue);
+				#else
 					GL.uniform3iv(this._location, count, this._int32ArrayValue);
+				#end
 
 				} else if (type == "ivec4") {
 					#if js
@@ -461,7 +481,11 @@ class Uniform  {
 					this._int32ArrayValue.set(this._intArrayValue);
 					#end
 					var count = Std.int(this._int32ArrayValue.length / 4);
+				#if lime_webgl
+					GL.uniform4ivWEBGL(this._location, this._int32ArrayValue);
+				#else
 					GL.uniform4iv(this._location, count , this._int32ArrayValue);
+				#end
 
 				} else if (type == "mat3") {
 					MatrixHelper.copy3x3ToArray(this._matrixValue, this._floatArrayValue);
@@ -471,12 +495,20 @@ class Uniform  {
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
 					var count = Std.int(this._float32ArrayValue.length / 9);	// Matrix of 3x3
+				#if lime_webgl
+					GL.uniformMatrix3fvWEBGL(this._location, false, this._float32ArrayValue);
+				#else
 					GL.uniformMatrix3fv(this._location, count, false, this._float32ArrayValue);
+				#end
 
 				} else if (type == "mat4") {
 					this._float32ArrayValue.set(this._matrixValue);
 					var count = Std.int(this._float32ArrayValue.length / 16);	// Matrix of 4x4
+				#if lime_webgl
+					GL.uniformMatrix4fvWEBGL(this._location, false, this._float32ArrayValue);
+				#else
 					GL.uniformMatrix4fv(this._location, count, false, this._float32ArrayValue);
+				#end
 				}
 
 				_isDirty = false;

@@ -2,12 +2,12 @@
   "name": "xt3d",
   "url": "https://github.com/stuartcaunt/xt3d",
   "license": "MIT",
-  "tags": [ "xt3d", "3d", "engine", "cross", "opengl", "game" ],
+  "tags": [ "xt3d", "3d", "engine", "cross", "opengl", "webgl", "game", "haxe" ],
   "description": "An open-source, cross-platform, 3D graphics and game-development framework",
-  "version": "0.2.14",
+  "version": "0.2.17",
   "releasenote": "See History.md",
-  "contributors": [ "stuartcaunt" ],
+  "contributors": [ "stuartcaunt", "IvanThomasFr" ],
   "dependencies": {
-    "lime": "3.7.4"
+    "lime": "7.2.1"
   }
 }

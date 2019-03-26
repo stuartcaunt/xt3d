@@ -7,7 +7,7 @@ import xt3d.node.Camera;
 import xt3d.core.Renderer;
 import lime.math.Rectangle;
 import xt3d.utils.string.StringFunctions;
-import lime.Assets;
+import lime.utils.Assets;
 
 class FPSCalculator {
 

@@ -3,3 +3,4 @@ Export
 script/build
 tests/**/project.xml
 *.iml
+.idea

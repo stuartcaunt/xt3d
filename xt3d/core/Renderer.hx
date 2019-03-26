@@ -5,7 +5,7 @@ import xt3d.gl.GLExtensionManager;
 import lime.utils.ArrayBufferView;
 import xt3d.gl.GLInfo;
 import lime.math.Rectangle;
-import lime.graphics.GLRenderContext;
+import lime.graphics.WebGLRenderContext;
 import lime.graphics.opengl.GLFramebuffer;
 import xt3d.utils.XTObject;
 import xt3d.textures.RenderTexture;
@@ -43,7 +43,7 @@ class Renderer extends XTObject {
 	public var renderTarget(get, set):RenderTexture;
 
 	// members
-	private var _gl:GLRenderContext;
+	private var _gl:WebGLRenderContext;
 	private var _glInfo:GLInfo;
 	private var _extensionManager:GLExtensionManager;
 	private var _stateManager:GLStateManager;
@@ -67,7 +67,7 @@ class Renderer extends XTObject {
 
 	private var _globalTime:Float = 0.0;
 
-	public static function create(gl:GLRenderContext):Renderer {
+	public static function create(gl:WebGLRenderContext):Renderer {
 		var object = new Renderer();
 
 		if (object != null && !(object.init(gl))) {
@@ -77,7 +77,7 @@ class Renderer extends XTObject {
 		return object;
 	}
 
-	public function init(gl:GLRenderContext):Bool {
+	public function init(gl:WebGLRenderContext):Bool {
 		this._gl = gl;
 
 		this._glInfo = GLInfo.create();

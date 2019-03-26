@@ -43,7 +43,12 @@ class GLBufferManager {
 		this.setVertexBuffer(buffer);
 
 		// Write data
+	#if lime_webgl
+		GL.bufferDataWEBGL(GL.ARRAY_BUFFER, data, GL.STATIC_DRAW);
+	#else
 		GL.bufferData(GL.ARRAY_BUFFER, data.byteLength, data, GL.STATIC_DRAW);
+	#end
+
 
 		return buffer;
 	}
@@ -55,7 +60,11 @@ class GLBufferManager {
 		this.setElementBuffer(buffer);
 
 		// Write data
+	#if lime_webgl
+		GL.bufferDataWEBGL(GL.ELEMENT_ARRAY_BUFFER, data, GL.STATIC_DRAW);
+	#else
 		GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, data.byteLength, data, GL.STATIC_DRAW);
+	#end
 
 		return buffer;
 	}
@@ -65,7 +74,11 @@ class GLBufferManager {
 		this.setVertexBuffer(buffer);
 
 		// Write data
+	#if lime_webgl
+		GL.bufferSubDataWEBGL(GL.ARRAY_BUFFER, 0, data);
+	#else
 		GL.bufferSubData(GL.ARRAY_BUFFER, 0, data.byteLength, data);
+	#end
 	}
 
 	public inline function updateElementBuffer(buffer:GLBuffer, data:ArrayBufferView):Void {
@@ -73,7 +86,12 @@ class GLBufferManager {
 		this.setElementBuffer(buffer);
 
 		// Write data
+	#if lime_webgl
+		GL.bufferSubDataWEBGL(GL.ELEMENT_ARRAY_BUFFER, 0, data);
+	#else
 		GL.bufferSubData(GL.ELEMENT_ARRAY_BUFFER, 0, data.byteLength, data);
+	#end
+
 	}
 
 

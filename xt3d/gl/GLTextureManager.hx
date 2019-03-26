@@ -177,6 +177,44 @@ class GLTextureManager {
 			GL.pixelStorei(GL.UNPACK_ALIGNMENT, 1);
 		}
 
+	#if lime_webgl
+		if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA8888) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB888) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA4444) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_SHORT_4_4_4_4, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB565) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.UNSIGNED_SHORT_5_6_5, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_RGB5A1) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_SHORT_5_5_5_1, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_A8) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.ALPHA, textureWidth, textureHeight, 0, GL.ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_I8) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.LUMINANCE, textureWidth, textureHeight, 0, GL.LUMINANCE, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_AI88) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.LUMINANCE_ALPHA, textureWidth, textureHeight, 0, GL.LUMINANCE_ALPHA, GL.UNSIGNED_BYTE, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float1) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.LUMINANCE, textureWidth, textureHeight, 0, GL.LUMINANCE, GL.FLOAT, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float2) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.LUMINANCE_ALPHA, textureWidth, textureHeight, 0, GL.LUMINANCE_ALPHA, GL.FLOAT, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float3) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGB, textureWidth, textureHeight, 0, GL.RGB, GL.FLOAT, formattedDataSource);
+
+		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float4) {
+			GL.texImage2DWEBGL(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.FLOAT, formattedDataSource);
+		}
+	#else
 		if (pixelFormat == XTGL.Texture2DPixelFormat_RGBA8888) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.UNSIGNED_BYTE, formattedDataSource);
 
@@ -213,6 +251,8 @@ class GLTextureManager {
 		} else if (pixelFormat == XTGL.Texture2DPixelFormat_Float4) {
 			GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, textureWidth, textureHeight, 0, GL.RGBA, GL.FLOAT, formattedDataSource);
 		}
+	#end
+
 	}
 
 	private function formatData(source:UInt8Array, width:Int, height:Int, pixelFormat:Int):ArrayBufferView {

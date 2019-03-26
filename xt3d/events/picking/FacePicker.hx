@@ -137,7 +137,12 @@ class FacePicker implements RendererOverriderMaterialDelegate implements Rendere
 	private function getPickingResultAtLocation(location:Vector2, scene:Scene):FacePickingResult {
 		// Get pixel color
 		var pixels = new UInt8Array(4);
+	#if lime_webgl
+		GL.readPixelsWEBGL(Std.int(location.x), Std.int(location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
+	#else
 		GL.readPixels(Std.int(location.x), Std.int(location.y), 1, 1, GL.RGBA, GL.UNSIGNED_BYTE, pixels);
+	#end
+
 
 		// Convert pixel colors to faceId and renderedObjectId
 		var renderObjectId = pixels[0] * 256 + pixels[1];

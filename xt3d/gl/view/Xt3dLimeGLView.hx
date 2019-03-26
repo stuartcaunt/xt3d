@@ -1,35 +1,33 @@
 package xt3d.gl.view;
 
+import lime.ui.MouseWheelMode;
 import lime.ui.Touch;
 import xt3d.utils.geometry.Size;
 import lime.ui.Window;
-import lime.graphics.Renderer;
+import lime.graphics.RenderContext;
 import lime.app.Application;
 import xt3d.utils.geometry.Size;
 import lime.math.Rectangle;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
-import lime.graphics.GLRenderContext;
+import lime.graphics.WebGLRenderContext;
 import xt3d.core.EventEmitter;
-import lime.app.Module;
 import lime.ui.KeyModifier;
 import lime.ui.KeyCode;
 import lime.ui.GamepadButton;
 import lime.ui.GamepadAxis;
 import lime.ui.Gamepad;
-import lime.graphics.RenderContext;
-import lime.app.Module;
 
-class Xt3dLimeGLView extends Module implements Xt3dGLView {
+class Xt3dLimeGLView extends Application implements Xt3dGLView {
 
 	// properties
-	public var gl(get, null):GLRenderContext;
+	public var gl(get, null):WebGLRenderContext;
 	public var size(get, null):Size<Int>;
 	public var touchDelegate(get, set):TouchDelegate;
 	public var mouseDelegate(get, set):MouseDelegate;
 
 	// members
-	private var _gl:GLRenderContext = null;
+	private var _gl:WebGLRenderContext = null;
 	private var _listeners:Array<Xt3dGLViewListener> = new Array<Xt3dGLViewListener>();
 	private var _width:Int = 0;
 	private var _height:Int = 0;
@@ -69,7 +67,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 
 	/* ----------- Xt3dGLView Properties ----------- */
 
-	inline public function get_gl():GLRenderContext {
+	inline public function get_gl():WebGLRenderContext {
 		return this._gl;
 	}
 
@@ -106,7 +104,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 		}
 	}
 
-	private inline function onUpdate(dt:Float):Void {
+	private inline function onUpdateEvent(dt:Float):Void {
 		for (listener in this._listeners) {
 			listener.onUpdate(this, dt);
 		}
@@ -125,19 +123,17 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	}
 
 	private inline function setRenderContext(context:RenderContext):Void {
-		switch (context) {
+        if (context.webgl != null) {
+            if (this._gl == null) {
+                this._gl = context.webgl;
 
-			case OPENGL (gl):
-				if (this._gl == null) {
-					this._gl = gl;
-
-				} else if (this._gl != gl) {
-					// TODO Handle change of render context
-					throw new XTException("RenderContextChanged", "The OpenGL render context changed which wasn't expected");
-				}
-
-			default:
-		}
+            } else if (this._gl != context.webgl) {
+                // TODO Handle change of render context
+                throw new XTException("RenderContextChanged", "The OpenGL render context changed which wasn't expected");
+            }
+        } else {
+            throw new XTException("RenderContextChanged", "Unknown RenderContext type");
+        }
 	}
 
 	private inline function onApplicationReady(context:RenderContext):Void {
@@ -174,6 +170,34 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 		this.onEvent(Xt3dGLViewEvent.RESIZE);
 	}
 
+	public function addWindow (window:Window):Void {
+//		window.onActivate.add (onWindowActivate.bind (window));
+//		window.onClose.add (__onWindowClose.bind (window), false, -10000);
+//		window.onCreate.add (onWindowCreate.bind (window));
+//		window.onDeactivate.add (onWindowDeactivate.bind (window));
+//		window.onDropFile.add (onWindowDropFile.bind (window));
+//		window.onEnter.add (onWindowEnter.bind (window));
+//		window.onExpose.add (onWindowExpose.bind (window));
+//		window.onFocusIn.add (onWindowFocusIn.bind (window));
+//		window.onFocusOut.add (onWindowFocusOut.bind (window));
+//		window.onFullscreen.add (onWindowFullscreen.bind (window));
+//		window.onKeyDown.add (onKeyDown.bind (window));
+//		window.onKeyUp.add (onKeyUp.bind (window));
+//		window.onLeave.add (onWindowLeave.bind (window));
+//		window.onMinimize.add (onWindowMinimize.bind (window));
+//		window.onMouseDown.add (onMouseDown.bind (window));
+//		window.onMouseMove.add (onMouseMove.bind (window));
+//		window.onMouseMoveRelative.add (onMouseMoveRelative.bind (window));
+//		window.onMouseUp.add (onMouseUp.bind (window));
+//		window.onMouseWheel.add (onMouseWheel.bind (window));
+//		window.onMove.add (onWindowMove.bind (window));
+//		window.onResize.add (onWindowResize.bind (window));
+//		window.onRestore.add (onWindowRestore.bind (window));
+//		window.onTextEdit.add (onTextEdit.bind (window));
+//		window.onTextInput.add (onTextInput.bind (window));
+
+		__windows.push (window);
+	}
 
 	/* --------- Xt3dGLView Implementation --------- */
 
@@ -196,7 +220,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	}
 
 
-	/* --------- Module Implementation --------- */
+	/* --------- Application Implementation --------- */
 
 
 
@@ -204,8 +228,8 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * Called when a render event is fired
 	 * @param	context	The current render context
 	 */
-	override inline public function render(renderer:Renderer):Void {
-		this._renderCallback(renderer.context);
+	override inline public function render(renderContext:RenderContext):Void {
+		this._renderCallback(renderContext);
 	}
 
 
@@ -215,7 +239,7 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 */
 	override inline public function update (deltaTime:Int):Void {
 		// Notify all listeners, convert to seconds
-		this.onUpdate(0.001 * deltaTime);
+		this.onUpdateEvent(0.001 * deltaTime);
 	}
 
 	/**
@@ -223,8 +247,8 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	width	The width of the window
 	 * @param	height	The height of the window
 	 */
-	override inline public function onWindowResize(window:Window, width:Int, height:Int):Void {
-		this._windowResizeCallback(window, width, height);
+	override inline public function onWindowResize(width:Int, height:Int):Void {
+		this._windowResizeCallback(this.window, width, height);
 	}
 
 	/**
@@ -234,9 +258,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	y	The current y coordinate of the mouse
 	 * @param	button	The ID of the mouse button that was pressed
 	 */
-	override public function onMouseDown (window:Window, x:Float, y:Float, button:Int):Void {
+	override public function onMouseDown (x:Float, y:Float, button:Int):Void {
 		if (this._mouseDelegate != null) {
-			this._mouseDelegate.onMouseDown(window, x, y, button);
+			this._mouseDelegate.onMouseDown(this.window, x, y, button);
 		}
 	}
 
@@ -248,9 +272,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	y	The current y coordinate of the mouse
 	 * @param	button	The ID of the mouse button that was pressed
 	 */
-	override public function onMouseMove (window:Window, x:Float, y:Float):Void {
+	override public function onMouseMove (x:Float, y:Float):Void {
 		if (this._mouseDelegate != null) {
-			this._mouseDelegate.onMouseMove(window, x, y);
+			this._mouseDelegate.onMouseMove(this.window, x, y);
 		}
 	}
 
@@ -262,9 +286,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	y	The current y coordinate of the mouse
 	 * @param	button	The ID of the button that was released
 	 */
-	override public function onMouseUp (window:Window, x:Float, y:Float, button:Int):Void {
+	override public function onMouseUp (x:Float, y:Float, button:Int):Void {
 		if (this._mouseDelegate != null) {
-			this._mouseDelegate.onMouseUp(window, x, y, button);
+			this._mouseDelegate.onMouseUp(this.window, x, y, button);
 		}
 	}
 
@@ -275,9 +299,9 @@ class Xt3dLimeGLView extends Module implements Xt3dGLView {
 	 * @param	deltaX	The amount of horizontal scrolling (if applicable)
 	 * @param	deltaY	The amount of vertical scrolling (if applicable)
 	 */
-	override public function onMouseWheel (window:Window, deltaX:Float, deltaY:Float):Void {
+	override public function onMouseWheel (deltaX:Float, deltaY:Float, deltaMode:MouseWheelMode):Void {
 		if (this._mouseDelegate != null) {
-			this._mouseDelegate.onMouseWheel(window, deltaX, deltaY);
+			this._mouseDelegate.onMouseWheel(this.window, deltaX, deltaY);
 		}
 	}
 

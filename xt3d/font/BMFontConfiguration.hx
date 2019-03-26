@@ -4,7 +4,7 @@ import haxe.io.Path;
 import lime.math.Rectangle;
 import xt3d.utils.errors.XTException;
 import xt3d.utils.XT;
-import lime.Assets;
+import lime.utils.Assets;
 
 typedef BMFontCharacterDefinition = {
 	var charId:Int;
