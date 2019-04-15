@@ -119,7 +119,7 @@ class FacePicker implements RendererOverriderMaterialDelegate implements Rendere
 		// Set render object id in material uniforms
 		var renderIdHigh = Std.int(renderObject.renderId / 256);
 		var renderIdLow = renderObject.renderId % 256;
-		this._facePickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 256, renderIdLow / 256];
+		this._facePickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 255, renderIdLow / 255];
 
 		// Set picking material sided-ness to match original material
 		this._facePickerMaterial.side = originalMaterial.side;
