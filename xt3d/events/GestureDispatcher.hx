@@ -259,7 +259,7 @@ class GestureDispatcher implements MouseHandler implements TouchHandler {
 		this._vector.setTo(
 			touch.dx * this._director.displaySize.width,
 			-touch.dy * this._director.displaySize.height);
-		var dp = this._activeView.viewTransform.deltaTransformVector2(this._vector);
+		var dp = this._activeView.viewTransform.deltaTransformVector(this._vector);
 
 		var touchInView = new Touch(p.x, p.y, touch.id, dp.x, dp.y, touch.pressure, touch.device);
 
@@ -270,7 +270,7 @@ class GestureDispatcher implements MouseHandler implements TouchHandler {
 		var height = this._director.displaySize.height;
 		this._vector.setTo(x, height - y);
 		var viewTransform = this._activeView.viewTransform;
-		var transformed = viewTransform.transformVector2(this._vector);
+		var transformed = viewTransform.transformVector(this._vector);
 
 		return transformed;
 	}
@@ -278,7 +278,7 @@ class GestureDispatcher implements MouseHandler implements TouchHandler {
 	private function transformDeltaScreenPositionToDeltaViewPosition(dx:Float, dy:Float):Vector2 {
 		this._vector.setTo(dx, -dy);
 		var viewTransform = this._activeView.viewTransform;
-		var transformed = viewTransform.deltaTransformVector2(this._vector);
+		var transformed = viewTransform.deltaTransformVector(this._vector);
 
 		return transformed;
 	}

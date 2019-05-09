@@ -3,7 +3,7 @@ package xt3d.view.filters;
 import lime.math.Matrix3;
 import xt3d.textures.RenderTexture;
 import xt3d.textures.TextureOptions;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import xt3d.gl.XTGL;
 import xt3d.material.Material;
 import xt3d.utils.Types;

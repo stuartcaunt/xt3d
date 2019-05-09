@@ -2,7 +2,7 @@ package xt3d.gl;
 
 import lime.graphics.opengl.GLRenderbuffer;
 import lime.graphics.opengl.GLFramebuffer;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 class GLFrameBufferManager {
 
 // members

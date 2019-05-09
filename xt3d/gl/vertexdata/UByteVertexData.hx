@@ -4,7 +4,7 @@ import xt3d.utils.errors.XTException;
 import xt3d.gl.vertexdata.PrimitiveVertexData;
 import lime.utils.UInt8Array;
 import lime.utils.ArrayBufferView;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 
 class UByteVertexData extends PrimitiveVertexData {
 

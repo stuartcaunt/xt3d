@@ -8,7 +8,7 @@ import sys.io.FileOutput;
 #end
 import lime.graphics.Image;
 import lime.graphics.ImageBuffer;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import lime.utils.UInt8Array;
 import xt3d.core.Director;
 import xt3d.textures.RenderTexture;

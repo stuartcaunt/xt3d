@@ -7,7 +7,7 @@ import xt3d.events.picking.FacePicker.FacePickingResult;
 import lime.utils.UInt8Array;
 import xt3d.core.Director;
 import lime.math.Vector2;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import xt3d.view.View;
 import xt3d.material.Material;
 import xt3d.core.RendererOverrider;
@@ -97,7 +97,7 @@ class ObjectPicker implements RendererOverriderMaterialDelegate {
 		// Set render object id in material uniforms
 		var renderIdHigh = Std.int(renderObject.renderId / 256);
 		var renderIdLow = renderObject.renderId % 256;
-		this._objectPickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 256, renderIdLow / 256];
+		this._objectPickerMaterial.uniform("objectId").floatArrayValue = [renderIdHigh / 255, renderIdLow / 255];
 
 		// Set picking material sided-ness to match original material
 		this._objectPickerMaterial.side = originalMaterial.side;

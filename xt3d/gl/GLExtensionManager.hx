@@ -1,7 +1,7 @@
 package xt3d.gl;
 
 import xt3d.utils.XT;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 
 
 class GLExtensionManager {

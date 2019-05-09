@@ -5,7 +5,6 @@ import xt3d.gl.GLExtensionManager;
 import lime.utils.ArrayBufferView;
 import xt3d.gl.GLInfo;
 import lime.math.Rectangle;
-import lime.graphics.GLRenderContext;
 import lime.graphics.opengl.GLFramebuffer;
 import xt3d.utils.XTObject;
 import xt3d.textures.RenderTexture;
@@ -26,7 +25,7 @@ import xt3d.lights.Light;
 import xt3d.material.Material;
 import xt3d.node.Scene;
 import xt3d.node.RenderObject;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 
 
 class Renderer extends XTObject {
@@ -44,7 +43,6 @@ class Renderer extends XTObject {
 	public var renderTarget(get, set):RenderTexture;
 
 	// members
-	private var _gl:GLRenderContext;
 	private var _glInfo:GLInfo;
 	private var _extensionManager:GLExtensionManager;
 	private var _stateManager:GLStateManager;
@@ -68,18 +66,17 @@ class Renderer extends XTObject {
 
 	private var _globalTime:Float = 0.0;
 
-	public static function create(gl:GLRenderContext):Renderer {
+	public static function create():Renderer {
 		var object = new Renderer();
 
-		if (object != null && !(object.init(gl))) {
+		if (object != null && !(object.init())) {
 			object = null;
 		}
 
 		return object;
 	}
 
-	public function init(gl:GLRenderContext):Bool {
-		this._gl = gl;
+	public function init():Bool {
 
 		this._glInfo = GLInfo.create();
 		this._extensionManager = GLExtensionManager.create();
@@ -168,7 +165,7 @@ class Renderer extends XTObject {
 
 		if (renderTarget == null) {
 			// Reset the color mask, by default alpha not renderered to screen
-			this._stateManager.setColorMask(true, true, true, false);
+			this._stateManager.setColorMask(true, true, true, true);
 
 			// Reset frame and render buffer
 			this._frameBufferManager.setFrameBuffer(this._screenFrameBuffer);

@@ -1,7 +1,7 @@
 package xt3d.gl.shaders;
 
 import xt3d.utils.string.StringFunctions;
-import lime.Assets;
+import lime.utils.Assets;
 import lime.utils.AssetType;
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTException;

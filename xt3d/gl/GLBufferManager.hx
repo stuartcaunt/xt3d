@@ -1,7 +1,7 @@
 package xt3d.gl;
 
 import lime.utils.ArrayBufferView;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import lime.graphics.opengl.GLBuffer;
 class GLBufferManager {
 
@@ -43,7 +43,7 @@ class GLBufferManager {
 		this.setVertexBuffer(buffer);
 
 		// Write data
-		GL.bufferData(GL.ARRAY_BUFFER, data.byteLength, data, GL.STATIC_DRAW);
+		GL.bufferData(GL.ARRAY_BUFFER, data, GL.STATIC_DRAW);
 
 		return buffer;
 	}
@@ -55,7 +55,7 @@ class GLBufferManager {
 		this.setElementBuffer(buffer);
 
 		// Write data
-		GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, data.byteLength, data, GL.STATIC_DRAW);
+		GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, data, GL.STATIC_DRAW);
 
 		return buffer;
 	}
@@ -65,7 +65,7 @@ class GLBufferManager {
 		this.setVertexBuffer(buffer);
 
 		// Write data
-		GL.bufferSubData(GL.ARRAY_BUFFER, 0, data.byteLength, data);
+		GL.bufferSubData(GL.ARRAY_BUFFER, 0, data);
 	}
 
 	public inline function updateElementBuffer(buffer:GLBuffer, data:ArrayBufferView):Void {
@@ -73,7 +73,7 @@ class GLBufferManager {
 		this.setElementBuffer(buffer);
 
 		// Write data
-		GL.bufferSubData(GL.ELEMENT_ARRAY_BUFFER, 0, data.byteLength, data);
+		GL.bufferSubData(GL.ELEMENT_ARRAY_BUFFER, 0, data);
 	}
 
 

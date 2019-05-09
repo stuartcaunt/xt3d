@@ -5,7 +5,7 @@ import xt3d.utils.errors.XTException;
 import lime.utils.ArrayBufferView;
 import xt3d.gl.GLBufferManager;
 import lime.graphics.opengl.GLBuffer;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 
 import xt3d.utils.XT;
 import xt3d.utils.errors.XTAbstractMethodError;

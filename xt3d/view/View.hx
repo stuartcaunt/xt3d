@@ -1,7 +1,7 @@
 package xt3d.view;
 
 import xt3d.lights.ShadowEngine;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import lime.math.Vector2;
 import lime.math.Matrix3;
 import xt3d.utils.Types;

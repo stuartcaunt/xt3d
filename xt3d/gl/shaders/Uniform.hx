@@ -7,7 +7,7 @@ import lime.utils.Float32Array;
 import lime.utils.Int32Array;
 import lime.graphics.opengl.GLProgram;
 import lime.graphics.opengl.GLUniformLocation;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import haxe.Json;
 import xt3d.math.Matrix4;
 import xt3d.core.Director;
@@ -415,8 +415,7 @@ class Uniform  {
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
-					var count = Std.int(this._float32ArrayValue.length / 2);
-					GL.uniform2fv(this._location, count, this._float32ArrayValue);
+					GL.uniform2fv(this._location, this._float32ArrayValue);
 
 				} else if (type == "vec3") {
 					#if js
@@ -424,8 +423,7 @@ class Uniform  {
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
-					var count = Std.int(this._float32ArrayValue.length / 3);
-					GL.uniform3fv(this._location, count, this._float32ArrayValue);
+					GL.uniform3fv(this._location, this._float32ArrayValue);
 
 				} else if (type == "vec4") {
 					#if js
@@ -433,8 +431,7 @@ class Uniform  {
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
-					var count = Std.int(this._float32ArrayValue.length / 4);
-					GL.uniform4fv(this._location, count, this._float32ArrayValue);
+					GL.uniform4fv(this._location, this._float32ArrayValue);
 
 				} else if (type == "ivec2") {
 					#if js
@@ -442,8 +439,7 @@ class Uniform  {
 					#else
 					this._int32ArrayValue.set(this._intArrayValue);
 					#end
-					var count = Std.int(this._int32ArrayValue.length / 2);
-					GL.uniform2iv(this._location, count, this._int32ArrayValue);
+					GL.uniform2iv(this._location, this._int32ArrayValue);
 
 				} else if (type == "ivec3") {
 					#if js
@@ -451,8 +447,7 @@ class Uniform  {
 					#else
 					this._int32ArrayValue.set(this._intArrayValue);
 					#end
-					var count = Std.int(this._int32ArrayValue.length / 3);
-					GL.uniform3iv(this._location, count, this._int32ArrayValue);
+					GL.uniform3iv(this._location, this._int32ArrayValue);
 
 				} else if (type == "ivec4") {
 					#if js
@@ -460,8 +455,7 @@ class Uniform  {
 					#else
 					this._int32ArrayValue.set(this._intArrayValue);
 					#end
-					var count = Std.int(this._int32ArrayValue.length / 4);
-					GL.uniform4iv(this._location, count , this._int32ArrayValue);
+					GL.uniform4iv(this._location, this._int32ArrayValue);
 
 				} else if (type == "mat3") {
 					MatrixHelper.copy3x3ToArray(this._matrixValue, this._floatArrayValue);
@@ -470,13 +464,11 @@ class Uniform  {
 					#else
 					this._float32ArrayValue.set(this._floatArrayValue);
 					#end
-					var count = Std.int(this._float32ArrayValue.length / 9);	// Matrix of 3x3
-					GL.uniformMatrix3fv(this._location, count, false, this._float32ArrayValue);
+					GL.uniformMatrix3fv(this._location, false, this._float32ArrayValue);
 
 				} else if (type == "mat4") {
 					this._float32ArrayValue.set(this._matrixValue);
-					var count = Std.int(this._float32ArrayValue.length / 16);	// Matrix of 4x4
-					GL.uniformMatrix4fv(this._location, count, false, this._float32ArrayValue);
+					GL.uniformMatrix4fv(this._location, false, this._float32ArrayValue);
 				}
 
 				_isDirty = false;

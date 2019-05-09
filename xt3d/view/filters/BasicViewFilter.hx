@@ -1,7 +1,7 @@
 package xt3d.view.filters;
 
 import xt3d.textures.TextureOptions;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import xt3d.gl.XTGL;
 import xt3d.utils.color.Color;
 import xt3d.textures.RenderTexture;

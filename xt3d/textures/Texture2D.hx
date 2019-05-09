@@ -18,7 +18,7 @@ import xt3d.utils.XT;
 import lime.graphics.opengl.GLTexture;
 import xt3d.utils.geometry.Size;
 import xt3d.core.Director;
-import lime.Assets;
+import lime.utils.Assets;
 
 	class Texture2D extends XTObject {
 

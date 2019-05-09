@@ -204,7 +204,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		}
 
 		// Create new renderer for opengl view
-		this._renderer = Renderer.create(_glView.gl);
+		this._renderer = Renderer.create();
 
 		// Iterate over all views
 		for (view in _views) {
@@ -487,7 +487,7 @@ class Director extends EventEmitter implements Xt3dGLViewListener {
 		this._frameRate = frameRate;
 
 		// Set the framerate
-		Application.current.frameRate = this._frameRate;
+		Application.current.window.frameRate = this._frameRate;
 	}
 
 }

@@ -1,7 +1,7 @@
 package xt3d.gl;
 
 import lime.graphics.opengl.GLShaderPrecisionFormat;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 
 class GLInfo {
 

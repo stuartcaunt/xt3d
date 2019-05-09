@@ -5,7 +5,7 @@ import xt3d.gl.XTGL;
 import xt3d.node.Camera;
 import xt3d.view.View;
 import xt3d.node.RenderObject;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import lime.utils.UInt8Array;
 import xt3d.utils.geometry.Size;
 import xt3d.textures.RenderTexture;

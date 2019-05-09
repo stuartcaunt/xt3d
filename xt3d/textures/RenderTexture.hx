@@ -5,7 +5,7 @@ import lime.math.Rectangle;
 import xt3d.core.RendererOverrider;
 import xt3d.utils.color.Color;
 import xt3d.gl.XTGL;
-import lime.graphics.opengl.GL;
+import xt3d.gl.GLCurrentContext.GL;
 import lime.graphics.opengl.GLFramebuffer;
 import lime.graphics.opengl.GLRenderbuffer;
 import xt3d.utils.geometry.Size;

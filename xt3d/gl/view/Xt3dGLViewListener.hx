@@ -1,6 +1,5 @@
 package xt3d.gl.view;
 
-import lime.graphics.GLRenderContext;
 interface Xt3dGLViewListener {
 
 	function onContextInitialised(view:Xt3dGLView):Void;
